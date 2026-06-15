@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
+import { useAuth } from "@/hooks/use-auth";
 import { PixPagamentoDialog } from "@/components/PixPagamentoDialog";
+import { PagamentoMpMensalidadeDialog } from "./components/PagamentoMpMensalidadeDialog";
 import { useFinanceiroLoja } from "./hooks/use-financeiro-loja";
 import { calcularResumo } from "./logic/resumo";
 import type { DialogState } from "./logic/types";
@@ -12,6 +14,7 @@ import { CobrancasTabela } from "./components/CobrancasTabela";
 
 export function FinanceiroPage() {
   const { data: loja } = useMinhaLoja();
+  const { user } = useAuth();
   const {
     cobrancas,
     mensalidades,
@@ -19,9 +22,11 @@ export function FinanceiroPage() {
     prazo,
     mensalidadeValor,
     pixCfg,
+    carregar,
     marcarSolicitado,
   } = useFinanceiroLoja(loja);
   const [dialog, setDialog] = useState<DialogState>(null);
+  const [mpMensId, setMpMensId] = useState<string | null>(null);
 
   if (!loja) {
     return (
@@ -34,6 +39,16 @@ export function FinanceiroPage() {
   const { cobAbertas, mensAbertas, cobAberto, mensAberto, totalAberto, totalPago, prox } =
     calcularResumo(cobrancas, mensalidades);
   const pixHabilitado = !!pixCfg.pix_chave_sistema;
+
+  // Quando o admin tem MP configurado, usamos MP para mensalidades.
+  // O componente acima detecta se há token via tentativa do serverFn.
+  const handleDialog = (d: DialogState) => {
+    if (d && (d.tipo === "mensalidade" || d.tipo === "agrupado-mensalidade")) {
+      setMpMensId(d.tipo === "mensalidade" ? d.ids[0] : null);
+      return;
+    }
+    setDialog(d);
+  };
 
   return (
     <LojaShell title="Financeiro">
@@ -50,8 +65,8 @@ export function FinanceiroPage() {
           mensalidades={mensalidades}
           mensAbertas={mensAbertas}
           mensAberto={mensAberto}
-          pixHabilitado={pixHabilitado}
-          onDialog={setDialog}
+          pixHabilitado
+          onDialog={handleDialog}
         />
         <CobrancasTabela
           loading={loading}
@@ -62,6 +77,22 @@ export function FinanceiroPage() {
           onDialog={setDialog}
         />
       </div>
+
+      <PagamentoMpMensalidadeDialog
+        open={mpMensId !== null || (dialog === null && false)}
+        onClose={() => {
+          setMpMensId(null);
+          carregar();
+        }}
+        lojaId={loja.id}
+        mensalidadeId={mpMensId}
+        defaultEmail={user?.email ?? ""}
+        defaultNome={(loja as any).nome ?? ""}
+        defaultDoc={(loja as any).cnpj ?? ""}
+        onPago={() => {
+          carregar();
+        }}
+      />
 
       <PixPagamentoDialog
         open={!!dialog}
