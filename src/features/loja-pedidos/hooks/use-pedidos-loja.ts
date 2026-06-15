@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Pedido = Record<string, any>;
+export type Pedido = { id: string; [k: string]: any };
 
 /**
  * Carrega a lista de pedidos da loja (últimos 100, ordem desc).
