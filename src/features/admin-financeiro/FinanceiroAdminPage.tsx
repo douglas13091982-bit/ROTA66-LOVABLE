@@ -5,6 +5,7 @@ import { ConfiguracoesSection } from "./components/ConfiguracoesSection";
 import { PixSection } from "./components/PixSection";
 import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
+import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
 
 export function FinanceiroAdminPage() {
   const {
@@ -46,12 +47,15 @@ export function FinanceiroAdminPage() {
           onGerarMensalidades={gerarMensalidades}
         />
 
+        <MercadoPagoPlataformaSection />
+
         <PixSection
           config={config}
           setConfig={setConfig}
           saving={saving}
           onSalvar={salvar}
         />
+
 
         <MensalidadesSection
           mensalidades={mensalidades}
