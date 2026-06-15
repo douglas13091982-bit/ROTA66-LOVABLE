@@ -212,6 +212,10 @@ function SignupPage() {
         return;
       }
     } else if (role === "loja_admin") {
+      if (!nomeLoja.trim()) {
+        toast.error("Informe o nome da loja");
+        return;
+      }
       if (!cnpjDigits) {
         toast.error("CNPJ é obrigatório para lojas");
         return;
@@ -226,6 +230,10 @@ function SignupPage() {
       }
       if (!aceiteContrato) {
         toast.error("Você precisa aceitar os Termos de Uso para continuar");
+        return;
+      }
+      if (contratoLoading || !contratoAtivo?.id) {
+        toast.error("Aguarde o carregamento dos Termos de Uso e tente novamente.");
         return;
       }
       if (cpfDigits && !isValidCpf(cpfDigits)) {
