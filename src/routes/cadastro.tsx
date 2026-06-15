@@ -719,8 +719,15 @@ function SignupPage() {
                 </p>
               </div>
             )}
-            <PrimaryButton type="submit" disabled={loading}>
-              {loading ? "Criando..." : "Criar conta"}
+            <PrimaryButton
+              type="submit"
+              disabled={loading || (role === "loja_admin" && contratoLoading)}
+            >
+              {loading
+                ? "Criando..."
+                : role === "loja_admin" && contratoLoading
+                  ? "Carregando termos..."
+                  : "Criar conta"}
             </PrimaryButton>
           </form>
         </div>
