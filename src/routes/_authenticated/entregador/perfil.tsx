@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useLogout } from "@/features/logout/logic/use-logout";
 import {
   LogOut,
   Camera,
@@ -31,7 +32,8 @@ type SectionKey = "info" | "pagamentos" | "seguranca" | "ajuda" | "config" | nul
 type MenuKey = Exclude<SectionKey, null> | "carteira";
 
 function PerfilPage() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
+  const { signOut: handleSignOut, loading: sairLoading } = useLogout();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { suporteWhatsapp, suporteHorario } = useBranding();
@@ -47,7 +49,7 @@ function PerfilPage() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
   const [savingExternos, setSavingExternos] = useState(false);
-  const [sairLoading, setSairLoading] = useState(false);
+  
   const [openSection, setOpenSection] = useState<SectionKey>(null);
 
   const { data: profile, refetch: refetchProfile } = useQuery({
@@ -232,14 +234,6 @@ function PerfilPage() {
     }
   };
 
-  const handleSignOut = async () => {
-    setSairLoading(true);
-    await queryClient.cancelQueries();
-    queryClient.clear();
-    await signOut();
-    await supabase.auth.signOut();
-    navigate({ to: "/", replace: true });
-  };
 
   const menu: { key: MenuKey; icon: typeof User; label: string; to?: string }[] = [
     { key: "info", icon: User, label: "Informações Pessoais" },
