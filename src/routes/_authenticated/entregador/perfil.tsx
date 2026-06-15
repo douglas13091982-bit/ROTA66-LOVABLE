@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +35,7 @@ function PerfilPage() {
   const { user } = useAuth();
   const { signOut: handleSignOut, loading: sairLoading } = useLogout();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  
   const { suporteWhatsapp, suporteHorario } = useBranding();
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
