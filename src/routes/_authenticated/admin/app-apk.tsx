@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/AdminShell";
 import { toast } from "sonner";
 import { Download, Upload, Trash2, Smartphone, FileDown, RefreshCw } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/app-apk")({
   head: () => ({ meta: [{ title: "App APK — Admin" }] }),
@@ -22,14 +23,7 @@ function formatSize(bytes: number) {
   return mb >= 1 ? `${mb.toFixed(1)} MB` : `${(bytes / 1024).toFixed(0)} KB`;
 }
 
-function formatDate(s: string) {
-  if (!s) return "";
-  try {
-    return new Date(s).toLocaleString("pt-BR");
-  } catch {
-    return s;
-  }
-}
+const formatDate = (s: string) => formatDateTime(s);
 
 function AdminAppApkPage() {
   const [apks, setApks] = useState<ApkFile[]>([]);

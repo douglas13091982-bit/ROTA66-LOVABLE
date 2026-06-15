@@ -5,14 +5,13 @@ import { toast } from "sonner";
 import { AdminShell } from "@/components/AdminShell";
 import { supabase } from "@/integrations/supabase/client";
 import { Wallet, Save, Plus, Minus, RefreshCw } from "lucide-react";
+import { formatCurrency, formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/creditos-entregador")({
   component: AdminCreditosEntregador,
 });
 
-function brl(n: number | string | null | undefined) {
-  return Number(n ?? 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+const brl = (n: number | string | null | undefined) => formatCurrency(Number(n ?? 0));
 
 function AdminCreditosEntregador() {
   const qc = useQueryClient();
