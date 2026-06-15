@@ -2,7 +2,7 @@ import { haversineKm } from "@/lib/geo";
 import { normalizarEndereco } from "@/lib/endereco";
 
 interface PedidoComCoords {
-  id?: string;
+  id: string;
   status?: string;
   endereco_coleta?: string | null;
   endereco_coleta_lat?: number | string | null;
