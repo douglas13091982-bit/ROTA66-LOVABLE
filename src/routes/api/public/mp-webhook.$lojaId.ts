@@ -96,8 +96,8 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
             .eq("loja_id", lojaId);
 
           return new Response("ok", { status: 200 });
-        } catch (e: any) {
-          console.error("[mp-webhook]", e?.message);
+        } catch {
+          // Detalhes do erro permanecem apenas em logs internos do provedor de hosting.
           return new Response("error", { status: 500 });
         }
       },
