@@ -14,13 +14,13 @@ import { EntregadorPixCard } from "@/components/EntregadorPixCard";
 import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
 import { ChatPedidoButton, PedidoChatBadge } from "@/components/ChatPedido";
 import {
-import { formatDateTime } from "@/lib/format";
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/loja/pedidos")({
   component: PedidosPage,
