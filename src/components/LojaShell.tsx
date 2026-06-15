@@ -1,9 +1,10 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,11 +23,12 @@ const NAV = [
 
 export function LojaShell({ children, title }: { children: ReactNode; title: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
+  const { signOut: handleSignOut, loading: signingOut } = useLogout();
   const { logoUrl, nomeSistema } = useBranding();
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
-  const navigate = useNavigate();
+  
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [togglingAtiva, setTogglingAtiva] = useState(false);
@@ -37,10 +39,6 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate({ to: "/", replace: true });
-  };
 
   const handleToggleAtiva = async () => {
     if (!loja || togglingAtiva) return;
@@ -139,7 +137,8 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
             </div>
             <button
               onClick={handleSignOut}
-              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition"
+              disabled={signingOut}
+              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition disabled:opacity-50"
               aria-label="Sair"
               title="Sair"
             >
