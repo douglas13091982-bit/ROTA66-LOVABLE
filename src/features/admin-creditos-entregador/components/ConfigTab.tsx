@@ -74,43 +74,19 @@ export function ConfigTab() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
-        <div>
-          <h3 className="text-sm font-semibold text-white">Mercado Pago do sistema</h3>
-          <p className="text-xs text-white/50">Credenciais usadas para receber recargas dos entregadores</p>
-        </div>
-        <div className="text-[11px] text-white/60">
-          Status: {f.mp_configurado ? <span className="text-green-400">configurado</span> : <span className="text-amber-400">não configurado</span>}
-          {f.mp_access_token_masked && <span className="ml-2 font-mono text-white/40">{f.mp_access_token_masked}</span>}
-        </div>
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-white/60 mb-1">
-            Access Token (deixe em branco para manter)
-          </label>
-          <input
-            type="password"
-            placeholder="APP_USR-..."
-            value={f._mp_access_token_novo ?? ""}
-            onChange={(e) => update({ _mp_access_token_novo: e.target.value })}
-            className="w-full px-3 py-2 rounded-md bg-black/40 border border-white/10 text-white font-mono text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-white/60 mb-1">
-            Public Key
-          </label>
-          <input
-            type="text"
-            value={f.mp_public_key ?? ""}
-            onChange={(e) => update({ mp_public_key: e.target.value })}
-            className="w-full px-3 py-2 rounded-md bg-black/40 border border-white/10 text-white font-mono text-sm"
-          />
-        </div>
-        <div className="text-[11px] text-white/50 leading-relaxed bg-black/30 p-3 rounded-md border border-white/5">
-          <div className="font-bold mb-1">URL de webhook para configurar no Mercado Pago:</div>
+      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+        <h3 className="text-sm font-semibold text-white mb-1">Mercado Pago</h3>
+        <p className="text-xs text-white/60 leading-relaxed">
+          As recargas dos entregadores usam o <strong>mesmo token da plataforma</strong>{" "}
+          (mesma conta MP usada para receber mensalidades das lojas). Configure em{" "}
+          <strong>Admin → Financeiro → Mercado Pago da plataforma</strong>.
+        </p>
+        <div className="text-[11px] text-white/50 leading-relaxed bg-black/30 p-3 rounded-md border border-white/5 mt-3">
+          <div className="font-bold mb-1">URL de webhook (configurar no painel do Mercado Pago):</div>
           <code className="text-white/80 break-all">{webhookUrl}</code>
         </div>
       </div>
+
 
       <button
         onClick={onSalvar}

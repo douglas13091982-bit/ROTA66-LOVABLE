@@ -4,18 +4,15 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const MP_BASE = "https://api.mercadopago.com";
 
 async function getMpToken(): Promise<string> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("config_creditos_entregador" as any)
-    .select("mp_access_token, ativo")
-    .eq("singleton", true)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  const row = data as any;
-  if (!row?.mp_access_token) {
-    throw new Error("Mercado Pago do sistema não está configurado");
+  // Unificado: usa o MESMO token da plataforma (private_config.mp_platform_access_token)
+  // já configurado em Admin → Financeiro. Recargas de entregador e mensalidades de
+  // loja caem na mesma conta MP da plataforma (ROTA 66).
+  const { getPlataformaMp } = await import("@/lib/plataforma-mp.server");
+  const cfg = await getPlataformaMp();
+  if (!cfg?.access_token) {
+    throw new Error("Mercado Pago da plataforma não está configurado (Admin → Financeiro)");
   }
-  return row.mp_access_token as string;
+  return cfg.access_token;
 }
 
 export const criarRecargaPix = createServerFn({ method: "POST" })
