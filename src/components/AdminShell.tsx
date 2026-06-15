@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
 
@@ -24,7 +25,8 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
 
 export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
+  const { signOut: handleSignOut, loading: signingOut } = useLogout();
   const { isSuper, can } = useAdminPermissoes();
   const visibleNav = NAV.filter((n) => {
     if (n.superOnly) return isSuper;
@@ -42,10 +44,6 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate({ to: "/", replace: true });
-  };
 
   const activeItem = visibleNav.find((n) => path.startsWith(n.to));
   const initials = (user?.email ?? "A").slice(0, 1).toUpperCase();
@@ -106,7 +104,8 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
             </div>
             <button
               onClick={handleSignOut}
-              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition"
+              disabled={signingOut}
+              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition disabled:opacity-50"
               aria-label="Sair"
               title="Sair"
             >
