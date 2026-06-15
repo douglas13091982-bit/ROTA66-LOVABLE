@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
@@ -34,7 +34,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
     return can(n.area);
   });
   const { logoUrl, nomeSistema } = useBranding();
-  const navigate = useNavigate();
+  
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

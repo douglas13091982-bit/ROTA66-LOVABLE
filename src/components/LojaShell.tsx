@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -28,7 +28,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { logoUrl, nomeSistema } = useBranding();
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
-  const navigate = useNavigate();
+  
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [togglingAtiva, setTogglingAtiva] = useState(false);
