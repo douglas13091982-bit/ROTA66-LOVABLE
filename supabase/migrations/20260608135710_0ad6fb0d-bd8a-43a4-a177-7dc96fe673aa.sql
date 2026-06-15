@@ -1,0 +1,15 @@
+DO $$
+DECLARE r record;
+BEGIN
+  FOR r IN SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE c.relkind='r' AND n.nspname='public'
+  LOOP
+    EXECUTE format('GRANT SELECT, INSERT, UPDATE, DELETE ON public.%I TO authenticated', r.relname);
+    EXECUTE format('GRANT ALL ON public.%I TO service_role', r.relname);
+  END LOOP;
+END $$;
+
+GRANT SELECT ON public.lojas TO anon;
+GRANT SELECT ON public.produtos TO anon;
+GRANT SELECT ON public.tarifas_globais TO anon;
+GRANT SELECT ON public.anuncios_entregador TO anon;
+GRANT SELECT ON public.config_branding TO anon;

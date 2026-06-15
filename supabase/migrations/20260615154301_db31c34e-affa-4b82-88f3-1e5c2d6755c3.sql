@@ -1,0 +1,1 @@
+ALTER TABLE public.lojas ADD COLUMN IF NOT EXISTS usar_horario_automatico boolean NOT NULL DEFAULT false;

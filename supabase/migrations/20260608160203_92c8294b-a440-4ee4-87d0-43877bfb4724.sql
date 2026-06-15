@@ -1,0 +1,1 @@
+ALTER TABLE public.lojas ADD COLUMN IF NOT EXISTS catalogo_layout TEXT NOT NULL DEFAULT 'cards' CHECK (catalogo_layout IN ('cards', 'lista'));

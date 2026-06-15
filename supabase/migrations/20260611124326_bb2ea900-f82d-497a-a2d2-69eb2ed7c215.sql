@@ -1,0 +1,1 @@
+UPDATE public.config_notificacao_som SET ativo = false WHERE singleton = true;

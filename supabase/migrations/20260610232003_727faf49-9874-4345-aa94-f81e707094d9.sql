@@ -1,0 +1,1 @@
+ALTER TABLE public.config_roteirizacao ADD COLUMN IF NOT EXISTS raio_agrupamento_preparo_meters integer NOT NULL DEFAULT 1500;

@@ -1,0 +1,1 @@
+UPDATE public.pedido_ofertas SET expira_em = now() + interval '999 days' WHERE status = 'ativo' AND expira_em < now() + interval '1 hour';

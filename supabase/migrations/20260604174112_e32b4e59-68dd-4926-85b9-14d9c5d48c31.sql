@@ -1,0 +1,1 @@
+ALTER TABLE public.pedidos ADD COLUMN arquivado boolean NOT NULL DEFAULT false;

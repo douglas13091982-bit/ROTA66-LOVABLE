@@ -1,0 +1,1 @@
+CREATE POLICY "Entregador ve loja dos seus pedidos" ON public.lojas FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM public.pedidos WHERE pedidos.loja_id = lojas.id AND pedidos.entregador_id = auth.uid()));

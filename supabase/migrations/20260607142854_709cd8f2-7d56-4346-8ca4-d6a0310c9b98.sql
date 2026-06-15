@@ -1,0 +1,1 @@
+ALTER TABLE public.pedidos ADD COLUMN IF NOT EXISTS bonus_entregador numeric(10,2) NOT NULL DEFAULT 0;
