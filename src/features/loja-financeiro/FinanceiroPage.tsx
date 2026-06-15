@@ -26,6 +26,7 @@ export function FinanceiroPage() {
     marcarSolicitado,
   } = useFinanceiroLoja(loja);
   const [dialog, setDialog] = useState<DialogState>(null);
+  const [mpOpen, setMpOpen] = useState(false);
   const [mpMensId, setMpMensId] = useState<string | null>(null);
 
   if (!loja) {
@@ -40,15 +41,15 @@ export function FinanceiroPage() {
     calcularResumo(cobrancas, mensalidades);
   const pixHabilitado = !!pixCfg.pix_chave_sistema;
 
-  // Quando o admin tem MP configurado, usamos MP para mensalidades.
-  // O componente acima detecta se há token via tentativa do serverFn.
   const handleDialog = (d: DialogState) => {
     if (d && (d.tipo === "mensalidade" || d.tipo === "agrupado-mensalidade")) {
       setMpMensId(d.tipo === "mensalidade" ? d.ids[0] : null);
+      setMpOpen(true);
       return;
     }
     setDialog(d);
   };
+
 
   return (
     <LojaShell title="Financeiro">
@@ -79,8 +80,9 @@ export function FinanceiroPage() {
       </div>
 
       <PagamentoMpMensalidadeDialog
-        open={mpMensId !== null || (dialog === null && false)}
+        open={mpOpen}
         onClose={() => {
+          setMpOpen(false);
           setMpMensId(null);
           carregar();
         }}
@@ -93,6 +95,7 @@ export function FinanceiroPage() {
           carregar();
         }}
       />
+
 
       <PixPagamentoDialog
         open={!!dialog}
