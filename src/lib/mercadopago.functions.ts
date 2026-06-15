@@ -72,9 +72,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
     const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita Pix online");
 
-    const proto = process.env.NODE_ENV === "production" ? "https" : "https";
-    const host = process.env.PUBLIC_HOST ?? "drive-fleet.lovable.app";
-    const notification_url = `${proto}://${host}/api/public/mp-webhook/${pedido.loja_id}`;
+    const notification_url = buildWebhookUrl(pedido.loja_id as string);
 
     const expira = new Date(Date.now() + 30 * 60 * 1000);
 
