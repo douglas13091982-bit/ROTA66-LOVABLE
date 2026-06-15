@@ -1,0 +1,12 @@
+export type SectionKey = "info" | "pagamentos" | "seguranca" | "ajuda" | "config" | null;
+export type MenuKey = Exclude<SectionKey, null> | "carteira";
+export type TipoVeiculo = "moto" | "carro";
+
+export type PerfilForm = {
+  fullName: string;
+  phone: string;
+  pixChave: string;
+  aceitaExternos: boolean;
+  tipoVeiculo: TipoVeiculo;
+  avatarUrl: string | null;
+};
