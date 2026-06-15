@@ -4,6 +4,7 @@ import { haversineKm, type LatLng } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { segundosRestantesPedido } from "@/lib/oferta-timer";
 import type { PedidoDisponivel } from "@/types/pedido";
+import { formatDateTime } from "@/lib/format";
 
 type Props = {
   pedido: PedidoDisponivel;
@@ -100,7 +101,7 @@ function CabecalhoPedido({ pedido }: { pedido: PedidoDisponivel }) {
       <div>
         <div className="pp-num text-2xl tracking-[0.04em] text-white font-semibold">#{pedido.numero}</div>
         <div className="pp-eyebrow mt-1">
-          {new Date(pedido.created_at).toLocaleString("pt-BR")}
+          {formatDateTime(pedido.created_at)}
         </div>
       </div>
       <span
