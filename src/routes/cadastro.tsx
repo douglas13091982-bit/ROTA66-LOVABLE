@@ -319,57 +319,92 @@ function SignupPage() {
     }
 
     setLoading(false);
-    toast.success("Conta criada com sucesso!");
 
     // Garante sessão ativa (sem verificação de e-mail)
     let session = signUpData.session;
     if (!session) {
-      const { data: signInData } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       session = signInData.session ?? null;
+      if (signInErr || !session) {
+        // Sem sessão (provavelmente confirmação de e-mail obrigatória).
+        // NÃO redireciona para áreas internas — orienta o usuário a confirmar o e-mail.
+        toast.success("Conta criada! Confirme seu e-mail para concluir o cadastro.");
+        if (role === "loja_admin") {
+          toast.message(
+            "Após confirmar o e-mail, faça login para registrar os dados da sua loja.",
+          );
+        }
+        return navigate({ to: "/login" });
+      }
     }
 
     // Cria a loja automaticamente com o CNPJ informado
     if (role === "loja_admin" && session?.user) {
       const uid = session.user.id;
-      const baseSlug = fullName
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "")
-        .slice(0, 60) || "loja";
-      const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+      const baseSlug =
+        nomeLoja
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+          .slice(0, 60) || "loja";
+      // Sufixo longo (8 chars) reduz drasticamente a chance de colisão de slug.
+      const randomSuffix = (
+        globalThis.crypto?.randomUUID?.().replace(/-/g, "").slice(0, 8) ??
+        Math.random().toString(36).slice(2, 10).padEnd(8, "0")
+      );
+      const slug = `${baseSlug}-${randomSuffix}`;
       const { data: lojaInserida, error: lojaErr } = await supabase
         .from("lojas")
         .insert({
           owner_id: uid,
-          nome: fullName,
+          nome: nomeLoja.trim(),
           slug,
           cnpj: cnpjDigits,
           telefone: phone,
           categoria: categoria || null,
         } as any)
         .select("id")
-        .maybeSingle();
-      if (lojaErr) {
-        const msg = /cnpj/i.test(lojaErr.message)
-          ? lojaErr.message.includes("duplicate") || lojaErr.message.includes("unique")
-            ? "Este CNPJ já está cadastrado."
-            : "CNPJ inválido"
-          : lojaErr.message;
+        .single();
+      if (lojaErr || !lojaInserida?.id) {
+        const rawMsg = lojaErr?.message ?? "";
+        const msg = /slug/i.test(rawMsg)
+          ? "Não foi possível gerar um identificador único para a loja. Tente novamente."
+          : /cnpj/i.test(rawMsg)
+            ? rawMsg.includes("duplicate") || rawMsg.includes("unique")
+              ? "Este CNPJ já está cadastrado."
+              : "CNPJ inválido"
+            : rawMsg || "erro desconhecido";
         toast.error("Conta criada, mas não foi possível registrar a loja: " + msg);
-      } else if (lojaInserida?.id && contratoAtivo?.id) {
-        // Registra o aceite do contrato
-        await supabase.from("loja_aceites_contrato").insert({
+        // NÃO redireciona — usuário permanece no formulário para corrigir e tentar novamente.
+        return;
+      }
+
+      // Registra o aceite do contrato. Se falhar, avisa e mantém o usuário no fluxo.
+      if (contratoAtivo?.id) {
+        const { error: aceiteErr } = await supabase.from("loja_aceites_contrato").insert({
           loja_id: lojaInserida.id,
           contrato_id: contratoAtivo.id,
           versao: contratoAtivo.versao,
           user_agent: navigator.userAgent.slice(0, 500),
           full_name_snapshot: fullName,
         });
+        if (aceiteErr) {
+          toast.error(
+            "Loja criada, mas o registro do aceite dos Termos falhou. Acesse o painel para refazer o aceite.",
+          );
+        }
       }
+
+      toast.success("Loja criada com sucesso!");
       return navigate({ to: "/loja" });
     }
+
+    toast.success("Conta criada com sucesso!");
     if (role === "cliente") {
       return navigate({
         to: "/clientes/$cidade",
