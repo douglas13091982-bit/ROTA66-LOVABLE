@@ -13,7 +13,7 @@ export function EnderecoMatriz({
   bairro: string;
   coordsLat: number | null;
   onEnderecoChange: (v: string) => void;
-  onSelectPlace: (p: { address: string; lat: number; lng: number }) => void;
+  onSelectPlace: (p: { address: string; lat: number | null; lng: number | null }) => void;
   onBairroChange: (v: string) => void;
 }) {
   return (
