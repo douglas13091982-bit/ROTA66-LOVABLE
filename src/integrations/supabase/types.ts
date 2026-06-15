@@ -305,6 +305,7 @@ export type Database = {
           created_at: string
           id: string
           loja_id: string
+          mensalidade_id: string | null
           pago: boolean
           pago_em: string | null
           pago_solicitado_em: string | null
@@ -317,6 +318,7 @@ export type Database = {
           created_at?: string
           id?: string
           loja_id: string
+          mensalidade_id?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
@@ -329,6 +331,7 @@ export type Database = {
           created_at?: string
           id?: string
           loja_id?: string
+          mensalidade_id?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
@@ -337,7 +340,15 @@ export type Database = {
           valor?: number
           vencimento?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cobrancas_loja_mensalidade_id_fkey"
+            columns: ["mensalidade_id"]
+            isOneToOne: false
+            referencedRelation: "mensalidades_loja"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       config_branding: {
         Row: {
@@ -1018,11 +1029,20 @@ export type Database = {
           created_at: string
           id: string
           loja_id: string
+          metodo_pagamento: string | null
+          mp_payment_id: string | null
+          mp_payment_status: string | null
+          mp_pix_expira_em: string | null
+          mp_qr_code: string | null
+          mp_qr_code_base64: string | null
+          mp_ticket_url: string | null
           pago: boolean
           pago_em: string | null
           pago_solicitado_em: string | null
           updated_at: string
           valor: number
+          valor_tarifas_pedidos: number
+          valor_total: number | null
           vencimento: string
         }
         Insert: {
@@ -1030,11 +1050,20 @@ export type Database = {
           created_at?: string
           id?: string
           loja_id: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
           updated_at?: string
           valor: number
+          valor_tarifas_pedidos?: number
+          valor_total?: number | null
           vencimento: string
         }
         Update: {
@@ -1042,11 +1071,20 @@ export type Database = {
           created_at?: string
           id?: string
           loja_id?: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
           updated_at?: string
           valor?: number
+          valor_tarifas_pedidos?: number
+          valor_total?: number | null
           vencimento?: string
         }
         Relationships: []
@@ -1731,6 +1769,10 @@ export type Database = {
       confirmar_entrega: {
         Args: { _codigo: string; _pedido_id: string }
         Returns: boolean
+      }
+      consolidar_mensalidade_loja: {
+        Args: { _competencia?: string; _loja_id: string }
+        Returns: string
       }
       contrato_ativo: {
         Args: never
