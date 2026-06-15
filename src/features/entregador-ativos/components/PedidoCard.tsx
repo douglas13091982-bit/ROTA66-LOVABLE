@@ -101,7 +101,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             </a>
             <ChatPedidoButton
               pedidoId={p.id}
-              pedidoNumero={p.numero}
+              pedidoNumero={Number(p.numero)}
               senderRole="entregador"
               contraparteNome="Loja"
             />
