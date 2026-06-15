@@ -5,6 +5,7 @@ import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { segundosRestantesGrupo } from "@/lib/oferta-timer";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 import { BotaoAceitar, BotaoRecusar } from "./PedidoCardDisponivel";
+import { formatDateTime } from "@/lib/format";
 
 type Props = {
   grupo: GrupoPedido;
@@ -85,7 +86,7 @@ export function RotaCardDisponivel({
               </div>
             </div>
             <div className="pp-eyebrow mt-1">
-              {new Date(items[0].created_at).toLocaleString("pt-BR")}
+              {formatDateTime(items[0].created_at)}
             </div>
           </div>
           <span

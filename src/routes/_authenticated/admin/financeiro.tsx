@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Save, CheckCircle2, RefreshCw, BellRing } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/financeiro")({
   component: FinanceiroAdminPage,
@@ -230,7 +231,7 @@ function FinanceiroAdminPage() {
                       <td className="pl-4">{m.loja_nome || "—"}</td>
                       <td className="pl-4">{new Date(m.competencia + "T00:00:00").toLocaleDateString("pt-BR", { month: "2-digit", year: "numeric" })}</td>
                       <td className="text-right pl-4">R$ {Number(m.valor).toFixed(2)}</td>
-                      <td className="pl-4">{(m as any).pago_solicitado_em ? new Date((m as any).pago_solicitado_em).toLocaleString("pt-BR") : "—"}</td>
+                      <td className="pl-4">{(m as any).pago_solicitado_em ? formatDateTime((m as any).pago_solicitado_em) : "—"}</td>
                       <td className="text-right">
                         <button onClick={() => marcarMensalidadePaga(m.id)}
                           className="text-xs font-bold uppercase tracking-wider text-primary hover:underline flex items-center gap-1 ml-auto">
@@ -245,7 +246,7 @@ function FinanceiroAdminPage() {
                       <td className="pl-4">{c.loja_nome || "—"}</td>
                       <td className="pl-4">{new Date(c.created_at).toLocaleDateString("pt-BR")}</td>
                       <td className="text-right pl-4">R$ {Number(c.valor).toFixed(2)}</td>
-                      <td className="pl-4">{c.pago_solicitado_em ? new Date(c.pago_solicitado_em).toLocaleString("pt-BR") : "—"}</td>
+                      <td className="pl-4">{c.pago_solicitado_em ? formatDateTime(c.pago_solicitado_em) : "—"}</td>
                       <td className="text-right">
                         <button onClick={() => marcarCobrancaPaga(c.id)}
                           className="text-xs font-bold uppercase tracking-wider text-primary hover:underline flex items-center gap-1 ml-auto">

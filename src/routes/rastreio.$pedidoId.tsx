@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Package, MapPin, KeyRound, CheckCircle2, Truck, ChefHat, Bike } from "lucide-react";
 import { useBranding } from "@/hooks/use-branding";
+import { formatDateTime } from "@/lib/format";
 
 
 export const Route = createFileRoute("/rastreio/$pedidoId")({
@@ -118,7 +119,7 @@ function RastreioPage() {
             <CheckCircle2 className="h-10 w-10 text-green-600 mx-auto mb-2" />
             <p className="font-display text-2xl tracking-wide">Pedido entregue!</p>
             <p className="text-xs text-muted-foreground mt-1">
-              {data.entrega_confirmada_em && new Date(data.entrega_confirmada_em).toLocaleString("pt-BR")}
+              {data.entrega_confirmada_em && formatDateTime(data.entrega_confirmada_em)}
             </p>
           </div>
         )}

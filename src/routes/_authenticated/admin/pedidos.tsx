@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AdminShell } from "@/components/AdminShell";
 import { supabase } from "@/integrations/supabase/client";
 import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   component: AdminPedidos,
@@ -64,7 +65,7 @@ function AdminPedidos() {
                   </span>
                 </td>
                 <td className="p-4 text-muted-foreground text-sm">
-                  {new Date(p.created_at).toLocaleString("pt-BR")}
+                  {formatDateTime(p.created_at)}
                 </td>
               </tr>
             ))}

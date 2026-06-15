@@ -10,6 +10,7 @@ import { useTaxaSistema, liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { Phone, MapPin, Bike, Navigation, KeyRound, Loader2, PartyPopper, X, TrendingUp, CreditCard, Banknote, QrCode } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { ChatPedidoButton } from "@/components/ChatPedido";
+import { formatDateTime } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/entregador/ativos")({
   validateSearch: z.object({ destaque: z.string().uuid().optional() }),
@@ -358,7 +359,7 @@ function PedidoCard({ pedido: p, destaque, agrupado }: { pedido: any; destaque?:
           <div>
             <div className="font-display text-4xl md:text-5xl tracking-[0.06em] leading-none">#{p.numero}</div>
             <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1.5">
-              {new Date(p.updated_at).toLocaleString("pt-BR")}
+              {formatDateTime(p.updated_at)}
             </div>
             {p.duracao_estimada_seg != null && (
               <div className="mt-2 inline-flex items-center px-2.5 py-1 bg-indigo-500/15 backdrop-blur-sm border border-indigo-400/30 text-indigo-300 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full">

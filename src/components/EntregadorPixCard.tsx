@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { gerarPixBrCode } from "@/lib/pix-brcode";
 import { AvatarImg } from "@/components/AvatarImg";
+import { formatDateTime } from "@/lib/format";
 
 interface Props {
   pedidoId: string;
@@ -132,7 +133,7 @@ export function EntregadorPixCard({ pedidoId, valor, entregaPaga, entregaPagaEm,
           {entregaPaga ? (
             <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
               <Check className="h-4 w-4" />
-              Entrega paga{entregaPagaEm ? ` em ${new Date(entregaPagaEm).toLocaleString("pt-BR")}` : ""}
+              Entrega paga{entregaPagaEm ? ` em ${formatDateTime(entregaPagaEm)}` : ""}
             </div>
           ) : (
             <button
