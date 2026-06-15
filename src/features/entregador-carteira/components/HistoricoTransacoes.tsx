@@ -1,0 +1,51 @@
+import { formatDateTime } from "@/lib/format";
+import { brl, tipoCls } from "../logic/helpers";
+import type { TransacaoCredito } from "../logic/types";
+
+type Props = {
+  isLoading: boolean;
+  transacoes: TransacaoCredito[];
+};
+
+export function HistoricoTransacoes({ isLoading, transacoes }: Props) {
+  return (
+    <div>
+      <h3 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
+        Histórico
+      </h3>
+      <div className="space-y-1">
+        {isLoading && <p className="text-white/50 text-sm">Carregando...</p>}
+        {transacoes.map((t) => {
+          const valorNum = Number(t.valor);
+          return (
+            <div
+              key={t.id}
+              className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/[0.02] text-sm"
+            >
+              <div className="flex-1 min-w-0">
+                <div
+                  className={`text-xs uppercase font-bold ${tipoCls[t.tipo] ?? "text-white/60"}`}
+                >
+                  {t.tipo}
+                </div>
+                <div className="text-xs text-white/50 truncate">{t.descricao ?? "—"}</div>
+              </div>
+              <div className="text-right shrink-0">
+                <div
+                  className={`font-mono font-bold ${valorNum >= 0 ? "text-green-400" : "text-red-400"}`}
+                >
+                  {valorNum >= 0 ? "+" : ""}
+                  {brl(t.valor)}
+                </div>
+                <div className="text-[10px] text-white/40">{formatDateTime(t.created_at)}</div>
+              </div>
+            </div>
+          );
+        })}
+        {!isLoading && transacoes.length === 0 && (
+          <p className="text-white/50 text-sm text-center py-6">Nenhuma transação ainda.</p>
+        )}
+      </div>
+    </div>
+  );
+}
