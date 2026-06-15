@@ -77,9 +77,11 @@ function CriarLojaForm() {
     setSaving(true);
 
     const baseCatalogo = slugify(nome);
-    const randomSuffix = Math.random().toString(36).slice(2, 6);
-    const slug = baseCatalogo + "-" + randomSuffix;
+    const makeSuffix = () =>
+      globalThis.crypto?.randomUUID?.().replace(/-/g, "").slice(0, 8) ??
+      Math.random().toString(36).slice(2, 10).padEnd(8, "0");
 
+    let slug = `${baseCatalogo}-${makeSuffix()}`;
     let catalogo_slug = baseCatalogo;
     let inserted = false;
     let lastError: any = null;
@@ -99,7 +101,14 @@ function CriarLojaForm() {
         break;
       }
       lastError = error;
-      if (/duplicate|unique|violates/i.test(error.message)) {
+      const msg = error.message || "";
+      // CNPJ duplicado nunca é resolvido por retry — aborta imediatamente.
+      if (/cnpj/i.test(msg) && /(duplicate|unique)/i.test(msg)) {
+        break;
+      }
+      if (/duplicate|unique|violates/i.test(msg)) {
+        // Regenera tanto slug quanto catalogo_slug para evitar colisão em qualquer um dos dois.
+        slug = `${baseCatalogo}-${makeSuffix()}`;
         catalogo_slug = `${baseCatalogo}-${tentativa}`;
       } else {
         break;

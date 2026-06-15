@@ -1,7 +1,30 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
+
+/**
+ * URL pública usada pelo Mercado Pago para enviar webhooks.
+ * Prioriza PUBLIC_HOST (override explícito), depois o host real da requisição.
+ * Nunca usa http — webhooks do MP exigem HTTPS.
+ */
+function buildWebhookUrl(lojaId: string): string {
+  const envHost = process.env.PUBLIC_HOST?.trim();
+  let host = envHost && envHost.length > 0 ? envHost : "";
+  if (!host) {
+    try {
+      host = getRequestHost();
+    } catch {
+      host = "";
+    }
+  }
+  if (!host) {
+    throw new Error("Host público não configurado para o webhook do Mercado Pago");
+  }
+  return `https://${host}/api/public/mp-webhook/${lojaId}`;
+}
+
 
 // ---------- Config (loja dono) ----------
 
@@ -49,9 +72,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
     const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita Pix online");
 
-    const proto = process.env.NODE_ENV === "production" ? "https" : "https";
-    const host = process.env.PUBLIC_HOST ?? "drive-fleet.lovable.app";
-    const notification_url = `${proto}://${host}/api/public/mp-webhook/${pedido.loja_id}`;
+    const notification_url = buildWebhookUrl(pedido.loja_id as string);
 
     const expira = new Date(Date.now() + 30 * 60 * 1000);
 
@@ -123,8 +144,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
     const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita cartão online");
 
-    const host = process.env.PUBLIC_HOST ?? "drive-fleet.lovable.app";
-    const notification_url = `https://${host}/api/public/mp-webhook/${pedido.loja_id}`;
+    const notification_url = buildWebhookUrl(pedido.loja_id as string);
 
     const docDigits = data.payer_doc.replace(/\D/g, "");
     const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
