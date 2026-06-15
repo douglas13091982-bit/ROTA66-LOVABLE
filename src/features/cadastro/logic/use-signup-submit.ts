@@ -90,7 +90,7 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading }: 
     }
   }
 
-  async function garantirSessao(): Promise<{ user: { id: string } } | null> {
+  async function garantirSessao() {
     const { data } = await supabase.auth.getSession();
     if (data.session) return data.session;
     const { data: signInData, error } = await supabase.auth.signInWithPassword({
