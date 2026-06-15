@@ -14,6 +14,7 @@ import { EntregadorPixCard } from "@/components/EntregadorPixCard";
 import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
 import { ChatPedidoButton, PedidoChatBadge } from "@/components/ChatPedido";
 import {
+import { formatDateTime } from "@/lib/format";
   Sheet,
   SheetContent,
   SheetHeader,
@@ -132,7 +133,7 @@ async function imprimirPedido(p: any, lojaNome?: string) {
 </style></head>
 <body>
   <h1>${escapeHtml(lojaNome ?? "Pedido")}</h1>
-  <div class="muted" style="text-align:center">Pedido #${escapeHtml(p.numero)} — ${escapeHtml(new Date(p.created_at).toLocaleString("pt-BR"))}</div>
+  <div class="muted" style="text-align:center">Pedido #${escapeHtml(p.numero)} — ${escapeHtml(formatDateTime(p.created_at))}</div>
 
   <h2>Cliente</h2>
   <div>${escapeHtml(p.cliente_nome ?? "")}</div>
@@ -724,7 +725,7 @@ function PedidosPage() {
                 </SheetTitle>
                 <SheetDescription className="flex items-center gap-1.5 text-xs pp-eyebrow !tracking-[0.2em]">
                   <Calendar className="h-3 w-3" />
-                  {new Date(detalhe.created_at).toLocaleString("pt-BR")}
+                  {formatDateTime(detalhe.created_at)}
                 </SheetDescription>
               </SheetHeader>
 

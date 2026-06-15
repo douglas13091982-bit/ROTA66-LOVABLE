@@ -264,7 +264,7 @@ function EntregadorCarteira() {
                   <div className={`font-mono font-bold ${Number(t.valor) >= 0 ? "text-green-400" : "text-red-400"}`}>
                     {Number(t.valor) >= 0 ? "+" : ""}{brl(t.valor)}
                   </div>
-                  <div className="text-[10px] text-white/40">{new Date(t.created_at).toLocaleString("pt-BR")}</div>
+                  <div className="text-[10px] text-white/40">{formatDateTime(t.created_at)}</div>
                 </div>
               </div>
             ))}
