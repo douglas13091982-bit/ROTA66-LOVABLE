@@ -151,6 +151,7 @@ function SignupPage() {
   const [role, setRole] = useState<Role | null>(null);
   const [tipoVeiculo, setTipoVeiculo] = useState<"moto" | "carro">("moto");
   const [fullName, setFullName] = useState("");
+  const [nomeLoja, setNomeLoja] = useState("");
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
   const [cnpj, setCnpj] = useState("");
@@ -165,7 +166,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [aceiteContrato, setAceiteContrato] = useState(false);
   const [contratoModalOpen, setContratoModalOpen] = useState(false);
-  const { contrato: contratoAtivo } = useContratoAtivo();
+  const { contrato: contratoAtivo, loading: contratoLoading } = useContratoAtivo();
 
 
   const handleAvatarChange = (file: File | null) => {
@@ -211,6 +212,10 @@ function SignupPage() {
         return;
       }
     } else if (role === "loja_admin") {
+      if (!nomeLoja.trim()) {
+        toast.error("Informe o nome da loja");
+        return;
+      }
       if (!cnpjDigits) {
         toast.error("CNPJ é obrigatório para lojas");
         return;
@@ -225,6 +230,10 @@ function SignupPage() {
       }
       if (!aceiteContrato) {
         toast.error("Você precisa aceitar os Termos de Uso para continuar");
+        return;
+      }
+      if (contratoLoading || !contratoAtivo?.id) {
+        toast.error("Aguarde o carregamento dos Termos de Uso e tente novamente.");
         return;
       }
       if (cpfDigits && !isValidCpf(cpfDigits)) {
@@ -310,57 +319,92 @@ function SignupPage() {
     }
 
     setLoading(false);
-    toast.success("Conta criada com sucesso!");
 
     // Garante sessão ativa (sem verificação de e-mail)
     let session = signUpData.session;
     if (!session) {
-      const { data: signInData } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       session = signInData.session ?? null;
+      if (signInErr || !session) {
+        // Sem sessão (provavelmente confirmação de e-mail obrigatória).
+        // NÃO redireciona para áreas internas — orienta o usuário a confirmar o e-mail.
+        toast.success("Conta criada! Confirme seu e-mail para concluir o cadastro.");
+        if (role === "loja_admin") {
+          toast.message(
+            "Após confirmar o e-mail, faça login para registrar os dados da sua loja.",
+          );
+        }
+        return navigate({ to: "/login" });
+      }
     }
 
     // Cria a loja automaticamente com o CNPJ informado
     if (role === "loja_admin" && session?.user) {
       const uid = session.user.id;
-      const baseSlug = fullName
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "")
-        .slice(0, 60) || "loja";
-      const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+      const baseSlug =
+        nomeLoja
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+          .slice(0, 60) || "loja";
+      // Sufixo longo (8 chars) reduz drasticamente a chance de colisão de slug.
+      const randomSuffix = (
+        globalThis.crypto?.randomUUID?.().replace(/-/g, "").slice(0, 8) ??
+        Math.random().toString(36).slice(2, 10).padEnd(8, "0")
+      );
+      const slug = `${baseSlug}-${randomSuffix}`;
       const { data: lojaInserida, error: lojaErr } = await supabase
         .from("lojas")
         .insert({
           owner_id: uid,
-          nome: fullName,
+          nome: nomeLoja.trim(),
           slug,
           cnpj: cnpjDigits,
           telefone: phone,
           categoria: categoria || null,
         } as any)
         .select("id")
-        .maybeSingle();
-      if (lojaErr) {
-        const msg = /cnpj/i.test(lojaErr.message)
-          ? lojaErr.message.includes("duplicate") || lojaErr.message.includes("unique")
-            ? "Este CNPJ já está cadastrado."
-            : "CNPJ inválido"
-          : lojaErr.message;
+        .single();
+      if (lojaErr || !lojaInserida?.id) {
+        const rawMsg = lojaErr?.message ?? "";
+        const msg = /slug/i.test(rawMsg)
+          ? "Não foi possível gerar um identificador único para a loja. Tente novamente."
+          : /cnpj/i.test(rawMsg)
+            ? rawMsg.includes("duplicate") || rawMsg.includes("unique")
+              ? "Este CNPJ já está cadastrado."
+              : "CNPJ inválido"
+            : rawMsg || "erro desconhecido";
         toast.error("Conta criada, mas não foi possível registrar a loja: " + msg);
-      } else if (lojaInserida?.id && contratoAtivo?.id) {
-        // Registra o aceite do contrato
-        await supabase.from("loja_aceites_contrato").insert({
+        // NÃO redireciona — usuário permanece no formulário para corrigir e tentar novamente.
+        return;
+      }
+
+      // Registra o aceite do contrato. Se falhar, avisa e mantém o usuário no fluxo.
+      if (contratoAtivo?.id) {
+        const { error: aceiteErr } = await supabase.from("loja_aceites_contrato").insert({
           loja_id: lojaInserida.id,
           contrato_id: contratoAtivo.id,
           versao: contratoAtivo.versao,
           user_agent: navigator.userAgent.slice(0, 500),
           full_name_snapshot: fullName,
         });
+        if (aceiteErr) {
+          toast.error(
+            "Loja criada, mas o registro do aceite dos Termos falhou. Acesse o painel para refazer o aceite.",
+          );
+        }
       }
+
+      toast.success("Loja criada com sucesso!");
       return navigate({ to: "/loja" });
     }
+
+    toast.success("Conta criada com sucesso!");
     if (role === "cliente") {
       return navigate({
         to: "/clientes/$cidade",
@@ -462,13 +506,24 @@ function SignupPage() {
 
           <form onSubmit={handleSubmit}>
             <AuthInput
-              label={role === "loja_admin" ? "Nome / Razão social" : "Nome completo"}
+              label={role === "loja_admin" ? "Nome do responsável" : "Nome completo"}
               required
               value={fullName}
               onChange={(e) => setFullName(sanitizeName(e.target.value, 120))}
               maxLength={120}
               autoComplete="name"
             />
+            {role === "loja_admin" && (
+              <AuthInput
+                label="Nome da loja"
+                required
+                value={nomeLoja}
+                onChange={(e) => setNomeLoja(sanitizeName(e.target.value, 120))}
+                placeholder="Ex.: Pizzaria do Zé"
+                maxLength={120}
+                autoComplete="organization"
+              />
+            )}
             <AuthInput
               label="Telefone"
               type="tel"
@@ -664,8 +719,15 @@ function SignupPage() {
                 </p>
               </div>
             )}
-            <PrimaryButton type="submit" disabled={loading}>
-              {loading ? "Criando..." : "Criar conta"}
+            <PrimaryButton
+              type="submit"
+              disabled={loading || (role === "loja_admin" && contratoLoading)}
+            >
+              {loading
+                ? "Criando..."
+                : role === "loja_admin" && contratoLoading
+                  ? "Carregando termos..."
+                  : "Criar conta"}
             </PrimaryButton>
           </form>
         </div>
