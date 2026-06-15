@@ -1,7 +1,30 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
+
+/**
+ * URL pública usada pelo Mercado Pago para enviar webhooks.
+ * Prioriza PUBLIC_HOST (override explícito), depois o host real da requisição.
+ * Nunca usa http — webhooks do MP exigem HTTPS.
+ */
+function buildWebhookUrl(lojaId: string): string {
+  const envHost = process.env.PUBLIC_HOST?.trim();
+  let host = envHost && envHost.length > 0 ? envHost : "";
+  if (!host) {
+    try {
+      host = getRequestHost();
+    } catch {
+      host = "";
+    }
+  }
+  if (!host) {
+    throw new Error("Host público não configurado para o webhook do Mercado Pago");
+  }
+  return `https://${host}/api/public/mp-webhook/${lojaId}`;
+}
+
 
 // ---------- Config (loja dono) ----------
 
