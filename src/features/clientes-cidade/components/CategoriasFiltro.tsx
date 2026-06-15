@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function CategoriasFiltro({ value, onChange }: Props) {
-  if (LOJA_CATEGORIAS.length === 0) return null;
+  
   return (
     <div className="max-w-2xl mx-auto pb-3.5 pt-1 relative bg-background/0">
       <div className="flex gap-2 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
