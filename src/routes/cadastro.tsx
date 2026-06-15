@@ -506,13 +506,24 @@ function SignupPage() {
 
           <form onSubmit={handleSubmit}>
             <AuthInput
-              label={role === "loja_admin" ? "Nome / Razão social" : "Nome completo"}
+              label={role === "loja_admin" ? "Nome do responsável" : "Nome completo"}
               required
               value={fullName}
               onChange={(e) => setFullName(sanitizeName(e.target.value, 120))}
               maxLength={120}
               autoComplete="name"
             />
+            {role === "loja_admin" && (
+              <AuthInput
+                label="Nome da loja"
+                required
+                value={nomeLoja}
+                onChange={(e) => setNomeLoja(sanitizeName(e.target.value, 120))}
+                placeholder="Ex.: Pizzaria do Zé"
+                maxLength={120}
+                autoComplete="organization"
+              />
+            )}
             <AuthInput
               label="Telefone"
               type="tel"
