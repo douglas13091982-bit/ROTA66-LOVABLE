@@ -2,13 +2,14 @@ import { haversineKm } from "@/lib/geo";
 import { normalizarEndereco } from "@/lib/endereco";
 
 interface PedidoComCoords {
-  id: string;
-  status: string;
+  id?: string;
+  status?: string;
   endereco_coleta?: string | null;
   endereco_coleta_lat?: number | string | null;
   endereco_coleta_lng?: number | string | null;
   endereco_entrega_lat?: number | string | null;
   endereco_entrega_lng?: number | string | null;
+  [k: string]: unknown;
 }
 
 export interface LoteEmPreparo<P extends PedidoComCoords = PedidoComCoords> {
