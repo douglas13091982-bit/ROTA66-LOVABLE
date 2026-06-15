@@ -1,0 +1,26 @@
+export type PedidoAtivo = {
+  id: string;
+  numero: string | number;
+  status: string;
+  loja_id: string;
+  cliente_nome: string;
+  cliente_telefone: string;
+  endereco_coleta: string | null;
+  endereco_coleta_lat?: number | null;
+  endereco_coleta_lng?: number | null;
+  endereco_entrega: string | null;
+  complemento?: string | null;
+  codigo_coleta: string | null;
+  taxa_entrega: number;
+  forma_pagamento?: string | null;
+  troco_para?: number | null;
+  entrega_paga?: boolean;
+  updated_at: string;
+  created_at: string;
+  rota_id?: string | null;
+  rota_ordem?: number | null;
+  duracao_estimada_seg?: number | null;
+  distancia_metros?: number | null;
+  entrega_confirmada_em?: string | null;
+  bonus_entregador?: number | null;
+};
