@@ -151,6 +151,7 @@ function SignupPage() {
   const [role, setRole] = useState<Role | null>(null);
   const [tipoVeiculo, setTipoVeiculo] = useState<"moto" | "carro">("moto");
   const [fullName, setFullName] = useState("");
+  const [nomeLoja, setNomeLoja] = useState("");
   const [phone, setPhone] = useState("");
   const [cpf, setCpf] = useState("");
   const [cnpj, setCnpj] = useState("");
@@ -165,7 +166,7 @@ function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [aceiteContrato, setAceiteContrato] = useState(false);
   const [contratoModalOpen, setContratoModalOpen] = useState(false);
-  const { contrato: contratoAtivo } = useContratoAtivo();
+  const { contrato: contratoAtivo, loading: contratoLoading } = useContratoAtivo();
 
 
   const handleAvatarChange = (file: File | null) => {
