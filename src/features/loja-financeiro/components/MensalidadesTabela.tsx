@@ -37,8 +37,9 @@ export function MensalidadesTabela({
           title={!pixHabilitado ? "PIX do sistema ainda não configurado" : undefined}
         >
           <QrCode className="h-4 w-4" />
-          Pagar tudo via PIX
+          Pagar mensalidades
         </button>
+
       </div>
       {loading ? (
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
