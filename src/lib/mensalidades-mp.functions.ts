@@ -43,11 +43,30 @@ export const obterStatusTokenPlataforma = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertSuperAdmin(context.supabase, context.userId);
-    const { getPlataformaMp, mpVerifyTokenPlataforma } = await import("@/lib/plataforma-mp.server");
+    const { getPlataformaMp, getPlataformaMpPublicKey, mpVerifyTokenPlataforma } = await import(
+      "@/lib/plataforma-mp.server"
+    );
+    let webhook_url = "";
+    try {
+      webhook_url = buildWebhookUrl();
+    } catch {
+      webhook_url = "";
+    }
     const cfg = await getPlataformaMp();
-    if (!cfg) return { configurado: false as const };
+    const public_key = await getPlataformaMpPublicKey();
+    if (!cfg) {
+      return { configurado: false as const, webhook_url, public_key };
+    }
     const verif = await mpVerifyTokenPlataforma(cfg.access_token);
-    return { configurado: true as const, valido: verif.ok, nickname: verif.nickname, erro: verif.error };
+    return {
+      configurado: true as const,
+      valido: verif.ok,
+      nickname: verif.nickname,
+      erro: verif.error,
+      webhook_url,
+      webhook_secret: cfg.webhook_secret,
+      public_key,
+    };
   });
 
 const SalvarTokenSchema = z.object({ access_token: z.string().min(10).max(500) });
@@ -62,6 +81,27 @@ export const salvarTokenPlataforma = createServerFn({ method: "POST" })
     if (!verif.ok) throw new Error(`Token inválido: ${verif.error ?? "desconhecido"}`);
     await setPlataformaMpToken(data.access_token);
     return { ok: true, nickname: verif.nickname };
+  });
+
+const SalvarPublicKeySchema = z.object({ public_key: z.string().trim().max(500) });
+
+export const salvarPublicKeyPlataforma = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SalvarPublicKeySchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { setPlataformaMpPublicKey } = await import("@/lib/plataforma-mp.server");
+    await setPlataformaMpPublicKey(data.public_key);
+    return { ok: true };
+  });
+
+export const rotacionarWebhookSecretPlataforma = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { rotatePlataformaMpWebhookSecret } = await import("@/lib/plataforma-mp.server");
+    const secret = await rotatePlataformaMpWebhookSecret();
+    return { ok: true, webhook_secret: secret };
   });
 
 export const removerTokenPlataforma = createServerFn({ method: "POST" })
