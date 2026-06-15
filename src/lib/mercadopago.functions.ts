@@ -144,8 +144,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
     const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita cartão online");
 
-    const host = process.env.PUBLIC_HOST ?? "drive-fleet.lovable.app";
-    const notification_url = `https://${host}/api/public/mp-webhook/${pedido.loja_id}`;
+    const notification_url = buildWebhookUrl(pedido.loja_id as string);
 
     const docDigits = data.payer_doc.replace(/\D/g, "");
     const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
