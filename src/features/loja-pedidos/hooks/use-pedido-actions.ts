@@ -2,13 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-interface PedidoMin {
-  id: string;
-  numero: number;
-  cliente_nome?: string | null;
-  cliente_telefone?: string | null;
-  codigo_entrega?: string | null;
-}
+type PedidoMin = Record<string, any>;
 
 /**
  * Conjunto de mutações sobre `pedidos` da loja. Todas invalidam
