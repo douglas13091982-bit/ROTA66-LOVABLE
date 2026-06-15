@@ -41,6 +41,26 @@ export async function setPlataformaMpToken(token: string): Promise<void> {
   await setPrivateConfig("mp_platform_access_token", token.trim());
 }
 
+export async function getPlataformaMpPublicKey(): Promise<string | null> {
+  return await getPrivateConfig("mp_platform_public_key");
+}
+
+export async function setPlataformaMpPublicKey(key: string): Promise<void> {
+  const trimmed = (key ?? "").trim();
+  if (!trimmed) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("private_config" as any).delete().eq("key", "mp_platform_public_key");
+    return;
+  }
+  await setPrivateConfig("mp_platform_public_key", trimmed);
+}
+
+export async function rotatePlataformaMpWebhookSecret(): Promise<string> {
+  const secret = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
+  await setPrivateConfig("mp_platform_webhook_secret", secret);
+  return secret;
+}
+
 export async function clearPlataformaMpToken(): Promise<void> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   await supabaseAdmin.from("private_config" as any).delete().eq("key", "mp_platform_access_token");
