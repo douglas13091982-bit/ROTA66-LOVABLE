@@ -64,9 +64,8 @@ export function useChatMensagensEntregador(opts: {
 
   useEffect(() => {
     if (!lojaId || !pedidos || pedidos.length === 0) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel(`chat-msgs-loja-${lojaId}-${channelKey}`)
+      .channel(`chat-msgs-loja-${lojaId}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "pedido_mensagens" },
