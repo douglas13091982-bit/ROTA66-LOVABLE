@@ -29,16 +29,23 @@ function distanciaColetaKm(g: GrupoPedido, pos: LatLng | null): number {
 }
 
 /**
- * Menor distância da minha posição até qualquer endereço de entrega do grupo.
- * Usado como desempate (e ordenação principal quando todos os pedidos saem
- * da mesma coleta — caso comum: várias entregas da mesma loja).
+ * Menor distância entre a coleta do grupo e qualquer endereço de entrega.
+ * Usado como desempate quando vários grupos partem da mesma coleta — a
+ * entrega mais próxima da loja vem primeiro.
  */
-function distanciaEntregaMinKm(g: GrupoPedido, pos: LatLng | null): number {
-  if (!pos) return Number.POSITIVE_INFINITY;
+function distanciaEntregaDesdeColetaKm(g: GrupoPedido): number {
+  const p0 = g.items[0];
+  if (!p0 || p0.endereco_coleta_lat == null || p0.endereco_coleta_lng == null) {
+    return Number.POSITIVE_INFINITY;
+  }
+  const coleta = {
+    lat: Number(p0.endereco_coleta_lat),
+    lng: Number(p0.endereco_coleta_lng),
+  };
   let min = Number.POSITIVE_INFINITY;
   for (const p of g.items) {
     if (p.endereco_entrega_lat == null || p.endereco_entrega_lng == null) continue;
-    const d = haversineKm(pos, {
+    const d = haversineKm(coleta, {
       lat: Number(p.endereco_entrega_lat),
       lng: Number(p.endereco_entrega_lng),
     });
@@ -71,7 +78,7 @@ export function RotasDisponiveisList({
         const dColetaB = distanciaColetaKm(b, minhaPos);
         // Quando coletas são iguais (mesma loja), desempata pela entrega mais próxima.
         if (Math.abs(dColetaA - dColetaB) < 0.05) {
-          return distanciaEntregaMinKm(a, minhaPos) - distanciaEntregaMinKm(b, minhaPos);
+          return distanciaEntregaDesdeColetaKm(a) - distanciaEntregaDesdeColetaKm(b);
         }
         return dColetaA - dColetaB;
       });
