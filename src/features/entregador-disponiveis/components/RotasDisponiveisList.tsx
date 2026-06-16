@@ -28,6 +28,25 @@ function distanciaColetaKm(g: GrupoPedido, pos: LatLng | null): number {
   });
 }
 
+/**
+ * Menor distância da minha posição até qualquer endereço de entrega do grupo.
+ * Usado como desempate (e ordenação principal quando todos os pedidos saem
+ * da mesma coleta — caso comum: várias entregas da mesma loja).
+ */
+function distanciaEntregaMinKm(g: GrupoPedido, pos: LatLng | null): number {
+  if (!pos) return Number.POSITIVE_INFINITY;
+  let min = Number.POSITIVE_INFINITY;
+  for (const p of g.items) {
+    if (p.endereco_entrega_lat == null || p.endereco_entrega_lng == null) continue;
+    const d = haversineKm(pos, {
+      lat: Number(p.endereco_entrega_lat),
+      lng: Number(p.endereco_entrega_lng),
+    });
+    if (d < min) min = d;
+  }
+  return min;
+}
+
 export function RotasDisponiveisList({
   grupos,
   isLoading,
@@ -47,7 +66,15 @@ export function RotasDisponiveisList({
         return vb - va;
       });
     } else {
-      arr.sort((a, b) => distanciaColetaKm(a, minhaPos) - distanciaColetaKm(b, minhaPos));
+      arr.sort((a, b) => {
+        const dColetaA = distanciaColetaKm(a, minhaPos);
+        const dColetaB = distanciaColetaKm(b, minhaPos);
+        // Quando coletas são iguais (mesma loja), desempata pela entrega mais próxima.
+        if (Math.abs(dColetaA - dColetaB) < 0.05) {
+          return distanciaEntregaMinKm(a, minhaPos) - distanciaEntregaMinKm(b, minhaPos);
+        }
+        return dColetaA - dColetaB;
+      });
     }
     return arr;
   }, [grupos, ordenacao, taxaParaExibir, minhaPos]);
