@@ -47,7 +47,7 @@ function kmEntrega(p: PedidoDisponivel): string | null {
   return km.toFixed(1);
 }
 
-export function PedidoListItem({
+function PedidoListItemBase({
   grupo,
   minhaPos,
   taxaSistema,
@@ -55,15 +55,21 @@ export function PedidoListItem({
   onAceitar,
 }: Props) {
   const principal = grupo.items[0];
-  const total = grupo.items.reduce(
-    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
-    0,
+  const total = useMemo(
+    () =>
+      grupo.items.reduce(
+        (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
+        0,
+      ),
+    [grupo.items, taxaParaExibir, taxaSistema],
   );
   const km = kmAteLoja(principal, minhaPos);
   const distEntrega = kmEntrega(principal);
   const nomeLoja = principal.loja_nome || "Loja";
   const bairroLoja = principal.loja_bairro;
   const endereco = resumirEnderecoEntrega(principal.endereco_entrega);
+
+  const handleAceitar = useCallback(() => onAceitar(grupo), [onAceitar, grupo]);
 
   return (
     <div
@@ -127,13 +133,23 @@ export function PedidoListItem({
             </div>
           </div>
         </div>
-        <BotaoAceitarPress onAceitar={onAceitar} />
+        <BotaoAceitarPress onAceitar={handleAceitar} />
       </div>
     </div>
   );
 }
 
-function BotaoAceitarPress({
+// Memo com comparador estável: a lista re-renderiza a cada tick de polling
+// (5s pool + 15s rota + 30s ganho). Sem isso, cada card refaz todo o cálculo
+// de tarifa/haversine em loop. Posição arredondada para evitar re-render a
+// cada drift de GPS.
+export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
+  if (prev.onAceitar !== next.onAceitar) return false;
+  if (prev.taxaSistema !== next.taxaSistema) return false;
+  if (prev.taxaParaExibir !== next.taxaParaExibir) return false;
+  if (prev.grupo !== next.grupo) return false;
+  return roundPos(prev.minhaPos) === roundPos(next.minhaPos);
+});
   onAceitar,
   label = "Aceitar",
 }: {
