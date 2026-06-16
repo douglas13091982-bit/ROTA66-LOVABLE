@@ -47,8 +47,10 @@ export function usePerfilEntregador(userId: string | undefined) {
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ full_name: fullName, phone, pix_chave: pixChave || null })
-      .eq("id", userId);
+      .upsert(
+        { id: userId, full_name: fullName, phone, pix_chave: pixChave || null },
+        { onConflict: "id" },
+      );
     setSaving(false);
     if (error) toast.error(error.message);
     else toast.success("Perfil atualizado!");
@@ -60,8 +62,10 @@ export function usePerfilEntregador(userId: string | undefined) {
     setAceitaExternos(novo);
     const { error } = await supabase
       .from("profiles")
-      .update({ aceita_pedidos_externos: novo } as any)
-      .eq("id", userId);
+      .upsert(
+        { id: userId, aceita_pedidos_externos: novo } as any,
+        { onConflict: "id" },
+      );
     setSavingExternos(false);
     if (error) {
       toast.error(error.message);
@@ -79,8 +83,10 @@ export function usePerfilEntregador(userId: string | undefined) {
     setSavingVeiculo(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ tipo_veiculo: novo } as any)
-      .eq("id", userId);
+      .upsert(
+        { id: userId, tipo_veiculo: novo } as any,
+        { onConflict: "id" },
+      );
     setSavingVeiculo(false);
     if (error) {
       setTipoVeiculo(anterior);
