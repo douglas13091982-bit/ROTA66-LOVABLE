@@ -44,6 +44,14 @@ export function PedidosKanban({
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<string | null>(null);
 
+  // Cancelamento rápido: pede confirmação simples antes de mudar o status para
+  // "cancelado". Centralizado aqui para evitar duplicar o confirm em cada card.
+  const handleCancelar = (p: Pedido) => {
+    const ok = window.confirm(`Cancelar o pedido #${p.numero}? Essa ação não pode ser desfeita.`);
+    if (!ok) return;
+    actions.cancelarPedido(p.id);
+  };
+
   const handleDrop = (colKey: string) => {
     setDragOver(null);
     const id = dragId;
@@ -102,6 +110,7 @@ export function PedidosKanban({
               actions={actions}
               onOpenDetalhe={onOpenDetalhe}
               onConfirmarColeta={onConfirmarColeta}
+              onCancelar={handleCancelar}
             />
           </div>
         );
@@ -119,10 +128,11 @@ interface ColumnBodyProps {
   actions: PedidoActions;
   onOpenDetalhe: (p: Pedido) => void;
   onConfirmarColeta: (p: Pedido) => void;
+  onCancelar: (p: Pedido) => void;
 }
 
 function ColumnBody(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
 
   // Render padrão: comportamento idêntico ao original.
@@ -153,6 +163,7 @@ function ColumnBody(props: ColumnBodyProps) {
             onConfirmarColeta={onConfirmarColeta}
             onToggleArquivado={actions.toggleArquivado}
             onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+            onCancelar={onCancelar}
           />
         ))}
       </div>
@@ -169,12 +180,13 @@ function ColumnBody(props: ColumnBodyProps) {
       actions={actions}
       onOpenDetalhe={onOpenDetalhe}
       onConfirmarColeta={onConfirmarColeta}
+      onCancelar={onCancelar}
     />
   );
 }
 
 function VirtualizedColumn(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const parentRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -244,6 +256,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                   onConfirmarColeta={onConfirmarColeta}
                   onToggleArquivado={actions.toggleArquivado}
                   onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+                  onCancelar={onCancelar}
                 />
               </div>
             );
@@ -275,6 +288,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                 onConfirmarColeta={onConfirmarColeta}
                 onToggleArquivado={actions.toggleArquivado}
                 onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+                onCancelar={onCancelar}
               />
             </div>
           )}

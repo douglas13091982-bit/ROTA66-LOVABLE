@@ -1,8 +1,13 @@
-import { Bike, KeyRound, MessageCircle, Archive, ArchiveRestore } from "lucide-react";
+import { Bike, KeyRound, MessageCircle, Archive, ArchiveRestore, X } from "lucide-react";
 import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
 import { ChatPedidoButton, PedidoChatBadge } from "@/components/ChatPedido";
 import { STATUS_LABEL, STATUS_COLOR, lojaControlaStatus } from "../logic/constants";
 import type { Pedido } from "../hooks/use-pedidos-loja";
+
+// Status em que a loja ainda pode cancelar o pedido sem precisar abrir o detalhe.
+// "pronto" entra aqui porque, mesmo liberado para o pool, o entregador pode não
+// ter aceitado ainda — então a loja consegue desistir rapidamente.
+const CANCELAVEL = new Set(["novo", "aceito", "em_preparo", "pronto"]);
 
 interface Props {
   pedido: Pedido;
@@ -13,6 +18,7 @@ interface Props {
   onConfirmarColeta: (p: Pedido) => void;
   onToggleArquivado: (id: string, arquivado: boolean) => void;
   onAbrirWhatsApp: (p: Pedido) => void;
+  onCancelar: (p: Pedido) => void;
 }
 
 export function PedidoCard({
@@ -24,8 +30,10 @@ export function PedidoCard({
   onConfirmarColeta,
   onToggleArquivado,
   onAbrirWhatsApp,
+  onCancelar,
 }: Props) {
   const lojaControla = lojaControlaStatus(p.status);
+  const podeCancelar = CANCELAVEL.has(p.status) && !p.entregador_id;
   const mostrarAcoes =
     p.status === "entregue" || p.status === "em_rota" || p.codigo_entrega;
 
@@ -64,6 +72,20 @@ export function PedidoCard({
           >
             {STATUS_LABEL[p.status]}
           </span>
+          {podeCancelar && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCancelar(p);
+              }}
+              title="Cancelar pedido"
+              aria-label={`Cancelar pedido #${p.numero}`}
+              className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-zinc-700/60 hover:bg-[oklch(0.55_0.26_25)] text-white/80 hover:text-white transition-colors"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
         </div>
       </div>
       <div className="mt-1 text-xs font-medium truncate">{p.cliente_nome}</div>
