@@ -31,6 +31,9 @@ export type PedidoDisponivel = {
   /** Bairro da loja (vindo de join ou RPC). */
   loja_bairro?: string | null;
 
+  /** Se true, a loja tem plano mensal ativo (entregador recebe valor cheio). */
+  loja_plano_mensal_ativo?: boolean | null;
+
   /** Definido pela RPC `pedidos_pool_externo` em pedidos externos. */
   oferta_expira_em?: string | null;
   /** Flag local: pedido vindo do pool externo (não dos vínculos). */
