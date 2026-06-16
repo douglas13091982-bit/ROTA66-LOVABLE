@@ -49,7 +49,7 @@ export function PedidoListItem({
 }: Props) {
   const principal = grupo.items[0];
   const total = grupo.items.reduce(
-    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema),
+    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
     0,
   );
   const km = kmAteLoja(principal, minhaPos);
