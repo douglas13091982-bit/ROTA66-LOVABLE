@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useChatNaoLidasPorPedido } from "@/hooks/use-chat-nao-lidas";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Loader2, Send, MessageCircle, Store, Bike, X } from "lucide-react";
 import { toast } from "sonner";
+
 
 export type ChatSenderRole = "entregador" | "loja";
 
