@@ -162,7 +162,7 @@ export function usePedidosDisponiveis(
     };
   }, [userId, qc]);
 
-  // Realtime — pedidos das lojas vinculadas e pool externo
+  // Realtime — qualquer pedido novo invalida o pool unificado
   useEffect(() => {
     if (!userId) return;
     const channel = supabase
@@ -171,21 +171,12 @@ export function usePedidosDisponiveis(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedidos" },
         (payload) => {
-          const row = (payload.new ?? payload.old) as { loja_id?: string; status?: string; entregador_id?: string | null } | null;
-          if (!row) return;
-          const isVinculada = !!lojaIds && !!row.loja_id && lojaIds.includes(row.loja_id);
-          if (isVinculada) {
-            qc.invalidateQueries({ queryKey: ["pedidos-disponiveis", lojaIds] });
-          }
-          if (profileFlag) {
-            qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
-          }
+          qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           const novo = payload.new as { status?: string; entregador_id?: string | null } | null;
           const ficouPronto =
             (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
             novo?.status === "pronto" &&
-            !novo?.entregador_id &&
-            (isVinculada || profileFlag);
+            !novo?.entregador_id;
           if (ficouPronto) {
             toast.success("🚨 Novo pedido pronto para retirar!");
           }
@@ -195,7 +186,7 @@ export function usePedidosDisponiveis(
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [lojaIds, userId, qc, profileFlag]);
+  }, [userId, qc]);
 
   const pedidos = useMemo(
     () => mesclarPedidosDisponiveis(pedidosVinculados, pedidosExternos),
