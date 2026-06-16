@@ -44,6 +44,14 @@ export function PedidosKanban({
   const [dragId, setDragId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<string | null>(null);
 
+  // Cancelamento rápido: pede confirmação simples antes de mudar o status para
+  // "cancelado". Centralizado aqui para evitar duplicar o confirm em cada card.
+  const handleCancelar = (p: Pedido) => {
+    const ok = window.confirm(`Cancelar o pedido #${p.numero}? Essa ação não pode ser desfeita.`);
+    if (!ok) return;
+    actions.cancelarPedido(p.id);
+  };
+
   const handleDrop = (colKey: string) => {
     setDragOver(null);
     const id = dragId;
