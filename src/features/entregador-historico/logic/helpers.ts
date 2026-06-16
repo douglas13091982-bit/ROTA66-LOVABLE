@@ -48,11 +48,11 @@ export function agregar(
     for (const p of dentro) {
       const k = new Date(p.updated_at).toISOString().slice(0, 10);
       const b = buckets.find((x) => x.key === k);
-      if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaSistema);
+      if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo);
     }
 
     const total = dentro.reduce(
-      (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema),
+      (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo),
       0
     );
     return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
