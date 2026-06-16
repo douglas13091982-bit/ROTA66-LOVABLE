@@ -1,8 +1,13 @@
-import { Bike, KeyRound, MessageCircle, Archive, ArchiveRestore } from "lucide-react";
+import { Bike, KeyRound, MessageCircle, Archive, ArchiveRestore, X } from "lucide-react";
 import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
 import { ChatPedidoButton, PedidoChatBadge } from "@/components/ChatPedido";
 import { STATUS_LABEL, STATUS_COLOR, lojaControlaStatus } from "../logic/constants";
 import type { Pedido } from "../hooks/use-pedidos-loja";
+
+// Status em que a loja ainda pode cancelar o pedido sem precisar abrir o detalhe.
+// "pronto" entra aqui porque, mesmo liberado para o pool, o entregador pode não
+// ter aceitado ainda — então a loja consegue desistir rapidamente.
+const CANCELAVEL = new Set(["novo", "aceito", "em_preparo", "pronto"]);
 
 interface Props {
   pedido: Pedido;
@@ -13,6 +18,7 @@ interface Props {
   onConfirmarColeta: (p: Pedido) => void;
   onToggleArquivado: (id: string, arquivado: boolean) => void;
   onAbrirWhatsApp: (p: Pedido) => void;
+  onCancelar: (p: Pedido) => void;
 }
 
 export function PedidoCard({
