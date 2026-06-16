@@ -148,7 +148,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         .from("pedido_mensagens" as any)
         .update({ lida_em: new Date().toISOString() })
         .in("id", naoLidasDosOutros);
-      qc.invalidateQueries({ queryKey: ["chat-nao-lidas"] });
+      qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
     })();
   }, [open, mensagens, user?.id, qc]);
 
