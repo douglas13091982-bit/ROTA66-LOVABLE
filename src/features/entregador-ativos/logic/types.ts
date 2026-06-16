@@ -23,4 +23,5 @@ export type PedidoAtivo = {
   distancia_metros?: number | null;
   entrega_confirmada_em?: string | null;
   bonus_entregador?: number | null;
+  loja_plano_mensal_ativo?: boolean | null;
 };
