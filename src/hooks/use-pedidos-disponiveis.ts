@@ -39,7 +39,6 @@ export function usePedidosDisponiveis(
 ): UsePedidosDisponiveisResult {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const taxaSistema = useTaxaSistema();
   const userId = user?.id;
 
   const { data: profileFlag } = useQuery({
