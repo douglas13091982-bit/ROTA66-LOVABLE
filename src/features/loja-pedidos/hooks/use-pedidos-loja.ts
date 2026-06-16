@@ -12,6 +12,7 @@ export function usePedidosLoja(lojaId: string | undefined) {
   return useQuery({
     queryKey: ["pedidos", lojaId],
     enabled: !!lojaId,
+    refetchInterval: 30_000, // fallback se o canal Realtime cair
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
@@ -31,9 +32,8 @@ export function usePedidosRealtime(lojaId: string | undefined) {
 
   useEffect(() => {
     if (!lojaId) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel(`pedidos-${lojaId}-${channelKey}`)
+      .channel(`pedidos-${lojaId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedidos", filter: `loja_id=eq.${lojaId}` },
