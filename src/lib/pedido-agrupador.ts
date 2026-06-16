@@ -21,7 +21,10 @@ function chaveColeta(p: PedidoDisponivel): string {
 
 function chaveDoPedido(p: PedidoDisponivel): string {
   if (p.rota_id) return `rota:${p.rota_id}`;
-  return `addr:${p.loja_id}|${chaveColeta(p)}`;
+  // Sem rota_id explícita, cada pedido é um card independente.
+  // (chaveColeta segue disponível caso queira reativar agrupamento por coleta.)
+  void chaveColeta;
+  return `pedido:${p.id}`;
 }
 
 export function agruparPedidosPorRota(
