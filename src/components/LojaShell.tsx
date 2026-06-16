@@ -9,6 +9,7 @@ import { useBranding } from "@/hooks/use-branding";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
+import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -28,6 +29,8 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { logoUrl, nomeSistema } = useBranding();
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
+  useChatNaoLidasGlobal();
+  
   
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);

@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useChatNaoLidasPorPedido } from "@/hooks/use-chat-nao-lidas";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Loader2, Send, MessageCircle, Store, Bike, X } from "lucide-react";
 import { toast } from "sonner";
+
 
 export type ChatSenderRole = "entregador" | "loja";
 
@@ -31,50 +33,18 @@ interface ChatPedidoProps {
 
 /**
  * Badge de mensagens não lidas para exibir no cartão do pedido.
+ * Lê do mapa global (alimentado por 1 canal Realtime único no shell).
  */
 export function PedidoChatBadge({
   pedidoId,
-  senderRole,
   onClick,
 }: {
   pedidoId: string;
-  senderRole: ChatSenderRole;
+  senderRole?: ChatSenderRole;
   onClick?: (e: React.MouseEvent) => void;
 }) {
-  const { user } = useAuth();
-  const qc = useQueryClient();
+  const naoLidas = useChatNaoLidasPorPedido(pedidoId);
 
-  const { data: naoLidas = 0 } = useQuery({
-    queryKey: ["chat-nao-lidas", pedidoId, user?.id],
-    enabled: !!user?.id,
-    refetchInterval: 15000,
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("pedido_mensagens" as any)
-        .select("id", { count: "exact", head: true })
-        .eq("pedido_id", pedidoId)
-        .is("lida_em", null)
-        .neq("sender_id", user!.id);
-      if (error) return 0;
-      return count ?? 0;
-    },
-  });
-
-  useEffect(() => {
-    if (!user?.id) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const channel = supabase
-      .channel(`chat-badge-${pedidoId}-${user.id}-${channelKey}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
-        () => qc.invalidateQueries({ queryKey: ["chat-nao-lidas", pedidoId] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [pedidoId, user?.id, qc]);
 
   if (naoLidas === 0) return null;
 
@@ -91,6 +61,7 @@ export function PedidoChatBadge({
     </span>
   );
 }
+
 
 export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderRole, contraparteNome }: ChatPedidoProps) {
   const { user } = useAuth();
@@ -144,15 +115,14 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
   // Realtime
   useEffect(() => {
     if (!open) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel(`chat-pedido-${pedidoId}-${channelKey}`)
+      .channel(`chat-pedido-${pedidoId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
         () => {
           qc.invalidateQueries({ queryKey: ["chat-pedido", pedidoId] });
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas"] });
+          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
         }
       )
       .subscribe();
@@ -178,7 +148,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         .from("pedido_mensagens" as any)
         .update({ lida_em: new Date().toISOString() })
         .in("id", naoLidasDosOutros);
-      qc.invalidateQueries({ queryKey: ["chat-nao-lidas"] });
+      qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
     })();
   }, [open, mensagens, user?.id, qc]);
 
@@ -336,42 +306,9 @@ export function ChatPedidoButton({
   contraparteNome?: string;
   variant?: "ghost" | "solid";
 }) {
-  const { user } = useAuth();
   const [open, setOpen] = useState(false);
-  const qc = useQueryClient();
+  const naoLidas = useChatNaoLidasPorPedido(pedidoId);
 
-  const { data: naoLidas = 0 } = useQuery({
-    queryKey: ["chat-nao-lidas", pedidoId, user?.id],
-    enabled: !!user?.id,
-    refetchInterval: 15000,
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("pedido_mensagens" as any)
-        .select("id", { count: "exact", head: true })
-        .eq("pedido_id", pedidoId)
-        .is("lida_em", null)
-        .neq("sender_id", user!.id);
-      if (error) return 0;
-      return count ?? 0;
-    },
-  });
-
-  // Realtime para atualizar badge mesmo com o chat fechado
-  useEffect(() => {
-    if (!user?.id) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const channel = supabase
-      .channel(`chat-badge-${pedidoId}-${user.id}-${channelKey}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
-        () => qc.invalidateQueries({ queryKey: ["chat-nao-lidas", pedidoId] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [pedidoId, user?.id, qc]);
 
   const base =
     variant === "solid"
