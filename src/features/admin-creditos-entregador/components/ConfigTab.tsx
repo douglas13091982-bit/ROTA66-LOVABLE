@@ -18,8 +18,6 @@ export function ConfigTab() {
     if (ok) setForm(null);
   };
 
-  const webhookUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/api/public/mp-webhook-entregador`;
-
   return (
     <div className="space-y-5 max-w-2xl">
       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
@@ -77,15 +75,15 @@ export function ConfigTab() {
       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
         <h3 className="text-sm font-semibold text-white mb-1">Mercado Pago</h3>
         <p className="text-xs text-white/60 leading-relaxed">
-          As recargas dos entregadores usam o <strong>mesmo token da plataforma</strong>{" "}
-          (mesma conta MP usada para receber mensalidades das lojas). Configure em{" "}
-          <strong>Admin → Financeiro → Mercado Pago da plataforma</strong>.
+          As recargas dos entregadores usam a <strong>mesma conta MP da plataforma</strong>{" "}
+          que recebe as mensalidades das lojas. Configure (uma única vez) em{" "}
+          <strong>Admin → Financeiro → Mercado Pago da plataforma</strong>. A URL do webhook
+          é única e já está configurada lá.
         </p>
-        <div className="text-[11px] text-white/50 leading-relaxed bg-black/30 p-3 rounded-md border border-white/5 mt-3">
-          <div className="font-bold mb-1">URL de webhook (configurar no painel do Mercado Pago):</div>
-          <code className="text-white/80 break-all">{webhookUrl}</code>
-        </div>
       </div>
+
+
+
 
 
       <button

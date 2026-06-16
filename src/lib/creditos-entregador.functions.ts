@@ -1,7 +1,22 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const MP_BASE = "https://api.mercadopago.com";
+
+function buildWebhookUrl(): string {
+  const envHost = process.env.PUBLIC_HOST?.trim();
+  let host = envHost && envHost.length > 0 ? envHost : "";
+  if (!host) {
+    try {
+      host = getRequestHost();
+    } catch {
+      host = "";
+    }
+  }
+  if (!host) return "";
+  return `https://${host}/api/public/mp-webhook`;
+}
 
 async function getMpToken(): Promise<string> {
   // Unificado: usa o MESMO token da plataforma (private_config.mp_platform_access_token)
@@ -71,6 +86,7 @@ export const criarRecargaPix = createServerFn({ method: "POST" })
 
     const recargaId = (rec as any).id as string;
 
+    const notification_url = buildWebhookUrl();
     const body = {
       transaction_amount: data.valor,
       description: `Recarga de créditos - entregador`,
@@ -81,6 +97,7 @@ export const criarRecargaPix = createServerFn({ method: "POST" })
       },
       external_reference: `recarga:${recargaId}`,
       date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
+      ...(notification_url ? { notification_url } : {}),
     };
 
     const res = await fetch(`${MP_BASE}/v1/payments`, {
