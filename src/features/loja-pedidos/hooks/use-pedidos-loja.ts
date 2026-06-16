@@ -87,7 +87,7 @@ export function useChatMensagensEntregador(opts: {
               },
             },
           });
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas", msg.pedido_id] });
+          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
         },
       )
       .subscribe();
