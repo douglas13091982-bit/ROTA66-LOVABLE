@@ -30,7 +30,7 @@ export function AtivosPage({ destaque }: Props) {
   const mostrarFinalizado =
     semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0;
   const totalGanhoLote = (recentesEntregues ?? []).reduce(
-    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema),
+    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo),
     0,
   );
 
