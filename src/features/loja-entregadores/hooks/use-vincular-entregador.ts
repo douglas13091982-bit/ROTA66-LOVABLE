@@ -2,6 +2,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+function soDigitos(s: string) {
+  return s.replace(/\D/g, "");
+}
+
 export function useVincularEntregador(lojaId: string | undefined, onDone: () => void) {
   const [termo, setTermo] = useState("");
   const [adding, setAdding] = useState(false);
@@ -9,14 +13,14 @@ export function useVincularEntregador(lojaId: string | undefined, onDone: () => 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!lojaId) return;
-    const t = termo.trim();
-    if (t.length < 3) {
-      toast.error("Informe ao menos 3 caracteres");
+    const digitos = soDigitos(termo);
+    if (digitos.length < 10 || digitos.length > 13) {
+      toast.error("Informe um telefone válido com DDD (ex.: 11912345678).");
       return;
     }
     setAdding(true);
     const { data: encontrados, error: rpcError } = await supabase.rpc("buscar_entregador", {
-      termo: t,
+      termo: digitos,
     });
     if (rpcError) {
       toast.error(rpcError.message);
@@ -26,14 +30,14 @@ export function useVincularEntregador(lojaId: string | undefined, onDone: () => 
     if (!encontrados || encontrados.length === 0) {
       toast.error("Entregador não encontrado", {
         description:
-          "Peça para o entregador se cadastrar primeiro e informar telefone ou nome.",
+          "Confirme o telefone com DDD. O entregador precisa estar cadastrado no app.",
       });
       setAdding(false);
       return;
     }
     if (encontrados.length > 1) {
-      toast.error("Mais de um entregador encontrado", {
-        description: "Refine a busca usando o telefone completo.",
+      toast.error("Mais de um entregador com este telefone", {
+        description: "Contate o suporte para resolver o cadastro duplicado.",
       });
       setAdding(false);
       return;
