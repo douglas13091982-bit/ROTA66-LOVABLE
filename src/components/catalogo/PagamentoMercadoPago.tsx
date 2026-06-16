@@ -26,6 +26,18 @@ function loadMpSdk() {
   return sdkPromise;
 }
 
+
+function detectBrand(num: string): string | null {
+  const n = num.replace(/\D/g, "");
+  if (/^4/.test(n)) return "visa";
+  if (/^(5[1-5]|2(2[2-9]|[3-6]\d|7[01]|720))/.test(n)) return "master";
+  if (/^3[47]/.test(n)) return "amex";
+  if (/^3(0[0-5]|[68])/.test(n)) return "diners";
+  if (/^(4011|4312|4389|4514|4573|5041|5066|5067|509|6277|6362|6363|650|6516|6550)/.test(n)) return "elo";
+  if (/^(606282|3841)/.test(n)) return "hipercard";
+  return null;
+}
+
 interface Props {
   pedidoId: string;
   numero: number;
@@ -183,10 +195,21 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
       const docDigits = payerDoc.replace(/\D/g, "");
       const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
-      // Descobrir payment_method_id pelo bin
-      const pmRes = await mpRef.current.getPaymentMethods({ bin: cardNumber.slice(0, 8) });
-      const pm = pmRes?.results?.[0];
-      if (!pm) throw new Error("Bandeira do cartão não reconhecida");
+      // Descobrir payment_method_id pelo bin (MP exige 6 dígitos)
+      if (cardNumber.length < 6) throw new Error("Número do cartão incompleto");
+      let pm: any = null;
+      try {
+        const pmRes = await mpRef.current.getPaymentMethods({ bin: cardNumber.slice(0, 6) });
+        pm = pmRes?.results?.[0];
+      } catch (err) {
+        console.error("[MP] getPaymentMethods erro", err);
+      }
+      if (!pm) {
+        // Fallback: detecta bandeira local (Visa, Master, Amex, Elo, Hiper, Diners)
+        const local = detectBrand(cardNumber);
+        if (!local) throw new Error("Bandeira do cartão não reconhecida");
+        pm = { id: local };
+      }
 
       const tokenRes = await mpRef.current.createCardToken({
         cardNumber,
