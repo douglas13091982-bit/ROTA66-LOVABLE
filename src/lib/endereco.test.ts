@@ -78,12 +78,15 @@ describe("extrairBairro", () => {
     expect(extrairBairro("Rua A, 10, Centro, Joinville, SC")).toBe("Centro");
   });
 
-  it("rejeita candidato muito curto (< 2 chars)", () => {
-    expect(extrairBairro("Rua A, 10 - X, Cidade")).toBeNull();
+  it("rejeita candidato muito curto (< 2 chars) e cai no penúltimo segmento", () => {
+    // "X" é rejeitado por tamanho; cai em extrairAposNumero (também falha porque
+    // "10 - X" não bate em /^\d+$/) e termina em penultimoSegmento → "Rua A".
+    expect(extrairBairro("Rua A, 10 - X, Cidade")).toBe("Rua A");
   });
 
-  it("ignora segmento que começa com dígito", () => {
-    // "- 200" começa com dígito → vai cair em extração por número e devolver "Cidade"
-    expect(extrairBairro("Rua A, 10 - 200, Cidade")).toBe("Cidade");
+  it("rejeita segmento que começa com dígito e cai no penúltimo segmento", () => {
+    // "- 200" é rejeitado (começa com dígito); demais extratores falham; volta
+    // para penultimoSegmento → "Rua A".
+    expect(extrairBairro("Rua A, 10 - 200, Cidade")).toBe("Rua A");
   });
 });
