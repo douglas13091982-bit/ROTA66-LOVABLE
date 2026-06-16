@@ -57,7 +57,7 @@ export function DisponiveisPage() {
           minhaPos={minhaPos}
           taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
-          onAceitar={aceitarGrupo}
+          onAceitar={handleAceitar}
         />
       )}
 
