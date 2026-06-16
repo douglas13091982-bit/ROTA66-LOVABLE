@@ -8,7 +8,6 @@ import {
   Trash2,
   Save,
   Copy,
-  RefreshCw,
   Eye,
   EyeOff,
 } from "lucide-react";
@@ -18,7 +17,7 @@ import {
   salvarTokenPlataforma,
   removerTokenPlataforma,
   salvarPublicKeyPlataforma,
-  rotacionarWebhookSecretPlataforma,
+  salvarWebhookSecretPlataforma,
 } from "@/lib/mensalidades-mp.functions";
 
 function copy(value: string, label: string) {
