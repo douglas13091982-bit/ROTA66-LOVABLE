@@ -74,17 +74,18 @@ export function MercadoPagoPlataformaSection() {
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha"),
   });
-  const mRotacionar = useMutation({
-    mutationFn: () => rotacionar(),
+  const mSalvarSecret = useMutation({
+    mutationFn: (s: string) => salvarSecret({ data: { webhook_secret: s } }),
     onSuccess: () => {
-      toast.success("Nova chave de webhook gerada");
+      toast.success("Assinatura secreta salva");
       qc.invalidateQueries({ queryKey: ["plataforma-mp-status"] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha"),
   });
 
   const webhookUrl = (data as any)?.webhook_url ?? "";
-  const webhookSecret = (data as any)?.webhook_secret ?? "";
+  const webhookSecretSalvo = (data as any)?.webhook_secret ?? "";
+  const temSecret = webhookSecretSalvo.length > 0;
 
   return (
     <section className="bg-card border border-border rounded-lg p-6 space-y-6">
