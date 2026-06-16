@@ -32,7 +32,7 @@ export function MercadoPagoPlataformaSection() {
   const salvar = useServerFn(salvarTokenPlataforma);
   const remover = useServerFn(removerTokenPlataforma);
   const salvarPk = useServerFn(salvarPublicKeyPlataforma);
-  const rotacionar = useServerFn(rotacionarWebhookSecretPlataforma);
+  const salvarSecret = useServerFn(salvarWebhookSecretPlataforma);
 
   const { data, isLoading } = useQuery({
     queryKey: ["plataforma-mp-status"],
@@ -41,11 +41,13 @@ export function MercadoPagoPlataformaSection() {
 
   const [token, setToken] = useState("");
   const [publicKey, setPublicKey] = useState("");
+  const [webhookSecretInput, setWebhookSecretInput] = useState("");
   const [mostrarSecret, setMostrarSecret] = useState(false);
 
   useEffect(() => {
     setToken("");
     setPublicKey((data as any)?.public_key ?? "");
+    setWebhookSecretInput((data as any)?.webhook_secret ?? "");
   }, [data]);
 
   const mSalvar = useMutation({
