@@ -83,7 +83,7 @@ export function CobrancasUnificadasSection() {
         .order("created_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      const rows = (data ?? []) as RecargaRow[];
+      const rows = ((data ?? []) as unknown) as RecargaRow[];
       const ids = Array.from(new Set(rows.map((r) => r.entregador_id)));
       if (ids.length === 0) return rows;
       const { data: profs } = await supabase.from("profiles").select("id, full_name").in("id", ids);
