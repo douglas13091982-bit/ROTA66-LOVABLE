@@ -60,6 +60,8 @@ export function DisponiveisPage() {
           taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
           onAceitar={handleAceitar}
+          ordenacao={ordenacao}
+          onOrdenacaoChange={setOrdenacao}
         />
       )}
 
