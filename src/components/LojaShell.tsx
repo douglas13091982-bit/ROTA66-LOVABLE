@@ -29,6 +29,8 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { logoUrl, nomeSistema } = useBranding();
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
+  useChatNaoLidasGlobal();
+  
   
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
