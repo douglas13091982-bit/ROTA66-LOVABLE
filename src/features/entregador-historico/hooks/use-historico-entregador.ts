@@ -18,13 +18,16 @@ export function useHistoricoEntregador(periodo: Periodo) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*, lojas(nome)")
+        .select("*, lojas(nome, plano_mensal_ativo)")
         .eq("entregador_id", user!.id)
         .eq("status", "entregue")
         .gte("updated_at", inicioJanela.toISOString())
         .order("updated_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as PedidoHistorico[];
+      return (data ?? []).map((p: any) => ({
+        ...p,
+        loja_plano_mensal_ativo: !!p.lojas?.plano_mensal_ativo,
+      })) as PedidoHistorico[];
     },
   });
 
