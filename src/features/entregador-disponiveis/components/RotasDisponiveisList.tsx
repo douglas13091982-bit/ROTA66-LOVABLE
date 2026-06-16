@@ -1,13 +1,15 @@
 import { Package } from "lucide-react";
 import { PedidoListItem } from "@/components/entregador/PedidoListItem";
+import type { LatLng } from "@/lib/geo";
+import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 
 interface Props {
-  grupos: any[];
+  grupos: GrupoPedido[];
   isLoading: boolean;
-  minhaPos: any;
-  taxaSistema: any;
-  taxaParaExibir: any;
-  onAceitar: (items: any[]) => void;
+  minhaPos: LatLng | null;
+  taxaSistema: number;
+  taxaParaExibir: (p: PedidoDisponivel) => number;
+  onAceitar: (grupo: GrupoPedido) => void;
 }
 
 export function RotasDisponiveisList({
@@ -55,7 +57,7 @@ export function RotasDisponiveisList({
           minhaPos={minhaPos}
           taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
-          onAceitar={() => onAceitar(grupo.items)}
+          onAceitar={onAceitar}
         />
       ))}
     </div>
