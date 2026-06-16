@@ -1886,6 +1886,8 @@ export type Database = {
           ativo: boolean
           configurado: boolean
           public_key: string
+          webhook_secret_configurado: boolean
+          webhook_secret_masked: string
         }[]
       }
       get_mp_public_config: {
@@ -2114,15 +2116,26 @@ export type Database = {
         }
         Returns: undefined
       }
-      salvar_mp_config: {
-        Args: {
-          _access_token: string
-          _ativo: boolean
-          _loja_id: string
-          _public_key: string
-        }
-        Returns: undefined
-      }
+      salvar_mp_config:
+        | {
+            Args: {
+              _access_token: string
+              _ativo: boolean
+              _loja_id: string
+              _public_key: string
+            }
+            Returns: undefined
+          }
+        | {
+            Args: {
+              _access_token: string
+              _ativo: boolean
+              _loja_id: string
+              _public_key: string
+              _webhook_secret?: string
+            }
+            Returns: undefined
+          }
       status_pagamento_pedido: {
         Args: { _pedido_id: string }
         Returns: {
