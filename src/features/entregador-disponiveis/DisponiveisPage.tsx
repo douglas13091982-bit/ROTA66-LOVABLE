@@ -18,6 +18,7 @@ export function DisponiveisPage() {
   const taxaSistema = useTaxaSistema();
   const { posicao: minhaPos } = useGeolocalizacao();
   const { dismissed, aceitarGrupo } = useAcoesPedido();
+  const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
   const {
     grupos,
     isLoading,
