@@ -288,6 +288,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                 onConfirmarColeta={onConfirmarColeta}
                 onToggleArquivado={actions.toggleArquivado}
                 onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+                onCancelar={onCancelar}
               />
             </div>
           )}
