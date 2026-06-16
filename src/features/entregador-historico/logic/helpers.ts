@@ -79,11 +79,11 @@ export function agregar(
     const d = new Date(p.updated_at);
     const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     const b = buckets.find((x) => x.key === k);
-    if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaSistema);
+    if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo);
   }
 
   const total = dentro.reduce(
-    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema),
+    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo),
     0
   );
   return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
