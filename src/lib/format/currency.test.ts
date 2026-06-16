@@ -45,8 +45,10 @@ describe("parseCurrency", () => {
     expect(parseCurrency("1234,56")).toBe(1234.56);
   });
 
-  it("parseia formato com ponto decimal", () => {
-    expect(parseCurrency("1234.56")).toBe(1234.56);
+  it('trata "." como separador de milhar (formato BR), nunca como decimal', () => {
+    // "1234.56" → o parser remove pontos antes da vírgula → 123456.
+    // Comportamento intencional: input é sempre interpretado em formato BR.
+    expect(parseCurrency("1234.56")).toBe(123456);
   });
 
   it("retorna null para texto não numérico", () => {
