@@ -30,7 +30,7 @@ export function useChatNaoLidasGlobal() {
         .neq("sender_id", userId!);
       if (error) return {} as Record<string, number>;
       const map: Record<string, number> = {};
-      for (const row of (data ?? []) as Array<{ pedido_id: string }>) {
+      for (const row of ((data ?? []) as unknown) as Array<{ pedido_id: string }>) {
         map[row.pedido_id] = (map[row.pedido_id] ?? 0) + 1;
       }
       return map;
