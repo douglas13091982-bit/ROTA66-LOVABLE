@@ -2062,6 +2062,7 @@ export type Database = {
           loja_bairro: string
           loja_id: string
           loja_nome: string
+          loja_plano_mensal_ativo: boolean
           numero: number
           observacoes: string
           oferta_expira_em: string
