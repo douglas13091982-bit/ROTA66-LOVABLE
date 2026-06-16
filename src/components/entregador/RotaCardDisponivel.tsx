@@ -19,7 +19,7 @@ type Props = {
 
 function calcularTotais(items: PedidoDisponivel[], taxaSistema: number, taxaParaExibir: (p: PedidoDisponivel) => number) {
   const totalLiquido = items.reduce(
-    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema),
+    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
     0,
   );
   const totalBonus = items.reduce(
