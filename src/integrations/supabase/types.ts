@@ -1875,6 +1875,7 @@ export type Database = {
           full_name: string
         }[]
       }
+      get_ganho_hoje: { Args: { _entregador_id: string }; Returns: number }
       get_mp_config_dono: {
         Args: { _loja_id: string }
         Returns: {

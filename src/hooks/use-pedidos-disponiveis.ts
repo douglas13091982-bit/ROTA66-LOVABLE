@@ -13,7 +13,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { liquidoEntregador, useTaxaSistema } from "@/hooks/use-taxa-sistema";
 import { haversineKm } from "@/lib/geo";
 import {
   agruparPedidosPorRota,
@@ -40,7 +39,6 @@ export function usePedidosDisponiveis(
 ): UsePedidosDisponiveisResult {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const taxaSistema = useTaxaSistema();
   const userId = user?.id;
 
   const { data: profileFlag } = useQuery({
@@ -128,19 +126,14 @@ export function usePedidosDisponiveis(
     enabled: !!userId,
     refetchInterval: GANHO_REFETCH_MS,
     queryFn: async () => {
-      const start = new Date();
-      start.setHours(0, 0, 0, 0);
-      const { data, error } = await supabase
-        .from("pedidos")
-        .select("taxa_entrega,updated_at")
-        .eq("entregador_id", userId!)
-        .eq("status", "entregue")
-        .gte("updated_at", start.toISOString());
+      const { data, error } = await (
+        supabase.rpc as unknown as (
+          fn: string,
+          args: Record<string, unknown>,
+        ) => Promise<{ data: number | string | null; error: Error | null }>
+      )("get_ganho_hoje", { _entregador_id: userId! });
       if (error) throw error;
-      return (data ?? []).reduce(
-        (s, p) => s + liquidoEntregador(p.taxa_entrega as number, taxaSistema),
-        0,
-      );
+      return Number(data ?? 0);
     },
   });
 
