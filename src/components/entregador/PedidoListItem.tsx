@@ -201,8 +201,8 @@ function BotaoAceitarPress({
       onContextMenu={(e) => e.preventDefault()}
       className="relative w-full h-10 text-white text-[11px] font-bold uppercase tracking-[0.18em] rounded-lg active:scale-95 transition-all duration-200 overflow-hidden select-none"
       style={{
-        background: "linear-gradient(135deg, oklch(0.62 0.22 27), oklch(0.52 0.22 27))",
-        boxShadow: "0 6px 18px -6px oklch(0.55 0.22 27 / 0.7)",
+        background: "linear-gradient(135deg, #dd0008, #b00006)",
+        boxShadow: "0 6px 18px -6px rgba(221, 0, 8, 0.7)",
       }}
     >
       <span className="relative z-10">{progresso > 0 ? "Segure..." : label}</span>
