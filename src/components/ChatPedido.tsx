@@ -31,50 +31,18 @@ interface ChatPedidoProps {
 
 /**
  * Badge de mensagens não lidas para exibir no cartão do pedido.
+ * Lê do mapa global (alimentado por 1 canal Realtime único no shell).
  */
 export function PedidoChatBadge({
   pedidoId,
-  senderRole,
   onClick,
 }: {
   pedidoId: string;
-  senderRole: ChatSenderRole;
+  senderRole?: ChatSenderRole;
   onClick?: (e: React.MouseEvent) => void;
 }) {
-  const { user } = useAuth();
-  const qc = useQueryClient();
-
-  const { data: naoLidas = 0 } = useQuery({
-    queryKey: ["chat-nao-lidas", pedidoId, user?.id],
-    enabled: !!user?.id,
-    refetchInterval: 15000,
-    queryFn: async () => {
-      const { count, error } = await supabase
-        .from("pedido_mensagens" as any)
-        .select("id", { count: "exact", head: true })
-        .eq("pedido_id", pedidoId)
-        .is("lida_em", null)
-        .neq("sender_id", user!.id);
-      if (error) return 0;
-      return count ?? 0;
-    },
-  });
-
-  useEffect(() => {
-    if (!user?.id) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const channel = supabase
-      .channel(`chat-badge-${pedidoId}-${user.id}-${channelKey}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
-        () => qc.invalidateQueries({ queryKey: ["chat-nao-lidas", pedidoId] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [pedidoId, user?.id, qc]);
+  const { useChatNaoLidasPorPedido } = require("@/hooks/use-chat-nao-lidas") as typeof import("@/hooks/use-chat-nao-lidas");
+  const naoLidas = useChatNaoLidasPorPedido(pedidoId);
 
   if (naoLidas === 0) return null;
 
@@ -91,6 +59,7 @@ export function PedidoChatBadge({
     </span>
   );
 }
+
 
 export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderRole, contraparteNome }: ChatPedidoProps) {
   const { user } = useAuth();
