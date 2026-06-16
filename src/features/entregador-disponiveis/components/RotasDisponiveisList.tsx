@@ -74,18 +74,14 @@ export function RotasDisponiveisList({
       });
     } else {
       arr.sort((a, b) => {
-        const dColetaA = distanciaColetaKm(a, minhaPos);
-        const dColetaB = distanciaColetaKm(b, minhaPos);
-        const ambasInvalidas = !Number.isFinite(dColetaA) && !Number.isFinite(dColetaB);
-        const coletasIguais =
-          Number.isFinite(dColetaA) &&
-          Number.isFinite(dColetaB) &&
-          Math.abs(dColetaA - dColetaB) < 0.05;
-        // Sem geolocalização (ou mesma loja), ordena pela entrega mais próxima da coleta.
-        if (ambasInvalidas || coletasIguais) {
-          return distanciaEntregaDesdeColetaKm(a) - distanciaEntregaDesdeColetaKm(b);
+        // Primário: entrega mais próxima do ponto de coleta.
+        const dEntregaA = distanciaEntregaDesdeColetaKm(a);
+        const dEntregaB = distanciaEntregaDesdeColetaKm(b);
+        if (Math.abs(dEntregaA - dEntregaB) >= 0.05) {
+          return dEntregaA - dEntregaB;
         }
-        return dColetaA - dColetaB;
+        // Desempate: proximidade da minha posição até o ponto de coleta.
+        return distanciaColetaKm(a, minhaPos) - distanciaColetaKm(b, minhaPos);
       });
     }
     return arr;
