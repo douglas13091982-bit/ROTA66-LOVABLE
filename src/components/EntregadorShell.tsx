@@ -26,6 +26,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   const { online, toggle } = useEntregadorStatus();
   const qc = useQueryClient();
   const turnosCount = useTurnosDisponiveisCount();
+  useChatNaoLidasGlobal();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
 
