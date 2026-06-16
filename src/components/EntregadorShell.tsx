@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
+import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 
 import { supabase } from "@/integrations/supabase/client";
 
