@@ -65,6 +65,30 @@ export function RoteirizacaoForm() {
 
       <div className="pt-4 mt-2 border-t border-border">
         <h2 className="text-sm font-bold flex items-center gap-2 mb-1">
+          <Radio className="h-4 w-4 text-primary" />
+          Pool aberto de pedidos
+        </h2>
+        <p className="text-xs text-muted-foreground mb-4">
+          Define quais pedidos cada entregador vê na tela "Disponíveis". O primeiro a aceitar fica com o pedido.
+        </p>
+      </div>
+
+      <Field icon={<Radio className="h-4 w-4 text-primary" />} label="Escopo do pool aberto"
+        hint="Vinculados: só pedidos das lojas em que o entregador está vinculado. Externos: pedidos de lojas sem entregador próprio online (entregador precisa ter aceita externos no perfil). Ambos: união dos dois.">
+        <select
+          value={form.pool_aberto_scope}
+          onChange={(e) => setForm({ ...form, pool_aberto_scope: e.target.value as PoolAbertoScope })}
+          className={numberInputClass}
+        >
+          <option value="vinculados_e_externos">Vinculados + Externos (padrão)</option>
+          <option value="somente_vinculados">Somente vinculados</option>
+          <option value="somente_externos">Somente externos</option>
+        </select>
+      </Field>
+
+
+      <div className="pt-4 mt-2 border-t border-border">
+        <h2 className="text-sm font-bold flex items-center gap-2 mb-1">
           <LayoutGrid className="h-4 w-4 text-primary" />
           Catálogo da loja
         </h2>
