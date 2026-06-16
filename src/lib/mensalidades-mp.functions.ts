@@ -14,7 +14,8 @@ function buildWebhookUrl(): string {
     }
   }
   if (!host) throw new Error("Host público não configurado");
-  return `https://${host}/api/public/mp-webhook-plataforma`;
+  // Endpoint único da plataforma — cobre mensalidades de loja e recargas de entregador.
+  return `https://${host}/api/public/mp-webhook`;
 }
 
 function buildBackUrl(): string {
