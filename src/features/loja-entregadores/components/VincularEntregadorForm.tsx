@@ -14,14 +14,18 @@ export function VincularEntregadorForm({
     <div className="bg-card border border-border rounded-lg p-6 shadow-card mb-6">
       <h2 className="font-display text-2xl tracking-wide mb-1">Vincular entregador</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Informe o telefone ou nome de um entregador já cadastrado.
+        Informe o <strong>telefone com DDD</strong> de um entregador já cadastrado
+        (ex.: 11912345678).
       </p>
       <form onSubmit={submit} className="flex flex-col sm:flex-row gap-3">
         <input
           value={termo}
           onChange={(e) => setTermo(e.target.value)}
-          placeholder="Telefone ou nome"
+          placeholder="Telefone com DDD"
           required
+          inputMode="tel"
+          autoComplete="tel"
+          maxLength={20}
           className="flex-1 bg-background border border-border rounded-md px-4 py-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
         />
         <button
