@@ -150,6 +150,8 @@ export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
   if (prev.grupo !== next.grupo) return false;
   return roundPos(prev.minhaPos) === roundPos(next.minhaPos);
 });
+
+function BotaoAceitarPress({
   onAceitar,
   label = "Aceitar",
 }: {
