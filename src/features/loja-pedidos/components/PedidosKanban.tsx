@@ -110,6 +110,7 @@ export function PedidosKanban({
               actions={actions}
               onOpenDetalhe={onOpenDetalhe}
               onConfirmarColeta={onConfirmarColeta}
+              onCancelar={handleCancelar}
             />
           </div>
         );
