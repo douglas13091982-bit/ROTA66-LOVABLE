@@ -159,6 +159,11 @@ export async function handleMpPlataformaWebhook(
   const { getPlataformaMp, mpGetPaymentPlataforma } = await import("@/lib/plataforma-mp.server");
   const cfg = await getPlataformaMp();
   if (!cfg) return new Response("plataforma sem mp", { status: 503 });
+  if (!cfg.webhook_secret) {
+    // Sem a "Assinatura secreta" copiada do painel do MP não temos como
+    // validar o HMAC dos eventos. Recusar em vez de processar cegamente.
+    return new Response("plataforma sem webhook secret", { status: 503 });
+  }
 
   const v = verifySignature(request, payload, cfg.webhook_secret, strict);
   if (!v.ok) return new Response(v.body ?? "unauthorized", { status: v.status ?? 401 });
