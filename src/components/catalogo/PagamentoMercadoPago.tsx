@@ -183,10 +183,21 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
       const docDigits = payerDoc.replace(/\D/g, "");
       const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
-      // Descobrir payment_method_id pelo bin
-      const pmRes = await mpRef.current.getPaymentMethods({ bin: cardNumber.slice(0, 8) });
-      const pm = pmRes?.results?.[0];
-      if (!pm) throw new Error("Bandeira do cartão não reconhecida");
+      // Descobrir payment_method_id pelo bin (MP exige 6 dígitos)
+      if (cardNumber.length < 6) throw new Error("Número do cartão incompleto");
+      let pm: any = null;
+      try {
+        const pmRes = await mpRef.current.getPaymentMethods({ bin: cardNumber.slice(0, 6) });
+        pm = pmRes?.results?.[0];
+      } catch (err) {
+        console.error("[MP] getPaymentMethods erro", err);
+      }
+      if (!pm) {
+        // Fallback: detecta bandeira local (Visa, Master, Amex, Elo, Hiper, Diners)
+        const local = detectBrand(cardNumber);
+        if (!local) throw new Error("Bandeira do cartão não reconhecida");
+        pm = { id: local };
+      }
 
       const tokenRes = await mpRef.current.createCardToken({
         cardNumber,
