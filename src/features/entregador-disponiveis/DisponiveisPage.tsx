@@ -26,6 +26,16 @@ export function DisponiveisPage() {
     taxaParaExibir,
   } = usePedidosDisponiveis(dismissed);
 
+  // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
+  // ser referencialmente estável — caso contrário, todo tick de polling
+  // invalida o memo e re-renderiza a lista inteira.
+  const handleAceitar = useCallback(
+    (grupo: GrupoPedido) => {
+      void aceitarGrupo(grupo.items);
+    },
+    [aceitarGrupo],
+  );
+
   if (semVinculoNemExterno) {
     return (
       <EntregadorShell title="Disponíveis">
