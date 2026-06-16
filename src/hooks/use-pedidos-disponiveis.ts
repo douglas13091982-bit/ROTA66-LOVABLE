@@ -91,7 +91,7 @@ export function usePedidosDisponiveis(
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*, lojas:loja_id(nome, bairro)")
+        .select("*, lojas:loja_id(nome, bairro, plano_mensal_ativo)")
         .in("loja_id", lojaIds!)
         .eq("status", "pronto")
         .is("entregador_id", null)
@@ -102,6 +102,7 @@ export function usePedidosDisponiveis(
         ...p,
         loja_nome: p.lojas?.nome ?? null,
         loja_bairro: p.lojas?.bairro ?? null,
+        loja_plano_mensal_ativo: !!p.lojas?.plano_mensal_ativo,
       })) as PedidoDisponivel[];
     },
   });
