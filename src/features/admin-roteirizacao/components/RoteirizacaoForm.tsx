@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Route as Route2, Clock, MapPinned, Users, Save, LayoutGrid, Car } from "lucide-react";
+import { Route as Route2, Clock, MapPinned, Users, Save, LayoutGrid, Car, Radio } from "lucide-react";
 import { useRoteirizacao } from "../hooks/use-roteirizacao";
-import { fromRow, INITIAL_FORM, type RoteirizacaoForm } from "../logic/form";
+import { fromRow, INITIAL_FORM, type RoteirizacaoForm, type PoolAbertoScope } from "../logic/form";
 import { Field, numberInputClass } from "./Field";
 
 export function RoteirizacaoForm() {
