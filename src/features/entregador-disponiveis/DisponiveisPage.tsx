@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
@@ -6,6 +7,7 @@ import { useTaxaSistema } from "@/hooks/use-taxa-sistema";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
+import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
