@@ -128,10 +128,11 @@ interface ColumnBodyProps {
   actions: PedidoActions;
   onOpenDetalhe: (p: Pedido) => void;
   onConfirmarColeta: (p: Pedido) => void;
+  onCancelar: (p: Pedido) => void;
 }
 
 function ColumnBody(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
 
   // Render padrão: comportamento idêntico ao original.
@@ -162,6 +163,7 @@ function ColumnBody(props: ColumnBodyProps) {
             onConfirmarColeta={onConfirmarColeta}
             onToggleArquivado={actions.toggleArquivado}
             onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+            onCancelar={onCancelar}
           />
         ))}
       </div>
@@ -178,12 +180,13 @@ function ColumnBody(props: ColumnBodyProps) {
       actions={actions}
       onOpenDetalhe={onOpenDetalhe}
       onConfirmarColeta={onConfirmarColeta}
+      onCancelar={onCancelar}
     />
   );
 }
 
 function VirtualizedColumn(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const parentRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
