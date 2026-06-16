@@ -6,7 +6,12 @@ import { PedidoCard } from "./PedidoCard";
 import { LoteEmPreparoCard } from "./LoteEmPreparoCard";
 import { Package } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+
+const COLUMN_VIRTUALIZE_THRESHOLD = 200;
+const ESTIMATED_CARD = 168;
+const OVERSCAN = 10;
 
 interface Props {
   pedidos: Pedido[];
@@ -68,6 +73,7 @@ export function PedidosKanban({
       {COLUMNS.map((col) => {
         const items = grouped[col.key] ?? [];
         const isOver = dragOver === col.key;
+        const lotes = col.key === "preparacao" ? lotesEmPreparo : [];
         return (
           <div
             key={col.key}
@@ -87,21 +93,146 @@ export function PedidosKanban({
                 {items.length}
               </span>
             </div>
-            <div className="p-2 space-y-2 flex-1">
-              {col.key === "preparacao" &&
-                lotesEmPreparo.map((lote) => (
-                  <LoteEmPreparoCard
-                    key={`lote-${lote.key}`}
-                    lote={lote}
-                    onMarcarTodosProntos={actions.marcarLoteComoPronto}
-                  />
-                ))}
-              {items.length === 0 && (
-                <p className="text-[10px] text-muted-foreground text-center py-4">Vazio</p>
-              )}
-              {items.map((p) => (
+            <ColumnBody
+              items={items}
+              lotes={lotes}
+              dragId={dragId}
+              setDragId={setDragId}
+              setDragOver={setDragOver}
+              actions={actions}
+              onOpenDetalhe={onOpenDetalhe}
+              onConfirmarColeta={onConfirmarColeta}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface ColumnBodyProps {
+  items: Pedido[];
+  lotes: LoteEmPreparo[];
+  dragId: string | null;
+  setDragId: (id: string | null) => void;
+  setDragOver: (k: string | null) => void;
+  actions: PedidoActions;
+  onOpenDetalhe: (p: Pedido) => void;
+  onConfirmarColeta: (p: Pedido) => void;
+}
+
+function ColumnBody(props: ColumnBodyProps) {
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
+
+  // Render padrão: comportamento idêntico ao original.
+  if (!virtualize) {
+    return (
+      <div className="p-2 space-y-2 flex-1">
+        {lotes.map((lote) => (
+          <LoteEmPreparoCard
+            key={`lote-${lote.key}`}
+            lote={lote}
+            onMarcarTodosProntos={actions.marcarLoteComoPronto}
+          />
+        ))}
+        {items.length === 0 && (
+          <p className="text-[10px] text-muted-foreground text-center py-4">Vazio</p>
+        )}
+        {items.map((p) => (
+          <PedidoCard
+            key={p.id}
+            pedido={p}
+            dragId={dragId}
+            onDragStart={setDragId}
+            onDragEnd={() => {
+              setDragId(null);
+              setDragOver(null);
+            }}
+            onOpenDetalhe={onOpenDetalhe}
+            onConfirmarColeta={onConfirmarColeta}
+            onToggleArquivado={actions.toggleArquivado}
+            onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <VirtualizedColumn
+      items={items}
+      lotes={lotes}
+      dragId={dragId}
+      setDragId={setDragId}
+      setDragOver={setDragOver}
+      actions={actions}
+      onOpenDetalhe={onOpenDetalhe}
+      onConfirmarColeta={onConfirmarColeta}
+    />
+  );
+}
+
+function VirtualizedColumn(props: ColumnBodyProps) {
+  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta } = props;
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => ESTIMATED_CARD,
+    overscan: OVERSCAN,
+    getItemKey: (i) => items[i].id,
+  });
+
+  const vItems = virtualizer.getVirtualItems();
+  // Mantém o cartão sendo arrastado sempre no DOM, mesmo se sair do viewport
+  // — garantia para o HTML5 drag-and-drop não cancelar no meio do movimento.
+  const draggingIndex = dragId ? items.findIndex((p) => p.id === dragId) : -1;
+  const draggingInWindow = vItems.some((vi) => vi.index === draggingIndex);
+
+  return (
+    <div className="p-2 flex-1 flex flex-col gap-2">
+      {/* Lotes ficam fora da janela virtualizada (lista pequena, sempre visível). */}
+      {lotes.map((lote) => (
+        <LoteEmPreparoCard
+          key={`lote-${lote.key}`}
+          lote={lote}
+          onMarcarTodosProntos={actions.marcarLoteComoPronto}
+        />
+      ))}
+
+      <div
+        ref={parentRef}
+        className="overflow-y-auto"
+        // Janela própria de rolagem é requisito da virtualização.
+        // Mantém a coluna utilizável dentro do grid do Kanban.
+        style={{ maxHeight: "calc(100dvh - 260px)", minHeight: 240 }}
+      >
+        <div
+          style={{
+            height: virtualizer.getTotalSize(),
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {vItems.map((vi) => {
+            const p = items[vi.index];
+            return (
+              <div
+                key={vi.key}
+                ref={virtualizer.measureElement}
+                data-index={vi.index}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  paddingBottom: 8,
+                  transform: `translateY(${vi.start}px)`,
+                }}
+              >
                 <PedidoCard
-                  key={p.id}
                   pedido={p}
                   dragId={dragId}
                   onDragStart={setDragId}
@@ -114,11 +245,41 @@ export function PedidosKanban({
                   onToggleArquivado={actions.toggleArquivado}
                   onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
                 />
-              ))}
+              </div>
+            );
+          })}
+
+          {/* Cartão arrastado fora da janela: renderiza oculto para não cancelar o drag. */}
+          {dragId && draggingIndex >= 0 && !draggingInWindow && (
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                opacity: 0,
+                pointerEvents: "none",
+                transform: `translateY(${draggingIndex * ESTIMATED_CARD}px)`,
+              }}
+            >
+              <PedidoCard
+                pedido={items[draggingIndex]}
+                dragId={dragId}
+                onDragStart={setDragId}
+                onDragEnd={() => {
+                  setDragId(null);
+                  setDragOver(null);
+                }}
+                onOpenDetalhe={onOpenDetalhe}
+                onConfirmarColeta={onConfirmarColeta}
+                onToggleArquivado={actions.toggleArquivado}
+                onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
+              />
             </div>
-          </div>
-        );
-      })}
+          )}
+        </div>
+      </div>
     </div>
   );
 }
