@@ -30,8 +30,10 @@ export function PedidoCard({
   onConfirmarColeta,
   onToggleArquivado,
   onAbrirWhatsApp,
+  onCancelar,
 }: Props) {
   const lojaControla = lojaControlaStatus(p.status);
+  const podeCancelar = CANCELAVEL.has(p.status) && !p.entregador_id;
   const mostrarAcoes =
     p.status === "entregue" || p.status === "em_rota" || p.codigo_entrega;
 
