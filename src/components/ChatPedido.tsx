@@ -43,8 +43,8 @@ export function PedidoChatBadge({
   senderRole?: ChatSenderRole;
   onClick?: (e: React.MouseEvent) => void;
 }) {
-  const { useChatNaoLidasPorPedido } = require("@/hooks/use-chat-nao-lidas") as typeof import("@/hooks/use-chat-nao-lidas");
   const naoLidas = useChatNaoLidasPorPedido(pedidoId);
+
 
   if (naoLidas === 0) return null;
 
