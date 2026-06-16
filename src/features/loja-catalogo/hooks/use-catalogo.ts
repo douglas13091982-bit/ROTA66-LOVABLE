@@ -8,7 +8,7 @@ export function useLojaPublica(slug: string) {
     queryKey: ["catalogo-loja", slug],
     queryFn: async () => {
       const lojaSelect =
-        "id, nome, slug, catalogo_slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, catalogo_ativo, ativa, status, plano_mensal_ativo, catalogo_layout";
+        "id, nome, slug, catalogo_slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, catalogo_ativo, ativa, status, catalogo_layout";
 
       const { data, error } = await (supabase as any)
         .from("lojas_publicas")
