@@ -78,7 +78,7 @@ export function RotasDisponiveisList({
         const dColetaB = distanciaColetaKm(b, minhaPos);
         // Quando coletas são iguais (mesma loja), desempata pela entrega mais próxima.
         if (Math.abs(dColetaA - dColetaB) < 0.05) {
-          return distanciaEntregaMinKm(a, minhaPos) - distanciaEntregaMinKm(b, minhaPos);
+          return distanciaEntregaDesdeColetaKm(a) - distanciaEntregaDesdeColetaKm(b);
         }
         return dColetaA - dColetaB;
       });
