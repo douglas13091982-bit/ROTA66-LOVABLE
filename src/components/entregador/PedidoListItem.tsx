@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { resumirEnderecoEntrega } from "@/lib/endereco";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
@@ -9,8 +9,15 @@ type Props = {
   minhaPos: LatLng | null;
   taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
-  onAceitar: () => void;
+  onAceitar: (grupo: GrupoPedido) => void;
 };
+
+// Arredonda para ~11m (4 casas decimais) — evita re-render a cada drift
+// minúsculo do GPS. Os km exibidos têm 1 casa decimal, então é seguro.
+function roundPos(p: LatLng | null): string {
+  if (!p) return "";
+  return `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`;
+}
 
 function kmAteLoja(p: PedidoDisponivel, minhaPos: LatLng | null): string | null {
   if (!minhaPos || p.endereco_coleta_lat == null || p.endereco_coleta_lng == null) return null;
