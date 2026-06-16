@@ -275,6 +275,14 @@ export function MercadoPagoConfig({ lojaId }: Props) {
             )}
           </div>
           <div className="text-[11px] text-muted-foreground bg-muted/30 rounded p-2 space-y-1">
+            <a
+              href="https://www.mercadopago.com.br/developers/panel/app/1391198286441309/webhooks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-primary hover:underline font-bold"
+            >
+              Abrir configuração de Webhooks no Mercado Pago <ExternalLink className="h-3 w-3" />
+            </a>
             <div>
               <strong>1.</strong> No painel do MP, em <em>Suas integrações → Webhooks → Configurar notificações</em>,
               cole esta URL e selecione o evento <strong>"Pagamentos"</strong>:
