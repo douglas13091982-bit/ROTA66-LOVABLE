@@ -76,8 +76,13 @@ export function RotasDisponiveisList({
       arr.sort((a, b) => {
         const dColetaA = distanciaColetaKm(a, minhaPos);
         const dColetaB = distanciaColetaKm(b, minhaPos);
-        // Quando coletas são iguais (mesma loja), desempata pela entrega mais próxima.
-        if (Math.abs(dColetaA - dColetaB) < 0.05) {
+        const ambasInvalidas = !Number.isFinite(dColetaA) && !Number.isFinite(dColetaB);
+        const coletasIguais =
+          Number.isFinite(dColetaA) &&
+          Number.isFinite(dColetaB) &&
+          Math.abs(dColetaA - dColetaB) < 0.05;
+        // Sem geolocalização (ou mesma loja), ordena pela entrega mais próxima da coleta.
+        if (ambasInvalidas || coletasIguais) {
           return distanciaEntregaDesdeColetaKm(a) - distanciaEntregaDesdeColetaKm(b);
         }
         return dColetaA - dColetaB;
