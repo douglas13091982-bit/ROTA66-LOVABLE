@@ -8,7 +8,6 @@ import {
   Trash2,
   Save,
   Copy,
-  RefreshCw,
   Eye,
   EyeOff,
 } from "lucide-react";
@@ -18,7 +17,7 @@ import {
   salvarTokenPlataforma,
   removerTokenPlataforma,
   salvarPublicKeyPlataforma,
-  rotacionarWebhookSecretPlataforma,
+  salvarWebhookSecretPlataforma,
 } from "@/lib/mensalidades-mp.functions";
 
 function copy(value: string, label: string) {
@@ -33,7 +32,7 @@ export function MercadoPagoPlataformaSection() {
   const salvar = useServerFn(salvarTokenPlataforma);
   const remover = useServerFn(removerTokenPlataforma);
   const salvarPk = useServerFn(salvarPublicKeyPlataforma);
-  const rotacionar = useServerFn(rotacionarWebhookSecretPlataforma);
+  const salvarSecret = useServerFn(salvarWebhookSecretPlataforma);
 
   const { data, isLoading } = useQuery({
     queryKey: ["plataforma-mp-status"],
@@ -42,11 +41,13 @@ export function MercadoPagoPlataformaSection() {
 
   const [token, setToken] = useState("");
   const [publicKey, setPublicKey] = useState("");
+  const [webhookSecretInput, setWebhookSecretInput] = useState("");
   const [mostrarSecret, setMostrarSecret] = useState(false);
 
   useEffect(() => {
     setToken("");
     setPublicKey((data as any)?.public_key ?? "");
+    setWebhookSecretInput((data as any)?.webhook_secret ?? "");
   }, [data]);
 
   const mSalvar = useMutation({
@@ -73,17 +74,18 @@ export function MercadoPagoPlataformaSection() {
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha"),
   });
-  const mRotacionar = useMutation({
-    mutationFn: () => rotacionar(),
+  const mSalvarSecret = useMutation({
+    mutationFn: (s: string) => salvarSecret({ data: { webhook_secret: s } }),
     onSuccess: () => {
-      toast.success("Nova chave de webhook gerada");
+      toast.success("Assinatura secreta salva");
       qc.invalidateQueries({ queryKey: ["plataforma-mp-status"] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha"),
   });
 
   const webhookUrl = (data as any)?.webhook_url ?? "";
-  const webhookSecret = (data as any)?.webhook_secret ?? "";
+  const webhookSecretSalvo = (data as any)?.webhook_secret ?? "";
+  const temSecret = webhookSecretSalvo.length > 0;
 
   return (
     <section className="bg-card border border-border rounded-lg p-6 space-y-6">
@@ -216,57 +218,80 @@ export function MercadoPagoPlataformaSection() {
             </div>
           </div>
 
-          {/* Webhook secret */}
+          {/* Assinatura secreta (gerada pelo MP, copiada para cá) */}
           {(data as any)?.configurado && (
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                Chave secreta do webhook
+                Assinatura secreta do webhook
               </label>
               <p className="text-xs text-muted-foreground">
-                Cole esta chave em Mercado Pago → Webhooks → <strong>Assinatura secreta</strong>. Usada para
-                validar a assinatura HMAC dos eventos recebidos.
+                Esta chave é <strong>gerada pelo Mercado Pago</strong>. No painel do MP, abra a
+                aplicação → <strong>Webhooks</strong> → campo <strong>"Assinatura secreta"</strong>,
+                clique no ícone de olho para revelar, copie o valor e cole aqui. A mesma chave
+                vale para cobranças de lojas e entregadores (é uma única conta MP).
               </p>
+              {!temSecret && (
+                <div className="flex items-center gap-2 text-amber-500 text-xs">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Sem a assinatura secreta os webhooks são rejeitados — pagamentos não serão confirmados automaticamente.
+                </div>
+              )}
               <div className="flex gap-2">
                 <input
-                  readOnly
                   type={mostrarSecret ? "text" : "password"}
-                  value={webhookSecret}
+                  placeholder="Cole a Assinatura secreta do painel do Mercado Pago"
+                  value={webhookSecretInput}
+                  onChange={(e) => setWebhookSecretInput(e.target.value)}
                   className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-xs font-mono"
                 />
                 <button
+                  type="button"
                   onClick={() => setMostrarSecret((v) => !v)}
                   className="px-3 py-2 bg-card border border-border rounded-md hover:bg-background"
                   title={mostrarSecret ? "Ocultar" : "Mostrar"}
                 >
                   {mostrarSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
-                <button
-                  onClick={() => copy(webhookSecret, "Chave")}
-                  className="px-3 py-2 bg-card border border-border rounded-md hover:bg-background"
-                  title="Copiar"
-                >
-                  <Copy className="h-4 w-4" />
-                </button>
-              </div>
-              <button
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Gerar uma nova chave? Você precisará atualizá-la em Mercado Pago, senão os webhooks serão rejeitados.",
-                    )
-                  )
-                    mRotacionar.mutate();
-                }}
-                disabled={mRotacionar.isPending}
-                className="inline-flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider bg-card border border-border rounded-md hover:bg-background"
-              >
-                {mRotacionar.isPending ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <RefreshCw className="h-3.5 w-3.5" />
+                {temSecret && (
+                  <button
+                    type="button"
+                    onClick={() => copy(webhookSecretSalvo, "Chave")}
+                    className="px-3 py-2 bg-card border border-border rounded-md hover:bg-background"
+                    title="Copiar chave atual"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
                 )}
-                Gerar nova chave
-              </button>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => mSalvarSecret.mutate(webhookSecretInput.trim())}
+                  disabled={mSalvarSecret.isPending || webhookSecretInput.trim() === webhookSecretSalvo}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90 disabled:opacity-50"
+                >
+                  {mSalvarSecret.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  Salvar assinatura
+                </button>
+                {temSecret && (
+                  <button
+                    onClick={() => {
+                      if (confirm("Remover a assinatura? Webhooks ficarão sem validação até você colar uma nova.")) {
+                        setWebhookSecretInput("");
+                        mSalvarSecret.mutate("");
+                      }
+                    }}
+                    disabled={mSalvarSecret.isPending}
+                    className="inline-flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider bg-card border border-border rounded-md hover:bg-background"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                    Remover
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </>

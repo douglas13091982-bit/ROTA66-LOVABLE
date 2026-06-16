@@ -29,11 +29,7 @@ async function setPrivateConfig(key: string, value: string): Promise<void> {
 export async function getPlataformaMp(): Promise<PlataformaMpCfg | null> {
   const token = await getPrivateConfig("mp_platform_access_token");
   if (!token) return null;
-  let secret = await getPrivateConfig("mp_platform_webhook_secret");
-  if (!secret) {
-    secret = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
-    await setPrivateConfig("mp_platform_webhook_secret", secret);
-  }
+  const secret = (await getPrivateConfig("mp_platform_webhook_secret")) ?? "";
   return { access_token: token, webhook_secret: secret };
 }
 
@@ -55,10 +51,24 @@ export async function setPlataformaMpPublicKey(key: string): Promise<void> {
   await setPrivateConfig("mp_platform_public_key", trimmed);
 }
 
-export async function rotatePlataformaMpWebhookSecret(): Promise<string> {
-  const secret = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
-  await setPrivateConfig("mp_platform_webhook_secret", secret);
-  return secret;
+/**
+ * Salva a "Assinatura secreta" copiada do painel do Mercado Pago.
+ * Não geramos chave do nosso lado — o MP é quem gera e exibe a chave
+ * no painel de Webhooks. Aqui apenas armazenamos uma cópia para que o
+ * dispatcher consiga validar o HMAC dos eventos recebidos.
+ * Passar string vazia remove a chave armazenada.
+ */
+export async function setPlataformaMpWebhookSecret(value: string): Promise<void> {
+  const trimmed = (value ?? "").trim();
+  if (!trimmed) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin
+      .from("private_config" as any)
+      .delete()
+      .eq("key", "mp_platform_webhook_secret");
+    return;
+  }
+  await setPrivateConfig("mp_platform_webhook_secret", trimmed);
 }
 
 export async function clearPlataformaMpToken(): Promise<void> {

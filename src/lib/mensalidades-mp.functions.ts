@@ -96,13 +96,16 @@ export const salvarPublicKeyPlataforma = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-export const rotacionarWebhookSecretPlataforma = createServerFn({ method: "POST" })
+const SalvarWebhookSecretSchema = z.object({ webhook_secret: z.string().trim().max(500) });
+
+export const salvarWebhookSecretPlataforma = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((d: unknown) => SalvarWebhookSecretSchema.parse(d))
+  .handler(async ({ data, context }) => {
     await assertSuperAdmin(context.supabase, context.userId);
-    const { rotatePlataformaMpWebhookSecret } = await import("@/lib/plataforma-mp.server");
-    const secret = await rotatePlataformaMpWebhookSecret();
-    return { ok: true, webhook_secret: secret };
+    const { setPlataformaMpWebhookSecret } = await import("@/lib/plataforma-mp.server");
+    await setPlataformaMpWebhookSecret(data.webhook_secret);
+    return { ok: true };
   });
 
 export const removerTokenPlataforma = createServerFn({ method: "POST" })
