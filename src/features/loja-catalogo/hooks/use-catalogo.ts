@@ -7,15 +7,24 @@ export function useLojaPublica(slug: string) {
   return useQuery({
     queryKey: ["catalogo-loja", slug],
     queryFn: async () => {
+      const lojaSelect =
+        "id, nome, slug, catalogo_slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, catalogo_ativo, ativa, status, plano_mensal_ativo, catalogo_layout";
+
       const { data, error } = await (supabase as any)
         .from("lojas_publicas")
-        .select(
-          "id, nome, slug, catalogo_slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, catalogo_ativo, ativa, status, plano_mensal_ativo, catalogo_layout",
-        )
+        .select(lojaSelect)
         .eq("catalogo_slug", slug)
         .maybeSingle();
       if (error) throw error;
-      return data;
+      if (data) return data;
+
+      const { data: lojaPorSlug, error: slugError } = await (supabase as any)
+        .from("lojas_publicas")
+        .select(lojaSelect)
+        .eq("slug", slug)
+        .maybeSingle();
+      if (slugError) throw slugError;
+      return lojaPorSlug;
     },
   });
 }
