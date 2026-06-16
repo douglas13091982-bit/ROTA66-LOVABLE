@@ -188,7 +188,11 @@ export function BotaoAceitar({
     <button
       onClick={onClick}
       disabled={expirou}
-      className="pp-cta flex-1 min-w-0 px-3 h-14 whitespace-nowrap font-semibold uppercase text-sm sm:text-base tracking-[0.18em] rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex-1 min-w-0 px-3 h-14 whitespace-nowrap font-semibold uppercase text-sm sm:text-base tracking-[0.18em] rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all"
+      style={{
+        background: "linear-gradient(135deg, #dd0008, #b00006)",
+        boxShadow: "0 8px 22px -8px rgba(221, 0, 8, 0.7)",
+      }}
     >
       <CheckCircle2 className="h-5 w-5 shrink-0" />
       <span className="truncate">{texto}</span>
