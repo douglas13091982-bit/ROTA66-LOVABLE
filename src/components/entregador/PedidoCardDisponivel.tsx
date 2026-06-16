@@ -39,7 +39,7 @@ export function PedidoCardDisponivel({
   onRecusar,
 }: Props) {
   const kmAteLoja = kmAteLojaTexto(pedido, minhaPos);
-  const liquido = liquidoEntregador(taxaParaExibir(pedido), taxaSistema);
+  const liquido = liquidoEntregador(taxaParaExibir(pedido), taxaSistema, pedido.loja_plano_mensal_ativo);
   const bairro = extrairBairro(pedido.endereco_entrega);
   const bonus = Number(pedido.bonus_entregador ?? 0);
   const segs = segundosRestantesPedido(pedido, nowMs);

@@ -143,7 +143,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 Você recebe
               </div>
               <div className="font-display text-5xl md:text-6xl text-emerald-400 leading-none drop-shadow-[0_4px_24px_oklch(0.7_0.18_155_/_0.45)]">
-                R$ {liquidoEntregador(p.taxa_entrega, taxaSistema).toFixed(2)}
+                R$ {liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo).toFixed(2)}
               </div>
               {Number(p.bonus_entregador ?? 0) > 0 && (
                 <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/90 text-white text-sm font-bold uppercase tracking-[0.14em] rounded-full shadow-[0_8px_24px_-6px_oklch(0.7_0.18_155_/_0.5)] backdrop-blur-sm border border-emerald-300/40">

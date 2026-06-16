@@ -8,7 +8,7 @@ export function EntregaRow({
   pedido: PedidoHistorico;
   taxaSistema: number;
 }) {
-  const valor = liquidoEntregador(pedido.taxa_entrega, taxaSistema);
+  const valor = liquidoEntregador(pedido.taxa_entrega, taxaSistema, pedido.loja_plano_mensal_ativo);
   const hora = new Date(pedido.updated_at).toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",

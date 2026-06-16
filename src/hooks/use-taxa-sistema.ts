@@ -35,10 +35,19 @@ export function useTaxaSistema(): number {
   return Number(data ?? 0);
 }
 
+/**
+ * Calcula o valor líquido que o entregador recebe.
+ *
+ * - Se a loja tem **plano mensal ativo**, o entregador recebe o **valor cheio**
+ *   da taxa (a loja já paga a plataforma via mensalidade).
+ * - Se não tem plano, é descontada a tarifa do sistema por pedido.
+ */
 export function liquidoEntregador(
-  taxaEntrega: number | string,
+  taxaEntrega: number | string | null | undefined,
   taxaSistema: number,
+  lojaPlanoMensalAtivo?: boolean | null,
 ) {
   const bruto = Number(taxaEntrega) || 0;
+  if (lojaPlanoMensalAtivo) return Math.max(0, bruto);
   return Math.max(0, bruto - taxaSistema);
 }
