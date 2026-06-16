@@ -1,0 +1,1 @@
+DELETE FROM public.mensalidades_loja WHERE competencia >= date_trunc('month', now())::date;
