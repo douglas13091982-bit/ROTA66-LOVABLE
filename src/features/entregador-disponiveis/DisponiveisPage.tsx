@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
@@ -6,6 +7,7 @@ import { useTaxaSistema } from "@/hooks/use-taxa-sistema";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
+import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
@@ -23,6 +25,16 @@ export function DisponiveisPage() {
     ganhoHoje,
     taxaParaExibir,
   } = usePedidosDisponiveis(dismissed);
+
+  // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
+  // ser referencialmente estável — caso contrário, todo tick de polling
+  // invalida o memo e re-renderiza a lista inteira.
+  const handleAceitar = useCallback(
+    (grupo: GrupoPedido) => {
+      void aceitarGrupo(grupo.items);
+    },
+    [aceitarGrupo],
+  );
 
   if (semVinculoNemExterno) {
     return (
@@ -45,7 +57,7 @@ export function DisponiveisPage() {
           minhaPos={minhaPos}
           taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
-          onAceitar={aceitarGrupo}
+          onAceitar={handleAceitar}
         />
       )}
 
