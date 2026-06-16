@@ -90,9 +90,9 @@ export function MercadoPagoPlataformaSection() {
       <div>
         <h2 className="font-display text-xl mb-1">Mercado Pago da plataforma</h2>
         <p className="text-sm text-muted-foreground">
-          Credenciais usadas para receber as <strong>mensalidades + tarifas por pedido</strong> das lojas e as{" "}
-          <strong>recargas/mensalidades dos entregadores</strong>. Crie uma aplicação em Mercado Pago → Suas
-          integrações e cole as credenciais de produção abaixo.
+          <strong>Uma única conta MP</strong> recebe TODOS os pagamentos da plataforma:
+          mensalidades das lojas + recargas/mensalidades dos entregadores. Crie uma aplicação em
+          Mercado Pago → Suas integrações e cole as credenciais de produção abaixo.
         </p>
       </div>
 
@@ -190,14 +190,15 @@ export function MercadoPagoPlataformaSection() {
             </button>
           </div>
 
-          {/* Webhook URL */}
+          {/* Webhook URL (ÚNICA — cobre lojas + entregadores) */}
           <div className="space-y-2">
             <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              URL do webhook (lojas)
+              URL única do webhook
             </label>
             <p className="text-xs text-muted-foreground">
-              Cadastre esta URL em Mercado Pago → Sua aplicação → Webhooks, evento{" "}
-              <strong>payment</strong>.
+              Cadastre <strong>apenas esta URL</strong> em Mercado Pago → Sua aplicação → Webhooks,
+              evento <strong>"Pagamentos"</strong>. Ela recebe automaticamente tanto as mensalidades
+              das lojas quanto as recargas dos entregadores.
             </p>
             <div className="flex gap-2">
               <input
@@ -213,10 +214,6 @@ export function MercadoPagoPlataformaSection() {
                 <Copy className="h-4 w-4" />
               </button>
             </div>
-            <p className="text-[11px] text-muted-foreground">
-              Para recargas/mensalidades de entregadores, use a URL irmã:{" "}
-              <code>{webhookUrl ? webhookUrl.replace("mp-webhook-plataforma", "mp-webhook-entregador") : "—"}</code>
-            </p>
           </div>
 
           {/* Webhook secret */}

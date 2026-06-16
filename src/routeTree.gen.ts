@@ -29,6 +29,7 @@ import { Route as ApiPublicSendPushRouteImport } from './routes/api/public/send-
 import { Route as ApiPublicPwaIconDotpngRouteImport } from './routes/api/public/pwa-icon[.]png'
 import { Route as ApiPublicMpWebhookPlataformaRouteImport } from './routes/api/public/mp-webhook-plataforma'
 import { Route as ApiPublicMpWebhookEntregadorRouteImport } from './routes/api/public/mp-webhook-entregador'
+import { Route as ApiPublicMpWebhookRouteImport } from './routes/api/public/mp-webhook'
 import { Route as ApiPublicManifestDotwebmanifestRouteImport } from './routes/api/public/manifest[.]webmanifest'
 import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authenticated/loja/produtos'
 import { Route as AuthenticatedLojaPedidosRouteImport } from './routes/_authenticated/loja/pedidos'
@@ -163,6 +164,11 @@ const ApiPublicMpWebhookEntregadorRoute =
     path: '/api/public/mp-webhook-entregador',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMpWebhookRoute = ApiPublicMpWebhookRouteImport.update({
+  id: '/api/public/mp-webhook',
+  path: '/api/public/mp-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicManifestDotwebmanifestRoute =
   ApiPublicManifestDotwebmanifestRouteImport.update({
     id: '/api/public/manifest.webmanifest',
@@ -338,9 +344,9 @@ const AuthenticatedAdminAdminsRoute =
   } as any)
 const ApiPublicMpWebhookLojaIdRoute =
   ApiPublicMpWebhookLojaIdRouteImport.update({
-    id: '/api/public/mp-webhook/$lojaId',
-    path: '/api/public/mp-webhook/$lojaId',
-    getParentRoute: () => rootRouteImport,
+    id: '/$lojaId',
+    path: '/$lojaId',
+    getParentRoute: () => ApiPublicMpWebhookRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -385,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
+  '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
   '/api/public/mp-webhook-plataforma': typeof ApiPublicMpWebhookPlataformaRoute
   '/api/public/pwa-icon.png': typeof ApiPublicPwaIconDotpngRoute
@@ -433,6 +440,7 @@ export interface FileRoutesByTo {
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
+  '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
   '/api/public/mp-webhook-plataforma': typeof ApiPublicMpWebhookPlataformaRoute
   '/api/public/pwa-icon.png': typeof ApiPublicPwaIconDotpngRoute
@@ -486,6 +494,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/_authenticated/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
+  '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
   '/api/public/mp-webhook-plataforma': typeof ApiPublicMpWebhookPlataformaRoute
   '/api/public/pwa-icon.png': typeof ApiPublicPwaIconDotpngRoute
@@ -539,6 +548,7 @@ export interface FileRouteTypes {
     | '/loja/pedidos'
     | '/loja/produtos'
     | '/api/public/manifest.webmanifest'
+    | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
     | '/api/public/mp-webhook-plataforma'
     | '/api/public/pwa-icon.png'
@@ -587,6 +597,7 @@ export interface FileRouteTypes {
     | '/loja/pedidos'
     | '/loja/produtos'
     | '/api/public/manifest.webmanifest'
+    | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
     | '/api/public/mp-webhook-plataforma'
     | '/api/public/pwa-icon.png'
@@ -639,6 +650,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/pedidos'
     | '/_authenticated/loja/produtos'
     | '/api/public/manifest.webmanifest'
+    | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
     | '/api/public/mp-webhook-plataforma'
     | '/api/public/pwa-icon.png'
@@ -661,11 +673,11 @@ export interface RootRouteChildren {
   RastreioPedidoIdRoute: typeof RastreioPedidoIdRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
   ApiPublicManifestDotwebmanifestRoute: typeof ApiPublicManifestDotwebmanifestRoute
+  ApiPublicMpWebhookRoute: typeof ApiPublicMpWebhookRouteWithChildren
   ApiPublicMpWebhookEntregadorRoute: typeof ApiPublicMpWebhookEntregadorRoute
   ApiPublicMpWebhookPlataformaRoute: typeof ApiPublicMpWebhookPlataformaRoute
   ApiPublicPwaIconDotpngRoute: typeof ApiPublicPwaIconDotpngRoute
   ApiPublicSendPushRoute: typeof ApiPublicSendPushRoute
-  ApiPublicMpWebhookLojaIdRoute: typeof ApiPublicMpWebhookLojaIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -808,6 +820,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/mp-webhook-entregador'
       fullPath: '/api/public/mp-webhook-entregador'
       preLoaderRoute: typeof ApiPublicMpWebhookEntregadorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/mp-webhook': {
+      id: '/api/public/mp-webhook'
+      path: '/api/public/mp-webhook'
+      fullPath: '/api/public/mp-webhook'
+      preLoaderRoute: typeof ApiPublicMpWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/manifest.webmanifest': {
@@ -1015,10 +1034,10 @@ declare module '@tanstack/react-router' {
     }
     '/api/public/mp-webhook/$lojaId': {
       id: '/api/public/mp-webhook/$lojaId'
-      path: '/api/public/mp-webhook/$lojaId'
+      path: '/$lojaId'
       fullPath: '/api/public/mp-webhook/$lojaId'
       preLoaderRoute: typeof ApiPublicMpWebhookLojaIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ApiPublicMpWebhookRoute
     }
   }
 }
@@ -1141,6 +1160,17 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface ApiPublicMpWebhookRouteChildren {
+  ApiPublicMpWebhookLojaIdRoute: typeof ApiPublicMpWebhookLojaIdRoute
+}
+
+const ApiPublicMpWebhookRouteChildren: ApiPublicMpWebhookRouteChildren = {
+  ApiPublicMpWebhookLojaIdRoute: ApiPublicMpWebhookLojaIdRoute,
+}
+
+const ApiPublicMpWebhookRouteWithChildren =
+  ApiPublicMpWebhookRoute._addFileChildren(ApiPublicMpWebhookRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -1153,11 +1183,11 @@ const rootRouteChildren: RootRouteChildren = {
   RastreioPedidoIdRoute: RastreioPedidoIdRoute,
   ClientesIndexRoute: ClientesIndexRoute,
   ApiPublicManifestDotwebmanifestRoute: ApiPublicManifestDotwebmanifestRoute,
+  ApiPublicMpWebhookRoute: ApiPublicMpWebhookRouteWithChildren,
   ApiPublicMpWebhookEntregadorRoute: ApiPublicMpWebhookEntregadorRoute,
   ApiPublicMpWebhookPlataformaRoute: ApiPublicMpWebhookPlataformaRoute,
   ApiPublicPwaIconDotpngRoute: ApiPublicPwaIconDotpngRoute,
   ApiPublicSendPushRoute: ApiPublicSendPushRoute,
-  ApiPublicMpWebhookLojaIdRoute: ApiPublicMpWebhookLojaIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
