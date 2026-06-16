@@ -38,9 +38,11 @@ export function useBranding() {
   const [cachedData, setCachedData] = useState<Branding>(null);
   const { data } = useQuery<Branding>({
     queryKey: ["config-branding"],
-    staleTime: 0,
-    refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    // Branding raramente muda. Mantém em cache por 10min e revalida
+    // em background sem bloquear a navegação.
+    staleTime: 10 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("config_branding")
