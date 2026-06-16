@@ -14,6 +14,8 @@ interface ConfigState {
   ativo: boolean;
   public_key: string;
   access_token_masked: string;
+  webhook_secret_masked: string;
+  webhook_secret_configurado: boolean;
 }
 
 export function MercadoPagoConfig({ lojaId }: Props) {
@@ -22,10 +24,16 @@ export function MercadoPagoConfig({ lojaId }: Props) {
   const [editing, setEditing] = useState(false);
   const [publicKey, setPublicKey] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const [webhookSecret, setWebhookSecret] = useState("");
   const [ativo, setAtivo] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
   const testar = useServerFn(testarConexaoMp);
+
+  const webhookUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/api/public/mp-webhook/${lojaId}`
+      : `/api/public/mp-webhook/${lojaId}`;
 
   const load = async () => {
     setLoading(true);
@@ -42,10 +50,19 @@ export function MercadoPagoConfig({ lojaId }: Props) {
         ativo: row.ativo,
         public_key: row.public_key,
         access_token_masked: row.access_token_masked,
+        webhook_secret_masked: row.webhook_secret_masked ?? "",
+        webhook_secret_configurado: !!row.webhook_secret_configurado,
       });
       setAtivo(row.ativo);
     } else {
-      setCfg({ configurado: false, ativo: false, public_key: "", access_token_masked: "" });
+      setCfg({
+        configurado: false,
+        ativo: false,
+        public_key: "",
+        access_token_masked: "",
+        webhook_secret_masked: "",
+        webhook_secret_configurado: false,
+      });
       setEditing(true);
     }
   };
@@ -67,6 +84,7 @@ export function MercadoPagoConfig({ lojaId }: Props) {
       _access_token: accessToken.trim(),
       _public_key: publicKey.trim(),
       _ativo: ativo,
+      _webhook_secret: webhookSecret.trim() || null,
     });
     setSaving(false);
     if (error) {
@@ -76,6 +94,7 @@ export function MercadoPagoConfig({ lojaId }: Props) {
     toast.success("Credenciais salvas");
     setAccessToken("");
     setPublicKey("");
+    setWebhookSecret("");
     setEditing(false);
     load();
   };
@@ -146,6 +165,10 @@ export function MercadoPagoConfig({ lojaId }: Props) {
               <span className="uppercase tracking-wider font-bold mr-2">Access token:</span>
               <code className="text-foreground">{cfg.access_token_masked}</code>
             </div>
+            <div>
+              <span className="uppercase tracking-wider font-bold mr-2">Chave do webhook:</span>
+              <code className="text-foreground">{cfg.webhook_secret_masked || "—"}</code>
+            </div>
           </div>
           <button
             type="button"
@@ -153,6 +176,7 @@ export function MercadoPagoConfig({ lojaId }: Props) {
               setEditing(true);
               setPublicKey(cfg.public_key);
               setAccessToken("");
+              setWebhookSecret("");
               setAtivo(cfg.ativo);
             }}
             className="text-xs font-bold uppercase tracking-wider text-primary hover:underline"
@@ -188,6 +212,21 @@ export function MercadoPagoConfig({ lojaId }: Props) {
             />
             <span className="block text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
               <AlertCircle className="h-3 w-3" /> Mantemos seu token criptografado. Ele nunca aparece no navegador.
+            </span>
+          </label>
+          <label className="block">
+            <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1.5">
+              Chave secreta do Webhook
+            </span>
+            <input
+              type="password"
+              value={webhookSecret}
+              onChange={(e) => setWebhookSecret(e.target.value)}
+              placeholder={cfg?.webhook_secret_configurado ? "•••••••••• (deixe em branco para manter)" : "Cole a chave gerada pelo MP"}
+              className="w-full bg-card border border-border rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-primary"
+            />
+            <span className="block text-[11px] text-muted-foreground mt-1">
+              O Mercado Pago gera essa chave ao criar o webhook em <em>Suas integrações → Webhooks → Configurar notificações</em>. Copie de lá e cole aqui.
             </span>
           </label>
           <label className="flex items-center justify-between gap-3 p-3 bg-card rounded-md border border-border">
@@ -235,13 +274,17 @@ export function MercadoPagoConfig({ lojaId }: Props) {
               </button>
             )}
           </div>
-          <div className="text-[11px] text-muted-foreground bg-muted/30 rounded p-2">
-            <strong>Importante:</strong> em <em>Suas integrações → Webhooks</em> no painel do Mercado Pago, configure a
-            URL:
-            <code className="block mt-1 break-all text-foreground">
-              https://drive-fleet.lovable.app/api/public/mp-webhook/{lojaId}
+          <div className="text-[11px] text-muted-foreground bg-muted/30 rounded p-2 space-y-1">
+            <div>
+              <strong>1.</strong> No painel do MP, em <em>Suas integrações → Webhooks → Configurar notificações</em>,
+              cole esta URL e selecione o evento <strong>"Pagamentos"</strong>:
+            </div>
+            <code className="block break-all text-foreground bg-background/60 rounded px-2 py-1">
+              {webhookUrl}
             </code>
-            Selecione o evento "Pagamentos".
+            <div>
+              <strong>2.</strong> O MP vai gerar uma <strong>Chave secreta</strong> — copie e cole no campo acima.
+            </div>
           </div>
         </form>
       )}
