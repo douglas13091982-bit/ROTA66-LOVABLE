@@ -22,13 +22,25 @@ export function useAdminEntregadores() {
           .select("*")
           .in("entregador_id", ids),
       ]);
+      const profMap = new Map<string, any>(
+        (profiles ?? []).map((p: any) => [p.id, p])
+      );
       const stMap = new Map<string, any>(
         (statuses ?? []).map((s: any) => [s.entregador_id, s])
       );
-      return (profiles ?? []).map((p: any) => ({
-        ...p,
-        status: stMap.get(p.id)?.status ?? "pendente",
-      }));
+      return ids.map((id) => {
+        const p = profMap.get(id) ?? {};
+        return {
+          id,
+          full_name: p.full_name ?? null,
+          email: p.email ?? null,
+          phone: p.phone ?? null,
+          avatar_url: p.avatar_url ?? null,
+          tipo_veiculo: p.tipo_veiculo ?? null,
+          ...p,
+          status: stMap.get(id)?.status ?? "pendente",
+        };
+      });
     },
   });
 
