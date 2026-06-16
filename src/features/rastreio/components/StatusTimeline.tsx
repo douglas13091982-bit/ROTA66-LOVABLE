@@ -17,7 +17,7 @@ export function StatusTimeline({ status }: { status: string }) {
                   done
                     ? current
                       ? "bg-gradient-red shadow-red text-primary-foreground"
-                      : "bg-primary/20 text-primary"
+                      : "bg-emerald-500 text-white"
                     : "bg-muted text-muted-foreground"
                 }`}
               >
