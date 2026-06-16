@@ -328,19 +328,14 @@ export const atribuirPedido = createServerFn({ method: "POST" })
       }
     }
 
-    // 2. Senão, escolhe entregador online e cria nova rota
+    // 2. Senão, deixa o pedido no pool aberto — qualquer entregador elegível
+    //    pode aceitar pela tela "Disponíveis". Não atribui automaticamente.
     if (!rotaEscolhida) {
-      const pick = await pickEntregador(supabase, pedido.loja_id, coleta, cfg.entregador_online_ttl_min);
-      if (!pick) {
-        return { ok: false, reason: "Nenhum entregador online disponível" };
-      }
-      rotaEscolhida = {
-        rotaId: crypto.randomUUID(),
-        entregadorId: pick.entregadorId,
-        proximaOrdem: 1,
-        duracao: pick.duracaoAteColeta,
-        distancia: pick.distanciaAteColeta,
-      };
+      // Mantém referência para evitar warning de variável não usada (pickEntregador
+      // segue exportada/disponível para uso futuro de roteirização avançada).
+      void pickEntregador;
+      void coleta;
+      return { ok: false, reason: "pool_aberto" };
     }
 
     const etaAt =

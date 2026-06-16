@@ -523,6 +523,7 @@ export type Database = {
           max_detour_seconds: number
           max_paradas_por_rota: number
           max_paradas_por_rota_carro: number
+          pool_aberto_scope: string
           raio_agrupamento_preparo_meters: number
           singleton: boolean
           updated_at: string
@@ -537,6 +538,7 @@ export type Database = {
           max_detour_seconds?: number
           max_paradas_por_rota?: number
           max_paradas_por_rota_carro?: number
+          pool_aberto_scope?: string
           raio_agrupamento_preparo_meters?: number
           singleton?: boolean
           updated_at?: string
@@ -551,6 +553,7 @@ export type Database = {
           max_detour_seconds?: number
           max_paradas_por_rota?: number
           max_paradas_por_rota_carro?: number
+          pool_aberto_scope?: string
           raio_agrupamento_preparo_meters?: number
           singleton?: boolean
           updated_at?: string

@@ -1,3 +1,8 @@
+export type PoolAbertoScope =
+  | "somente_vinculados"
+  | "somente_externos"
+  | "vinculados_e_externos";
+
 export type RoteirizacaoForm = {
   max_detour_minutes: string;
   max_detour_km: string;
@@ -7,6 +12,7 @@ export type RoteirizacaoForm = {
   raio_agrupamento_preparo_km: string;
   catalogo_horizontal_min_produtos: string;
   catalogo_horizontal_min_categorias: string;
+  pool_aberto_scope: PoolAbertoScope;
 };
 
 export const INITIAL_FORM: RoteirizacaoForm = {
@@ -18,6 +24,7 @@ export const INITIAL_FORM: RoteirizacaoForm = {
   raio_agrupamento_preparo_km: "1.5",
   catalogo_horizontal_min_produtos: "50",
   catalogo_horizontal_min_categorias: "5",
+  pool_aberto_scope: "vinculados_e_externos",
 };
 
 export function fromRow(data: any): RoteirizacaoForm {
@@ -30,11 +37,12 @@ export function fromRow(data: any): RoteirizacaoForm {
     raio_agrupamento_preparo_km: String(((data.raio_agrupamento_preparo_meters ?? 1500) / 1000).toFixed(1)),
     catalogo_horizontal_min_produtos: String(data.catalogo_horizontal_min_produtos ?? 50),
     catalogo_horizontal_min_categorias: String(data.catalogo_horizontal_min_categorias ?? 5),
+    pool_aberto_scope: (data.pool_aberto_scope ?? "vinculados_e_externos") as PoolAbertoScope,
   };
 }
 
 export type ValidationResult =
-  | { ok: true; payload: Record<string, number> }
+  | { ok: true; payload: Record<string, number | string> }
   | { ok: false; error: string };
 
 export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
@@ -56,6 +64,14 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
   if (paradas > 20 || paradasCarro > 40) {
     return { ok: false, error: "Máximo de 20 paradas (moto) / 40 (carro) por rota" };
   }
+  const scopesValidos: PoolAbertoScope[] = [
+    "somente_vinculados",
+    "somente_externos",
+    "vinculados_e_externos",
+  ];
+  if (!scopesValidos.includes(form.pool_aberto_scope)) {
+    return { ok: false, error: "Escopo do pool aberto inválido" };
+  }
 
   return {
     ok: true,
@@ -68,6 +84,7 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
       raio_agrupamento_preparo_meters: Math.round(raioKm * 1000),
       catalogo_horizontal_min_produtos: Math.round(catMinProd),
       catalogo_horizontal_min_categorias: Math.round(catMinCat),
+      pool_aberto_scope: form.pool_aberto_scope,
     },
   };
 }

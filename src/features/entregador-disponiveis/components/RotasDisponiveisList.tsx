@@ -1,7 +1,10 @@
+import { useMemo } from "react";
 import { Package } from "lucide-react";
 import { PedidoListItem } from "@/components/entregador/PedidoListItem";
-import type { LatLng } from "@/lib/geo";
+import { haversineKm, type LatLng } from "@/lib/geo";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
+import { OrdenacaoToggle } from "./OrdenacaoToggle";
+import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
 
 interface Props {
   grupos: GrupoPedido[];
@@ -10,6 +13,19 @@ interface Props {
   taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
+  ordenacao: OrdenacaoPedidos;
+  onOrdenacaoChange: (v: OrdenacaoPedidos) => void;
+}
+
+function distanciaColetaKm(g: GrupoPedido, pos: LatLng | null): number {
+  const p = g.items[0];
+  if (!pos || !p || p.endereco_coleta_lat == null || p.endereco_coleta_lng == null) {
+    return Number.POSITIVE_INFINITY;
+  }
+  return haversineKm(pos, {
+    lat: Number(p.endereco_coleta_lat),
+    lng: Number(p.endereco_coleta_lng),
+  });
 }
 
 export function RotasDisponiveisList({
@@ -19,7 +35,23 @@ export function RotasDisponiveisList({
   taxaSistema,
   taxaParaExibir,
   onAceitar,
+  ordenacao,
+  onOrdenacaoChange,
 }: Props) {
+  const gruposOrdenados = useMemo(() => {
+    const arr = [...grupos];
+    if (ordenacao === "valor") {
+      arr.sort((a, b) => {
+        const va = a.items.reduce((s, p) => s + taxaParaExibir(p), 0);
+        const vb = b.items.reduce((s, p) => s + taxaParaExibir(p), 0);
+        return vb - va;
+      });
+    } else {
+      arr.sort((a, b) => distanciaColetaKm(a, minhaPos) - distanciaColetaKm(b, minhaPos));
+    }
+    return arr;
+  }, [grupos, ordenacao, taxaParaExibir, minhaPos]);
+
   return (
     <div className="max-w-xl mx-auto">
       <div className="flex items-center justify-between mb-3 px-1">
@@ -36,6 +68,8 @@ export function RotasDisponiveisList({
         </div>
       </div>
 
+      <OrdenacaoToggle value={ordenacao} onChange={onOrdenacaoChange} />
+
       {isLoading && grupos.length === 0 && (
         <p className="text-white/45 text-sm px-1">Carregando pedidos...</p>
       )}
@@ -50,7 +84,7 @@ export function RotasDisponiveisList({
         </div>
       )}
 
-      {grupos.map((grupo) => (
+      {gruposOrdenados.map((grupo) => (
         <PedidoListItem
           key={grupo.key}
           grupo={grupo}

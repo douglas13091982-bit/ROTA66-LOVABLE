@@ -238,31 +238,26 @@ export function useAcoesPedido() {
         toast.error("Sessão expirada");
         return;
       }
-      const ehExterno = items.every((p) => p._externo);
 
-      let erro: string | null;
-      if (ehExterno) {
-        erro = await aceitarPedidosExternos(items);
-        if (!erro) {
-          toast.success(
-            items.length > 1
-              ? `Rota com ${items.length} pedidos aceita!`
-              : "Pedido aceito! Boa rota.",
-          );
-        }
-      } else if (items.length > 1) {
-        erro = await aceitarRotaVinculada(items, user.id);
-        if (!erro) toast.success(`Rota com ${items.length} pedidos aceita!`);
-      } else {
-        erro = await aceitarPedidoUnico(items, user.id);
-        if (!erro) toast.success("Pedido aceito! Boa rota.");
-      }
+      // Pool aberto: tudo passa pelo RPC aceitar_pedido_externo, que faz a
+      // trava atômica (UPDATE ... WHERE entregador_id IS NULL).
+      const erro = await aceitarPedidosExternos(items);
 
       if (erro) {
-        toast.error(erro);
+        const ehRace =
+          /já foi aceito|não está mais|não pôde ser aceito|não está disponível/i.test(erro);
+        toast.error(ehRace ? "Pedido já foi aceito por outro entregador" : erro);
+        // Some imediatamente da lista local e refaz a busca
+        for (const p of items) dismiss(p.id);
         qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", user.id] });
         return;
       }
+
+      toast.success(
+        items.length > 1
+          ? `Rota com ${items.length} pedidos aceita!`
+          : "Pedido aceito! Boa rota.",
+      );
 
       // Navega PRIMEIRO via router.navigate (independente do ciclo de vida do
       // componente que disparou o aceite). Só então invalida as queries, para
@@ -274,7 +269,7 @@ export function useAcoesPedido() {
       });
       invalidarQueries();
     },
-    [user?.id, qc, router, invalidarQueries],
+    [user?.id, qc, router, invalidarQueries, dismiss],
   );
 
   const recusarGrupo = useCallback(

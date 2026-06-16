@@ -11,12 +11,14 @@ import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
+import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
   const taxaSistema = useTaxaSistema();
   const { posicao: minhaPos } = useGeolocalizacao();
   const { dismissed, aceitarGrupo } = useAcoesPedido();
+  const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
   const {
     grupos,
     isLoading,
@@ -58,6 +60,8 @@ export function DisponiveisPage() {
           taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
           onAceitar={handleAceitar}
+          ordenacao={ordenacao}
+          onOrdenacaoChange={setOrdenacao}
         />
       )}
 
