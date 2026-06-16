@@ -13,7 +13,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { liquidoEntregador, useTaxaSistema } from "@/hooks/use-taxa-sistema";
 import { haversineKm } from "@/lib/geo";
 import {
   agruparPedidosPorRota,
