@@ -6,6 +6,7 @@ import { PixSection } from "./components/PixSection";
 import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
+import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
 
 export function FinanceiroAdminPage() {
   const {
@@ -48,6 +49,8 @@ export function FinanceiroAdminPage() {
         />
 
         <MercadoPagoPlataformaSection />
+
+        <CobrancasUnificadasSection />
 
         <PixSection
           config={config}
