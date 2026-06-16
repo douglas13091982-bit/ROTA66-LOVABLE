@@ -1,7 +1,7 @@
 import { STATUS_STEPS } from "../logic/types";
 
 export function StatusTimeline({ status }: { status: string }) {
-  const currentStepIdx = STATUS_STEPS.findIndex((s) => s.key === status);
+  const currentStepIdx = STATUS_STEPS.findIndex((s) => (s.matches as readonly string[]).includes(status));
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
       <p className="text-xs uppercase tracking-wider text-muted-foreground mb-4">Status do pedido</p>
