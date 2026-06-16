@@ -115,15 +115,14 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
   // Realtime
   useEffect(() => {
     if (!open) return;
-    const channelKey = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const channel = supabase
-      .channel(`chat-pedido-${pedidoId}-${channelKey}`)
+      .channel(`chat-pedido-${pedidoId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
         () => {
           qc.invalidateQueries({ queryKey: ["chat-pedido", pedidoId] });
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas"] });
+          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
         }
       )
       .subscribe();
