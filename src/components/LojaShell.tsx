@@ -9,6 +9,7 @@ import { useBranding } from "@/hooks/use-branding";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
+import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
