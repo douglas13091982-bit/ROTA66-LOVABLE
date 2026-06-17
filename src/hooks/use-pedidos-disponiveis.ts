@@ -73,12 +73,7 @@ export function usePedidosDisponiveis(
   });
   const estouOnline = !!meuStatus?.online;
 
-        .eq("id", userId!)
-        .maybeSingle();
-      return !!(data as { aceita_pedidos_externos?: boolean } | null)
-        ?.aceita_pedidos_externos;
-    },
-  });
+
 
   const { data: rotaAtivaCount } = useQuery({
     queryKey: ["entregador-rota-ativa", userId],
