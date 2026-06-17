@@ -8,7 +8,7 @@
  *   - Subscrever realtime
  */
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,7 +32,9 @@ export type UsePedidosDisponiveisResult = {
   semVinculoNemExterno: boolean;
   ganhoHoje: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
+  estouOnline: boolean;
 };
+
 
 export function usePedidosDisponiveis(
   dismissed: string[],
@@ -54,6 +56,30 @@ export function usePedidosDisponiveis(
         ?.aceita_pedidos_externos;
     },
   });
+
+  // Status online do próprio entregador. Quando offline, nenhum pedido deve
+  // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
+  // refetcha junto com a do StatusIndicator graças ao realtime.
+  const { data: meuStatus } = useQuery({
+    queryKey: ["entregador-self-status", userId],
+    enabled: !!userId,
+    refetchInterval: 15_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("entregador_status")
+        .select("online, updated_at")
+        .eq("entregador_id", userId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const estouOnline = !!meuStatus?.online;
+  const estouOnlineRef = useRef(estouOnline);
+  estouOnlineRef.current = estouOnline;
+
+
+
+
 
   const { data: rotaAtivaCount } = useQuery({
     queryKey: ["entregador-rota-ativa", userId],
@@ -89,7 +115,7 @@ export function usePedidosDisponiveis(
   // no admin (somente_vinculados / somente_externos / vinculados_e_externos).
   const { data: pedidosExternos, isLoading: loadingExt } = useQuery({
     queryKey: ["pedidos-pool-externo", userId],
-    enabled: !!userId && !temRotaAtiva,
+    enabled: !!userId && !temRotaAtiva && estouOnline,
     refetchInterval: POOL_REFETCH_MS,
     queryFn: async () => {
       const { data, error } = await (
@@ -150,11 +176,13 @@ export function usePedidosDisponiveis(
           filter: `entregador_id=eq.${userId}`,
         },
         (payload) => {
+          if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           if (payload.eventType === "INSERT") {
             toast.success("🚨 Nova oferta de pedido disponível!");
           }
         },
+
       )
       .subscribe();
     return () => {
@@ -171,6 +199,7 @@ export function usePedidosDisponiveis(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedidos" },
         (payload) => {
+          if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           const novo = payload.new as { status?: string; entregador_id?: string | null } | null;
           const ficouPronto =
@@ -181,6 +210,7 @@ export function usePedidosDisponiveis(
             toast.success("🚨 Novo pedido pronto para retirar!");
           }
         },
+
       )
       .subscribe();
     return () => {
@@ -194,9 +224,10 @@ export function usePedidosDisponiveis(
   );
 
   const grupos = useMemo(
-    () => agruparPedidosPorRota(pedidos, dismissed),
-    [pedidos, dismissed],
+    () => (estouOnline ? agruparPedidosPorRota(pedidos, dismissed) : []),
+    [pedidos, dismissed, estouOnline],
   );
+
 
 
   const taxaParaExibir = useMemo(
@@ -211,7 +242,9 @@ export function usePedidosDisponiveis(
     semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !profileFlag,
     ganhoHoje: ganhoHoje ?? 0,
     taxaParaExibir,
+    estouOnline,
   };
+
 }
 
 function criarCalculadorTaxaExibida(

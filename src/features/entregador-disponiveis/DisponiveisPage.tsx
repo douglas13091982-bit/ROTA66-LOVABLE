@@ -26,7 +26,9 @@ export function DisponiveisPage() {
     semVinculoNemExterno,
     ganhoHoje,
     taxaParaExibir,
+    estouOnline,
   } = usePedidosDisponiveis(dismissed);
+
 
   // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
   // ser referencialmente estável — caso contrário, todo tick de polling
@@ -52,6 +54,13 @@ export function DisponiveisPage() {
 
       {temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
+      ) : !estouOnline ? (
+        <div className="bg-card border border-border rounded-lg p-6 text-center">
+          <p className="font-display text-xl mb-2">VOCÊ ESTÁ OFFLINE</p>
+          <p className="text-sm text-muted-foreground">
+            Fique online no menu do entregador para começar a receber pedidos.
+          </p>
+        </div>
       ) : (
         <RotasDisponiveisList
           grupos={grupos}
@@ -64,6 +73,7 @@ export function DisponiveisPage() {
           onOrdenacaoChange={setOrdenacao}
         />
       )}
+
 
       <AnunciosEntregador />
     </EntregadorShell>
