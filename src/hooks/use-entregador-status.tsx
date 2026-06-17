@@ -1,13 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export function useEntregadorStatus() {
   const { user } = useAuth();
+  const qc = useQueryClient();
   const [online, setOnline] = useState(false);
   const [loading, setLoading] = useState(true);
   const [geoError, setGeoError] = useState<string | null>(null);
+
+  // "Sessão" da fase online atual. Toda escrita assíncrona (heartbeat, geo
+  // callback) captura o token no início e só persiste se o token AINDA for
+  // o vigente. Isso impede que um ping em voo ressuscite online=true
+  // depois que o usuário clicou em offline.
+  const sessionRef = useRef(0);
+  const onlineRef = useRef(false);
+  onlineRef.current = online;
 
   // Carrega estado inicial
   useEffect(() => {
@@ -20,24 +30,27 @@ export function useEntregadorStatus() {
         .eq("entregador_id", user.id)
         .maybeSingle();
       if (cancel) return;
-      setOnline(!!data?.online);
+      const inicial = !!data?.online;
+      setOnline(inicial);
+      onlineRef.current = inicial;
       setLoading(false);
     })();
-    return () => { cancel = true; };
+    return () => {
+      cancel = true;
+    };
   }, [user?.id]);
 
-  // Loop de heartbeat enquanto online.
-  // Importante: o heartbeat é gravado imediatamente, independente do GPS.
-  // A localização é apenas um complemento; sem GPS o entregador continua online.
+  // Loop de heartbeat enquanto online. Toda escrita verifica o token de
+  // sessão antes de gravar — se o usuário ficou offline no meio do caminho,
+  // a escrita é descartada.
   useEffect(() => {
     if (!online || !user?.id) return;
+    const mySession = ++sessionRef.current;
     let timer: ReturnType<typeof setInterval> | null = null;
     let warned = false;
 
-    // Atualiza apenas heartbeat (sem mexer em lat/lng) quando geo não disponível.
-    // Usa upsert para criar a linha se ela ainda não existir. Log de erro
-    // para diagnosticar quando a loja vê o entregador offline mesmo com app aberto.
     const heartbeatOnly = async () => {
+      if (sessionRef.current !== mySession) return;
       const { error } = await supabase.from("entregador_status").upsert(
         { entregador_id: user.id, online: true, updated_at: new Date().toISOString() },
         { onConflict: "entregador_id" }
@@ -45,8 +58,8 @@ export function useEntregadorStatus() {
       if (error) console.error("[heartbeat] falhou:", error);
     };
 
-    // Salva coordenadas + heartbeat
     const upsertComCoords = async (lat: number, lng: number) => {
+      if (sessionRef.current !== mySession) return;
       const { error } = await supabase.from("entregador_status").upsert(
         { entregador_id: user.id, online: true, lat, lng, updated_at: new Date().toISOString() },
         { onConflict: "entregador_id" }
@@ -55,8 +68,7 @@ export function useEntregadorStatus() {
     };
 
     const ping = () => {
-      // Mantém o status vivo primeiro. Se o GPS demorar, travar ou falhar,
-      // o painel ainda recebe um heartbeat recente.
+      if (sessionRef.current !== mySession) return;
       heartbeatOnly();
 
       if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -69,10 +81,12 @@ export function useEntregadorStatus() {
       }
       navigator.geolocation.getCurrentPosition(
         (pos) => {
+          if (sessionRef.current !== mySession) return;
           setGeoError(null);
           upsertComCoords(pos.coords.latitude, pos.coords.longitude);
         },
         (err) => {
+          if (sessionRef.current !== mySession) return;
           const msg =
             err.code === err.PERMISSION_DENIED
               ? "Permissão de localização negada. Ative para aparecer no mapa."
@@ -84,7 +98,6 @@ export function useEntregadorStatus() {
             toast.error(msg);
             warned = true;
           }
-          // O heartbeat já foi enviado no início do ping; mantém última lat/lng conhecida.
         },
         { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
       );
@@ -109,7 +122,6 @@ export function useEntregadorStatus() {
       window.removeEventListener("focus", ping);
       window.removeEventListener("pageshow", ping);
     };
-
   }, [online, user?.id]);
 
   const toggle = async () => {
@@ -118,37 +130,56 @@ export function useEntregadorStatus() {
       return;
     }
     const novo = !online;
-    setOnline(novo);
 
-    // Ao FICAR OFFLINE: apenas atualiza o status.
+    // === FICAR OFFLINE ===
+    // 1) Invalida QUALQUER ping/geo em voo (bump da sessão).
+    // 2) Atualiza o ref ANTES do await — heartbeats já agendados saem.
+    // 3) Persiste online=false no banco e CONFIRMA a escrita.
+    // 4) Atualiza o cache do react-query do `entregador-self-status` na hora
+    //    para que `usePedidosDisponiveis` esconda os pedidos imediatamente.
     if (!novo) {
+      sessionRef.current++; // cancela sessão online atual
+      onlineRef.current = false;
+      setOnline(false);
+
+      const agora = new Date().toISOString();
       const { error } = await supabase.from("entregador_status").upsert(
-        { entregador_id: user.id, online: false, updated_at: new Date().toISOString() },
+        { entregador_id: user.id, online: false, updated_at: agora },
         { onConflict: "entregador_id" }
       );
       if (error) {
         console.error("[status] falha ao ficar offline:", error);
         toast.error(`Não foi possível salvar offline: ${error.message}`);
+        onlineRef.current = true;
         setOnline(true); // rollback
-      } else {
-        toast.success("Você está offline");
+        return;
       }
+
+      // Reflete na hora no cache local — sem esperar refetch/realtime.
+      qc.setQueryData(["entregador-self-status", user.id], {
+        online: false,
+        updated_at: agora,
+      });
+      qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", user.id] });
+
+      toast.success("Você está offline");
       return;
     }
 
-    // Ao FICAR ONLINE: grava no banco AGORA e CONFIRMA a escrita.
-    // Se a escrita falhar, faz rollback do estado local — para o botão
-    // não ficar "verde" mentindo que está online enquanto o painel da loja vê offline.
+    // === FICAR ONLINE ===
+    const agora = new Date().toISOString();
     const { error: upErr } = await supabase.from("entregador_status").upsert(
-      { entregador_id: user.id, online: true, updated_at: new Date().toISOString() },
+      { entregador_id: user.id, online: true, updated_at: agora },
       { onConflict: "entregador_id" }
     );
     if (upErr) {
       console.error("[status] falha ao ficar online:", upErr);
       toast.error(`Não foi possível ficar online: ${upErr.message}`);
-      setOnline(false); // rollback
       return;
     }
+    onlineRef.current = true;
+    setOnline(true);
+    qc.setQueryData(["entregador-self-status", user.id], { online: true, updated_at: agora });
     toast.success("Você está online — recebendo pedidos");
 
     if (typeof navigator === "undefined" || !navigator.geolocation) {
@@ -156,10 +187,12 @@ export function useEntregadorStatus() {
       return;
     }
 
-    console.log("[geo] solicitando getCurrentPosition...");
+    // Captura a sessão atual para o callback do GPS — se o usuário clicar
+    // offline antes do GPS responder, o upsert é descartado.
+    const sessaoCaptura = sessionRef.current + 1; // o efeito de heartbeat vai incrementar para esse valor
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        console.log("[geo] sucesso:", pos.coords.latitude, pos.coords.longitude, "accuracy:", pos.coords.accuracy);
+        if (sessionRef.current !== sessaoCaptura) return;
         setGeoError(null);
         const { error } = await supabase.from("entregador_status").upsert(
           {
@@ -174,7 +207,7 @@ export function useEntregadorStatus() {
         if (error) console.error("[status] falha ao gravar coords:", error);
       },
       (err) => {
-        console.error("[geo] erro:", err.code, err.message);
+        if (sessionRef.current !== sessaoCaptura) return;
         const msg =
           err.code === err.PERMISSION_DENIED
             ? "Permissão de localização negada. Ative no navegador para aparecer no mapa."
