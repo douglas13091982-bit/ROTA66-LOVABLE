@@ -32,7 +32,9 @@ export type UsePedidosDisponiveisResult = {
   semVinculoNemExterno: boolean;
   ganhoHoje: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
+  estouOnline: boolean;
 };
+
 
 export function usePedidosDisponiveis(
   dismissed: string[],
