@@ -86,11 +86,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Outlet />
-        <InstallPrompt />
-        <Toaster theme="dark" position="top-right" richColors />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Outlet />
+          <InstallPrompt />
+          <Toaster theme="dark" position="top-right" richColors />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
