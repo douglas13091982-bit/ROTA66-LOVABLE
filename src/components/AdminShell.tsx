@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
