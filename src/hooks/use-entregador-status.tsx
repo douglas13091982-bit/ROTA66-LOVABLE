@@ -1,8 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import {
+  getEntregadorOfflinePending,
+  setEntregadorOfflinePending,
+  subscribeEntregadorOfflinePending,
+} from "@/lib/entregador-offline-pending";
+
+const OFFLINE_RETRY_MS = 5_000;
 
 export function useEntregadorStatus() {
   const { user } = useAuth();
@@ -10,6 +17,7 @@ export function useEntregadorStatus() {
   const [online, setOnline] = useState(false);
   const [loading, setLoading] = useState(true);
   const [geoError, setGeoError] = useState<string | null>(null);
+  const [offlineLocked, setOfflineLockedState] = useState(false);
 
   // "Sessão" da fase online atual. Toda escrita assíncrona (heartbeat, geo
   // callback) captura o token no início e só persiste se o token AINDA for
@@ -17,7 +25,43 @@ export function useEntregadorStatus() {
   // depois que o usuário clicou em offline.
   const sessionRef = useRef(0);
   const onlineRef = useRef(false);
+  const offlineLockedRef = useRef(false);
   onlineRef.current = online;
+  offlineLockedRef.current = offlineLocked;
+
+  const travarOfflineLocal = useCallback((userId: string, locked: boolean) => {
+    offlineLockedRef.current = locked;
+    setOfflineLockedState(locked);
+    setEntregadorOfflinePending(userId, locked);
+  }, []);
+
+  const limparPedidosDisponiveisDoCache = useCallback(
+    (userId: string, agora: string) => {
+      qc.setQueryData(["entregador-self-status", userId], {
+        online: false,
+        updated_at: agora,
+      });
+      qc.setQueryData(["pedidos-pool-externo", userId], []);
+      qc.cancelQueries({ queryKey: ["pedidos-pool-externo", userId] });
+      qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+    },
+    [qc],
+  );
+
+  const persistirOffline = useCallback(async () => {
+    if (!user?.id) return false;
+    const agora = new Date().toISOString();
+    const { error } = await supabase.from("entregador_status").upsert(
+      { entregador_id: user.id, online: false, updated_at: agora },
+      { onConflict: "entregador_id" },
+    );
+    if (error) {
+      console.error("[status] falha ao sincronizar offline:", error);
+      return false;
+    }
+    limparPedidosDisponiveisDoCache(user.id, agora);
+    return true;
+  }, [limparPedidosDisponiveisDoCache, user?.id]);
 
   // Carrega estado inicial
   useEffect(() => {
