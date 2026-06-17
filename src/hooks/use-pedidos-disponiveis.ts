@@ -109,7 +109,7 @@ export function usePedidosDisponiveis(
   // no admin (somente_vinculados / somente_externos / vinculados_e_externos).
   const { data: pedidosExternos, isLoading: loadingExt } = useQuery({
     queryKey: ["pedidos-pool-externo", userId],
-    enabled: !!userId && !temRotaAtiva,
+    enabled: !!userId && !temRotaAtiva && estouOnline,
     refetchInterval: POOL_REFETCH_MS,
     queryFn: async () => {
       const { data, error } = await (
