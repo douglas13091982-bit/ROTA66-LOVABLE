@@ -152,6 +152,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rota-gold)", boxShadow: "0 0 0 3px oklch(0.78 0.16 75 / 0.18), 0 0 12px oklch(0.78 0.16 75 / 0.55)" }} />
               Plataforma
             </span>
+            <ThemeToggle />
           </div>
         </header>
 
