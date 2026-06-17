@@ -41,8 +41,10 @@ function criarStatusController() {
   };
 
   // Simula um heartbeat que estava agendado: captura o token AGORA e
-  // tenta escrever depois (durante/após a queda de rede).
+  // tenta escrever depois (durante/após a queda de rede). Reflete o
+  // hook real: heartbeats só são agendados enquanto onlineRef=true.
   const agendarHeartbeatEmVoo = (latencyMs: number, flushQueue: any[]) => {
+    if (!onlineRef) return Promise.resolve(); // loop parou ao ficar offline
     const captured = sessionRef;
     return upsert(captured, true, latencyMs, flushQueue);
   };
