@@ -8,7 +8,6 @@ import {
 import { Toaster } from "sonner";
 import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ThemeProvider } from "@/hooks/use-theme";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { registerAppServiceWorker } from "@/lib/register-sw";
@@ -86,13 +85,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <Outlet />
-          <InstallPrompt />
-          <Toaster theme="dark" position="top-right" richColors />
-        </AuthProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <Outlet />
+        <InstallPrompt />
+        <Toaster theme="dark" position="top-right" richColors />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

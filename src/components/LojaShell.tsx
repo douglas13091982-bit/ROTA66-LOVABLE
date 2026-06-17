@@ -10,7 +10,6 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -189,7 +188,6 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
               <span className="h-1.5 w-1.5 rounded-full pp-dot-online" />
               Ao vivo
             </span>
-            <ThemeToggle />
           </div>
         </header>
 

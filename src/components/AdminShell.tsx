@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
@@ -152,7 +151,6 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rota-gold)", boxShadow: "0 0 0 3px oklch(0.78 0.16 75 / 0.18), 0 0 12px oklch(0.78 0.16 75 / 0.55)" }} />
               Plataforma
             </span>
-            <ThemeToggle />
           </div>
         </header>
 
