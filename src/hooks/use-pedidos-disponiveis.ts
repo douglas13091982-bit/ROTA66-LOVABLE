@@ -214,9 +214,10 @@ export function usePedidosDisponiveis(
   );
 
   const grupos = useMemo(
-    () => agruparPedidosPorRota(pedidos, dismissed),
-    [pedidos, dismissed],
+    () => (estouOnline ? agruparPedidosPorRota(pedidos, dismissed) : []),
+    [pedidos, dismissed, estouOnline],
   );
+
 
 
   const taxaParaExibir = useMemo(
