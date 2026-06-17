@@ -242,7 +242,9 @@ export function usePedidosDisponiveis(
     semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !profileFlag,
     ganhoHoje: ganhoHoje ?? 0,
     taxaParaExibir,
+    estouOnline,
   };
+
 }
 
 function criarCalculadorTaxaExibida(
