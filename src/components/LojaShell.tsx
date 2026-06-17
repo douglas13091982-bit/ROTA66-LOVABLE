@@ -189,6 +189,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
               <span className="h-1.5 w-1.5 rounded-full pp-dot-online" />
               Ao vivo
             </span>
+            <ThemeToggle />
           </div>
         </header>
 
