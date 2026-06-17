@@ -72,6 +72,10 @@ export function usePedidosDisponiveis(
     },
   });
   const estouOnline = !!meuStatus?.online;
+  const estouOnlineRef = useRef(estouOnline);
+  estouOnlineRef.current = estouOnline;
+
+
 
 
 
