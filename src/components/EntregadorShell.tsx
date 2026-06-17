@@ -8,6 +8,7 @@ import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -120,6 +121,10 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
+        <div className="absolute top-3 right-3 z-30">
+          <ThemeToggle />
+        </div>
+
 
         <main className="flex-1 px-4 py-4 pb-24 relative">
           <div className="pp-reveal">
