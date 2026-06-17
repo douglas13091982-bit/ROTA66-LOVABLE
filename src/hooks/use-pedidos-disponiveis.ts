@@ -174,11 +174,13 @@ export function usePedidosDisponiveis(
           filter: `entregador_id=eq.${userId}`,
         },
         (payload) => {
+          if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           if (payload.eventType === "INSERT") {
             toast.success("🚨 Nova oferta de pedido disponível!");
           }
         },
+
       )
       .subscribe();
     return () => {
