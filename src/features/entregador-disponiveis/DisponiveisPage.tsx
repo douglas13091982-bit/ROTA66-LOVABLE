@@ -26,7 +26,9 @@ export function DisponiveisPage() {
     semVinculoNemExterno,
     ganhoHoje,
     taxaParaExibir,
+    estouOnline,
   } = usePedidosDisponiveis(dismissed);
+
 
   // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
   // ser referencialmente estável — caso contrário, todo tick de polling
