@@ -55,6 +55,31 @@ export function usePedidosDisponiveis(
     },
   });
 
+  // Status online do próprio entregador. Quando offline, nenhum pedido deve
+  // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
+  // refetcha junto com a do StatusIndicator graças ao realtime.
+  const { data: meuStatus } = useQuery({
+    queryKey: ["entregador-self-status", userId],
+    enabled: !!userId,
+    refetchInterval: 15_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("entregador_status")
+        .select("online, updated_at")
+        .eq("entregador_id", userId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const estouOnline = !!meuStatus?.online;
+
+        .eq("id", userId!)
+        .maybeSingle();
+      return !!(data as { aceita_pedidos_externos?: boolean } | null)
+        ?.aceita_pedidos_externos;
+    },
+  });
+
   const { data: rotaAtivaCount } = useQuery({
     queryKey: ["entregador-rota-ativa", userId],
     enabled: !!userId,
