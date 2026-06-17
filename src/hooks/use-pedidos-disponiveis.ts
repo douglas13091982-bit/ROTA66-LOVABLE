@@ -197,6 +197,7 @@ export function usePedidosDisponiveis(
         "postgres_changes",
         { event: "*", schema: "public", table: "pedidos" },
         (payload) => {
+          if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           const novo = payload.new as { status?: string; entregador_id?: string | null } | null;
           const ficouPronto =
@@ -207,6 +208,7 @@ export function usePedidosDisponiveis(
             toast.success("🚨 Novo pedido pronto para retirar!");
           }
         },
+
       )
       .subscribe();
     return () => {
