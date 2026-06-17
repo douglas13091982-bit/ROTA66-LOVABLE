@@ -77,6 +77,36 @@ export function usePedidosDisponiveis(
   const estouOnlineRef = useRef(estouOnline);
   estouOnlineRef.current = estouOnline;
 
+  // Realtime no próprio status: assim que o toggle grava online=false,
+  // o estado flipa AQUI na mesma hora — sem esperar o refetch de 15s —
+  // e os grupos somem da tela imediatamente.
+  useEffect(() => {
+    if (!userId) return;
+    const ch = supabase
+      .channel(`self-status-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "entregador_status",
+          filter: `entregador_id=eq.${userId}`,
+        },
+        (payload) => {
+          const novo = (payload.new ?? null) as { online?: boolean; updated_at?: string } | null;
+          if (novo) {
+            qc.setQueryData(["entregador-self-status", userId], novo);
+          } else {
+            qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
+          }
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [userId, qc]);
+
 
 
 
