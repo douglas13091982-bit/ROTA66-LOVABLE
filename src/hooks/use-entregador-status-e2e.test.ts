@@ -216,15 +216,14 @@ describe("E2E (node): perda de rede + clique offline + reconexão", () => {
 
     supa.setNetwork(false);
     const hbAntigo = ctrl.heartbeat();
-
-    await ctrl.ficarOffline();
+    // Não esperamos ficarOffline aqui porque o upsert também está pendente
+    // até a rede voltar — só nos importa que o estado LOCAL flipou na hora.
+    const offPromise = ctrl.ficarOffline();
     expect(ctrl.estouOnline).toBe(false);
 
-    // Rede volta, heartbeat antigo resolve…
+    // Rede volta — fila drena na ordem: hbAntigo, depois offline.
     supa.setNetwork(true);
-    await hbAntigo;
-
-    // …e o estado publicado segue offline.
+    await Promise.all([hbAntigo, offPromise]);
     expect(ctrl.estouOnline).toBe(false);
 
     // Se o usuário escolher ficar online de novo, é uma sessão nova.
