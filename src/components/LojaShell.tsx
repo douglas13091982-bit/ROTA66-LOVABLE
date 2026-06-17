@@ -10,6 +10,7 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
