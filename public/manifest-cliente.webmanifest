@@ -1,0 +1,20 @@
+{
+  "name": "ROTA 66 — Cliente",
+  "short_name": "ROTA 66",
+  "description": "Encontre lojas, restaurantes e mercados perto de você.",
+  "start_url": "/clientes",
+  "scope": "/clientes",
+  "id": "/clientes",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#cc2229",
+  "lang": "pt-BR",
+  "categories": ["shopping", "food", "lifestyle"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

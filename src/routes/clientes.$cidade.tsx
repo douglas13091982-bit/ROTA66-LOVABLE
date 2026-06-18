@@ -14,7 +14,13 @@ export const Route = createFileRoute("/clientes/$cidade")({
         { title: `Lojas em ${cidade}` },
         { name: "description", content: `Veja todas as lojas disponíveis em ${cidade}.` },
         { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-        { name: "theme-color", content: "#ffffff" },
+        { name: "theme-color", content: "#cc2229" },
+        { name: "apple-mobile-web-app-title", content: "ROTA 66 Cliente" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "mobile-web-app-capable", content: "yes" },
+      ],
+      links: [
+        { rel: "manifest", href: "/manifest-cliente.webmanifest" },
       ],
     };
   },
