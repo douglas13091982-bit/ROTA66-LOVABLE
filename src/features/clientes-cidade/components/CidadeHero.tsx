@@ -33,6 +33,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
   const [nomeCliente, setNomeCliente] = useState<string>("");
   const [logado, setLogado] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [perfilOpen, setPerfilOpen] = useState(false);
   const navigate = useNavigate();
   const { data: cidades = [] } = useCidadesDisponiveis();
 
@@ -117,16 +118,17 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
               <nav className="flex flex-col py-2">
                 {logado ? (
                   <>
-                    <PerfilDialog>
-                      <button
-                        type="button"
-                        onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
-                      >
-                        <UserRound className="h-4 w-4 text-muted-foreground" />
-                        Meu perfil
-                      </button>
-                    </PerfilDialog>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        setTimeout(() => setPerfilOpen(true), 150);
+                      }}
+                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left w-full"
+                    >
+                      <UserRound className="h-4 w-4 text-muted-foreground" />
+                      Meu perfil
+                    </button>
                     <button
                       type="button"
                       onClick={() => {
