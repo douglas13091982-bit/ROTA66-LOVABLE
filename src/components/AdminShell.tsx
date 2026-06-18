@@ -9,7 +9,7 @@ import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 
 const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
-  { to: "/clientes", label: "Marketplace", icon: Store, area: null },
+  
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
   { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas" },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
