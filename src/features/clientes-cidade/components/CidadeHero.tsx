@@ -131,12 +131,12 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        navigate({ to: "/cadastro" });
+                        navigate({ to: "/cadastro", search: { role: "cliente" } });
                       }}
                       className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
                     >
                       <UserPlus className="h-4 w-4 text-muted-foreground" />
-                      Cadastrar loja / entregador
+                      Cadastrar
                     </button>
                     <button
                       type="button"
@@ -164,7 +164,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        navigate({ to: "/cadastro" });
+                        navigate({ to: "/cadastro", search: { role: "cliente" } });
                       }}
                       className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
                     >
