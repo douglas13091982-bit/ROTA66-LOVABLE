@@ -1251,3 +1251,88 @@
 .entregador-light textarea::placeholder {
   color: rgba(189, 15, 16, 0.4) !important;
 }
+
+/* ===========================================================
+   ENTREGADOR LIGHT — Refinos
+   =========================================================== */
+
+/* Forçar painel base branco mesmo com panel-premium */
+.entregador-light.panel-premium,
+.entregador-light .panel-premium {
+  background: #ffffff !important;
+  color: #bd0f10 !important;
+  --panel-gradient-bg: #ffffff !important;
+  --panel-bg: #ffffff !important;
+  --panel-bg-elev: #ffffff !important;
+  --panel-text: #bd0f10 !important;
+  --panel-text-dim: #bd0f10 !important;
+  --panel-text-muted: rgba(189, 15, 16, 0.7) !important;
+  --panel-border: rgba(189, 15, 16, 0.18) !important;
+  --panel-border-strong: rgba(189, 15, 16, 0.28) !important;
+}
+
+/* Eyebrow ("Ganhos do dia", "Estado atual" etc.) vermelho vivo */
+.entregador-light .pp-eyebrow {
+  color: #bd0f10 !important;
+  opacity: 1 !important;
+}
+
+/* Bottom nav: branco com borda topo vermelha */
+.entregador-light nav.fixed,
+.entregador-light nav[style*="0f304d"] {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-top: 1px solid rgba(189, 15, 16, 0.18) !important;
+  box-shadow: 0 -8px 24px -18px rgba(189, 15, 16, 0.25) !important;
+}
+.entregador-light nav .ring-\[\#0f304d\] {
+  --tw-ring-color: #ffffff !important;
+}
+
+/* Botão online (status toggle): contorno vermelho */
+.entregador-light button[aria-label*="ficar"],
+.entregador-light button[aria-label*="Ficar"] {
+  background: #ffffff !important;
+  border: 2px solid #bd0f10 !important;
+  box-shadow: 0 0 0 1px rgba(189, 15, 16, 0.15), inset 0 1px 2px rgba(189, 15, 16, 0.1) !important;
+}
+.entregador-light button[aria-label*="ficar"] > span,
+.entregador-light button[aria-label*="Ficar"] > span {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  color: rgba(189, 15, 16, 0.45) !important;
+  box-shadow: none !important;
+}
+/* ON / power ativo dentro do toggle (o lado "ativo" tem border colorida ou bg colorido) */
+.entregador-light button[aria-label*="Ficar offline"] > span:last-child,
+.entregador-light button[aria-label*="ficar offline"] > span:last-child {
+  background: #bd0f10 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #bd0f10 !important;
+  box-shadow: 0 6px 18px -6px rgba(189, 15, 16, 0.5) !important;
+}
+.entregador-light button[aria-label*="Ficar online"] > span:first-child,
+.entregador-light button[aria-label*="ficar online"] > span:first-child {
+  background: #bd0f10 !important;
+  color: #ffffff !important;
+}
+
+/* Filtro de ordenação (Mais próximos / Maior valor): aba ativa em vermelho */
+.entregador-light [role="tablist"][aria-label="Ordenar pedidos"] {
+  background: #ffffff !important;
+  border-color: rgba(189, 15, 16, 0.25) !important;
+}
+.entregador-light [role="tablist"][aria-label="Ordenar pedidos"] [role="tab"] {
+  color: rgba(189, 15, 16, 0.55) !important;
+  background: transparent !important;
+}
+.entregador-light [role="tablist"][aria-label="Ordenar pedidos"] [role="tab"][aria-selected="true"] {
+  background: #bd0f10 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px -4px rgba(189, 15, 16, 0.45) !important;
+}
+.entregador-light [role="tablist"][aria-label="Ordenar pedidos"] [role="tab"][aria-selected="true"] * {
+  color: #ffffff !important;
+}
