@@ -118,7 +118,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
 
 
   return (
-    <div className={`panel-premium flex flex-col min-h-screen ${theme === "light" ? "entregador-light" : ""}`}>
+    <div className="panel-premium flex flex-col min-h-screen">
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
