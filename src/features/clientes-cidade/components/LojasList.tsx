@@ -59,10 +59,11 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
               style={{ scrollbarWidth: "none" }}
             >
               {items.map((l) => (
-                <div key={l.id} className="snap-start shrink-0 w-[260px]">
+                <div key={l.id} className="snap-start shrink-0 w-[160px]">
                   <LojaCard loja={l} />
                 </div>
               ))}
+
             </div>
           </section>
         );
