@@ -1,20 +1,18 @@
 /**
- * Calcula o valor líquido recebido pelo entregador por uma entrega.
+ * Valor líquido que o entregador recebe por uma entrega.
  *
- * - Se a loja tem `plano_mensal_ativo = true`, o entregador recebe o valor cheio
- *   da `taxa_entrega` (a loja paga a mensalidade fixa).
- * - Caso contrário, desconta a `taxa_por_pedido` específica da loja (vinda do
- *   plano contratado). Nunca retorna negativo.
+ * Modelo atual: a taxa do plano é cobrada do CLIENTE (somada à tarifa de
+ * entrega), não descontada do entregador. Portanto o entregador recebe
+ * `taxa_entrega` integral. Os parâmetros adicionais (`_lojaTaxaPorPedido`,
+ * `_planoMensalAtivo`) são aceitos por compatibilidade com chamadas antigas
+ * mas são ignorados.
  */
 export function liquidoEntregador(
   taxaEntrega: number | string | null | undefined,
-  lojaTaxaPorPedido: number | string | null | undefined,
-  planoMensalAtivo?: boolean | null,
+  _lojaTaxaPorPedido?: number | string | null,
+  _planoMensalAtivo?: boolean | null,
 ): number {
   const taxa = Number(taxaEntrega);
   if (!Number.isFinite(taxa) || taxa <= 0) return 0;
-  if (planoMensalAtivo) return taxa;
-  const desconto = Number(lojaTaxaPorPedido);
-  const d = Number.isFinite(desconto) && desconto > 0 ? desconto : 0;
-  return Math.max(0, taxa - d);
+  return taxa;
 }

@@ -39,7 +39,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 1. Loja precisa estar ativa, aprovada e com catálogo ativo
-    const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo";
+    const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
     let { data: loja, error: lojaErr } = await supabaseAdmin
       .from("lojas")
       .select(lojaCols)
@@ -100,6 +100,14 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         .order("faixa_km_min", { ascending: true });
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
+    }
+    // Soma a taxa do plano da loja na taxa de entrega cobrada do cliente
+    // (loja repassa esse valor ao sistema depois via cobrancas_loja).
+    // Lojas com plano mensal ativo não acrescentam nada.
+    const planoAtivo = Boolean((loja as any).plano_mensal_ativo);
+    const taxaPlano = planoAtivo ? 0 : Number((loja as any).taxa_por_pedido ?? 0) || 0;
+    if (taxaPlano > 0) {
+      taxa_entrega = Number((taxa_entrega + taxaPlano).toFixed(2));
     }
     const valor_total = valor_produtos + taxa_entrega;
 
