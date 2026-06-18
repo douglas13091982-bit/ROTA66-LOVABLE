@@ -5,7 +5,6 @@ import type { Cobranca, ConfigFinanceiro, Mensalidade } from "../logic/types";
 
 export function useAdminFinanceiro() {
   const [config, setConfig] = useState<ConfigFinanceiro>({
-    taxa: 2,
     prazo: 30,
     mensalidadePadrao: 0,
     diaVenc: 10,
@@ -30,7 +29,6 @@ export function useAdminFinanceiro() {
     if (cfg) {
       setConfigId(cfg.id);
       setConfig({
-        taxa: Number(cfg.taxa_por_pedido),
         prazo: Number(cfg.prazo_pagamento_dias),
         mensalidadePadrao: Number(cfg.mensalidade_valor_padrao ?? 0),
         diaVenc: Number(cfg.dia_vencimento_padrao ?? 10),
@@ -104,7 +102,6 @@ export function useAdminFinanceiro() {
   async function salvar() {
     setSaving(true);
     const payload = {
-      taxa_por_pedido: config.taxa,
       prazo_pagamento_dias: config.prazo,
       mensalidade_valor_padrao: config.mensalidadePadrao,
       dia_vencimento_padrao: Math.min(Math.max(config.diaVenc, 1), 28),

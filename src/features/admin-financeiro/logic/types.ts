@@ -24,7 +24,6 @@ export type Mensalidade = {
 };
 
 export type ConfigFinanceiro = {
-  taxa: number;
   prazo: number;
   mensalidadePadrao: number;
   diaVenc: number;

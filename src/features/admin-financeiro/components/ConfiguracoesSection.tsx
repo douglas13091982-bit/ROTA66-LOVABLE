@@ -27,22 +27,7 @@ export function ConfiguracoesSection({
         <strong>Lojas</strong>.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <label className="block">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Taxa por pedido (R$)
-          </span>
-          <input
-            type="number"
-            min={0}
-            step="0.01"
-            value={config.taxa}
-            onChange={(e) => upd({ taxa: Number(e.target.value) })}
-            className="mt-1 w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
-          />
-          <span className="text-[10px] text-muted-foreground">
-            Por pedido entregue · não se aplica a lojas com plano mensal ativo
-          </span>
-        </label>
+
         <label className="block">
           <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Prazo p/ pagamento (dias)
