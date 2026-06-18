@@ -51,6 +51,7 @@ import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
+import { Route as AuthenticatedAdminNotificacaoSomLojaRouteImport } from './routes/_authenticated/admin/notificacao-som-loja'
 import { Route as AuthenticatedAdminNotificacaoSomRouteImport } from './routes/_authenticated/admin/notificacao-som'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
 import { Route as AuthenticatedAdminFinanceiroRouteImport } from './routes/_authenticated/admin/financeiro'
@@ -298,6 +299,12 @@ const AuthenticatedAdminPedidosRoute =
     path: '/pedidos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminNotificacaoSomLojaRoute =
+  AuthenticatedAdminNotificacaoSomLojaRouteImport.update({
+    id: '/notificacao-som-loja',
+    path: '/notificacao-som-loja',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminNotificacaoSomRoute =
   AuthenticatedAdminNotificacaoSomRouteImport.update({
     id: '/notificacao-som',
@@ -394,6 +401,7 @@ export interface FileRoutesByFullPath {
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
+  '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -446,6 +454,7 @@ export interface FileRoutesByTo {
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
+  '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -503,6 +512,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/_authenticated/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
+  '/_authenticated/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -560,6 +570,7 @@ export interface FileRouteTypes {
     | '/admin/financeiro'
     | '/admin/lojas'
     | '/admin/notificacao-som'
+    | '/admin/notificacao-som-loja'
     | '/admin/pedidos'
     | '/admin/planos'
     | '/admin/roteirizacao'
@@ -612,6 +623,7 @@ export interface FileRouteTypes {
     | '/admin/financeiro'
     | '/admin/lojas'
     | '/admin/notificacao-som'
+    | '/admin/notificacao-som-loja'
     | '/admin/pedidos'
     | '/admin/planos'
     | '/admin/roteirizacao'
@@ -668,6 +680,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/financeiro'
     | '/_authenticated/admin/lojas'
     | '/_authenticated/admin/notificacao-som'
+    | '/_authenticated/admin/notificacao-som-loja'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
     | '/_authenticated/admin/roteirizacao'
@@ -1015,6 +1028,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/notificacao-som-loja': {
+      id: '/_authenticated/admin/notificacao-som-loja'
+      path: '/notificacao-som-loja'
+      fullPath: '/admin/notificacao-som-loja'
+      preLoaderRoute: typeof AuthenticatedAdminNotificacaoSomLojaRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/notificacao-som': {
       id: '/_authenticated/admin/notificacao-som'
       path: '/notificacao-som'
@@ -1114,6 +1134,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminFinanceiroRoute: typeof AuthenticatedAdminFinanceiroRoute
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
   AuthenticatedAdminNotificacaoSomRoute: typeof AuthenticatedAdminNotificacaoSomRoute
+  AuthenticatedAdminNotificacaoSomLojaRoute: typeof AuthenticatedAdminNotificacaoSomLojaRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
@@ -1137,6 +1158,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminLojasRoute: AuthenticatedAdminLojasRoute,
     AuthenticatedAdminNotificacaoSomRoute:
       AuthenticatedAdminNotificacaoSomRoute,
+    AuthenticatedAdminNotificacaoSomLojaRoute:
+      AuthenticatedAdminNotificacaoSomLojaRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
