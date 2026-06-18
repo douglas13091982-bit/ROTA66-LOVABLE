@@ -8,6 +8,7 @@ import { StatCard } from "./components/StatCard";
 import { EntregadoresLista } from "./components/EntregadoresLista";
 import { CatalogoPublicoCard } from "./components/CatalogoPublicoCard";
 import { MeuPlanoCard } from "./components/MeuPlanoCard";
+import { FinanceiroResumoDashboard } from "./components/FinanceiroResumoDashboard";
 
 export function DashboardPage() {
   const { data: loja, isLoading } = useMinhaLoja();
