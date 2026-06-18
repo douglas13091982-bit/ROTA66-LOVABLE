@@ -34,7 +34,7 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
             {loja.logo_url ? (
               <div className="relative shrink-0">
                 <img src={loja.logo_url} alt={loja.nome} className="h-14 w-14 rounded-2xl object-cover border border-border shadow-sm" />
-                <span className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+                <span className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full ring-2 ring-background ${loja.ativa ? "bg-emerald-500" : "bg-muted-foreground"}`} />
               </div>
             ) : (
               <div
