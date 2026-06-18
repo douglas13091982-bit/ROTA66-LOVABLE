@@ -1555,63 +1555,6 @@ export type Database = {
         }
         Relationships: []
       }
-      tarifas_loja: {
-        Row: {
-          ativa: boolean
-          created_at: string
-          faixa_km_max: number
-          faixa_km_min: number
-          id: string
-          loja_id: string
-          tipo_veiculo: Database["public"]["Enums"]["tipo_veiculo"]
-          updated_at: string
-          valor: number
-          valor_minimo: number
-          valor_por_km: number
-        }
-        Insert: {
-          ativa?: boolean
-          created_at?: string
-          faixa_km_max: number
-          faixa_km_min?: number
-          id?: string
-          loja_id: string
-          tipo_veiculo?: Database["public"]["Enums"]["tipo_veiculo"]
-          updated_at?: string
-          valor: number
-          valor_minimo?: number
-          valor_por_km?: number
-        }
-        Update: {
-          ativa?: boolean
-          created_at?: string
-          faixa_km_max?: number
-          faixa_km_min?: number
-          id?: string
-          loja_id?: string
-          tipo_veiculo?: Database["public"]["Enums"]["tipo_veiculo"]
-          updated_at?: string
-          valor?: number
-          valor_minimo?: number
-          valor_por_km?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tarifas_loja_loja_id_fkey"
-            columns: ["loja_id"]
-            isOneToOne: false
-            referencedRelation: "lojas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "tarifas_loja_loja_id_fkey"
-            columns: ["loja_id"]
-            isOneToOne: false
-            referencedRelation: "lojas_publicas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_roles: {
         Row: {
           created_at: string

@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS public.tarifas_loja CASCADE;
