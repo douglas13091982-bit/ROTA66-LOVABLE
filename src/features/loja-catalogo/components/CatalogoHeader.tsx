@@ -24,22 +24,24 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
     <header className="cc-glass sticky top-0 z-30">
       <div className="cc-hero-bg cc-noise">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 relative">
-          {loja.cidade ? (
-            <Link
-              to="/clientes/$cidade"
-              params={{ cidade: encodeURIComponent(loja.cidade) }}
-              className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] font-semibold text-muted-foreground hover:text-foreground transition mb-2"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
-            </Link>
-          ) : (
-            <Link
-              to="/clientes"
-              className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] font-semibold text-muted-foreground hover:text-foreground transition mb-2"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
-            </Link>
-          )}
+          <div className="flex justify-center mb-3">
+            {loja.cidade ? (
+              <Link
+                to="/clientes/$cidade"
+                params={{ cidade: encodeURIComponent(loja.cidade) }}
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-semibold px-4 py-2 rounded-full bg-foreground text-background shadow-sm hover:opacity-90 active:scale-[0.98] transition"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
+              </Link>
+            ) : (
+              <Link
+                to="/clientes"
+                className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-semibold px-4 py-2 rounded-full bg-foreground text-background shadow-sm hover:opacity-90 active:scale-[0.98] transition"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
+              </Link>
+            )}
+          </div>
           <div className="flex items-center gap-3.5">
             {loja.logo_url ? (
               <div className="relative shrink-0">
