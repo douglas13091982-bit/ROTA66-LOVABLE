@@ -11,6 +11,7 @@ import { ResumoCards } from "./components/ResumoCards";
 import { InfoPrazo } from "./components/InfoPrazo";
 import { MensalidadesTabela } from "./components/MensalidadesTabela";
 import { CobrancasTabela } from "./components/CobrancasTabela";
+import { PreviaSemanaCard } from "./components/PreviaSemanaCard";
 
 export function FinanceiroPage() {
   const { data: loja } = useMinhaLoja();
