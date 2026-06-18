@@ -129,6 +129,15 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
                 maxLength={16}
               />
             </div>
+            <div>
+              <Label className="text-xs">Endereço</Label>
+              <Input
+                value={form.endereco}
+                onChange={(e) => setForm((f) => ({ ...f, endereco: e.target.value }))}
+                placeholder="Rua, número, bairro"
+                maxLength={200}
+              />
+            </div>
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <div>
                 <Label className="text-xs">Cidade *</Label>
