@@ -43,13 +43,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
   return (
     <div>
       <div className="max-w-2xl mx-auto px-4 pt-2 pb-3 relative">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <Link
-            to="/clientes"
-            className="mp-back inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] font-semibold transition"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" /> Trocar cidade
-          </Link>
+        <div className="flex items-center justify-end gap-2 mb-2">
           <PerfilDialog>
             <button
               type="button"
