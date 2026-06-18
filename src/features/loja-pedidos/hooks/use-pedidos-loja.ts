@@ -41,7 +41,7 @@ export function usePedidosRealtime(lojaId: string | undefined) {
   useEffect(() => {
     instalarDesbloqueioAutomatico();
     let cancelled = false;
-    fetchConfigSom().then((cfg) => {
+    fetchConfigSom("loja").then((cfg) => {
       if (cancelled) return;
       somCfgRef.current = cfg;
       if (cfg.audio_path) precarregarSom(cfg);

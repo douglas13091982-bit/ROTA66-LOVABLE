@@ -1,7 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export type SomScope = "entregador" | "loja";
+
 export type ConfigNotificacaoSom = {
   id: string;
+  scope?: SomScope;
   ativo: boolean;
   volume: number;
   frequencia_inicial: number;
@@ -16,6 +19,7 @@ export type ConfigNotificacaoSom = {
 
 export const DEFAULT_SOM: ConfigNotificacaoSom = {
   id: "",
+  scope: "entregador",
   ativo: true,
   volume: 0.6,
   frequencia_inicial: 880,
@@ -34,21 +38,19 @@ let currentAudioCtx: AudioContext | null = null;
 let currentAudioEl: HTMLAudioElement | null = null;
 
 // Elemento <audio> pré-criado e "destravado" por um gesto do usuário.
-// Mantemos uma única instância reutilizável: navegadores móveis (Android/iOS)
-// só permitem .play() em resposta direta a um gesto; uma vez destravado,
-// o MESMO elemento pode ser reproduzido depois sem novo gesto.
 let unlockedAudioEl: HTMLAudioElement | null = null;
 let unlockedAudioUrl: string | null = null;
 let audioUnlocked = false;
 let unlockedAudioCtx: AudioContext | null = null;
 
-export async function fetchConfigSom(): Promise<ConfigNotificacaoSom> {
+export async function fetchConfigSom(scope: SomScope = "entregador"): Promise<ConfigNotificacaoSom> {
   const { data } = await supabase
     .from("config_notificacao_som" as any)
     .select("*")
+    .eq("scope", scope)
     .limit(1)
     .maybeSingle();
-  return { ...DEFAULT_SOM, ...((data as any) ?? {}) };
+  return { ...DEFAULT_SOM, scope, ...((data as any) ?? {}) };
 }
 
 /** Gera URL assinada (válida por 1h) para o arquivo de som. */

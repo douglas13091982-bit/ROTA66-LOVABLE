@@ -12,8 +12,10 @@ import { useNotificacaoSom } from "../hooks/use-notificacao-som";
 import { Field, ToggleCard } from "./Field";
 import { AudioUpload } from "./AudioUpload";
 
-export function ConfigForm() {
-  const { data, isLoading, salvar, uploadAudio, removerAudio } = useNotificacaoSom();
+import type { SomScope } from "@/lib/notificacao-som";
+
+export function ConfigForm({ scope = "entregador" }: { scope?: SomScope }) {
+  const { data, isLoading, salvar, uploadAudio, removerAudio } = useNotificacaoSom(scope);
   const [form, setForm] = useState<ConfigNotificacaoSom>(DEFAULT_SOM);
   const [saving, setSaving] = useState(false);
 

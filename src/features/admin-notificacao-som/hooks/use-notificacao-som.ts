@@ -1,12 +1,11 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { SOM_BUCKET, type ConfigNotificacaoSom } from "@/lib/notificacao-som";
+import { SOM_BUCKET, type ConfigNotificacaoSom, type SomScope } from "@/lib/notificacao-som";
 
-const QK = ["config-notificacao-som"];
-
-export function useNotificacaoSom() {
+export function useNotificacaoSom(scope: SomScope = "entregador") {
   const qc = useQueryClient();
+  const QK = ["config-notificacao-som", scope];
 
   const query = useQuery({
     queryKey: QK,
@@ -14,6 +13,7 @@ export function useNotificacaoSom() {
       const { data, error } = await supabase
         .from("config_notificacao_som" as any)
         .select("*")
+        .eq("scope", scope)
         .limit(1)
         .maybeSingle();
       if (error) throw error;
@@ -59,7 +59,7 @@ export function useNotificacaoSom() {
       toast.error("Use apenas MP3");
       return;
     }
-    const path = `som-${Date.now()}.${ext}`;
+    const path = `som-${scope}-${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage
       .from(SOM_BUCKET)
       .upload(path, file, { contentType: file.type || `audio/${ext}`, upsert: false });

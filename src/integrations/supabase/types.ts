@@ -581,6 +581,7 @@ export type Database = {
           id: string
           intervalo_ms: number
           repeticoes: number
+          scope: string
           singleton: boolean
           tipo_onda: string
           updated_at: string
@@ -597,6 +598,7 @@ export type Database = {
           id?: string
           intervalo_ms?: number
           repeticoes?: number
+          scope?: string
           singleton?: boolean
           tipo_onda?: string
           updated_at?: string
@@ -613,6 +615,7 @@ export type Database = {
           id?: string
           intervalo_ms?: number
           repeticoes?: number
+          scope?: string
           singleton?: boolean
           tipo_onda?: string
           updated_at?: string
