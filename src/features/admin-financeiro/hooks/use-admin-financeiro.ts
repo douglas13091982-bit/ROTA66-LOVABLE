@@ -102,7 +102,6 @@ export function useAdminFinanceiro() {
   async function salvar() {
     setSaving(true);
     const payload = {
-      taxa_por_pedido: config.taxa,
       prazo_pagamento_dias: config.prazo,
       mensalidade_valor_padrao: config.mensalidadePadrao,
       dia_vencimento_padrao: Math.min(Math.max(config.diaVenc, 1), 28),
