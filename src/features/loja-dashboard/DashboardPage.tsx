@@ -7,6 +7,7 @@ import { LojaHeader } from "./components/LojaHeader";
 import { StatCard } from "./components/StatCard";
 import { EntregadoresLista } from "./components/EntregadoresLista";
 import { CatalogoPublicoCard } from "./components/CatalogoPublicoCard";
+import { MeuPlanoCard } from "./components/MeuPlanoCard";
 
 export function DashboardPage() {
   const { data: loja, isLoading } = useMinhaLoja();
