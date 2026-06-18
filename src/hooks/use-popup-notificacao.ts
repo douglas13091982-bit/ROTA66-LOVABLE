@@ -26,7 +26,7 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
 
   const { data: somCfg } = useQuery({
     queryKey: ["config-notificacao-som"],
-    queryFn: fetchConfigSom,
+    queryFn: () => fetchConfigSom("entregador"),
     staleTime: SOM_STALE_MS,
   });
 
