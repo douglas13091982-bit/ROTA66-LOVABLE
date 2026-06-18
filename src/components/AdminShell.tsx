@@ -82,6 +82,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
           {visibleNav.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
+            const badge = item.to === "/admin/suporte" ? suporteBadge : 0;
             return (
               <Link
                 key={item.to}
@@ -91,7 +92,12 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               >
                 <Icon />
                 <span className="flex-1 truncate">{item.label}</span>
-                {active && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
+                {badge > 0 && (
+                  <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-red text-white text-[10px] font-bold flex items-center justify-center">
+                    {badge > 9 ? "9+" : badge}
+                  </span>
+                )}
+                {active && badge === 0 && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
               </Link>
             );
           })}
