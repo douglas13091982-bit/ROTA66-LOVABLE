@@ -1336,3 +1336,11 @@
 .entregador-light [role="tablist"][aria-label="Ordenar pedidos"] [role="tab"][aria-selected="true"] * {
   color: #ffffff !important;
 }
+
+/* Valor "Ganhos do dia" em vermelho vivo no tema claro */
+.entregador-light .text-4xl,
+.entregador-light .text-3xl,
+.entregador-light .text-5xl {
+  color: #bd0f10 !important;
+  text-shadow: none !important;
+}
