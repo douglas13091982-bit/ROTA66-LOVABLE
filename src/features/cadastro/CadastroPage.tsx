@@ -14,9 +14,9 @@ import type { Role } from "./logic/roles";
 import { useSignupForm } from "./logic/use-signup-form";
 import { useSignupSubmit } from "./logic/use-signup-submit";
 
-export function CadastroPage() {
-  const [step, setStep] = useState<"select" | "form">("select");
-  const [role, setRole] = useState<Role | null>(null);
+export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
+  const [step, setStep] = useState<"select" | "form">(initialRole ? "form" : "select");
+  const [role, setRole] = useState<Role | null>(initialRole ?? null);
   const [loading, setLoading] = useState(false);
   const [contratoModalOpen, setContratoModalOpen] = useState(false);
 
