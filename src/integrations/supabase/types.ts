@@ -864,6 +864,7 @@ export type Database = {
           slug: string
           status: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base: number
+          taxa_por_pedido: number
           telefone: string | null
           updated_at: string
           usar_horario_automatico: boolean
@@ -894,6 +895,7 @@ export type Database = {
           slug: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
+          taxa_por_pedido?: number
           telefone?: string | null
           updated_at?: string
           usar_horario_automatico?: boolean
@@ -924,6 +926,7 @@ export type Database = {
           slug?: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
+          taxa_por_pedido?: number
           telefone?: string | null
           updated_at?: string
           usar_horario_automatico?: boolean
@@ -1905,6 +1908,7 @@ export type Database = {
       }
       get_private_config: { Args: { _key: string }; Returns: string }
       get_taxa_sistema: { Args: never; Returns: number }
+      get_taxa_sistema_loja: { Args: { _loja_id: string }; Returns: number }
       has_admin_area: {
         Args: {
           _area: Database["public"]["Enums"]["admin_area"]
@@ -2064,6 +2068,7 @@ export type Database = {
           loja_id: string
           loja_nome: string
           loja_plano_mensal_ativo: boolean
+          loja_taxa_por_pedido: number
           numero: number
           observacoes: string
           oferta_expira_em: string
