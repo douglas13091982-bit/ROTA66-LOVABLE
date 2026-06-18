@@ -1,14 +1,9 @@
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import type { PedidoHistorico } from "../logic/types";
 
-export function EntregaRow({
-  pedido,
-  taxaSistema,
-}: {
-  pedido: PedidoHistorico;
-  taxaSistema: number;
-}) {
-  const valor = liquidoEntregador(pedido.taxa_entrega, taxaSistema, pedido.loja_plano_mensal_ativo);
+export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
+  const taxaLoja = Number(pedido.loja_taxa_por_pedido ?? 0);
+  const valor = liquidoEntregador(pedido.taxa_entrega, taxaLoja, pedido.loja_plano_mensal_ativo);
   const hora = new Date(pedido.updated_at).toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",

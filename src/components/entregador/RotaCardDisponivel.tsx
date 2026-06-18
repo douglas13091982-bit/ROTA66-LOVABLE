@@ -10,16 +10,21 @@ import { formatDateTime } from "@/lib/format";
 type Props = {
   grupo: GrupoPedido;
   minhaPos: LatLng | null;
-  taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   nowMs: number;
   onAceitar: () => void;
   onRecusar: () => void;
 };
 
-function calcularTotais(items: PedidoDisponivel[], taxaSistema: number, taxaParaExibir: (p: PedidoDisponivel) => number) {
+function calcularTotais(items: PedidoDisponivel[], taxaParaExibir: (p: PedidoDisponivel) => number) {
   const totalLiquido = items.reduce(
-    (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
+    (s, p) =>
+      s +
+      liquidoEntregador(
+        taxaParaExibir(p),
+        Number(p.loja_taxa_por_pedido ?? 0),
+        p.loja_plano_mensal_ativo,
+      ),
     0,
   );
   const totalBonus = items.reduce(
@@ -56,14 +61,13 @@ function bairrosUnicos(items: PedidoDisponivel[]): string[] {
 export function RotaCardDisponivel({
   grupo,
   minhaPos,
-  taxaSistema,
   taxaParaExibir,
   nowMs,
   onAceitar,
   onRecusar,
 }: Props) {
   const { items } = grupo;
-  const { totalLiquido, totalBonus } = calcularTotais(items, taxaSistema, taxaParaExibir);
+  const { totalLiquido, totalBonus } = calcularTotais(items, taxaParaExibir);
   const kmAteLoja = kmAteLojaDoGrupo(items, minhaPos);
   const bairros = bairrosUnicos(items);
   const segs = segundosRestantesGrupo(items, nowMs);

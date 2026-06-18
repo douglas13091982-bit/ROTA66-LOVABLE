@@ -1,6 +1,6 @@
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { useAuth } from "@/hooks/use-auth";
-import { liquidoEntregador, useTaxaSistema } from "@/hooks/use-taxa-sistema";
+import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { FinalizadoBanner } from "./components/FinalizadoBanner";
 import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
@@ -17,7 +17,6 @@ type Props = {
 
 export function AtivosPage({ destaque }: Props) {
   const { user } = useAuth();
-  const taxaSistema = useTaxaSistema();
 
   const { data: pedidos, isLoading } = usePedidosAtivos(user?.id);
   const { loteFinalizado, dismissedFinalizado, dismissFinalizado } =
@@ -30,7 +29,13 @@ export function AtivosPage({ destaque }: Props) {
   const mostrarFinalizado =
     semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0;
   const totalGanhoLote = (recentesEntregues ?? []).reduce(
-    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaSistema, p.loja_plano_mensal_ativo),
+    (s, p) =>
+      s +
+      liquidoEntregador(
+        p.taxa_entrega,
+        Number(p.loja_taxa_por_pedido ?? 0),
+        p.loja_plano_mensal_ativo,
+      ),
     0,
   );
 

@@ -10,7 +10,6 @@ interface Props {
   grupos: GrupoPedido[];
   isLoading: boolean;
   minhaPos: LatLng | null;
-  taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
   ordenacao: OrdenacaoPedidos;
@@ -58,7 +57,6 @@ export function RotasDisponiveisList({
   grupos,
   isLoading,
   minhaPos,
-  taxaSistema,
   taxaParaExibir,
   onAceitar,
   ordenacao,
@@ -124,7 +122,6 @@ export function RotasDisponiveisList({
           key={grupo.key}
           grupo={grupo}
           minhaPos={minhaPos}
-          taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
           onAceitar={onAceitar}
         />

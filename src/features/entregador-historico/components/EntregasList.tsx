@@ -5,21 +5,15 @@ import type { PedidoHistorico } from "../logic/types";
 import { EntregaRow } from "./EntregaRow";
 
 const VIRTUALIZE_THRESHOLD = 30;
-const ESTIMATED_ROW = 88;     // altura média de EntregaRow
-const ESTIMATED_HEADER = 36;  // altura do cabeçalho de dia
+const ESTIMATED_ROW = 88;
+const ESTIMATED_HEADER = 36;
 const OVERSCAN = 6;
 
 type FlatItem =
   | { kind: "header"; label: string; key: string }
   | { kind: "row"; pedido: PedidoHistorico; key: string };
 
-export function EntregasList({
-  listagem,
-  taxaSistema,
-}: {
-  listagem: PedidoHistorico[];
-  taxaSistema: number;
-}) {
+export function EntregasList({ listagem }: { listagem: PedidoHistorico[] }) {
   const groups = useMemo(() => agruparPorDia(listagem), [listagem]);
 
   const flat = useMemo<FlatItem[]>(() => {
@@ -42,7 +36,6 @@ export function EntregasList({
     </div>
   );
 
-  // Para listas pequenas, mantém DOM completo — comportamento idêntico ao original.
   if (flat.length <= VIRTUALIZE_THRESHOLD) {
     return (
       <div className="overflow-hidden">
@@ -53,7 +46,7 @@ export function EntregasList({
               {g.label}
             </div>
             {g.items.map((p) => (
-              <EntregaRow key={p.id} pedido={p} taxaSistema={taxaSistema} />
+              <EntregaRow key={p.id} pedido={p} />
             ))}
           </div>
         ))}
@@ -64,18 +57,12 @@ export function EntregasList({
   return (
     <div className="overflow-hidden">
       {header}
-      <VirtualBody flat={flat} taxaSistema={taxaSistema} />
+      <VirtualBody flat={flat} />
     </div>
   );
 }
 
-function VirtualBody({
-  flat,
-  taxaSistema,
-}: {
-  flat: FlatItem[];
-  taxaSistema: number;
-}) {
+function VirtualBody({ flat }: { flat: FlatItem[] }) {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -90,7 +77,6 @@ function VirtualBody({
     <div
       ref={parentRef}
       className="overflow-y-auto"
-      // Janela de rolagem dedicada para a lista — necessário p/ virtualização.
       style={{ maxHeight: "calc(100dvh - 240px)" }}
     >
       <div
@@ -120,7 +106,7 @@ function VirtualBody({
                   {item.label}
                 </div>
               ) : (
-                <EntregaRow pedido={item.pedido} taxaSistema={taxaSistema} />
+                <EntregaRow pedido={item.pedido} />
               )}
             </div>
           );

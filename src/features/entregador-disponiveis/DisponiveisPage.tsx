@@ -3,7 +3,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
 import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
-import { useTaxaSistema } from "@/hooks/use-taxa-sistema";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
@@ -15,7 +14,6 @@ import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
-  const taxaSistema = useTaxaSistema();
   const { posicao: minhaPos } = useGeolocalizacao();
   const { dismissed, aceitarGrupo } = useAcoesPedido();
   const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
@@ -66,7 +64,6 @@ export function DisponiveisPage() {
           grupos={grupos}
           isLoading={isLoading}
           minhaPos={minhaPos}
-          taxaSistema={taxaSistema}
           taxaParaExibir={taxaParaExibir}
           onAceitar={handleAceitar}
           ordenacao={ordenacao}

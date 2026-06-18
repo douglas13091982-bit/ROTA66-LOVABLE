@@ -7,7 +7,6 @@ import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 type Props = {
   grupo: GrupoPedido;
   minhaPos: LatLng | null;
-  taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
 };
@@ -50,7 +49,6 @@ function kmEntrega(p: PedidoDisponivel): string | null {
 function PedidoListItemBase({
   grupo,
   minhaPos,
-  taxaSistema,
   taxaParaExibir,
   onAceitar,
 }: Props) {
@@ -58,10 +56,16 @@ function PedidoListItemBase({
   const total = useMemo(
     () =>
       grupo.items.reduce(
-        (s, p) => s + liquidoEntregador(taxaParaExibir(p), taxaSistema, p.loja_plano_mensal_ativo),
+        (s, p) =>
+          s +
+          liquidoEntregador(
+            taxaParaExibir(p),
+            Number(p.loja_taxa_por_pedido ?? 0),
+            p.loja_plano_mensal_ativo,
+          ),
         0,
       ),
-    [grupo.items, taxaParaExibir, taxaSistema],
+    [grupo.items, taxaParaExibir],
   );
   const km = kmAteLoja(principal, minhaPos);
   const distEntrega = kmEntrega(principal);
@@ -145,7 +149,6 @@ function PedidoListItemBase({
 // cada drift de GPS.
 export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
   if (prev.onAceitar !== next.onAceitar) return false;
-  if (prev.taxaSistema !== next.taxaSistema) return false;
   if (prev.taxaParaExibir !== next.taxaParaExibir) return false;
   if (prev.grupo !== next.grupo) return false;
   return roundPos(prev.minhaPos) === roundPos(next.minhaPos);

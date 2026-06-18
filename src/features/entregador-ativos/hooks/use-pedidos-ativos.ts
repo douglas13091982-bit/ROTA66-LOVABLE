@@ -6,6 +6,7 @@ function mapPedido(p: any): PedidoAtivo {
   return {
     ...p,
     loja_plano_mensal_ativo: !!p.lojas?.plano_mensal_ativo,
+    loja_taxa_por_pedido: Number(p.lojas?.taxa_por_pedido ?? 0),
   };
 }
 
@@ -17,7 +18,7 @@ export function usePedidosAtivos(userId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*, lojas:loja_id(plano_mensal_ativo)")
+        .select("*, lojas:loja_id(plano_mensal_ativo, taxa_por_pedido)")
         .eq("entregador_id", userId!)
         .in("status", ["em_rota", "coletado"])
         .order("created_at", { ascending: true });
@@ -34,7 +35,7 @@ export function usePedidosLoteFinalizado(userId: string | undefined, loteIds: st
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*, lojas:loja_id(plano_mensal_ativo)")
+        .select("*, lojas:loja_id(plano_mensal_ativo, taxa_por_pedido)")
         .eq("entregador_id", userId!)
         .eq("status", "entregue")
         .in("id", loteIds)
