@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Mensagem, Modo, Ticket } from "../types";
@@ -29,10 +29,12 @@ export function useTickets(modo: Modo, lojaId?: string) {
 
 export function useTicketsRealtime(modo: Modo, lojaId?: string) {
   const qc = useQueryClient();
+  const uid = useId();
   useEffect(() => {
     if (modo === "loja" && !lojaId) return;
+    const channelName = `suporte-tickets-${modo}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
     const channel = supabase
-      .channel(`suporte-tickets-${modo}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "suporte_tickets" },
@@ -44,7 +46,7 @@ export function useTicketsRealtime(modo: Modo, lojaId?: string) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [modo, lojaId, qc]);
+  }, [modo, lojaId, qc, uid]);
 }
 
 export function useMensagens(ticketId: string | null) {
@@ -65,10 +67,12 @@ export function useMensagens(ticketId: string | null) {
 
 export function useMensagensRealtime(ticketId: string | null) {
   const qc = useQueryClient();
+  const uid = useId();
   useEffect(() => {
     if (!ticketId) return;
+    const channelName = `suporte-mensagens-${ticketId}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
     const channel = supabase
-      .channel(`suporte-mensagens-${ticketId}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
@@ -80,7 +84,7 @@ export function useMensagensRealtime(ticketId: string | null) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [ticketId, qc]);
+  }, [ticketId, qc, uid]);
 }
 
 export function useEnviarMensagem(modo: Modo) {
