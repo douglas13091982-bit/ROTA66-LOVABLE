@@ -2,6 +2,13 @@ import { useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  DEFAULT_SOM,
+  fetchConfigSom,
+  instalarDesbloqueioAutomatico,
+  precarregarSom,
+  tocarNotificacao,
+} from "@/lib/notificacao-som";
 
 export type Pedido = { id: string; [k: string]: any };
 
@@ -29,6 +36,18 @@ export function usePedidosLoja(lojaId: string | undefined) {
 /** Inscreve em mudanças realtime nos pedidos da loja e invalida a query. */
 export function usePedidosRealtime(lojaId: string | undefined) {
   const qc = useQueryClient();
+  const somCfgRef = useRef(DEFAULT_SOM);
+
+  useEffect(() => {
+    instalarDesbloqueioAutomatico();
+    let cancelled = false;
+    fetchConfigSom().then((cfg) => {
+      if (cancelled) return;
+      somCfgRef.current = cfg;
+      if (cfg.audio_path) precarregarSom(cfg);
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!lojaId) return;
@@ -41,6 +60,8 @@ export function usePedidosRealtime(lojaId: string | undefined) {
           qc.invalidateQueries({ queryKey: ["pedidos", lojaId] });
           if (payload.eventType === "INSERT") {
             toast.success("🚨 Novo pedido recebido!");
+            const cfg = { ...somCfgRef.current, ativo: true, volume: Math.max(somCfgRef.current.volume ?? 0.6, 1) };
+            tocarNotificacao(cfg);
           }
         },
       )
