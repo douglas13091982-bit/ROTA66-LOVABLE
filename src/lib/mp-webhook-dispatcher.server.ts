@@ -249,6 +249,9 @@ export async function handleMpPlataformaWebhook(
     if (ref.startsWith("mensalidade:")) {
       return await processMensalidadeLoja(paymentId, payment);
     }
+    if (ref.startsWith("fatura:")) {
+      return await processFaturaCobrancas(paymentId, payment);
+    }
     if (ref.startsWith("cobranca:")) {
       return await processCobrancaLoja(paymentId, payment);
     }
