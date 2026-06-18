@@ -9,6 +9,7 @@ type Props = {
   pixHabilitado: boolean;
   onDialog: (d: DialogState) => void;
   onPagarMp?: (cobrancaId: string) => void;
+  onPagarTudoMp?: () => void;
 };
 
 export function CobrancasTabela({
@@ -19,28 +20,42 @@ export function CobrancasTabela({
   pixHabilitado,
   onDialog,
   onPagarMp,
+  onPagarTudoMp,
 }: Props) {
   return (
     <div className="bg-card border border-border rounded-lg p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h2 className="font-display text-xl">Taxas por pedido</h2>
-        <button
-          disabled={cobAbertas.length === 0 || !pixHabilitado}
-          onClick={() =>
-            onDialog({
-              tipo: "agrupado-cobranca",
-              valor: cobAberto,
-              ids: cobAbertas.map((c) => c.id),
-              titulo: "Pagar taxas de entrega em aberto",
-              descricao: `${cobAbertas.length} cobrança(s) — total R$ ${cobAberto.toFixed(2)}`,
-            })
-          }
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-          title={!pixHabilitado ? "PIX do sistema ainda não configurado" : undefined}
-        >
-          <QrCode className="h-4 w-4" />
-          Pagar tudo via PIX
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {onPagarTudoMp && (
+            <button
+              disabled={cobAbertas.length === 0}
+              onClick={onPagarTudoMp}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold uppercase text-xs tracking-wider rounded-md disabled:opacity-40 disabled:cursor-not-allowed"
+              title="Pagar todas via Mercado Pago (PIX ou cartão)"
+            >
+              <CreditCard className="h-4 w-4" />
+              Pagar tudo via MP
+            </button>
+          )}
+          <button
+            disabled={cobAbertas.length === 0 || !pixHabilitado}
+            onClick={() =>
+              onDialog({
+                tipo: "agrupado-cobranca",
+                valor: cobAberto,
+                ids: cobAbertas.map((c) => c.id),
+                titulo: "Pagar taxas de entrega em aberto",
+                descricao: `${cobAbertas.length} cobrança(s) — total R$ ${cobAberto.toFixed(2)}`,
+              })
+            }
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+            title={!pixHabilitado ? "PIX do sistema ainda não configurado" : undefined}
+          >
+            <QrCode className="h-4 w-4" />
+            Pagar tudo via PIX
+          </button>
+        </div>
       </div>
       {loading ? (
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
