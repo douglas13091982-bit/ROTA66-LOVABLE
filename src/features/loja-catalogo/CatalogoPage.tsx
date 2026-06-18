@@ -4,6 +4,7 @@ import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
 import { CatalogoHeader } from "./components/CatalogoHeader";
 import { CatalogoIndisponivel } from "./components/CatalogoIndisponivel";
+import { LojaFechada } from "./components/LojaFechada";
 import { CatalogoListagem } from "./components/CatalogoListagem";
 import { CheckoutDialog } from "./components/CheckoutDialog";
 import { PedidoSucesso } from "./components/PedidoSucesso";
