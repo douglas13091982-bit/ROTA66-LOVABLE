@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 
 export type EntregadorTheme = "dark" | "light";
 const STORAGE_KEY = "entregador-theme";
+const EVENT = "entregador-theme-change";
 
 function readInitial(): EntregadorTheme {
   if (typeof window === "undefined") return "dark";
@@ -13,27 +14,26 @@ export function useEntregadorTheme() {
   const [theme, setThemeState] = useState<EntregadorTheme>(readInitial);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "light") root.classList.add("entregador-light");
-    else root.classList.remove("entregador-light");
-    try {
-      window.localStorage.setItem(STORAGE_KEY, theme);
-    } catch {}
-    return () => {
-      // cleanup when component using this unmounts (leaving entregador area)
-      root.classList.remove("entregador-light");
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<EntregadorTheme>).detail;
+      if (detail === "light" || detail === "dark") setThemeState(detail);
     };
-  }, [theme]);
+    window.addEventListener(EVENT, handler as EventListener);
+    return () => window.removeEventListener(EVENT, handler as EventListener);
+  }, []);
 
-  const setTheme = useCallback((t: EntregadorTheme) => setThemeState(t), []);
+  const setTheme = useCallback((t: EntregadorTheme) => {
+    setThemeState(t);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, t);
+    } catch {}
+    window.dispatchEvent(new CustomEvent(EVENT, { detail: t }));
+  }, []);
+
   const toggle = useCallback(
-    () => setThemeState((t) => (t === "light" ? "dark" : "light")),
-    []
+    () => setTheme(theme === "light" ? "dark" : "light"),
+    [theme, setTheme]
   );
 
   return { theme, setTheme, toggle };
-}
-
-export function getEntregadorTheme(): EntregadorTheme {
-  return readInitial();
 }
