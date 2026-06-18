@@ -39,7 +39,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // 1. Loja precisa estar ativa, aprovada e com catálogo ativo
-    const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo";
+    const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
     let { data: loja, error: lojaErr } = await supabaseAdmin
       .from("lojas")
       .select(lojaCols)
