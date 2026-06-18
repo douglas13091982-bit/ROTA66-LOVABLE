@@ -20,6 +20,7 @@ const NAV = [
   { to: "/loja/produtos", label: "Catálogo", icon: Package },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users },
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet },
+  { to: "/clientes", label: "Marketplace", icon: Store },
   { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy },
   { to: "/loja/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
