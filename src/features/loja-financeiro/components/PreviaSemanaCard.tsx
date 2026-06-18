@@ -35,8 +35,8 @@ export function PreviaSemanaCard({ lojaId, taxaPorPedido, planoMensalAtivo }: Pr
       .select("id", { count: "exact", head: true })
       .eq("loja_id", lojaId)
       .eq("status", "entregue")
-      .gte("entregue_em", ini.toISOString())
-      .lt("entregue_em", fim.toISOString());
+      .gte("entrega_confirmada_em", ini.toISOString())
+      .lt("entrega_confirmada_em", fim.toISOString());
     setQtd(count ?? 0);
     setLoading(false);
   };
