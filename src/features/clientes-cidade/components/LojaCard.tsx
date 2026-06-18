@@ -39,14 +39,6 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
             <MapPin className="h-3 w-3 shrink-0" /> <span className="truncate">{loja.endereco}</span>
           </div>
         )}
-        {loja.taxa_entrega_base != null && (
-          <div className="mp-muted text-[11px] mt-0.5">
-            Taxa a partir de{" "}
-            <span className="mp-price font-display font-bold">
-              R$ {Number(loja.taxa_entrega_base).toFixed(2).replace(".", ",")}
-            </span>
-          </div>
-        )}
       </div>
       <span className="mp-open text-[10px] font-semibold uppercase tracking-[0.18em] shrink-0">
         Abrir →
