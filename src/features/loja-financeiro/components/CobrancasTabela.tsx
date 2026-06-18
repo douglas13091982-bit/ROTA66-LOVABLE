@@ -18,6 +18,7 @@ export function CobrancasTabela({
   cobAberto,
   pixHabilitado,
   onDialog,
+  onPagarMp,
 }: Props) {
   return (
     <div className="bg-card border border-border rounded-lg p-6">
