@@ -7,13 +7,12 @@ interface Props {
 }
 
 export function CategoriasFiltro({ value, onChange }: Props) {
-  
   return (
-    <div className="max-w-2xl mx-auto pb-3.5 pt-1 relative bg-background/0">
-      <div className="flex gap-2 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
+    <div className="max-w-2xl mx-auto pb-3.5 pt-1 relative">
+      <div className="flex gap-2 overflow-x-auto px-4 pb-1 snap-x scroll-smooth" style={{ scrollbarWidth: "none" }}>
         <button
           onClick={() => onChange("")}
-          className={`shrink-0 snap-start px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] rounded-full whitespace-nowrap ${value === "" ? "cc-chip-active" : "cc-chip"}`}
+          className={`shrink-0 snap-start px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] rounded-full whitespace-nowrap ${value === "" ? "mp-chip-active" : "mp-chip"}`}
         >
           <span className="inline-flex items-center gap-1.5">
             <SlidersHorizontal className="h-3 w-3" /> Todas
@@ -23,13 +22,13 @@ export function CategoriasFiltro({ value, onChange }: Props) {
           <button
             key={c.value}
             onClick={() => onChange(c.value)}
-            className={`shrink-0 snap-start px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] rounded-full whitespace-nowrap ${value === c.value ? "cc-chip-active" : "cc-chip"}`}
+            className={`shrink-0 snap-start px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] rounded-full whitespace-nowrap ${value === c.value ? "mp-chip-active" : "mp-chip"}`}
           >
             {c.label}
           </button>
         ))}
       </div>
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-background to-transparent" />
+      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 mp-fade" />
     </div>
   );
 }
