@@ -50,8 +50,17 @@ export function CatalogoPage({ slug }: { slug: string }) {
     );
   }
 
-  if (!loja || !catalogoAtivo || !loja.ativa || loja.status !== "aprovado") {
+  if (!loja || !catalogoAtivo || loja.status !== "aprovado") {
     return <CatalogoIndisponivel />;
+  }
+
+  if (!loja.ativa) {
+    return (
+      <LojaFechada
+        nome={loja.nome}
+        horario={(loja as any).horario_funcionamento ?? null}
+      />
+    );
   }
 
   if (sucesso) {
