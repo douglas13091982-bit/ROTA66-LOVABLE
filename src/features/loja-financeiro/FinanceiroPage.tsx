@@ -4,6 +4,7 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { useAuth } from "@/hooks/use-auth";
 import { PixPagamentoDialog } from "@/components/PixPagamentoDialog";
 import { PagamentoMpMensalidadeDialog } from "./components/PagamentoMpMensalidadeDialog";
+import { PagamentoMpCobrancaDialog } from "./components/PagamentoMpCobrancaDialog";
 import { useFinanceiroLoja } from "./hooks/use-financeiro-loja";
 import { calcularResumo } from "./logic/resumo";
 import type { DialogState } from "./logic/types";
@@ -29,6 +30,7 @@ export function FinanceiroPage() {
   const [dialog, setDialog] = useState<DialogState>(null);
   const [mpOpen, setMpOpen] = useState(false);
   const [mpMensId, setMpMensId] = useState<string | null>(null);
+  const [mpCobId, setMpCobId] = useState<string | null>(null);
 
   if (!loja) {
     return (
@@ -82,8 +84,22 @@ export function FinanceiroPage() {
           cobAberto={cobAberto}
           pixHabilitado={pixHabilitado}
           onDialog={setDialog}
+          onPagarMp={(id) => setMpCobId(id)}
         />
       </div>
+
+      <PagamentoMpCobrancaDialog
+        open={!!mpCobId}
+        onClose={() => {
+          setMpCobId(null);
+          carregar();
+        }}
+        cobrancaId={mpCobId}
+        defaultEmail={user?.email ?? ""}
+        defaultNome={(loja as any).nome ?? ""}
+        defaultDoc={(loja as any).cnpj ?? ""}
+        onPago={() => carregar()}
+      />
 
       <PagamentoMpMensalidadeDialog
         open={mpOpen}

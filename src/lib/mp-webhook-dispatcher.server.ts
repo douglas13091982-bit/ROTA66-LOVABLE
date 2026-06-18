@@ -87,6 +87,31 @@ async function processMensalidadeLoja(
   return new Response(`ok mensalidade ${paymentId}`, { status: 200 });
 }
 
+async function processCobrancaLoja(
+  paymentId: string,
+  payment: { status: string; external_reference?: string },
+): Promise<Response> {
+  const ref = String(payment.external_reference ?? "");
+  const cobrancaId = ref.slice("cobranca:".length);
+  if (!cobrancaId) return new Response("invalid ref", { status: 200 });
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const aprovado = payment.status === "approved";
+  const update: Record<string, unknown> = {
+    mp_payment_status: payment.status,
+    mp_payment_id: paymentId,
+  };
+  if (aprovado) {
+    update.pago = true;
+    update.pago_em = new Date().toISOString();
+  }
+  await supabaseAdmin
+    .from("cobrancas_loja" as any)
+    .update(update)
+    .eq("id", cobrancaId);
+  return new Response(`ok cobranca ${paymentId}`, { status: 200 });
+}
+
 async function processRecargaEntregador(
   paymentId: string,
   payment: { status: string; external_reference?: string },
@@ -181,6 +206,9 @@ export async function handleMpPlataformaWebhook(
 
     if (ref.startsWith("mensalidade:")) {
       return await processMensalidadeLoja(paymentId, payment);
+    }
+    if (ref.startsWith("cobranca:")) {
+      return await processCobrancaLoja(paymentId, payment);
     }
     if (ref.startsWith("recarga:")) {
       return await processRecargaEntregador(paymentId, payment);

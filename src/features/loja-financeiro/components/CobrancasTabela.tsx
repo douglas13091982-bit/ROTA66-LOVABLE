@@ -1,4 +1,4 @@
-import { Check, Loader2, QrCode } from "lucide-react";
+import { Check, Loader2, QrCode, CreditCard } from "lucide-react";
 import type { Cobranca, DialogState } from "../logic/types";
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   cobAberto: number;
   pixHabilitado: boolean;
   onDialog: (d: DialogState) => void;
+  onPagarMp?: (cobrancaId: string) => void;
 };
 
 export function CobrancasTabela({
@@ -17,6 +18,7 @@ export function CobrancasTabela({
   cobAberto,
   pixHabilitado,
   onDialog,
+  onPagarMp,
 }: Props) {
   return (
     <div className="bg-card border border-border rounded-lg p-6">
@@ -85,20 +87,32 @@ export function CobrancasTabela({
                     </td>
                     <td className="pl-4 text-right">
                       {!c.pago && (
-                        <button
-                          onClick={() =>
-                            onDialog({
-                              tipo: "cobranca",
-                              valor: Number(c.valor),
-                              ids: [c.id],
-                              titulo: "Pagar taxa do pedido",
-                              descricao: `Vencimento ${venc.toLocaleDateString("pt-BR")}`,
-                            })
-                          }
-                          className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"
-                        >
-                          <QrCode className="h-3 w-3" /> Pagar
-                        </button>
+                        <div className="inline-flex items-center gap-3 justify-end">
+                          {onPagarMp && (
+                            <button
+                              onClick={() => onPagarMp(c.id)}
+                              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-emerald-400 hover:underline"
+                              title="Pagar via Mercado Pago (PIX ou cartão)"
+                            >
+                              <CreditCard className="h-3 w-3" /> MP
+                            </button>
+                          )}
+                          <button
+                            onClick={() =>
+                              onDialog({
+                                tipo: "cobranca",
+                                valor: Number(c.valor),
+                                ids: [c.id],
+                                titulo: "Pagar taxa do pedido",
+                                descricao: `Vencimento ${venc.toLocaleDateString("pt-BR")}`,
+                              })
+                            }
+                            className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"
+                            title="Pagar via PIX manual (sem MP)"
+                          >
+                            <QrCode className="h-3 w-3" /> PIX
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
