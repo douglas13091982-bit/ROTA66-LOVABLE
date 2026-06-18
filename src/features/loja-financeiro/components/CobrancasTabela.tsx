@@ -8,6 +8,7 @@ type Props = {
   cobAberto: number;
   pixHabilitado: boolean;
   onDialog: (d: DialogState) => void;
+  onPagarMp?: (cobrancaId: string) => void;
 };
 
 export function CobrancasTabela({
