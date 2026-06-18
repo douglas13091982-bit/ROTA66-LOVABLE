@@ -129,6 +129,17 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                     </PerfilDialog>
                     <button
                       type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate({ to: "/cadastro" });
+                      }}
+                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
+                    >
+                      <UserPlus className="h-4 w-4 text-muted-foreground" />
+                      Cadastrar loja / entregador
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleSair}
                       className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left text-destructive"
                     >
