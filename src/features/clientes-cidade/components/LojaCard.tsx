@@ -14,17 +14,18 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="h-16 w-16 rounded-2xl object-cover shrink-0"
+          className="h-24 w-24 rounded-2xl object-cover shrink-0"
           style={{ border: "1px solid rgba(222,205,180,0.22)" }}
         />
       ) : (
         <div
-          className="h-16 w-16 rounded-2xl shrink-0 flex items-center justify-center text-[#decdb4] font-display text-2xl"
+          className="h-24 w-24 rounded-2xl shrink-0 flex items-center justify-center text-[#decdb4] font-display text-3xl"
           style={{ background: "linear-gradient(135deg,#bb1010,#7a0a0a)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
+
       <div className="flex-1 min-w-0">
         <h3 className="mp-card-title text-[13px] font-semibold uppercase tracking-[0.14em] leading-tight truncate">
           {loja.nome}
