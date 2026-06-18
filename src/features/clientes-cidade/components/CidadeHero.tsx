@@ -231,6 +231,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
           />
         </div>
       </div>
+      <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />
     </div>
   );
 }
