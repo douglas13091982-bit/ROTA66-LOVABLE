@@ -15,12 +15,12 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
           <img
             src={loja.logo_url}
             alt={loja.nome}
-            className="h-28 w-full rounded-xl object-cover"
+            className="h-20 w-20 rounded-2xl object-cover"
             style={{ border: "1px solid rgba(222,205,180,0.22)" }}
           />
         ) : (
           <div
-            className="h-28 w-full rounded-2xl flex items-center justify-center text-[#decdb4] font-display text-3xl"
+            className="h-20 w-20 rounded-2xl flex items-center justify-center text-[#decdb4] font-display text-3xl"
             style={{ background: "linear-gradient(135deg,#bb1010,#7a0a0a)" }}
           >
             {loja.nome.charAt(0)}
