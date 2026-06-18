@@ -1338,9 +1338,15 @@
 }
 
 /* Valor "Ganhos do dia" em vermelho vivo no tema claro */
+.entregador-light .entregador-ganho-valor,
 .entregador-light .text-4xl,
 .entregador-light .text-3xl,
 .entregador-light .text-5xl {
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
   color: #bd0f10 !important;
+  -webkit-text-fill-color: #bd0f10 !important;
   text-shadow: none !important;
 }
