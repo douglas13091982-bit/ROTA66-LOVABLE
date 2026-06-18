@@ -29,7 +29,6 @@ export function useAdminFinanceiro() {
     if (cfg) {
       setConfigId(cfg.id);
       setConfig({
-        taxa: Number(cfg.taxa_por_pedido),
         prazo: Number(cfg.prazo_pagamento_dias),
         mensalidadePadrao: Number(cfg.mensalidade_valor_padrao ?? 0),
         diaVenc: Number(cfg.dia_vencimento_padrao ?? 10),
