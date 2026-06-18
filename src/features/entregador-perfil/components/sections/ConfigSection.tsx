@@ -1,4 +1,6 @@
+import { Moon, Sun } from "lucide-react";
 import { SectionPanel } from "../ui-atoms";
+import { useEntregadorTheme } from "@/hooks/use-entregador-theme";
 
 type LojaVinc = {
   loja_id: string;
