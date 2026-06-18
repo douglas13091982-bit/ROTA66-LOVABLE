@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, UserRound, UserPlus, MapPin, ChevronDown } from "lucide-react";
+import { Search, UserRound, UserPlus, MapPin, ChevronDown, LogOut } from "lucide-react";
+import { toast } from "sonner";
 import { PerfilDialog } from "./PerfilDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useCidadesDisponiveis } from "../hooks/use-cidades-disponiveis";
@@ -89,6 +90,23 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
               <span className="truncate">{nomeCliente || "Meu cadastro"}</span>
             </button>
           </PerfilDialog>
+          {logado && (
+            <button
+              type="button"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                toast.success("Você saiu da conta");
+                setLogado(false);
+                setNomeCliente("");
+                navigate({ to: "/login" });
+              }}
+              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
+              aria-label="Sair da conta"
+            >
+              <LogOut className="h-3.5 w-3.5 shrink-0" />
+              <span>Sair</span>
+            </button>
+          )}
         </div>
         <div className="flex justify-center -mt-3 mb-1">
           <img src={logoUrl} alt={nomeSistema} className="h-16 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
