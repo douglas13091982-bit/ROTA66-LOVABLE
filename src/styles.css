@@ -1350,3 +1350,9 @@
   -webkit-text-fill-color: #bd0f10 !important;
   text-shadow: none !important;
 }
+
+/* Valores das stats (Avaliação / Pedidos / Tempo) em vermelho no tema claro */
+.entregador-light .entregador-stat-value {
+  color: #bd0f10 !important;
+  -webkit-text-fill-color: #bd0f10 !important;
+}
