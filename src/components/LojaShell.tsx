@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight } from "lucide-react";
+import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight, LifeBuoy } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +10,7 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -19,6 +20,7 @@ const NAV = [
   { to: "/loja/produtos", label: "Catálogo", icon: Package },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users },
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet },
+  { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy },
   { to: "/loja/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
 
@@ -30,6 +32,9 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
   useChatNaoLidasGlobal();
+  const suporteBadge = useSuporteBadge("loja", loja?.id);
+  
+  
   
   
   const [open, setOpen] = useState(false);
@@ -98,6 +103,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
+            const badge = item.to === "/loja/suporte" ? suporteBadge : 0;
             return (
               <Link
                 key={item.to}
@@ -107,7 +113,12 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
               >
                 <Icon />
                 <span className="flex-1 truncate">{item.label}</span>
-                {active && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
+                {badge > 0 && (
+                  <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-red text-white text-[10px] font-bold flex items-center justify-center">
+                    {badge > 9 ? "9+" : badge}
+                  </span>
+                )}
+                {active && badge === 0 && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
               </Link>
             );
           })}

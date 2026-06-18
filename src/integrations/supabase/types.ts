@@ -1631,6 +1631,98 @@ export type Database = {
         }
         Relationships: []
       }
+      suporte_mensagens: {
+        Row: {
+          autor_id: string
+          autor_tipo: Database["public"]["Enums"]["suporte_autor_tipo"]
+          created_at: string
+          id: string
+          mensagem: string
+          ticket_id: string
+        }
+        Insert: {
+          autor_id: string
+          autor_tipo: Database["public"]["Enums"]["suporte_autor_tipo"]
+          created_at?: string
+          id?: string
+          mensagem: string
+          ticket_id: string
+        }
+        Update: {
+          autor_id?: string
+          autor_tipo?: Database["public"]["Enums"]["suporte_autor_tipo"]
+          created_at?: string
+          id?: string
+          mensagem?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suporte_mensagens_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "suporte_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suporte_tickets: {
+        Row: {
+          assunto: string
+          created_at: string
+          criado_por: string
+          id: string
+          loja_id: string
+          nao_lidas_admin: number
+          nao_lidas_loja: number
+          prioridade: Database["public"]["Enums"]["suporte_ticket_prioridade"]
+          status: Database["public"]["Enums"]["suporte_ticket_status"]
+          ultima_mensagem_em: string
+          updated_at: string
+        }
+        Insert: {
+          assunto: string
+          created_at?: string
+          criado_por: string
+          id?: string
+          loja_id: string
+          nao_lidas_admin?: number
+          nao_lidas_loja?: number
+          prioridade?: Database["public"]["Enums"]["suporte_ticket_prioridade"]
+          status?: Database["public"]["Enums"]["suporte_ticket_status"]
+          ultima_mensagem_em?: string
+          updated_at?: string
+        }
+        Update: {
+          assunto?: string
+          created_at?: string
+          criado_por?: string
+          id?: string
+          loja_id?: string
+          nao_lidas_admin?: number
+          nao_lidas_loja?: number
+          prioridade?: Database["public"]["Enums"]["suporte_ticket_prioridade"]
+          status?: Database["public"]["Enums"]["suporte_ticket_status"]
+          ultima_mensagem_em?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suporte_tickets_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "suporte_tickets_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tarifas_globais: {
         Row: {
           ativa: boolean
@@ -1844,6 +1936,21 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      admin_listar_tickets_suporte: {
+        Args: never
+        Returns: {
+          assunto: string
+          created_at: string
+          id: string
+          loja_id: string
+          loja_nome: string
+          nao_lidas_admin: number
+          nao_lidas_loja: number
+          prioridade: Database["public"]["Enums"]["suporte_ticket_prioridade"]
+          status: Database["public"]["Enums"]["suporte_ticket_status"]
+          ultima_mensagem_em: string
+        }[]
+      }
       aplicar_credito_entregador: {
         Args: {
           _competencia?: string
@@ -1942,6 +2049,10 @@ export type Database = {
           phone: string
           updated_at: string
         }[]
+      }
+      fechar_ticket_suporte: {
+        Args: { _ticket_id: string }
+        Returns: undefined
       }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
@@ -2138,6 +2249,7 @@ export type Database = {
         Args: { _loja_id: string }
         Returns: boolean
       }
+      marcar_ticket_lido: { Args: { _ticket_id: string }; Returns: undefined }
       minhas_areas_admin: {
         Args: never
         Returns: {
@@ -2361,6 +2473,9 @@ export type Database = {
         | "cancelado"
         | "aguardando_pagamento"
       status_moderacao: "pendente" | "aprovado" | "bloqueado"
+      suporte_autor_tipo: "loja" | "admin"
+      suporte_ticket_prioridade: "normal" | "alta"
+      suporte_ticket_status: "aberto" | "respondido" | "fechado"
       tipo_veiculo: "moto" | "carro" | "caminhonete"
     }
     CompositeTypes: {
@@ -2563,6 +2678,9 @@ export const Constants = {
         "aguardando_pagamento",
       ],
       status_moderacao: ["pendente", "aprovado", "bloqueado"],
+      suporte_autor_tipo: ["loja", "admin"],
+      suporte_ticket_prioridade: ["normal", "alta"],
+      suporte_ticket_status: ["aberto", "respondido", "fechado"],
       tipo_veiculo: ["moto", "carro", "caminhonete"],
     },
   },
