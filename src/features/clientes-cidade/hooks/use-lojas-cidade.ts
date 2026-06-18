@@ -11,8 +11,8 @@ export function useLojasCidade(cidade: string, uf?: string) {
         .select("id, nome, slug, telefone, endereco, cidade, estado, logo_url, taxa_entrega_base, categoria")
         .eq("ativa", true)
         .eq("catalogo_ativo", true)
-        .eq("cidade", cidade);
-      if (uf) q = q.eq("estado", uf);
+        .ilike("cidade", cidade.trim());
+      if (uf) q = q.or(`estado.is.null,estado.ilike.${uf.trim()}`);
       const { data, error } = await q.order("nome");
       if (error) throw error;
       return (data ?? []) as LojaPublica[];
