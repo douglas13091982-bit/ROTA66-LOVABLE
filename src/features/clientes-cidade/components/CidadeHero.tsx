@@ -21,13 +21,17 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     (async () => {
       const { data: auth } = await supabase.auth.getUser();
       if (!auth.user) return;
+      const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
+      let full = "";
       const { data } = await supabase
         .from("profiles")
         .select("full_name")
         .eq("id", auth.user.id)
         .maybeSingle();
+      full = ((data as any)?.full_name ?? "").trim();
+      if (!full) full = String(meta.full_name ?? meta.name ?? "").trim();
+      if (!full && auth.user.email) full = auth.user.email.split("@")[0];
       if (cancelled) return;
-      const full = ((data as any)?.full_name ?? "").trim();
       const primeiro = full.split(/\s+/)[0] ?? "";
       setNomeCliente(primeiro);
     })();
