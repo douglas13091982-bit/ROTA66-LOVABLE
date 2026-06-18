@@ -23,9 +23,22 @@ function maskTelefone(v: string) {
   return d.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, "($1) $2-$3");
 }
 
-export function PerfilDialog({ children }: { children: React.ReactNode }) {
+export function PerfilDialog({
+  children,
+  open: openProp,
+  onOpenChange,
+}: {
+  children?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (v: boolean) => void;
+}) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [openInternal, setOpenInternal] = useState(false);
+  const open = openProp ?? openInternal;
+  const setOpen = (v: boolean) => {
+    setOpenInternal(v);
+    onOpenChange?.(v);
+  };
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -99,7 +112,7 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent className="max-w-sm rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-display">
