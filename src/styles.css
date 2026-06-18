@@ -44,9 +44,9 @@
   /* ROTA 66 brand — alinhado à tela de entrada (navy profundo + vermelho vibrante) */
   --rota-red: oklch(0.55 0.26 25);          /* vermelho intenso, menos rosa */
   --rota-red-dark: oklch(0.45 0.24 25);
-  --rota-navy: #0f304d;                        /* navy principal #0f304d */
-  --rota-navy-light: #164060;                   /* navy mais claro p/ cards */
-  --rota-navy-deep: #0c2538;                    /* navy mais escuro p/ contraste */
+  --rota-navy: #042a54;                         /* navy principal — azul da logo */
+  --rota-navy-light: #0a3d6e;                   /* navy mais claro p/ cards */
+  --rota-navy-deep: #021b3a;                    /* navy mais escuro p/ contraste */
   --rota-dark: #081929;
   --rota-gold: oklch(0.78 0.16 75);
 
@@ -262,7 +262,7 @@
    =========================================================== */
 .panel-premium {
   --panel-bg: oklch(0.18 0.06 265);
-  --panel-bg-elev: #0f304d;
+  --panel-bg-elev: #042a54;
   --panel-surface: oklch(0.26 0.06 265);
   --panel-surface-hi: oklch(0.30 0.06 265);
   --panel-border: oklch(0.34 0.06 265 / 0.55);
@@ -273,7 +273,7 @@
   --panel-accent: var(--rota-red);
   --panel-gold: var(--rota-gold);
 
-  --panel-gradient-bg: #0f304d;
+  --panel-gradient-bg: #042a54;
 
   --panel-gradient-rail:
     linear-gradient(180deg, var(--rota-red) 0%, var(--rota-gold) 100%);
