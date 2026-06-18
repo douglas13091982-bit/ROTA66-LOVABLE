@@ -5,7 +5,6 @@ import type { Cobranca, ConfigFinanceiro, Mensalidade } from "../logic/types";
 
 export function useAdminFinanceiro() {
   const [config, setConfig] = useState<ConfigFinanceiro>({
-    taxa: 2,
     prazo: 30,
     mensalidadePadrao: 0,
     diaVenc: 10,
