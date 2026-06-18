@@ -7,6 +7,7 @@ type Loja = {
   endereco?: string | null;
   cidade?: string | null;
   telefone?: string | null;
+  ativa?: boolean | null;
 };
 
 type Props = {
