@@ -115,7 +115,7 @@ export const importarCatalogoIfood = createServerFn({ method: "POST" })
     // insere em lotes
     for (let i = 0; i < rows.length; i += 500) {
       const lote = rows.slice(i, i + 500);
-      const { error } = await supabaseAdmin.from("produtos").insert(lote);
+      const { error } = await (supabaseAdmin as any).from("produtos").insert(lote);
       if (error) throw new Error(error.message);
     }
 
