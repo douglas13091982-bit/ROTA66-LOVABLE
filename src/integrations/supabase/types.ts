@@ -300,9 +300,79 @@ export type Database = {
         }
         Relationships: []
       }
+      cobrancas_faturas_mp: {
+        Row: {
+          created_at: string
+          id: string
+          loja_id: string
+          metodo_pagamento: string | null
+          mp_payment_id: string | null
+          mp_payment_status: string | null
+          mp_pix_expira_em: string | null
+          mp_qr_code: string | null
+          mp_qr_code_base64: string | null
+          mp_ticket_url: string | null
+          pago: boolean
+          pago_em: string | null
+          qtd_cobrancas: number
+          updated_at: string
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          loja_id: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
+          pago?: boolean
+          pago_em?: string | null
+          qtd_cobrancas: number
+          updated_at?: string
+          valor_total: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          loja_id?: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
+          pago?: boolean
+          pago_em?: string | null
+          qtd_cobrancas?: number
+          updated_at?: string
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cobrancas_faturas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobrancas_faturas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cobrancas_loja: {
         Row: {
           created_at: string
+          fatura_mp_id: string | null
           id: string
           loja_id: string
           mensalidade_id: string | null
@@ -326,6 +396,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          fatura_mp_id?: string | null
           id?: string
           loja_id: string
           mensalidade_id?: string | null
@@ -349,6 +420,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          fatura_mp_id?: string | null
           id?: string
           loja_id?: string
           mensalidade_id?: string | null
@@ -371,6 +443,13 @@ export type Database = {
           vencimento?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "cobrancas_loja_fatura_mp_id_fkey"
+            columns: ["fatura_mp_id"]
+            isOneToOne: false
+            referencedRelation: "cobrancas_faturas_mp"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "cobrancas_loja_mensalidade_id_fkey"
             columns: ["mensalidade_id"]
