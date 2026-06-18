@@ -30,14 +30,14 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
               params={{ cidade: encodeURIComponent(loja.cidade) }}
               className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] font-semibold text-muted-foreground hover:text-foreground transition mb-2"
             >
-              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o app
+              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
             </Link>
           ) : (
             <Link
               to="/clientes"
               className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] font-semibold text-muted-foreground hover:text-foreground transition mb-2"
             >
-              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o app
+              <ChevronLeft className="h-3.5 w-3.5" /> Voltar para o marketplace
             </Link>
           )}
           <div className="flex items-center gap-3.5">
