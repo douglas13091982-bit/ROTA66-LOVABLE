@@ -29,10 +29,12 @@ export function useTickets(modo: Modo, lojaId?: string) {
 
 export function useTicketsRealtime(modo: Modo, lojaId?: string) {
   const qc = useQueryClient();
+  const uid = useId();
   useEffect(() => {
     if (modo === "loja" && !lojaId) return;
+    const channelName = `suporte-tickets-${modo}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
     const channel = supabase
-      .channel(`suporte-tickets-${modo}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "suporte_tickets" },
@@ -44,7 +46,7 @@ export function useTicketsRealtime(modo: Modo, lojaId?: string) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [modo, lojaId, qc]);
+  }, [modo, lojaId, qc, uid]);
 }
 
 export function useMensagens(ticketId: string | null) {
