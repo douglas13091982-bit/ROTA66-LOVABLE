@@ -1,4 +1,4 @@
-import { Check, Loader2, QrCode } from "lucide-react";
+import { Check, Loader2, QrCode, CreditCard } from "lucide-react";
 import type { Cobranca, DialogState } from "../logic/types";
 
 type Props = {
