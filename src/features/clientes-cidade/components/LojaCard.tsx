@@ -26,9 +26,10 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <h3 className="mp-card-title font-display text-[16px] leading-tight tracking-tight truncate">
+        <h3 className="mp-card-title text-[15px] font-semibold leading-tight tracking-[0.04em] truncate">
           {loja.nome}
         </h3>
+
         {loja.categoria && (
           <div className="mp-tag mt-1 inline-block text-[9px] font-semibold uppercase tracking-[0.18em] px-2 py-0.5 rounded-full">
             {labelCategoria(loja.categoria)}
