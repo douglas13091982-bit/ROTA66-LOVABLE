@@ -112,7 +112,7 @@ export function PerfilDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
       <DialogContent className="max-w-sm rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-display">
