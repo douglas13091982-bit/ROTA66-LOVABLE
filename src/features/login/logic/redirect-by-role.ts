@@ -8,16 +8,31 @@ type NavigateFn = ReturnType<typeof useNavigate>;
  * Prioridade: super_admin/admin > entregador > loja_admin > cliente.
  */
 export async function redirectByRole(userId: string, navigate: NavigateFn) {
-  const { data } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId);
-  const roles = (data ?? []).map((r) => r.role as string);
+  const [{ data: rolesData }, { data: profile }] = await Promise.all([
+    supabase.from("user_roles").select("role").eq("user_id", userId),
+    supabase.from("profiles").select("cidade, estado").eq("id", userId).maybeSingle(),
+  ]);
+
+  const roles = (rolesData ?? []).map((r) => r.role as string);
   if (roles.includes("super_admin") || roles.includes("admin")) {
-    return navigate({ to: "/admin" });
+    return navigate({ to: "/admin", replace: true });
   }
-  if (roles.includes("entregador")) return navigate({ to: "/entregador" });
-  if (roles.includes("loja_admin")) return navigate({ to: "/loja" });
-  if (roles.includes("cliente")) return navigate({ to: "/clientes" });
-  return navigate({ to: "/" });
+  if (roles.includes("entregador")) return navigate({ to: "/entregador", replace: true });
+  if (roles.includes("loja_admin")) return navigate({ to: "/loja", replace: true });
+  if (roles.includes("cliente")) {
+    const cidade = String((profile as any)?.cidade ?? "").trim();
+    const uf = String((profile as any)?.estado ?? "").trim().toUpperCase();
+
+    if (cidade) {
+      return navigate({
+        to: "/clientes/$cidade",
+        params: { cidade: encodeURIComponent(cidade) },
+        search: uf ? { uf } : {},
+        replace: true,
+      });
+    }
+
+    return navigate({ to: "/clientes", replace: true });
+  }
+  return navigate({ to: "/clientes", replace: true });
 }
