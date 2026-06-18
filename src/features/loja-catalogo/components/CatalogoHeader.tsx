@@ -7,6 +7,7 @@ type Loja = {
   endereco?: string | null;
   cidade?: string | null;
   telefone?: string | null;
+  ativa?: boolean | null;
 };
 
 type Props = {
@@ -33,7 +34,7 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
             {loja.logo_url ? (
               <div className="relative shrink-0">
                 <img src={loja.logo_url} alt={loja.nome} className="h-14 w-14 rounded-2xl object-cover border border-border shadow-sm" />
-                <span className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+                <span className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full ring-2 ring-background ${loja.ativa ? "bg-emerald-500" : "bg-muted-foreground"}`} />
               </div>
             ) : (
               <div
@@ -47,7 +48,9 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
               <div className="flex items-center gap-1.5">
                 <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Catálogo</span>
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-                <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-emerald-600">Aberto agora</span>
+                <span className={`text-[9px] font-semibold uppercase tracking-[0.22em] ${loja.ativa ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {loja.ativa ? "Aberto agora" : "Fechado agora"}
+                </span>
               </div>
               <h1 className="font-display text-[19px] tracking-tight truncate leading-tight cc-ink-text mt-0.5">{loja.nome}</h1>
               <div className="text-[11px] text-muted-foreground space-y-0.5 mt-0.5">
