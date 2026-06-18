@@ -131,12 +131,12 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        navigate({ to: "/cadastro" });
+                        navigate({ to: "/cadastro", search: { role: "cliente" } });
                       }}
                       className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
                     >
                       <UserPlus className="h-4 w-4 text-muted-foreground" />
-                      Cadastrar loja / entregador
+                      Cadastrar
                     </button>
                     <button
                       type="button"
@@ -164,7 +164,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        navigate({ to: "/cadastro" });
+                        navigate({ to: "/cadastro", search: { role: "cliente" } });
                       }}
                       className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
                     >
@@ -180,7 +180,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
           {!logado && (
             <button
               type="button"
-              onClick={() => navigate({ to: "/cadastro" })}
+              onClick={() => navigate({ to: "/cadastro", search: { role: "cliente" } })}
               className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
             >
               <UserPlus className="h-3.5 w-3.5 shrink-0" />
