@@ -1,37 +1,58 @@
-## Objetivo
+## O que vai mudar
 
-Validar — no preview real, com a sessão atual do entregador — que ao clicar **OFF** os pedidos disponíveis somem na hora e **não** reaparecem após uma reconexão de rede, mesmo que o toggle no header mostre o estado certo.
+Hoje cada loja só tem um boolean `plano_mensal_ativo` + valor de mensalidade ajustado manualmente pelo super admin. Vou trocar isso por **planos configuráveis** que o super admin gerencia, e a loja escolhe um plano no momento da criação.
 
-## O que vou verificar
+## 1. Banco de dados (migration)
 
-1. **Estado inicial (ON)** — abrir `/entregador/disponiveis`, conferir que o toggle está ON, `estouOnline=true`, e os cards de rota (ex.: pedido #81) aparecem.
-2. **Clicar OFF** — pressionar o toggle e observar:
-   - Toggle do header vira "Offline" imediatamente.
-   - A lista é substituída pelo banner "VOCÊ ESTÁ OFFLINE" (sem flash de cards).
-   - No console: nenhum erro do upsert em `entregador_status`.
-   - No banco: `entregador_status.online` do meu user_id = `false`.
-3. **Simular reconexão** — com o app offline, simular network flap usando DevTools (Network → Offline → Online) ou apenas esperar 30s e voltar o foco da aba para disparar `visibilitychange`/`focus` listeners do hook. Conferir que:
-   - `estouOnline` permanece `false`.
-   - A query `pedidos-pool-externo` continua desabilitada (não dispara nenhum request).
-   - O toggle continua "Offline".
-   - Nenhum heartbeat de sessão antiga ressuscita `online=true` (checar `entregador_status.online` no banco continua `false`).
-4. **Voltar ON manualmente** — confirmar que ao clicar ON de novo, é uma nova sessão limpa, cards voltam.
+Nova tabela `public.planos_loja`:
+- `nome` (ex: "Básico", "Pro", "Premium")
+- `descricao` (texto curto, opcional)
+- `mensalidade_valor` (numeric) — quanto a loja paga por mês
+- `taxa_por_pedido` (numeric) — taxa cobrada por pedido entregue (0 = isento, igual ao "plano mensal ativo" de hoje)
+- `dia_vencimento` (1–28)
+- `destaque` (boolean) — marca o plano "recomendado"
+- `ordem` (int) — ordenação na tela
+- `ativo` (boolean) — se aparece para novas lojas
+- GRANTs: `SELECT` para `anon` e `authenticated` (página de criação precisa listar), full p/ `service_role`. INSERT/UPDATE/DELETE só `super_admin` via RLS.
 
-## Pontos de risco já identificados no código
+Em `public.lojas`:
+- adicionar coluna `plano_id uuid REFERENCES planos_loja(id)` (nullable, para lojas antigas).
 
-- `EntregadorStatusIndicator` usa `isEffectivelyOnline(online, updated_at, ttlMin)` (TTL), enquanto `usePedidosDisponiveis` usa `!!meuStatus?.online` (raw). Se o banco tiver `online=true` com `updated_at` antigo, o indicador pode mostrar "Offline" mas a lista de pedidos continuar visível. Vou conferir se esse descasamento aparece no teste.
-- O realtime de `entregador_status` precisa estar na publication `supabase_realtime`. Se não estiver, o flip depende só do `qc.setQueryData` feito pelo toggle e do refetch de 15s. Vou checar via `supabase--read_query` se a tabela está publicada.
-- O `sessionRef` do hook só protege heartbeats em voo do **mesmo mount**. Se a aba é recarregada após a reconexão, um `getCurrentPosition` antigo não escreve mais, mas vou confirmar lendo `entregador_status` antes/depois.
+Trigger `lojas_aplicar_plano`: quando `plano_id` é setado/alterado, copia `mensalidade_valor`, `dia_vencimento_mensalidade`, e ajusta `plano_mensal_ativo` conforme `taxa_por_pedido = 0`. Assim o restante do sistema (cobranças, financeiro) continua funcionando sem mudanças.
 
-## Saída esperada
+Atualizar `lojas_update_guard`: permitir que `owner` da loja altere `plano_id` apenas se a loja ainda não tem plano (escolha inicial). Trocas posteriores ficam restritas a `super_admin`.
 
-Relatório curto com:
-- Screenshot do estado ON → OFF → após reconexão.
-- Valor de `entregador_status.online` lido do banco em cada etapa.
-- Lista de qualquer divergência (ex.: cards reaparecendo, toggle dessincronizado, heartbeat indevido).
-- Se algo falhar, descrição da causa raiz e o ajuste proposto (sem implementar — só plano da correção).
+Seed: criar 1 plano default ("Básico — sem mensalidade, R$ 2 por pedido") para não quebrar o fluxo antes do admin configurar.
 
-## Não está no escopo
+## 2. Super Admin — CRUD de planos
 
-- Mudar lógica de online/offline agora — só verificar.
-- Mexer no badge "RETORNAR" do card (você pediu para focar no offline).
+Nova rota `/admin/planos` (`src/routes/_authenticated/admin/planos.tsx`) + feature `src/features/admin-planos/`:
+- Lista de planos em cards (nome, valores, ativo, destaque, ordem).
+- Form lateral para criar/editar/desativar/excluir.
+- Botão "Marcar como destaque" (apenas 1 destaque por vez).
+- Link no menu do `AdminShell`.
+
+## 3. Loja — seleção do plano na criação
+
+No `CriarLojaForm` adicionar **etapa 2** após preencher os dados:
+- Lista os planos ativos (`SELECT * FROM planos_loja WHERE ativo ORDER BY ordem`).
+- Cards lado a lado com nome, valor mensal, taxa por pedido, badge "Recomendado" no destaque.
+- Loja escolhe um plano antes de finalizar; `useCriarLoja` envia `plano_id` no `INSERT`.
+- Se nenhum plano ativo existir ainda, mostra o card sem opção (fallback do plano default seedado).
+
+Loja já criada sem plano: mostrar no Dashboard um aviso "Escolha seu plano" que abre a mesma tela de seleção (uma única vez — depois passa a ser super admin).
+
+## 4. Admin de lojas
+
+Em `LojaCard` substituir o toggle "Plano mensal ativo" + campo de mensalidade por um **select de plano** + resumo dos valores (vindos do plano). Edição da mensalidade individual fica como override opcional só para super admin.
+
+## Detalhes técnicos
+
+- Tabela `planos_loja` é pública para leitura porque a tela de criação roda antes da loja existir e o cadastro é autenticado mas a UI precisa renderizar antes do `INSERT`. Sem dados sensíveis.
+- A trigger garante que `lojas.mensalidade_valor` e `plano_mensal_ativo` continuem sendo a "fonte da verdade" usada por triggers existentes (`gerar_cobranca_pedido_entregue`, `gerar_mensalidades_do_dia`, `enforce_plano_para_vincular_entregador`), evitando refatorar todo o financeiro.
+- Não mexo em entregadores, pedidos, ou financeiro de cobranças — só na origem dos valores.
+
+## Fora do escopo
+
+- Cobrança automática da mensalidade do primeiro mês (continua via job `gerar_mensalidades_do_dia`).
+- Mudar plano com prorata / período de teste — adicionamos depois se quiser.

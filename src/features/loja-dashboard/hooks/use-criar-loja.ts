@@ -13,6 +13,7 @@ export function useCriarLoja() {
     cnpj: string;
     telefone: string;
     cidade: string;
+    plano_id?: string | null;
   }) {
     if (!user) return;
     const cnpjDigits = onlyDigits(input.cnpj);
@@ -33,7 +34,7 @@ export function useCriarLoja() {
     let lastError: any = null;
 
     for (let tentativa = 1; tentativa <= 20; tentativa++) {
-      const { error } = await supabase.from("lojas").insert({
+      const { error } = await (supabase as any).from("lojas").insert({
         owner_id: user.id,
         nome: input.nome,
         slug,
@@ -41,6 +42,7 @@ export function useCriarLoja() {
         cnpj: cnpjDigits,
         telefone: input.telefone,
         cidade: input.cidade,
+        plano_id: input.plano_id ?? null,
       });
       if (!error) {
         inserted = true;

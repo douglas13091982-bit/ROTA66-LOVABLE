@@ -47,6 +47,7 @@ import { Route as AuthenticatedEntregadorCarteiraRouteImport } from './routes/_a
 import { Route as AuthenticatedEntregadorAtivosRouteImport } from './routes/_authenticated/entregador/ativos'
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
+import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminNotificacaoSomRouteImport } from './routes/_authenticated/admin/notificacao-som'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
@@ -271,6 +272,12 @@ const AuthenticatedAdminRoteirizacaoRoute =
     path: '/roteirizacao',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPlanosRoute =
+  AuthenticatedAdminPlanosRouteImport.update({
+    id: '/planos',
+    path: '/planos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPedidosRoute =
   AuthenticatedAdminPedidosRouteImport.update({
     id: '/pedidos',
@@ -374,6 +381,7 @@ export interface FileRoutesByFullPath {
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -423,6 +431,7 @@ export interface FileRoutesByTo {
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -477,6 +486,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/_authenticated/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/_authenticated/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -531,6 +541,7 @@ export interface FileRouteTypes {
     | '/admin/lojas'
     | '/admin/notificacao-som'
     | '/admin/pedidos'
+    | '/admin/planos'
     | '/admin/roteirizacao'
     | '/admin/tarifas'
     | '/entregador/ativos'
@@ -580,6 +591,7 @@ export interface FileRouteTypes {
     | '/admin/lojas'
     | '/admin/notificacao-som'
     | '/admin/pedidos'
+    | '/admin/planos'
     | '/admin/roteirizacao'
     | '/admin/tarifas'
     | '/entregador/ativos'
@@ -633,6 +645,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/lojas'
     | '/_authenticated/admin/notificacao-som'
     | '/_authenticated/admin/pedidos'
+    | '/_authenticated/admin/planos'
     | '/_authenticated/admin/roteirizacao'
     | '/_authenticated/admin/tarifas'
     | '/_authenticated/entregador/ativos'
@@ -948,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRoteirizacaoRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/planos': {
+      id: '/_authenticated/admin/planos'
+      path: '/planos'
+      fullPath: '/admin/planos'
+      preLoaderRoute: typeof AuthenticatedAdminPlanosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/pedidos': {
       id: '/_authenticated/admin/pedidos'
       path: '/pedidos'
@@ -1055,6 +1075,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
   AuthenticatedAdminNotificacaoSomRoute: typeof AuthenticatedAdminNotificacaoSomRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
+  AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1076,6 +1097,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminNotificacaoSomRoute:
       AuthenticatedAdminNotificacaoSomRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
+    AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -1192,13 +1214,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
