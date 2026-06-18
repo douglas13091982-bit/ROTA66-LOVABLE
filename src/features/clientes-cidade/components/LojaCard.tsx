@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
+
 import { labelCategoria } from "@/lib/loja-categorias";
 import type { LojaPublica } from "../logic/types";
 
@@ -38,12 +38,6 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
         </div>
       )}
 
-      {loja.endereco && (
-        <div className="mp-muted text-[10px] flex items-center justify-center gap-1 mt-1.5 truncate">
-          <MapPin className="h-3 w-3 shrink-0" />
-          <span className="truncate">{loja.endereco}</span>
-        </div>
-      )}
 
       <span className="mp-open text-[10px] font-semibold uppercase tracking-[0.18em] text-center mt-2">
         Abrir →
