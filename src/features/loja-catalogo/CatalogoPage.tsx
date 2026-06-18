@@ -4,6 +4,7 @@ import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
 import { CatalogoHeader } from "./components/CatalogoHeader";
 import { CatalogoIndisponivel } from "./components/CatalogoIndisponivel";
+import { LojaFechada } from "./components/LojaFechada";
 import { CatalogoListagem } from "./components/CatalogoListagem";
 import { CheckoutDialog } from "./components/CheckoutDialog";
 import { PedidoSucesso } from "./components/PedidoSucesso";
@@ -49,8 +50,17 @@ export function CatalogoPage({ slug }: { slug: string }) {
     );
   }
 
-  if (!loja || !catalogoAtivo || !loja.ativa || loja.status !== "aprovado") {
+  if (!loja || !catalogoAtivo || loja.status !== "aprovado") {
     return <CatalogoIndisponivel />;
+  }
+
+  if (!loja.ativa) {
+    return (
+      <LojaFechada
+        nome={loja.nome}
+        horario={(loja as any).horario_funcionamento ?? null}
+      />
+    );
   }
 
   if (sucesso) {
