@@ -1,13 +1,18 @@
 // Roda no MAIN world da página do iFood para interceptar fetch/XHR.
-// Captura respostas JSON e envia ao content script via window.postMessage.
+// Captura QUALQUER resposta JSON e envia ao content script via window.postMessage.
 (function () {
   if (window.__rotas66_ifood_hook__) return;
   window.__rotas66_ifood_hook__ = true;
+  console.log("[Rotas66] hook injetado em", location.href);
 
   function send(url, body) {
     try {
+      if (!body || typeof body !== "string") return;
+      // só algo que pareça JSON
+      const t = body.trim();
+      if (!(t.startsWith("{") || t.startsWith("["))) return;
       window.postMessage(
-        { source: "rotas66-ifood-hook", url: String(url || ""), body: String(body || "") },
+        { source: "rotas66-ifood-hook", url: String(url || ""), body: body },
         "*"
       );
     } catch (_) {}
@@ -19,10 +24,7 @@
     const res = await origFetch.apply(this, args);
     try {
       const clone = res.clone();
-      const ct = clone.headers.get("content-type") || "";
-      if (ct.includes("json")) {
-        clone.text().then((t) => send(res.url, t)).catch(() => {});
-      }
+      clone.text().then((t) => send(res.url, t)).catch(() => {});
     } catch (_) {}
     return res;
   };
@@ -37,9 +39,12 @@
   XMLHttpRequest.prototype.send = function () {
     this.addEventListener("load", () => {
       try {
-        const ct = this.getResponseHeader("content-type") || "";
-        if (ct.includes("json") && this.responseText) {
-          send(this.__rotas66_url || this.responseURL, this.responseText);
+        if (this.responseType === "" || this.responseType === "text") {
+          if (this.responseText) {
+            send(this.__rotas66_url || this.responseURL, this.responseText);
+          }
+        } else if (this.responseType === "json" && this.response) {
+          send(this.__rotas66_url || this.responseURL, JSON.stringify(this.response));
         }
       } catch (_) {}
     });
