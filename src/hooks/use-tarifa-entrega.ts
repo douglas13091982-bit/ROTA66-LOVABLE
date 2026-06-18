@@ -1,6 +1,6 @@
 /**
  * Hook: calcula taxa de entrega automaticamente quando as coordenadas mudam.
- * Usa tarifas da loja se ela tem plano mensal ativo, senão tarifas globais.
+ * Usa exclusivamente as tarifas globais definidas pelo Super Admin.
  */
 
 import { useEffect, useState } from "react";
@@ -11,36 +11,14 @@ import type { TarifaFaixa } from "@/types/pedido";
 
 type Coords = { lat: number | null; lng: number | null };
 
-async function buscarTarifasDaLoja(lojaId: string): Promise<{
-  tarifas: TarifaFaixa[];
-  origem: string;
-}> {
-  const { data: lojaData } = await supabase
-    .from("lojas")
-    .select("plano_mensal_ativo")
-    .eq("id", lojaId)
-    .maybeSingle();
-
-  if (lojaData?.plano_mensal_ativo) {
-    const { data } = await supabase
-      .from("tarifas_loja")
-      .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
-      .eq("loja_id", lojaId)
-      .eq("ativa", true)
-      .eq("tipo_veiculo", "moto")
-      .order("faixa_km_min", { ascending: true });
-    if (data && data.length > 0) {
-      return { tarifas: data as TarifaFaixa[], origem: "tarifas da loja" };
-    }
-  }
-
-  const { data: globais } = await supabase
+async function buscarTarifas(): Promise<TarifaFaixa[]> {
+  const { data } = await supabase
     .from("tarifas_globais")
     .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
     .eq("ativa", true)
     .eq("tipo_veiculo", "moto")
     .order("faixa_km_min", { ascending: true });
-  return { tarifas: (globais ?? []) as TarifaFaixa[], origem: "tarifas globais" };
+  return (data ?? []) as TarifaFaixa[];
 }
 
 function coordsValidas(c: Coords): c is LatLng {
@@ -48,7 +26,7 @@ function coordsValidas(c: Coords): c is LatLng {
 }
 
 export function useTarifaEntrega(
-  lojaId: string,
+  _lojaId: string,
   coleta: Coords,
   entrega: Coords,
 ) {
@@ -65,7 +43,7 @@ export function useTarifaEntrega(
     let cancelled = false;
     (async () => {
       const km = haversineKm(coleta, entrega);
-      const { tarifas, origem } = await buscarTarifasDaLoja(lojaId);
+      const tarifas = await buscarTarifas();
       if (cancelled) return;
       if (tarifas.length === 0) {
         setTaxa(0);
@@ -84,14 +62,14 @@ export function useTarifaEntrega(
       setTaxa(Number(valor.toFixed(2)));
       if (faixa) {
         setInfo(
-          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · ${origem}`,
+          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · tarifas globais`,
         );
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [coleta.lat, coleta.lng, entrega.lat, entrega.lng, lojaId]);
+  }, [coleta.lat, coleta.lng, entrega.lat, entrega.lng]);
 
   return { taxa, info, setTaxa };
 }

@@ -92,26 +92,12 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     let taxa_entrega = Number(loja.taxa_entrega_base) || 0;
     if (coletaLat != null && coletaLng != null && entregaLat != null && entregaLng != null) {
       const km = haversineKm(coletaLat, coletaLng, entregaLat, entregaLng);
-      let tarifas: any[] | null = null;
-      if ((loja as any).plano_mensal_ativo) {
-        const { data: t } = await supabaseAdmin
-          .from("tarifas_loja")
-          .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
-          .eq("loja_id", loja.id)
-          .eq("ativa", true)
-          .eq("tipo_veiculo", "moto")
-          .order("faixa_km_min", { ascending: true });
-        tarifas = t;
-      }
-      if (!tarifas || tarifas.length === 0) {
-        const { data: g } = await supabaseAdmin
-          .from("tarifas_globais")
-          .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
-          .eq("ativa", true)
-          .eq("tipo_veiculo", "moto")
-          .order("faixa_km_min", { ascending: true });
-        tarifas = g;
-      }
+      const { data: tarifas } = await supabaseAdmin
+        .from("tarifas_globais")
+        .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
+        .eq("ativa", true)
+        .eq("tipo_veiculo", "moto")
+        .order("faixa_km_min", { ascending: true });
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
     }
