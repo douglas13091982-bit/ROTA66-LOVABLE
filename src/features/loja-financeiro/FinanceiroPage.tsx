@@ -4,6 +4,7 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { useAuth } from "@/hooks/use-auth";
 import { PixPagamentoDialog } from "@/components/PixPagamentoDialog";
 import { PagamentoMpMensalidadeDialog } from "./components/PagamentoMpMensalidadeDialog";
+import { PagamentoMpCobrancaDialog } from "./components/PagamentoMpCobrancaDialog";
 import { useFinanceiroLoja } from "./hooks/use-financeiro-loja";
 import { calcularResumo } from "./logic/resumo";
 import type { DialogState } from "./logic/types";
