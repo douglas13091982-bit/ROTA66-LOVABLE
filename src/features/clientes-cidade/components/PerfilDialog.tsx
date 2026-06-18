@@ -46,16 +46,18 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
         setLoading(false);
         return;
       }
+      const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
       const { data } = await supabase
         .from("profiles")
         .select("full_name, phone, cidade, estado")
         .eq("id", auth.user.id)
         .maybeSingle();
+      const p = (data as any) ?? {};
       setForm({
-        full_name: (data as any)?.full_name ?? "",
-        phone: (data as any)?.phone ?? "",
-        cidade: (data as any)?.cidade ?? "",
-        estado: (data as any)?.estado ?? "",
+        full_name: p.full_name ?? meta.full_name ?? meta.name ?? "",
+        phone: p.phone ?? meta.phone ?? "",
+        cidade: p.cidade ?? meta.cidade ?? "",
+        estado: p.estado ?? meta.estado ?? "",
       });
       setLoading(false);
     })();
@@ -73,13 +75,13 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
     const estado = form.estado.trim().toUpperCase().slice(0, 2);
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        id: auth.user.id,
         full_name: form.full_name.trim().slice(0, 100) || null,
         phone: form.phone.replace(/\D/g, "").slice(0, 11) || null,
         cidade,
         estado: estado || null,
-      })
-      .eq("id", auth.user.id);
+      }, { onConflict: "id" });
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Perfil atualizado");
