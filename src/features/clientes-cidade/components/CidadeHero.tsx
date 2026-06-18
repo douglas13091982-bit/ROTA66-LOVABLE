@@ -42,7 +42,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
 
   return (
     <div>
-      <div className="max-w-2xl mx-auto px-4 pt-2 pb-3 relative">
+      <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
         <div className="flex items-center justify-end gap-2 mb-2">
           <PerfilDialog>
             <button
