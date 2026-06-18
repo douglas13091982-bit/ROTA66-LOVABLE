@@ -37,6 +37,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
     return can(n.area);
   });
   const { logoUrl, nomeSistema } = useBranding();
+  const suporteBadge = useSuporteBadge("admin");
   
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
