@@ -1,4 +1,6 @@
 import { MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PerfilDialog } from "@/features/clientes-cidade/components/PerfilDialog";
 
 export function SemCidadeEstado() {
   return (
@@ -7,9 +9,12 @@ export function SemCidadeEstado() {
         <MapPin className="h-6 w-6 text-muted-foreground" />
       </div>
       <h2 className="font-display text-lg tracking-tight mb-2">Endereço não encontrado</h2>
-      <p className="text-sm text-muted-foreground">
-        Seu cadastro não possui uma cidade vinculada. Atualize seu endereço no perfil.
+      <p className="text-sm text-muted-foreground mb-4">
+        Seu cadastro não possui uma cidade vinculada. Atualize seu endereço para ver as lojas disponíveis.
       </p>
+      <PerfilDialog>
+        <Button>Atualizar cadastro</Button>
+      </PerfilDialog>
     </>
   );
 }
