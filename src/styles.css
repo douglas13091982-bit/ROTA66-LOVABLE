@@ -296,6 +296,13 @@
   min-height: 100vh;
 }
 
+/* Tema do app do entregador — azul #042a54 */
+.panel-premium.entregador-app {
+  --panel-bg-elev: #042a54;
+  --panel-gradient-bg: #042a54;
+  background: #042a54;
+}
+
 .panel-premium ::selection { background: oklch(0.55 0.21 27 / 0.45); color: #fff; }
 .panel-premium ::-webkit-scrollbar { width: 10px; height: 10px; }
 .panel-premium ::-webkit-scrollbar-track { background: transparent; }
