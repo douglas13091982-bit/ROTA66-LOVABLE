@@ -31,6 +31,7 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
+    endereco: "",
     cidade: "",
     estado: "",
   });
