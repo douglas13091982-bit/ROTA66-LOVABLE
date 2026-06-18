@@ -200,11 +200,25 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
           </div>
 
           <div className="ml-auto flex items-center gap-2">
+            <Link
+              to="/loja/suporte"
+              className="relative inline-flex items-center gap-1.5 text-[12px] font-medium text-white/80 hover:text-white px-2.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition"
+              aria-label="Suporte"
+            >
+              <LifeBuoy className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Suporte</span>
+              {suporteBadge > 0 && (
+                <span className="ml-0.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full bg-gradient-red text-white text-[10px] font-bold leading-none">
+                  {suporteBadge > 9 ? "9+" : suporteBadge}
+                </span>
+              )}
+            </Link>
             <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-white/60 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/5">
               <span className="h-1.5 w-1.5 rounded-full pp-dot-online" />
               Ao vivo
             </span>
           </div>
+
         </header>
 
         <main className="flex-1 px-5 md:px-8 py-6 md:py-8 relative">
