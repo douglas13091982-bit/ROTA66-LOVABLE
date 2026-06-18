@@ -30,6 +30,7 @@ export function FinanceiroPage() {
   const [dialog, setDialog] = useState<DialogState>(null);
   const [mpOpen, setMpOpen] = useState(false);
   const [mpMensId, setMpMensId] = useState<string | null>(null);
+  const [mpCobId, setMpCobId] = useState<string | null>(null);
 
   if (!loja) {
     return (
