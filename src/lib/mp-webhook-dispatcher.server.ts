@@ -112,6 +112,48 @@ async function processCobrancaLoja(
   return new Response(`ok cobranca ${paymentId}`, { status: 200 });
 }
 
+async function processFaturaCobrancas(
+  paymentId: string,
+  payment: { status: string; external_reference?: string },
+): Promise<Response> {
+  const ref = String(payment.external_reference ?? "");
+  const faturaId = ref.slice("fatura:".length);
+  if (!faturaId) return new Response("invalid ref", { status: 200 });
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const aprovado = payment.status === "approved";
+  const nowIso = new Date().toISOString();
+  const faturaUpdate: Record<string, unknown> = {
+    mp_payment_status: payment.status,
+    mp_payment_id: paymentId,
+  };
+  if (aprovado) {
+    faturaUpdate.pago = true;
+    faturaUpdate.pago_em = nowIso;
+  }
+  await supabaseAdmin
+    .from("cobrancas_faturas_mp" as any)
+    .update(faturaUpdate)
+    .eq("id", faturaId);
+
+  // Propaga para as cobranças vinculadas
+  const cobUpdate: Record<string, unknown> = {
+    mp_payment_status: payment.status,
+    mp_payment_id: paymentId,
+  };
+  if (aprovado) {
+    cobUpdate.pago = true;
+    cobUpdate.pago_em = nowIso;
+    cobUpdate.metodo_pagamento = "pix_fatura_mp";
+  }
+  await supabaseAdmin
+    .from("cobrancas_loja" as any)
+    .update(cobUpdate)
+    .eq("fatura_mp_id", faturaId);
+
+  return new Response(`ok fatura ${paymentId}`, { status: 200 });
+}
+
 async function processRecargaEntregador(
   paymentId: string,
   payment: { status: string; external_reference?: string },
