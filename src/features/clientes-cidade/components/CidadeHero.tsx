@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft, Search, UserRound } from "lucide-react";
 import { PerfilDialog } from "./PerfilDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   cidade: string;
@@ -12,6 +14,28 @@ interface Props {
 }
 
 export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaChange }: Props) {
+  const [nomeCliente, setNomeCliente] = useState<string>("");
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", auth.user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const full = ((data as any)?.full_name ?? "").trim();
+      const primeiro = full.split(/\s+/)[0] ?? "";
+      setNomeCliente(primeiro);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div>
       <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 relative">
@@ -21,9 +45,10 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
             <PerfilDialog>
               <button
                 type="button"
-                className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
+                className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 max-w-[180px]"
               >
-                <UserRound className="h-3.5 w-3.5" /> Meu cadastro
+                <UserRound className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{nomeCliente || "Meu cadastro"}</span>
               </button>
             </PerfilDialog>
             <Link
