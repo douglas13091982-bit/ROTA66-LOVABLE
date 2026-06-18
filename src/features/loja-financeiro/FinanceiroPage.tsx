@@ -70,6 +70,11 @@ export function FinanceiroPage() {
           pixHabilitado
           onDialog={handleDialog}
         />
+        <PreviaSemanaCard
+          lojaId={loja.id}
+          taxaPorPedido={Number((loja as any).taxa_por_pedido ?? 0)}
+          planoMensalAtivo={Boolean((loja as any).plano_mensal_ativo)}
+        />
         <CobrancasTabela
           loading={loading}
           cobrancas={cobrancas}
