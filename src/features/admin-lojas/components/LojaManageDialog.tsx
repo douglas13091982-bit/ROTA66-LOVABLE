@@ -12,6 +12,7 @@ import { StatusSection } from "./StatusSection";
 import { CatalogoSection } from "./CatalogoSection";
 import { PlanoMensalSection } from "./PlanoMensalSection";
 import { MensalidadeSection } from "./MensalidadeSection";
+import { PlanoSelectSection } from "./PlanoSelectSection";
 
 interface Props {
   loja: any;
@@ -75,6 +76,12 @@ export function LojaManageDialog({
             slug={l.slug}
             catalogoSlug={l.catalogo_slug}
             onToggle={() => onToggleCatalogo(l.id, !!l.catalogo_ativo)}
+          />
+
+          <PlanoSelectSection
+            lojaId={l.id}
+            planoIdAtual={l.plano_id ?? null}
+            onChanged={onChanged}
           />
 
           <PlanoMensalSection
