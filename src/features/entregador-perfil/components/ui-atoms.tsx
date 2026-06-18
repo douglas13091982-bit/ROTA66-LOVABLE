@@ -12,7 +12,7 @@ export function StatCell({
   return (
     <div className="text-center py-2">
       <div
-        className="text-[26px] font-extrabold leading-none tracking-tight"
+        className="entregador-stat-value text-[26px] font-extrabold leading-none tracking-tight"
         style={accent ? { color: "oklch(0.78 0.16 27)" } : { color: "white" }}
       >
         {value}
