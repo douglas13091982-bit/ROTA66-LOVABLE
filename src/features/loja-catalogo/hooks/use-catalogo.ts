@@ -6,6 +6,9 @@ import type { Produto } from "@/routes/-catalogo-types";
 export function useLojaPublica(slug: string) {
   return useQuery({
     queryKey: ["catalogo-loja", slug],
+    refetchInterval: 15000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
     queryFn: async () => {
       const lojaSelect =
         "id, nome, slug, catalogo_slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, catalogo_ativo, ativa, status, catalogo_layout";
