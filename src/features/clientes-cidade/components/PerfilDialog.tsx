@@ -1,0 +1,159 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { UserRound } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+
+const UFS = [
+  "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR",
+  "PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO",
+];
+
+function maskTelefone(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  if (d.length <= 10) {
+    return d.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, (_, a, b, c) =>
+      [a && `(${a}`, a && a.length === 2 ? ") " : "", b, c && `-${c}`].filter(Boolean).join(""),
+    );
+  }
+  return d.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, "($1) $2-$3");
+}
+
+export function PerfilDialog({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    full_name: "",
+    phone: "",
+    cidade: "",
+    estado: "",
+  });
+
+  useEffect(() => {
+    if (!open) return;
+    setLoading(true);
+    (async () => {
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth.user) {
+        toast.error("Faça login para editar seu perfil");
+        setOpen(false);
+        setLoading(false);
+        return;
+      }
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, phone, cidade, estado")
+        .eq("id", auth.user.id)
+        .maybeSingle();
+      setForm({
+        full_name: (data as any)?.full_name ?? "",
+        phone: (data as any)?.phone ?? "",
+        cidade: (data as any)?.cidade ?? "",
+        estado: (data as any)?.estado ?? "",
+      });
+      setLoading(false);
+    })();
+  }, [open]);
+
+  const onSave = async () => {
+    if (!form.cidade.trim()) return toast.error("Informe sua cidade");
+    setSaving(true);
+    const { data: auth } = await supabase.auth.getUser();
+    if (!auth.user) {
+      setSaving(false);
+      return toast.error("Sessão expirada");
+    }
+    const cidade = form.cidade.trim().replace(/\s+/g, " ");
+    const estado = form.estado.trim().toUpperCase().slice(0, 2);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: form.full_name.trim().slice(0, 100) || null,
+        phone: form.phone.replace(/\D/g, "").slice(0, 11) || null,
+        cidade,
+        estado: estado || null,
+      })
+      .eq("id", auth.user.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Perfil atualizado");
+    setOpen(false);
+    navigate({
+      to: "/clientes/$cidade",
+      params: { cidade: encodeURIComponent(cidade) },
+      search: estado ? { uf: estado } : {},
+      replace: true,
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-sm rounded-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 font-display">
+            <UserRound className="h-4 w-4" /> Meu cadastro
+          </DialogTitle>
+        </DialogHeader>
+        {loading ? (
+          <p className="text-sm text-muted-foreground py-6 text-center">Carregando...</p>
+        ) : (
+          <div className="space-y-3">
+            <div>
+              <Label className="text-xs">Nome</Label>
+              <Input
+                value={form.full_name}
+                onChange={(e) => setForm((f) => ({ ...f, full_name: e.target.value }))}
+                placeholder="Seu nome"
+                maxLength={100}
+              />
+            </div>
+            <div>
+              <Label className="text-xs">Telefone</Label>
+              <Input
+                value={maskTelefone(form.phone)}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                placeholder="(00) 00000-0000"
+                inputMode="tel"
+                maxLength={16}
+              />
+            </div>
+            <div className="grid grid-cols-[1fr_auto] gap-2">
+              <div>
+                <Label className="text-xs">Cidade *</Label>
+                <Input
+                  value={form.cidade}
+                  onChange={(e) => setForm((f) => ({ ...f, cidade: e.target.value }))}
+                  placeholder="Sua cidade"
+                  maxLength={80}
+                />
+              </div>
+              <div className="w-20">
+                <Label className="text-xs">UF</Label>
+                <select
+                  value={form.estado}
+                  onChange={(e) => setForm((f) => ({ ...f, estado: e.target.value }))}
+                  className="w-full h-10 rounded-md border border-input bg-background px-2 text-sm"
+                >
+                  <option value="">--</option>
+                  {UFS.map((u) => (
+                    <option key={u} value={u}>{u}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <Button onClick={onSave} disabled={saving} className="w-full mt-2">
+              {saving ? "Salvando..." : "Salvar"}
+            </Button>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}

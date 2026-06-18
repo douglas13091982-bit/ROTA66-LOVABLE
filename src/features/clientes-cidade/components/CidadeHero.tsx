@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Search, UserRound } from "lucide-react";
+import { PerfilDialog } from "./PerfilDialog";
 
 interface Props {
   cidade: string;
@@ -14,8 +15,16 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
   return (
     <div className="cc-hero-bg cc-noise">
       <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 relative">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center justify-between gap-2 mb-1">
           <img src={logoUrl} alt={nomeSistema} className="h-7 w-auto object-contain" />
+          <PerfilDialog>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/80 hover:text-foreground bg-card border border-border rounded-full px-3 py-1.5 transition"
+            >
+              <UserRound className="h-3.5 w-3.5" /> Meu cadastro
+            </button>
+          </PerfilDialog>
         </div>
         <Link
           to="/clientes"
