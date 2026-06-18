@@ -142,8 +142,8 @@ export function ImportarIfoodDialog({
               2. Exporte o catálogo no iFood
             </p>
             <ol className="text-xs text-muted-foreground space-y-1 list-decimal pl-4">
-              <li>Entre no Portal do Parceiro iFood com sua loja.</li>
-              <li>Abra a tela de <b>Cardápio</b> e role até carregar todos os produtos.</li>
+              <li>Abra o Portal do Parceiro em <b>Cardápio</b> ou a página pública da sua loja no iFood.</li>
+              <li>Role até o fim para carregar todos os produtos visíveis.</li>
               <li>Clique no ícone da extensão e em <b>Exportar JSON</b>.</li>
             </ol>
           </div>
