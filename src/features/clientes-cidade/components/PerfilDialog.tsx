@@ -31,6 +31,7 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
   const [form, setForm] = useState({
     full_name: "",
     phone: "",
+    endereco: "",
     cidade: "",
     estado: "",
   });
@@ -49,13 +50,14 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
       const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, phone, cidade, estado")
+        .select("full_name, phone, endereco, cidade, estado")
         .eq("id", auth.user.id)
         .maybeSingle();
       const p = (data as any) ?? {};
       setForm({
         full_name: p.full_name ?? meta.full_name ?? meta.name ?? "",
         phone: p.phone ?? meta.phone ?? "",
+        endereco: p.endereco ?? meta.endereco ?? "",
         cidade: p.cidade ?? meta.cidade ?? "",
         estado: p.estado ?? meta.estado ?? "",
       });
@@ -79,6 +81,7 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
         id: auth.user.id,
         full_name: form.full_name.trim().slice(0, 100) || null,
         phone: form.phone.replace(/\D/g, "").slice(0, 11) || null,
+        endereco: form.endereco.trim().slice(0, 200) || null,
         cidade,
         estado: estado || null,
       }, { onConflict: "id" });
@@ -124,6 +127,15 @@ export function PerfilDialog({ children }: { children: React.ReactNode }) {
                 placeholder="(00) 00000-0000"
                 inputMode="tel"
                 maxLength={16}
+              />
+            </div>
+            <div>
+              <Label className="text-xs">Endereço</Label>
+              <Input
+                value={form.endereco}
+                onChange={(e) => setForm((f) => ({ ...f, endereco: e.target.value }))}
+                placeholder="Rua, número, bairro"
+                maxLength={200}
               />
             </div>
             <div className="grid grid-cols-[1fr_auto] gap-2">
