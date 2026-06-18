@@ -8,7 +8,7 @@ import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
-import { useEntregadorTheme } from "@/hooks/use-entregador-theme";
+
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -30,7 +30,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   useChatNaoLidasGlobal();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
-  const { theme } = useEntregadorTheme();
+  
 
   useEffect(() => {
     // Tenta travar a orientação em retrato para que o app nunca gire
@@ -118,7 +118,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
 
 
   return (
-    <div className={`panel-premium flex flex-col min-h-screen ${theme === "light" ? "entregador-light" : ""}`}>
+    <div className="panel-premium flex flex-col min-h-screen">
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
