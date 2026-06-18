@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { PixPagamentoDialog } from "@/components/PixPagamentoDialog";
 import { PagamentoMpMensalidadeDialog } from "./components/PagamentoMpMensalidadeDialog";
 import { PagamentoMpCobrancaDialog } from "./components/PagamentoMpCobrancaDialog";
+import { PagamentoMpFaturaDialog } from "./components/PagamentoMpFaturaDialog";
 import { useFinanceiroLoja } from "./hooks/use-financeiro-loja";
 import { calcularResumo } from "./logic/resumo";
 import type { DialogState } from "./logic/types";
@@ -31,6 +32,7 @@ export function FinanceiroPage() {
   const [mpOpen, setMpOpen] = useState(false);
   const [mpMensId, setMpMensId] = useState<string | null>(null);
   const [mpCobId, setMpCobId] = useState<string | null>(null);
+  const [mpFaturaOpen, setMpFaturaOpen] = useState(false);
 
   if (!loja) {
     return (
@@ -85,8 +87,23 @@ export function FinanceiroPage() {
           pixHabilitado={pixHabilitado}
           onDialog={setDialog}
           onPagarMp={(id) => setMpCobId(id)}
+          onPagarTudoMp={() => setMpFaturaOpen(true)}
         />
       </div>
+
+      <PagamentoMpFaturaDialog
+        open={mpFaturaOpen}
+        onClose={() => {
+          setMpFaturaOpen(false);
+          carregar();
+        }}
+        cobrancaIds={cobAbertas.map((c) => c.id)}
+        valorTotal={cobAberto}
+        defaultEmail={user?.email ?? ""}
+        defaultNome={(loja as any).nome ?? ""}
+        defaultDoc={(loja as any).cnpj ?? ""}
+        onPago={() => carregar()}
+      />
 
       <PagamentoMpCobrancaDialog
         open={!!mpCobId}
