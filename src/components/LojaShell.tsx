@@ -10,6 +10,7 @@ import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -19,6 +20,7 @@ const NAV = [
   { to: "/loja/produtos", label: "Catálogo", icon: Package },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users },
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet },
+  { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy },
   { to: "/loja/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
 
