@@ -32,6 +32,7 @@ interface Props {
 export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaChange }: Props) {
   const [nomeCliente, setNomeCliente] = useState<string>("");
   const [logado, setLogado] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { data: cidades = [] } = useCidadesDisponiveis();
 
@@ -74,34 +75,6 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     });
   };
 
-  return (
-    <div>
-      <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
-        <div className="flex items-center justify-end gap-2 mb-2">
-          {!logado && (
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/cadastro" })}
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
-            >
-              <UserPlus className="h-3.5 w-3.5 shrink-0" />
-              <span>Cadastrar</span>
-            </button>
-          )}
-          <PerfilDialog>
-            <button
-              type="button"
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 max-w-[180px]"
-            >
-              <UserRound className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{nomeCliente || "Meu cadastro"}</span>
-            </button>
-          </PerfilDialog>
-          {logado && (
-            <button
-              type="button"
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const handleSair = async () => {
     await supabase.auth.signOut();
     toast.success("Você saiu da conta");
@@ -131,7 +104,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                     <UserRound className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col min-w-0">
                     <span className="text-sm font-semibold truncate">
                       {logado ? nomeCliente || "Minha conta" : "Visitante"}
                     </span>
@@ -204,7 +177,14 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
             </button>
           )}
         </div>
+
         <div className="flex justify-center -mt-3 mb-1">
+          <img src={logoUrl} alt={nomeSistema} className="h-16 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
+        </div>
+
+        <div className="mt-3">
+          <Select value={cidades.some((c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey) ? selectedKey : undefined} onValueChange={handleCidadeChange}>
+            <SelectTrigger className="mp-input w-full rounded-2xl py-3 text-[14px]">
               <div className="flex items-center gap-2 min-w-0">
                 <MapPin className="h-4 w-4 mp-muted shrink-0" />
                 <SelectValue placeholder={`${cidade}${uf ? ` - ${uf}` : ""}`}>
