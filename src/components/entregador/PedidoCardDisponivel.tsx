@@ -9,7 +9,6 @@ import { formatDateTime } from "@/lib/format";
 type Props = {
   pedido: PedidoDisponivel;
   minhaPos: LatLng | null;
-  taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   nowMs: number;
   onAceitar: () => void;
@@ -32,14 +31,14 @@ function kmAteLojaTexto(pedido: PedidoDisponivel, minhaPos: LatLng | null): stri
 export function PedidoCardDisponivel({
   pedido,
   minhaPos,
-  taxaSistema,
   taxaParaExibir,
   nowMs,
   onAceitar,
   onRecusar,
 }: Props) {
   const kmAteLoja = kmAteLojaTexto(pedido, minhaPos);
-  const liquido = liquidoEntregador(taxaParaExibir(pedido), taxaSistema, pedido.loja_plano_mensal_ativo);
+  const taxaLoja = Number(pedido.loja_taxa_por_pedido ?? 0);
+  const liquido = liquidoEntregador(taxaParaExibir(pedido), taxaLoja, pedido.loja_plano_mensal_ativo);
   const bairro = extrairBairro(pedido.endereco_entrega);
   const bonus = Number(pedido.bonus_entregador ?? 0);
   const segs = segundosRestantesPedido(pedido, nowMs);

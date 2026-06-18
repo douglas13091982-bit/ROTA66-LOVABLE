@@ -10,7 +10,7 @@ import type { Periodo } from "./logic/types";
 
 export function HistoricoPage() {
   const [periodo, setPeriodo] = useState<Periodo>("semanal");
-  const { isLoading, taxaSistema, chartData, totalPeriodo, totalEntregas, listagem } =
+  const { isLoading, chartData, totalPeriodo, totalEntregas, listagem } =
     useHistoricoEntregador(periodo);
 
   return (
@@ -23,7 +23,7 @@ export function HistoricoPage() {
 
       {isLoading && <p className="text-muted-foreground">Carregando...</p>}
       {!isLoading && listagem.length === 0 && <VazioHistorico periodo={periodo} />}
-      {listagem.length > 0 && <EntregasList listagem={listagem} taxaSistema={taxaSistema} />}
+      {listagem.length > 0 && <EntregasList listagem={listagem} />}
     </EntregadorShell>
   );
 }

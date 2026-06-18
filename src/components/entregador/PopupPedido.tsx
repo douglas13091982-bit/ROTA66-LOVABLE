@@ -11,7 +11,6 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   grupo: GrupoPedido | null;
   minhaPos: LatLng | null;
-  taxaSistema: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   nowMs: number;
   onAceitar: (items: PedidoDisponivel[]) => void;
@@ -23,7 +22,6 @@ export function PopupPedido({
   onOpenChange,
   grupo,
   minhaPos,
-  taxaSistema,
   taxaParaExibir,
   nowMs,
   onAceitar,
@@ -56,7 +54,6 @@ export function PopupPedido({
             <PedidoCardDisponivel
               pedido={grupo.items[0]}
               minhaPos={minhaPos}
-              taxaSistema={taxaSistema}
               taxaParaExibir={taxaParaExibir}
               nowMs={nowMs}
               onAceitar={() => onAceitar(grupo.items)}
@@ -67,7 +64,6 @@ export function PopupPedido({
             <RotaCardDisponivel
               grupo={grupo}
               minhaPos={minhaPos}
-              taxaSistema={taxaSistema}
               taxaParaExibir={taxaParaExibir}
               nowMs={nowMs}
               onAceitar={() => onAceitar(grupo.items)}
