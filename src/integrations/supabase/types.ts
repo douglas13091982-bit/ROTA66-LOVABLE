@@ -309,7 +309,10 @@ export type Database = {
           pago: boolean
           pago_em: string | null
           pago_solicitado_em: string | null
-          pedido_id: string
+          pedido_id: string | null
+          periodo_fim: string | null
+          periodo_inicio: string | null
+          qtd_pedidos: number | null
           updated_at: string
           valor: number
           vencimento: string
@@ -322,7 +325,10 @@ export type Database = {
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
-          pedido_id: string
+          pedido_id?: string | null
+          periodo_fim?: string | null
+          periodo_inicio?: string | null
+          qtd_pedidos?: number | null
           updated_at?: string
           valor: number
           vencimento: string
@@ -335,7 +341,10 @@ export type Database = {
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
-          pedido_id?: string
+          pedido_id?: string | null
+          periodo_fim?: string | null
+          periodo_inicio?: string | null
+          qtd_pedidos?: number | null
           updated_at?: string
           valor?: number
           vencimento?: string
@@ -1831,6 +1840,7 @@ export type Database = {
           updated_at: string
         }[]
       }
+      gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
       get_config_creditos_admin: {
