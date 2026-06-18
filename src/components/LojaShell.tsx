@@ -32,6 +32,9 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
   useChatNaoLidasGlobal();
+  const suporteBadge = useSuporteBadge("loja", loja?.id);
+  
+  
   
   
   const [open, setOpen] = useState(false);
