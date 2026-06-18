@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, UserRound, UserPlus, MapPin, ChevronDown } from "lucide-react";
+import { Search, UserRound, UserPlus, MapPin, ChevronDown, LogOut } from "lucide-react";
+import { toast } from "sonner";
 import { PerfilDialog } from "./PerfilDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useCidadesDisponiveis } from "../hooks/use-cidades-disponiveis";
