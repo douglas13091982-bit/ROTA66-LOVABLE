@@ -1,6 +1,4 @@
-import { Moon, Sun } from "lucide-react";
 import { SectionPanel } from "../ui-atoms";
-import { useEntregadorTheme } from "@/hooks/use-entregador-theme";
 
 type LojaVinc = {
   loja_id: string;
@@ -21,48 +19,9 @@ export function ConfigSection({
   onToggleExternos,
   lojas,
 }: Props) {
-  const { theme, setTheme } = useEntregadorTheme();
   return (
     <SectionPanel>
-      {/* Tema do app */}
-      <div className="flex items-start justify-between gap-3 py-1 pb-3 border-b border-white/8">
-        <div className="flex-1">
-          <p className="text-[13.5px] font-semibold text-white">Tema do app</p>
-          <p className="text-[11.5px] text-white/55 mt-0.5 leading-snug">
-            Escolha entre o tema escuro (padrão) e o tema claro.
-          </p>
-        </div>
-        <div className="inline-flex rounded-full border border-white/15 bg-white/[0.04] p-1">
-          <button
-            type="button"
-            onClick={() => setTheme("dark")}
-            aria-pressed={theme === "dark"}
-            className={`inline-flex items-center gap-1.5 px-3 h-7 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
-              theme === "dark"
-                ? "bg-white/15 text-white"
-                : "text-white/50 hover:text-white/80"
-            }`}
-          >
-            <Moon className="h-3.5 w-3.5" />
-            Escuro
-          </button>
-          <button
-            type="button"
-            onClick={() => setTheme("light")}
-            aria-pressed={theme === "light"}
-            className={`inline-flex items-center gap-1.5 px-3 h-7 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all ${
-              theme === "light"
-                ? "bg-white text-[#bd0f10]"
-                : "text-white/50 hover:text-white/80"
-            }`}
-          >
-            <Sun className="h-3.5 w-3.5" />
-            Claro
-          </button>
-        </div>
-      </div>
-
-      <div className="flex items-start justify-between gap-3 py-1 pt-3">
+      <div className="flex items-start justify-between gap-3 py-1">
         <div className="flex-1">
           <p className="text-[13.5px] font-semibold text-white">Entregador externo</p>
           <p className="text-[11.5px] text-white/55 mt-0.5 leading-snug">
