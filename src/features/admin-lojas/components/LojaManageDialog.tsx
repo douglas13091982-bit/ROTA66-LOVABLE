@@ -6,12 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useLojaPlano } from "../hooks/use-loja-plano";
 import { EntregadoresDaLoja } from "./EntregadoresDaLoja";
 import { StatusSection } from "./StatusSection";
 import { CatalogoSection } from "./CatalogoSection";
-import { PlanoMensalSection } from "./PlanoMensalSection";
-import { MensalidadeSection } from "./MensalidadeSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
 
 interface Props {
@@ -29,18 +26,6 @@ export function LojaManageDialog({
   onToggleCatalogo,
   onChanged,
 }: Props) {
-  const {
-    mensValor,
-    setMensValor,
-    diaVenc,
-    setDiaVenc,
-    savingM,
-    salvarMensalidade,
-    planoAtivo,
-    savingPlano,
-    togglePlano,
-  } = useLojaPlano(l, onChanged);
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -82,22 +67,6 @@ export function LojaManageDialog({
             lojaId={l.id}
             planoIdAtual={l.plano_id ?? null}
             onChanged={onChanged}
-          />
-
-          <PlanoMensalSection
-            lojaId={l.id}
-            planoAtivo={planoAtivo}
-            savingPlano={savingPlano}
-            onToggle={togglePlano}
-          />
-
-          <MensalidadeSection
-            valor={mensValor}
-            diaVenc={diaVenc}
-            saving={savingM}
-            onValorChange={setMensValor}
-            onDiaVencChange={setDiaVenc}
-            onSalvar={salvarMensalidade}
           />
 
           <section className="border-t border-border pt-4">
