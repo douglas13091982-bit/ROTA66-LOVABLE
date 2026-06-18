@@ -136,6 +136,16 @@ async function getState() {
   return { tab, onIfood, captures, totalSeen };
 }
 
+async function scrapeCurrentPage(tabId) {
+  if (!tabId) return null;
+  try {
+    const res = await chrome.tabs.sendMessage(tabId, { type: "rotas66-scrape-dom" });
+    return res && res.ok ? res : null;
+  } catch {
+    return null;
+  }
+}
+
 async function refresh() {
   const { tab, onIfood, captures, totalSeen } = await getState();
   const stat = document.getElementById("stat");
@@ -157,6 +167,14 @@ async function refresh() {
     if (norm && norm.produtos.length > bestCount) {
       best = norm;
       bestCount = norm.produtos.length;
+    }
+  }
+
+  if (!best) {
+    const domCatalog = await scrapeCurrentPage(tab?.id);
+    if (domCatalog?.produtos?.length) {
+      best = domCatalog;
+      bestCount = domCatalog.produtos.length;
     }
   }
 

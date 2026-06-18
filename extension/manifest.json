@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Rotas66 — Importar do iFood",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Captura o catálogo da sua loja no portal do iFood e exporta um JSON pronto para importar no Rotas66.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": [
     "*://*.ifood.com.br/*",
     "*://*.ifood.com/*"
