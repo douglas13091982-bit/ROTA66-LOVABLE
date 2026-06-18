@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
+import { toast } from "sonner";
 import { pageWrapper } from "@/routes/-catalogo-types";
 import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
 import { CatalogoHeader } from "./components/CatalogoHeader";
 import { CatalogoIndisponivel } from "./components/CatalogoIndisponivel";
-import { LojaFechada } from "./components/LojaFechada";
+import { LojaFechadaBanner } from "./components/LojaFechadaBanner";
 import { CatalogoListagem } from "./components/CatalogoListagem";
 import { CheckoutDialog } from "./components/CheckoutDialog";
 import { PedidoSucesso } from "./components/PedidoSucesso";
@@ -18,10 +19,22 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const { data: loja, isLoading: loadingLoja } = useLojaPublica(slug);
   const catalogoAtivo = !!loja && (loja as any).catalogo_ativo === true;
+  const lojaFechada = !!loja && loja.ativa === false;
   const { data: produtos } = useProdutosCatalogo(loja?.id, catalogoAtivo);
   const { data: catalogoConfig } = useCatalogoConfig();
 
   const { cart, clear, addItem, removeItem, cartItems, subtotal, totalItens } = useCart(produtos);
+
+  const addItemGuarded = useCallback(
+    (id: string) => {
+      if (lojaFechada) {
+        toast.error("Loja fechada — não é possível adicionar itens no momento.");
+        return;
+      }
+      addItem(id);
+    },
+    [addItem, lojaFechada],
+  );
 
   const categorias = useMemo(() => {
     const set = new Set<string>();
@@ -54,15 +67,6 @@ export function CatalogoPage({ slug }: { slug: string }) {
     return <CatalogoIndisponivel />;
   }
 
-  if (!loja.ativa) {
-    return (
-      <LojaFechada
-        nome={loja.nome}
-        horario={(loja as any).horario_funcionamento ?? null}
-      />
-    );
-  }
-
   if (sucesso) {
     return (
       <PedidoSucesso
@@ -77,6 +81,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
   const layout = ((loja as any).catalogo_layout ?? "cards") as "cards" | "lista";
+  const horario = (loja as any).horario_funcionamento ?? null;
 
   return (
     <div className={pageWrapper}>
@@ -89,6 +94,8 @@ export function CatalogoPage({ slug }: { slug: string }) {
         setCatAtiva={setCatAtiva}
       />
 
+      {lojaFechada && <LojaFechadaBanner horario={horario} />}
+
       <main className="max-w-2xl mx-auto px-4 pt-5">
         <CatalogoListagem
           produtos={produtos ?? []}
@@ -98,14 +105,16 @@ export function CatalogoPage({ slug }: { slug: string }) {
           isHorizontal={isHorizontal}
           layout={layout}
           cart={cart}
-          addItem={addItem}
+          addItem={addItemGuarded}
           removeItem={removeItem}
         />
       </main>
 
-      {!showCheckout && <StickyCartBar totalItens={totalItens} subtotal={subtotal} onOpen={() => setShowCheckout(true)} />}
+      {!lojaFechada && !showCheckout && (
+        <StickyCartBar totalItens={totalItens} subtotal={subtotal} onOpen={() => setShowCheckout(true)} />
+      )}
 
-      {showCheckout && (
+      {!lojaFechada && showCheckout && (
         <CheckoutDialog
           slug={slug}
           lojaId={loja.id}
@@ -118,7 +127,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
             setShowCheckout(false);
             setSucesso(r);
           }}
-          addItem={addItem}
+          addItem={addItemGuarded}
           removeItem={removeItem}
         />
       )}
