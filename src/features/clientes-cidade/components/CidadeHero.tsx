@@ -32,10 +32,6 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
         >
           <ChevronLeft className="h-3.5 w-3.5" /> Trocar cidade
         </Link>
-        <h1 className="mp-title font-display text-[26px] tracking-tight leading-tight">
-          Lojas em {cidade}
-          {uf ? <span className="mp-muted text-[14px] ml-1">· {uf}</span> : null}
-        </h1>
         <div className="relative mt-3.5">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 mp-muted" />
           <input
