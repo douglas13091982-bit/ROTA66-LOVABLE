@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Importar do iFood</title>
+  <style>
+    body { font: 13px/1.4 -apple-system, system-ui, sans-serif; margin: 0; padding: 14px; width: 340px; background: #111; color: #eee; }
+    h1 { font-size: 14px; margin: 0 0 10px; color: #fff; }
+    p { margin: 0 0 8px; color: #aaa; font-size: 12px; }
+    .row { display: flex; gap: 6px; margin-top: 10px; }
+    button { flex: 1; padding: 9px 10px; border-radius: 6px; border: 0; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; }
+    .primary { background: #bd0f10; color: #fff; }
+    .ghost { background: #222; color: #ddd; border: 1px solid #333; }
+    .stat { margin-top: 10px; padding: 8px 10px; background: #1a1a1a; border-radius: 6px; border: 1px solid #2a2a2a; }
+    .stat b { color: #fff; }
+    .ok { color: #4ade80; }
+    .warn { color: #fbbf24; }
+    code { background: #222; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1>Importar catálogo do iFood</h1>
+  <p>1. Abra o <b>Portal do Parceiro iFood</b> e vá em <b>Cardápio</b>.</p>
+  <p>2. Espere a página carregar todos os produtos (role até o fim).</p>
+  <p>3. Clique em <b>Exportar JSON</b> abaixo.</p>
+  <div class="stat" id="stat">Aguardando captura…</div>
+  <div class="row">
+    <button class="ghost" id="btn-clear">Limpar</button>
+    <button class="primary" id="btn-export" disabled>Exportar JSON</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
