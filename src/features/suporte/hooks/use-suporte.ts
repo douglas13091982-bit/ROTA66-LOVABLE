@@ -67,10 +67,12 @@ export function useMensagens(ticketId: string | null) {
 
 export function useMensagensRealtime(ticketId: string | null) {
   const qc = useQueryClient();
+  const uid = useId();
   useEffect(() => {
     if (!ticketId) return;
+    const channelName = `suporte-mensagens-${ticketId}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
     const channel = supabase
-      .channel(`suporte-mensagens-${ticketId}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
@@ -82,7 +84,7 @@ export function useMensagensRealtime(ticketId: string | null) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [ticketId, qc]);
+  }, [ticketId, qc, uid]);
 }
 
 export function useEnviarMensagem(modo: Modo) {
