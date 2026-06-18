@@ -859,6 +859,7 @@ export type Database = {
           mensalidade_valor: number | null
           nome: string
           owner_id: string
+          plano_id: string | null
           plano_mensal_ativo: boolean
           slug: string
           status: Database["public"]["Enums"]["status_moderacao"]
@@ -888,6 +889,7 @@ export type Database = {
           mensalidade_valor?: number | null
           nome: string
           owner_id: string
+          plano_id?: string | null
           plano_mensal_ativo?: boolean
           slug: string
           status?: Database["public"]["Enums"]["status_moderacao"]
@@ -917,6 +919,7 @@ export type Database = {
           mensalidade_valor?: number | null
           nome?: string
           owner_id?: string
+          plano_id?: string | null
           plano_mensal_ativo?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["status_moderacao"]
@@ -925,7 +928,15 @@ export type Database = {
           updated_at?: string
           usar_horario_automatico?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "lojas_plano_id_fkey"
+            columns: ["plano_id"]
+            isOneToOne: false
+            referencedRelation: "planos_loja"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lojas_enderecos_coleta: {
         Row: {
@@ -1315,6 +1326,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      planos_loja: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          destaque: boolean
+          dia_vencimento: number
+          id: string
+          mensalidade_valor: number
+          nome: string
+          ordem: number
+          taxa_por_pedido: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          destaque?: boolean
+          dia_vencimento?: number
+          id?: string
+          mensalidade_valor?: number
+          nome: string
+          ordem?: number
+          taxa_por_pedido?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          destaque?: boolean
+          dia_vencimento?: number
+          id?: string
+          mensalidade_valor?: number
+          nome?: string
+          ordem?: number
+          taxa_por_pedido?: number
+          updated_at?: string
+        }
+        Relationships: []
       }
       private_config: {
         Row: {
