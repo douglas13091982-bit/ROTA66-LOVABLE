@@ -84,8 +84,22 @@ export function FinanceiroPage() {
           cobAberto={cobAberto}
           pixHabilitado={pixHabilitado}
           onDialog={setDialog}
+          onPagarMp={(id) => setMpCobId(id)}
         />
       </div>
+
+      <PagamentoMpCobrancaDialog
+        open={!!mpCobId}
+        onClose={() => {
+          setMpCobId(null);
+          carregar();
+        }}
+        cobrancaId={mpCobId}
+        defaultEmail={user?.email ?? ""}
+        defaultNome={(loja as any).nome ?? ""}
+        defaultDoc={(loja as any).cnpj ?? ""}
+        onPago={() => carregar()}
+      />
 
       <PagamentoMpMensalidadeDialog
         open={mpOpen}
