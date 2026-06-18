@@ -1,10 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Rotas66 — Importar do iFood",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Captura o catálogo da sua loja no portal do iFood e exporta um JSON pronto para importar no Rotas66.",
-  "permissions": ["storage", "activeTab"],
-  "host_permissions": ["*://*.ifood.com.br/*"],
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "*://*.ifood.com.br/*",
+    "*://*.ifood.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png",
@@ -13,12 +16,16 @@
   "icons": { "48": "icon.png", "128": "icon.png" },
   "content_scripts": [
     {
-      "matches": ["*://*.ifood.com.br/*"],
+      "matches": ["*://*.ifood.com.br/*", "*://*.ifood.com/*"],
       "run_at": "document_start",
+      "all_frames": true,
       "js": ["content.js"]
     }
   ],
   "web_accessible_resources": [
-    { "resources": ["inject.js"], "matches": ["*://*.ifood.com.br/*"] }
+    {
+      "resources": ["inject.js"],
+      "matches": ["*://*.ifood.com.br/*", "*://*.ifood.com/*"]
+    }
   ]
 }
