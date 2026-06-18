@@ -16,7 +16,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     <div>
       <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 relative">
         <div className="flex items-center justify-between gap-2 mb-1">
-          <img src={logoUrl} alt={nomeSistema} className="h-8 w-auto object-contain drop-shadow-[0_6px_18px_rgba(187,16,16,0.45)]" />
+          <img src={logoUrl} alt={nomeSistema} className="h-16 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
           <PerfilDialog>
             <button
               type="button"
