@@ -30,6 +30,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   useChatNaoLidasGlobal();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
+  const { theme } = useEntregadorTheme();
 
   useEffect(() => {
     // Tenta travar a orientação em retrato para que o app nunca gire
