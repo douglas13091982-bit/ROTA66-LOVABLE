@@ -21,7 +21,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
       <div className="flex flex-col items-center gap-1">
         <div className="flex items-center gap-2">
           <div
-            className="entregador-ganho-valor text-4xl font-bold tracking-tight leading-none text-white text-center"
+            className="text-4xl font-bold tracking-tight leading-none text-white text-center"
             style={{ textShadow: "0 4px 24px oklch(0.78 0.16 75 / 0.25)" }}
           >
             {hide ? "R$ ••••" : `R$ ${valor.toFixed(2)}`}
