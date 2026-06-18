@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, UserRound, UserPlus, MapPin, ChevronDown, LogOut } from "lucide-react";
+import { Search, UserRound, UserPlus, MapPin, LogOut, Menu, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { PerfilDialog } from "./PerfilDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface Props {
   cidade: string;
@@ -25,6 +32,7 @@ interface Props {
 export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaChange }: Props) {
   const [nomeCliente, setNomeCliente] = useState<string>("");
   const [logado, setLogado] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { data: cidades = [] } = useCidadesDisponiveis();
 
@@ -67,10 +75,97 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     });
   };
 
+  const handleSair = async () => {
+    await supabase.auth.signOut();
+    toast.success("Você saiu da conta");
+    setLogado(false);
+    setNomeCliente("");
+    setMenuOpen(false);
+    navigate({ to: "/login" });
+  };
+
   return (
     <div>
       <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
-        <div className="flex items-center justify-end gap-2 mb-2">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                aria-label="Abrir menu"
+                className="mp-pill inline-flex items-center justify-center rounded-full h-10 w-10"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0">
+              <SheetHeader className="px-5 pt-6 pb-4 border-b">
+                <SheetTitle className="flex items-center gap-3 text-left">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <UserRound className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-semibold truncate">
+                      {logado ? nomeCliente || "Minha conta" : "Visitante"}
+                    </span>
+                    <span className="text-[11px] font-normal text-muted-foreground">
+                      {logado ? "Você está conectado" : "Entre ou cadastre-se"}
+                    </span>
+                  </div>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col py-2">
+                {logado ? (
+                  <>
+                    <PerfilDialog>
+                      <button
+                        type="button"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
+                      >
+                        <UserRound className="h-4 w-4 text-muted-foreground" />
+                        Meu perfil
+                      </button>
+                    </PerfilDialog>
+                    <button
+                      type="button"
+                      onClick={handleSair}
+                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left text-destructive"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sair da conta
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate({ to: "/login" });
+                      }}
+                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
+                    >
+                      <LogIn className="h-4 w-4 text-muted-foreground" />
+                      Entrar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate({ to: "/cadastro" });
+                      }}
+                      className="flex items-center gap-3 px-5 py-3 text-sm font-medium hover:bg-muted text-left"
+                    >
+                      <UserPlus className="h-4 w-4 text-muted-foreground" />
+                      Criar conta
+                    </button>
+                  </>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+
           {!logado && (
             <button
               type="button"
@@ -81,33 +176,8 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
               <span>Cadastrar</span>
             </button>
           )}
-          <PerfilDialog>
-            <button
-              type="button"
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 max-w-[180px]"
-            >
-              <UserRound className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{nomeCliente || "Meu cadastro"}</span>
-            </button>
-          </PerfilDialog>
-          {logado && (
-            <button
-              type="button"
-              onClick={async () => {
-                await supabase.auth.signOut();
-                toast.success("Você saiu da conta");
-                setLogado(false);
-                setNomeCliente("");
-                navigate({ to: "/login" });
-              }}
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
-              aria-label="Sair da conta"
-            >
-              <LogOut className="h-3.5 w-3.5 shrink-0" />
-              <span>Sair</span>
-            </button>
-          )}
         </div>
+
         <div className="flex justify-center -mt-3 mb-1">
           <img src={logoUrl} alt={nomeSistema} className="h-16 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
         </div>
