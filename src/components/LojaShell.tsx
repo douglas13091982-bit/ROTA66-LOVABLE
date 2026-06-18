@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight, LifeBuoy, Store } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -20,6 +20,7 @@ const NAV = [
   { to: "/loja/produtos", label: "Catálogo", icon: Package },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users },
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet },
+  { to: "/clientes", label: "Marketplace", icon: Store },
   { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy },
   { to: "/loja/configuracoes", label: "Configurações", icon: Settings },
 ] as const;
