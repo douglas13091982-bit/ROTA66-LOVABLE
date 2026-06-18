@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, UserRound, UserPlus, MapPin, ChevronDown, LogOut } from "lucide-react";
+import { Search, UserRound, UserPlus, MapPin, LogOut, Menu, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { PerfilDialog } from "./PerfilDialog";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface Props {
   cidade: string;
