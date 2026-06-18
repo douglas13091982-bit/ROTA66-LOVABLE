@@ -8,6 +8,7 @@ import { StatCard } from "./components/StatCard";
 import { EntregadoresLista } from "./components/EntregadoresLista";
 import { CatalogoPublicoCard } from "./components/CatalogoPublicoCard";
 import { MeuPlanoCard } from "./components/MeuPlanoCard";
+import { FinanceiroResumoDashboard } from "./components/FinanceiroResumoDashboard";
 
 export function DashboardPage() {
   const { data: loja, isLoading } = useMinhaLoja();
@@ -39,6 +40,10 @@ export function DashboardPage() {
       <LojaHeader nome={loja.nome} ativa={loja.ativa} />
 
       <MeuPlanoCard lojaId={loja.id} planoIdAtual={(loja as any).plano_id ?? null} />
+
+      <FinanceiroResumoDashboard />
+
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 pp-stagger">
         <StatCard
