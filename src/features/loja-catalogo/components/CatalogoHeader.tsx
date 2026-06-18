@@ -48,7 +48,9 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
               <div className="flex items-center gap-1.5">
                 <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Catálogo</span>
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-                <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-emerald-600">Aberto agora</span>
+                <span className={`text-[9px] font-semibold uppercase tracking-[0.22em] ${loja.ativa ? "text-emerald-600" : "text-muted-foreground"}`}>
+                  {loja.ativa ? "Aberto agora" : "Fechado agora"}
+                </span>
               </div>
               <h1 className="font-display text-[19px] tracking-tight truncate leading-tight cc-ink-text mt-0.5">{loja.nome}</h1>
               <div className="text-[11px] text-muted-foreground space-y-0.5 mt-0.5">
