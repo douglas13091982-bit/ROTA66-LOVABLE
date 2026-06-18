@@ -47,7 +47,12 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
     if (!loja || togglingAtiva) return;
     const novo = !loja.ativa;
     setTogglingAtiva(true);
-    const { error } = await supabase.from("lojas").update({ ativa: novo }).eq("id", loja.id);
+    // Se fechar manualmente, marca a flag para o cron não reabrir automaticamente.
+    // Se abrir manualmente, limpa a flag (volta a respeitar horário automático).
+    const { error } = await supabase
+      .from("lojas")
+      .update({ ativa: novo, fechado_manualmente: !novo } as any)
+      .eq("id", loja.id);
     setTogglingAtiva(false);
     if (error) {
       toast.error("Não foi possível atualizar", { description: error.message });

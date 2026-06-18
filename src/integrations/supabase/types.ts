@@ -962,6 +962,7 @@ export type Database = {
           endereco_lat: number | null
           endereco_lng: number | null
           estado: string | null
+          fechado_manualmente: boolean
           horario_funcionamento: Json
           id: string
           logo_url: string | null
@@ -993,6 +994,7 @@ export type Database = {
           endereco_lat?: number | null
           endereco_lng?: number | null
           estado?: string | null
+          fechado_manualmente?: boolean
           horario_funcionamento?: Json
           id?: string
           logo_url?: string | null
@@ -1024,6 +1026,7 @@ export type Database = {
           endereco_lat?: number | null
           endereco_lng?: number | null
           estado?: string | null
+          fechado_manualmente?: boolean
           horario_funcionamento?: Json
           id?: string
           logo_url?: string | null
