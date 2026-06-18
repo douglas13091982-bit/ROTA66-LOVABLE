@@ -306,6 +306,13 @@ export type Database = {
           id: string
           loja_id: string
           mensalidade_id: string | null
+          metodo_pagamento: string | null
+          mp_payment_id: string | null
+          mp_payment_status: string | null
+          mp_pix_expira_em: string | null
+          mp_qr_code: string | null
+          mp_qr_code_base64: string | null
+          mp_ticket_url: string | null
           pago: boolean
           pago_em: string | null
           pago_solicitado_em: string | null
@@ -322,6 +329,13 @@ export type Database = {
           id?: string
           loja_id: string
           mensalidade_id?: string | null
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
@@ -338,6 +352,13 @@ export type Database = {
           id?: string
           loja_id?: string
           mensalidade_id?: string | null
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
           pago?: boolean
           pago_em?: string | null
           pago_solicitado_em?: string | null
