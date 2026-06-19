@@ -1,6 +1,7 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { pageWrapper } from "@/routes/-catalogo-types";
+import { lojaAbertaAgora } from "@/lib/horario-funcionamento";
 import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
 import { CatalogoHeader } from "./components/CatalogoHeader";
@@ -19,7 +20,13 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const { data: loja, isLoading: loadingLoja } = useLojaPublica(slug);
   const catalogoAtivo = !!loja && (loja as any).catalogo_ativo === true;
-  const lojaFechada = !!loja && loja.ativa === false;
+  const horario = (loja as any)?.horario_funcionamento ?? null;
+  const [agora, setAgora] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setAgora(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const lojaFechada = !!loja && !lojaAbertaAgora(horario, agora);
   const { data: produtos } = useProdutosCatalogo(loja?.id, catalogoAtivo);
   const { data: catalogoConfig } = useCatalogoConfig();
 
@@ -81,7 +88,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
   const layout = ((loja as any).catalogo_layout ?? "cards") as "cards" | "lista";
-  const horario = (loja as any).horario_funcionamento ?? null;
+  
 
   return (
     <div className={pageWrapper}>
