@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { CreditCard, KeyRound, Loader2, MapPin, Navigation, Phone, Store, TrendingUp } from "lucide-react";
+import { KeyRound, Loader2, MapPin, Navigation, Phone, TrendingUp } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
 import { PagamentoBadge } from "./PagamentoBadge";
+import { abrirRetornoLoja } from "./RetornoLojaDialog";
 
 type Props = {
   pedido: PedidoAtivo;
@@ -19,7 +19,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
   const [revealedEntrega, setRevealedEntrega] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
-  const [returnDialog, setReturnDialog] = useState(false);
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
@@ -46,17 +45,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         return;
       }
       if (isCartao && p.endereco_coleta) {
-        setReturnDialog(true);
-      } else {
-        refresh();
+        abrirRetornoLoja(p.endereco_coleta);
       }
+      refresh();
     }
   }
 
-  function closeReturn() {
-    setReturnDialog(false);
-    refresh();
-  }
 
   return (
     <div
