@@ -1,7 +1,6 @@
-import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag } from "lucide-react";
+import { ExternalLink, FileSpreadsheet, Plus } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImportarProdutosDialog } from "@/components/loja/ImportarProdutosDialog";
-import { ImportarIfoodDialog } from "@/components/loja/ImportarIfoodDialog";
 import { ProdutoDialog } from "./ProdutoDialog";
 
 export function CatalogoHeader({
