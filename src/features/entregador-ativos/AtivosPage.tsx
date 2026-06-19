@@ -6,8 +6,9 @@ import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
 import {
   abrirRetornoLoja,
-  lerRetornoLojaSalvo,
+  useRetornoLojaSalvo,
 } from "./components/RetornoLojaDialog";
+
 import { useLoteFinalizado } from "./hooks/use-lote-finalizado";
 import {
   usePedidosAtivos,
