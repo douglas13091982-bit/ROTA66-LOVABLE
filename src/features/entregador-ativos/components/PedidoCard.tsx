@@ -19,7 +19,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
   const [revealedEntrega, setRevealedEntrega] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
-  const { confirmar, loading } = useConfirmarEntrega(p.id);
+  const [returnDialog, setReturnDialog] = useState(false);
+  const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
   const isColeta = p.status === "em_rota";
@@ -28,6 +29,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const badgeLabel = isColeta ? "Indo buscar" : "Em entrega";
   const isDestaque = destaque === p.id;
   const cardRef = useRef<HTMLDivElement>(null);
+  const isCartao = p.forma_pagamento === "cartao" || p.forma_pagamento === "cartao_credito";
 
   useEffect(() => {
     if (isDestaque && cardRef.current) {
@@ -39,8 +41,21 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     setCodigoInput(v);
     if (v.length === 4) {
       const ok = await confirmar(v);
-      if (!ok) setCodigoInput("");
+      if (!ok) {
+        setCodigoInput("");
+        return;
+      }
+      if (isCartao && p.endereco_coleta) {
+        setReturnDialog(true);
+      } else {
+        refresh();
+      }
     }
+  }
+
+  function closeReturn() {
+    setReturnDialog(false);
+    refresh();
   }
 
   return (
