@@ -23,12 +23,16 @@ export function usePedidosLoja(lojaId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*")
+        .select("*, lojas:loja_id(taxa_por_pedido, plano_mensal_ativo)")
         .eq("loja_id", lojaId!)
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
-      return data as Pedido[];
+      return (data ?? []).map((p: any) => ({
+        ...p,
+        loja_taxa_por_pedido: Number(p.lojas?.taxa_por_pedido ?? 0),
+        loja_plano_mensal_ativo: Boolean(p.lojas?.plano_mensal_ativo),
+      })) as Pedido[];
     },
   });
 }
