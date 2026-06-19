@@ -36,7 +36,7 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
           </div>
         )}
         <span className="mp-open text-[10px] font-semibold uppercase tracking-[0.18em] mt-0.5">
-          Abrir →
+          Abrir catálogo →
         </span>
       </div>
     </Link>
