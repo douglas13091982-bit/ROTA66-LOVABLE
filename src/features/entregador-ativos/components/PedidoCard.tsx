@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { KeyRound, Loader2, MapPin, Navigation, Phone, TrendingUp } from "lucide-react";
+import { CreditCard, KeyRound, Loader2, MapPin, Navigation, Phone, Store, TrendingUp } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
