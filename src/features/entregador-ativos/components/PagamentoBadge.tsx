@@ -13,6 +13,12 @@ const MAP: Record<string, { label: string; icon: typeof CreditCard; cls: string;
     cls: "bg-amber-500/15 border-amber-400/40 text-amber-300",
     hint: "Você precisará fazer voltar para devolver a maquininha.",
   },
+  cartao_debito: {
+    label: "Cartão na entrega",
+    icon: CreditCard,
+    cls: "bg-amber-500/15 border-amber-400/40 text-amber-300",
+    hint: "Você precisará fazer voltar para devolver a maquininha.",
+  },
 };
 
 export function PagamentoBadge({

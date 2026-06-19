@@ -3,13 +3,29 @@ import { CreditCard, MapPin, Navigation, Store, X } from "lucide-react";
 
 const STORAGE_KEY = "retorno-loja-endereco";
 
-type Payload = { endereco: string } | null;
+export type RetornoLojaPayload = {
+  endereco: string;
+  pedidoId?: string;
+  numero?: string | number;
+};
+
+type Payload = RetornoLojaPayload | null;
+
+function parsePayload(raw: string | null): Payload {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as RetornoLojaPayload;
+    return parsed?.endereco ? parsed : null;
+  } catch {
+    return { endereco: raw };
+  }
+}
 
 function readInitial(): Payload {
   if (typeof window === "undefined") return null;
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
-    return raw ? { endereco: raw } : null;
+    return parsePayload(raw);
   } catch {
     return null;
   }
@@ -22,10 +38,14 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
-export function abrirRetornoLoja(endereco: string) {
-  current = { endereco };
+export function lerRetornoLojaSalvo() {
+  return readInitial();
+}
+
+export function abrirRetornoLoja(endereco: string, pedidoId?: string, numero?: string | number) {
+  current = { endereco, pedidoId, numero };
   try {
-    sessionStorage.setItem(STORAGE_KEY, endereco);
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   } catch {}
   emit();
 }
@@ -74,6 +94,11 @@ export function RetornoLojaDialog() {
             <CreditCard className="h-5 w-5 text-amber-400" />
             <h2 className="text-lg font-bold">Volte para a loja com a maquininha</h2>
           </div>
+          {state.numero && (
+            <div className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300 mb-2">
+              Pedido #{state.numero}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground">
             Pagamento em cartão — devolva a maquininha à loja para concluir o recebimento.
           </p>

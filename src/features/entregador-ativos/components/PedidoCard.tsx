@@ -28,7 +28,9 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const badgeLabel = isColeta ? "Indo buscar" : "Em entrega";
   const isDestaque = destaque === p.id;
   const cardRef = useRef<HTMLDivElement>(null);
-  const isCartao = p.forma_pagamento === "cartao" || p.forma_pagamento === "cartao_credito";
+  const isCartao = ["cartao", "cartao_credito", "cartao_debito"].includes(
+    (p.forma_pagamento ?? "").toLowerCase(),
+  );
 
   useEffect(() => {
     if (isDestaque && cardRef.current) {
@@ -45,7 +47,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         return;
       }
       if (isCartao && p.endereco_coleta) {
-        abrirRetornoLoja(p.endereco_coleta);
+        abrirRetornoLoja(p.endereco_coleta, p.id, p.numero);
       }
       refresh();
     }
