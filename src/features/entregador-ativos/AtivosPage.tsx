@@ -6,8 +6,9 @@ import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
 import {
   abrirRetornoLoja,
-  lerRetornoLojaSalvo,
+  useRetornoLojaSalvo,
 } from "./components/RetornoLojaDialog";
+
 import { useLoteFinalizado } from "./hooks/use-lote-finalizado";
 import {
   usePedidosAtivos,
@@ -27,7 +28,7 @@ export function AtivosPage({ destaque }: Props) {
     useLoteFinalizado(pedidos);
   const { data: recentesEntregues } = usePedidosLoteFinalizado(user?.id, loteFinalizado);
 
-  const retornoSalvo = lerRetornoLojaSalvo();
+  const retornoSalvo = useRetornoLojaSalvo();
   const rotas = agruparPorColeta(pedidos ?? []);
 
   const semAtivos = !!pedidos && pedidos.length === 0;

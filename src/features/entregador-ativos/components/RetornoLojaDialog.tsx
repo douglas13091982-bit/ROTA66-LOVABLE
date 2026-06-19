@@ -39,8 +39,13 @@ function emit() {
 }
 
 export function lerRetornoLojaSalvo() {
-  return readInitial();
+  return current;
 }
+
+export function useRetornoLojaSalvo() {
+  return useSyncExternalStore(subscribe, getSnapshot, () => null);
+}
+
 
 export function abrirRetornoLoja(endereco: string, pedidoId?: string, numero?: string | number) {
   current = { endereco, pedidoId, numero };
