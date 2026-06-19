@@ -229,8 +229,34 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
   }
 }
 
+const MUTE_KEY = "notificacao-som:mutado";
+
+export function isNotificacaoMutada(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(MUTE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function setNotificacaoMutada(mutado: boolean) {
+  try {
+    if (mutado) {
+      window.localStorage.setItem(MUTE_KEY, "1");
+      pararNotificacao();
+    } else {
+      window.localStorage.removeItem(MUTE_KEY);
+    }
+    try {
+      window.dispatchEvent(new CustomEvent("notificacao-som:mute-changed", { detail: { mutado } }));
+    } catch {}
+  } catch {}
+}
+
 export function tocarNotificacao(cfg: ConfigNotificacaoSom) {
   if (!cfg?.ativo) return;
+  if (isNotificacaoMutada()) return;
   try {
     if (cfg.vibrar && typeof navigator !== "undefined" && navigator.vibrate) {
       navigator.vibrate([200, 100, 200]);
