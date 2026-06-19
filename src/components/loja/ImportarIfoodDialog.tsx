@@ -118,19 +118,25 @@ export function ImportarIfoodDialog({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const [modo, setModo] = useState<"url" | "arquivo">("url");
+  const [url, setUrl] = useState("");
+  const [buscando, setBuscando] = useState(false);
   const [arquivo, setArquivo] = useState<string>("");
   const [produtos, setProdutos] = useState<ProdutoJson[] | null>(null);
   const [categorias, setCategorias] = useState<string[]>([]);
   const [erro, setErro] = useState<string | null>(null);
   const [importando, setImportando] = useState(false);
   const importar = useServerFn(importarCatalogoIfood);
+  const extrairPorUrl = useServerFn(extrairCatalogoIfoodPorUrl);
 
   function reset() {
+    setUrl("");
     setArquivo("");
     setProdutos(null);
     setCategorias([]);
     setErro(null);
     setImportando(false);
+    setBuscando(false);
   }
 
   async function handleArquivo(file: File) {
@@ -149,6 +155,31 @@ export function ImportarIfoodDialog({
       setCategorias(cats);
     } catch (e: any) {
       setErro("JSON inválido: " + (e?.message ?? "desconhecido"));
+    }
+  }
+
+  async function handleUrl() {
+    const u = url.trim();
+    if (!u) {
+      setErro("Informe a URL do restaurante no iFood.");
+      return;
+    }
+    setErro(null);
+    setProdutos(null);
+    setBuscando(true);
+    try {
+      const json = await extrairPorUrl({ data: { loja_id: lojaId, url: u } });
+      const { produtos: lista, categorias: cats } = extrairCatalogo(json);
+      if (!lista.length) {
+        setErro("Nenhum produto encontrado para essa URL.");
+        return;
+      }
+      setProdutos(lista);
+      setCategorias(cats);
+    } catch (e: any) {
+      setErro("Erro ao extrair: " + (e?.message ?? "desconhecido"));
+    } finally {
+      setBuscando(false);
     }
   }
 
