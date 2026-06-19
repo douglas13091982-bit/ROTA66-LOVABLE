@@ -19,6 +19,95 @@ type CatalogoJson = {
   produtos: ProdutoJson[];
 };
 
+function precoDe(it: any): number {
+  const cands = [it?.preco, it?.price, it?.minPrice, it?.unitPrice, it?.originalPrice, it?.promotionalPrice];
+  for (const v of cands) {
+    if (typeof v === "number" && isFinite(v) && v >= 0) return v;
+    if (typeof v === "string") {
+      const n = Number(v.replace(/[^\d,.-]/g, "").replace(",", "."));
+      if (isFinite(n) && n >= 0) return n;
+    }
+    if (v && typeof v === "object" && typeof v.value === "number") {
+      return v.value > 1000 ? v.value / 100 : v.value;
+    }
+  }
+  return NaN;
+}
+
+function imagemDe(it: any): string | null {
+  const c = it?.imagem_url ?? it?.image ?? it?.imageUrl ?? it?.logoUrl ?? it?.imagePath;
+  if (!c) return null;
+  if (typeof c !== "string") return null;
+  if (/^https?:\/\//i.test(c)) return c;
+  return "https://static-images.ifood.com.br/image/upload/t_high/pratos/" + c.replace(/^\/+/, "");
+}
+
+/** Aceita o formato simples {categorias, produtos} ou o JSON cru do iFood PDP. */
+function extrairCatalogo(json: any): { produtos: ProdutoJson[]; categorias: string[] } {
+  // formato simples
+  if (Array.isArray(json?.produtos)) {
+    const lista = (json.produtos as any[])
+      .map((p) => ({
+        nome: String(p?.nome ?? "").trim(),
+        descricao: p?.descricao ?? null,
+        preco: typeof p?.preco === "number" ? p.preco : precoDe(p),
+        categoria: p?.categoria ?? null,
+        imagem_url: imagemDe(p),
+        ordem: typeof p?.ordem === "number" ? p.ordem : undefined,
+      }))
+      .filter((p) => p.nome && isFinite(p.preco));
+    const cats = Array.isArray(json.categorias) && json.categorias.length
+      ? json.categorias
+      : Array.from(new Set(lista.map((p) => p.categoria).filter(Boolean) as string[]));
+    return { produtos: lista, categorias: cats };
+  }
+
+  // procura recursivamente um array "menu" com {name, items[]}
+  const menus: any[] = [];
+  (function walk(node: any, depth = 0) {
+    if (!node || typeof node !== "object" || depth > 10) return;
+    if (Array.isArray(node)) {
+      const ok = node.length > 0 && node.every((c) => c && typeof c === "object"
+        && (typeof c.name === "string" || typeof c.title === "string" || typeof c.nome === "string")
+        && Array.isArray(c.items || c.itens || c.products || c.produtos));
+      if (ok) menus.push(node);
+      node.forEach((n) => walk(n, depth + 1));
+      return;
+    }
+    for (const k of Object.keys(node)) walk(node[k], depth + 1);
+  })(json);
+
+  if (!menus.length) return { produtos: [], categorias: [] };
+  menus.sort((a, b) => {
+    const sum = (arr: any[]) => arr.reduce((s, c) => s + ((c.items || c.itens || c.products || c.produtos || []).length), 0);
+    return sum(b) - sum(a);
+  });
+  const chosen = menus[0];
+  const produtos: ProdutoJson[] = [];
+  const cats: string[] = [];
+  let ordem = 0;
+  for (const cat of chosen) {
+    const catNome = String(cat?.name ?? cat?.title ?? cat?.nome ?? "Sem categoria").trim();
+    if (catNome && !cats.includes(catNome)) cats.push(catNome);
+    const items = cat.items || cat.itens || cat.products || cat.produtos || [];
+    for (const it of items) {
+      const nome = String(it?.name ?? it?.nome ?? it?.title ?? "").trim();
+      const preco = precoDe(it);
+      if (!nome || !isFinite(preco)) continue;
+      produtos.push({
+        nome,
+        descricao: (it?.description ?? it?.descricao ?? "").toString().trim() || null,
+        preco,
+        categoria: catNome,
+        imagem_url: imagemDe(it),
+        ordem: ordem++,
+      });
+    }
+  }
+  return { produtos, categorias: cats };
+}
+
+
 export function ImportarIfoodDialog({
   lojaId,
   onImported,
@@ -50,28 +139,19 @@ export function ImportarIfoodDialog({
     setProdutos(null);
     try {
       const txt = await file.text();
-      const json = JSON.parse(txt) as CatalogoJson;
-      const lista = Array.isArray(json?.produtos) ? json.produtos : [];
+      const json = JSON.parse(txt);
+      const { produtos: lista, categorias: cats } = extrairCatalogo(json);
       if (!lista.length) {
-        setErro("O arquivo não contém produtos.");
+        setErro("Nenhum produto encontrado no JSON.");
         return;
       }
-      const validos = lista.filter(
-        (p) => p && typeof p.nome === "string" && p.nome.trim() && typeof p.preco === "number"
-      );
-      if (!validos.length) {
-        setErro("Nenhum produto válido (precisa de nome e preco numérico).");
-        return;
-      }
-      setProdutos(validos);
-      const cats = Array.isArray(json.categorias) && json.categorias.length
-        ? json.categorias
-        : Array.from(new Set(validos.map((p) => p.categoria).filter(Boolean) as string[]));
+      setProdutos(lista);
       setCategorias(cats);
     } catch (e: any) {
       setErro("JSON inválido: " + (e?.message ?? "desconhecido"));
     }
   }
+
 
   async function confirmar() {
     if (!produtos?.length) return;
