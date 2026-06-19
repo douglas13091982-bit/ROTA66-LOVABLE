@@ -43,7 +43,11 @@ const InputOTPSlot = React.forwardRef<
         isActive && "z-10 ring-1 ring-ring",
         className,
       )}
-      style={{ fontFeatureSettings: '"zero" 0, "tnum" 1' }}
+      style={{
+        fontFamily:
+          'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFeatureSettings: '"zero" 0, "tnum" 1',
+      }}
       {...props}
     >
       {char}
