@@ -50,28 +50,19 @@ export function ImportarIfoodDialog({
     setProdutos(null);
     try {
       const txt = await file.text();
-      const json = JSON.parse(txt) as CatalogoJson;
-      const lista = Array.isArray(json?.produtos) ? json.produtos : [];
+      const json = JSON.parse(txt);
+      const { produtos: lista, categorias: cats } = extrairCatalogo(json);
       if (!lista.length) {
-        setErro("O arquivo não contém produtos.");
+        setErro("Nenhum produto encontrado no JSON.");
         return;
       }
-      const validos = lista.filter(
-        (p) => p && typeof p.nome === "string" && p.nome.trim() && typeof p.preco === "number"
-      );
-      if (!validos.length) {
-        setErro("Nenhum produto válido (precisa de nome e preco numérico).");
-        return;
-      }
-      setProdutos(validos);
-      const cats = Array.isArray(json.categorias) && json.categorias.length
-        ? json.categorias
-        : Array.from(new Set(validos.map((p) => p.categoria).filter(Boolean) as string[]));
+      setProdutos(lista);
       setCategorias(cats);
     } catch (e: any) {
       setErro("JSON inválido: " + (e?.message ?? "desconhecido"));
     }
   }
+
 
   async function confirmar() {
     if (!produtos?.length) return;
