@@ -12,6 +12,7 @@ type Loja = {
 
 type Props = {
   loja: Loja;
+  aberta: boolean;
   busca: string;
   setBusca: (v: string) => void;
   categorias: string[];
@@ -19,7 +20,7 @@ type Props = {
   setCatAtiva: (v: string) => void;
 };
 
-export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, setCatAtiva }: Props) {
+export function CatalogoHeader({ loja, aberta, busca, setBusca, categorias, catAtiva, setCatAtiva }: Props) {
   return (
     <header className="cc-glass sticky top-0 z-30">
       <div className="cc-hero-bg cc-noise">
