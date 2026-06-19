@@ -88,7 +88,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
   const layout = ((loja as any).catalogo_layout ?? "cards") as "cards" | "lista";
-  const horario = (loja as any).horario_funcionamento ?? null;
+  
 
   return (
     <div className={pageWrapper}>
