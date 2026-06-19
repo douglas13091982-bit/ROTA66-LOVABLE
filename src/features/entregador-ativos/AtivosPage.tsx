@@ -7,7 +7,6 @@ import { VazioBanner } from "./components/VazioBanner";
 import {
   abrirRetornoLoja,
   lerRetornoLojaSalvo,
-  RetornoLojaDialog,
 } from "./components/RetornoLojaDialog";
 import { useLoteFinalizado } from "./hooks/use-lote-finalizado";
 import {
@@ -87,7 +86,6 @@ export function AtivosPage({ destaque }: Props) {
           <RotaBlock key={key} items={items} destaque={destaque} />
         ))}
       </div>
-      <RetornoLojaDialog />
     </EntregadorShell>
   );
 }
