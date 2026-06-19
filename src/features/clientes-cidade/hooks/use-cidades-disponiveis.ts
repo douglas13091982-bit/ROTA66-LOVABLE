@@ -13,7 +13,6 @@ export function useCidadesDisponiveis() {
       const { data, error } = await (supabase as any)
         .from("lojas_publicas")
         .select("cidade, estado")
-        .eq("ativa", true)
         .eq("catalogo_ativo", true);
       if (error) throw error;
       const set = new Map<string, CidadeDisponivel>();
