@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { CreditCard, KeyRound, Loader2, MapPin, Navigation, Phone, Store, TrendingUp } from "lucide-react";
+import { KeyRound, Loader2, MapPin, Navigation, Phone, TrendingUp } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
 import { PagamentoBadge } from "./PagamentoBadge";
+import { abrirRetornoLoja } from "./RetornoLojaDialog";
 
 type Props = {
   pedido: PedidoAtivo;
@@ -19,7 +19,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
   const [revealedEntrega, setRevealedEntrega] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
-  const [returnDialog, setReturnDialog] = useState(false);
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
@@ -46,17 +45,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         return;
       }
       if (isCartao && p.endereco_coleta) {
-        setReturnDialog(true);
-      } else {
-        refresh();
+        abrirRetornoLoja(p.endereco_coleta);
       }
+      refresh();
     }
   }
 
-  function closeReturn() {
-    setReturnDialog(false);
-    refresh();
-  }
 
   return (
     <div
@@ -232,45 +226,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           </div>
         )}
       </div>
-
-      <Dialog open={returnDialog} onOpenChange={(o) => { if (!o) closeReturn(); }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-amber-400" />
-              Volte para a loja com a maquininha
-            </DialogTitle>
-            <DialogDescription>
-              Pagamento em cartão — devolva a maquininha à loja para concluir o recebimento.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="rounded-xl border border-border/40 bg-background/40 backdrop-blur-sm p-3">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold mb-1.5 flex items-center gap-1.5">
-                <Store className="h-3.5 w-3.5" /> Endereço da loja
-              </div>
-              <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-                <span className="font-semibold text-sm">{p.endereco_coleta}</span>
-              </div>
-            </div>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.endereco_coleta ?? "")}`}
-              className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
-            >
-              <Navigation className="h-5 w-5" /> Abrir rota de volta
-            </a>
-            <button
-              onClick={closeReturn}
-              className="w-full px-5 py-3 rounded-xl border border-border/60 bg-background/40 backdrop-blur-sm font-bold uppercase text-xs tracking-[0.18em] text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Já entreguei a maquininha
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
+
   );
 }
