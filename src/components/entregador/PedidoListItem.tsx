@@ -101,7 +101,9 @@ function PedidoListItemBase({
               <span className="text-white/55">{km} km</span>
             </>
           )}
-          {(principal.forma_pagamento ?? "").toLowerCase() === "cartao" && (
+          {["cartao", "cartao_credito", "cartao_debito"].includes(
+            (principal.forma_pagamento ?? "").toLowerCase(),
+          ) && (
             <span
               className="text-[10px] font-bold uppercase tracking-[0.18em] px-1.5 py-0.5 rounded"
               style={{ background: "oklch(0.55 0.18 145 / 0.25)", color: "oklch(0.82 0.14 145)" }}
