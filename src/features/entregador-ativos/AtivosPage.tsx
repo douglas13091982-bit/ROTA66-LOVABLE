@@ -59,6 +59,7 @@ export function AtivosPage({ destaque }: Props) {
           <RotaBlock key={key} items={items} destaque={destaque} />
         ))}
       </div>
+      <RetornoLojaDialog />
     </EntregadorShell>
   );
 }
