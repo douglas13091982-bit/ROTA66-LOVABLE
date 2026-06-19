@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { PlusCircle, Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { PlusCircle, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
+import {
+  isNotificacaoMutada,
+  setNotificacaoMutada,
+  pararNotificacao,
+} from "@/lib/notificacao-som";
 
 interface Props {
   slug?: string | null;
@@ -8,6 +14,24 @@ interface Props {
 }
 
 export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: Props) {
+  const [mutado, setMutado] = useState<boolean>(() => isNotificacaoMutada());
+
+  useEffect(() => {
+    const onChange = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { mutado?: boolean } | undefined;
+      setMutado(!!detail?.mutado);
+    };
+    window.addEventListener("notificacao-som:mute-changed", onChange);
+    return () => window.removeEventListener("notificacao-som:mute-changed", onChange);
+  }, []);
+
+  const toggleMute = () => {
+    const novo = !mutado;
+    setMutado(novo);
+    setNotificacaoMutada(novo);
+    if (novo) pararNotificacao();
+  };
+
   return (
     <div className="mb-4 flex flex-wrap items-center gap-3">
       <Link
@@ -33,6 +57,18 @@ export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: 
         </span>
         Tempo real
       </span>
+      <button
+        onClick={toggleMute}
+        title={mutado ? "Som silenciado — clique para reativar" : "Silenciar som de novos pedidos"}
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border rounded-md transition-colors ${
+          mutado
+            ? "border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20"
+            : "border-border hover:bg-muted"
+        }`}
+      >
+        {mutado ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+        {mutado ? "Som silenciado" : "Silenciar som"}
+      </button>
       <button
         onClick={onToggleArquivados}
         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-md hover:bg-muted transition-colors"
