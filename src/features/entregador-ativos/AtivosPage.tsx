@@ -4,6 +4,7 @@ import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { FinalizadoBanner } from "./components/FinalizadoBanner";
 import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
+import { RetornoLojaDialog } from "./components/RetornoLojaDialog";
 import { useLoteFinalizado } from "./hooks/use-lote-finalizado";
 import {
   usePedidosAtivos,
