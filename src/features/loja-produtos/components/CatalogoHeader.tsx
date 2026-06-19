@@ -1,7 +1,6 @@
-import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag } from "lucide-react";
+import { ExternalLink, FileSpreadsheet, Plus } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ImportarProdutosDialog } from "@/components/loja/ImportarProdutosDialog";
-import { ImportarIfoodDialog } from "@/components/loja/ImportarIfoodDialog";
 import { ProdutoDialog } from "./ProdutoDialog";
 
 export function CatalogoHeader({
@@ -46,11 +45,6 @@ export function CatalogoHeader({
         </div>
       </div>
       <div className="flex gap-2 flex-wrap">
-        <ImportarIfoodDialog lojaId={lojaId} onImported={invalidate}>
-          <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground rounded-md font-bold uppercase text-xs tracking-wider hover:bg-background">
-            <ShoppingBag className="h-4 w-4" /> Importar do iFood
-          </button>
-        </ImportarIfoodDialog>
         <ImportarProdutosDialog lojaId={lojaId} onImported={invalidate}>
           <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground rounded-md font-bold uppercase text-xs tracking-wider hover:bg-background">
             <FileSpreadsheet className="h-4 w-4" /> Importar planilha
