@@ -28,7 +28,7 @@ export function AtivosPage({ destaque }: Props) {
     useLoteFinalizado(pedidos);
   const { data: recentesEntregues } = usePedidosLoteFinalizado(user?.id, loteFinalizado);
 
-  const retornoSalvo = lerRetornoLojaSalvo();
+  const retornoSalvo = useRetornoLojaSalvo();
   const rotas = agruparPorColeta(pedidos ?? []);
 
   const semAtivos = !!pedidos && pedidos.length === 0;
