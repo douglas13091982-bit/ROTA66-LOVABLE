@@ -2248,6 +2248,10 @@ export type Database = {
         Args: { _loja_id: string }
         Returns: boolean
       }
+      loja_tem_catalogo_publico: {
+        Args: { _loja_id: string }
+        Returns: boolean
+      }
       loja_tem_entregador_proprio_online: {
         Args: { _loja_id: string }
         Returns: boolean
