@@ -281,7 +281,8 @@ function criarCalculadorTaxaExibida(
   tarifasGlobais: TarifaFaixa[] | undefined,
 ) {
   return (p: PedidoDisponivel): number => {
-    const ehCartao = (p.forma_pagamento ?? "").toLowerCase() === "cartao";
+    const forma = (p.forma_pagamento ?? "").toLowerCase();
+    const ehCartao = forma === "cartao" || forma === "cartao_credito" || forma === "cartao_debito";
     const dobrarSeExterno = (v: number) => (ehCartao && p._externo ? v * 2 : v);
     if (!p._externo) return Number(p.taxa_entrega) || 0;
 
