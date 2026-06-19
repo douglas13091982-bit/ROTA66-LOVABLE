@@ -138,6 +138,14 @@ export function PedidoDrawer({
               <span className="text-[var(--panel-text-muted)]">Taxa de entrega</span>
               <span className="pp-num text-[var(--panel-text)]">R$ {taxa.toFixed(2)}</span>
             </div>
+            <div className="flex items-center justify-between pl-3 text-xs">
+              <span className="text-[var(--panel-text-muted)]">↳ Taxa global (frete)</span>
+              <span className="pp-num text-[var(--panel-text-muted)]">R$ {taxaGlobal.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center justify-between pl-3 text-xs">
+              <span className="text-[var(--panel-text-muted)]">↳ Taxa por pedido (plano)</span>
+              <span className="pp-num text-[var(--panel-text-muted)]">R$ {taxaPorPedido.toFixed(2)}</span>
+            </div>
             {bonus > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-[var(--panel-text-muted)]">Bônus ao entregador</span>
