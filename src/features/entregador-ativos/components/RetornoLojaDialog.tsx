@@ -94,6 +94,11 @@ export function RetornoLojaDialog() {
             <CreditCard className="h-5 w-5 text-amber-400" />
             <h2 className="text-lg font-bold">Volte para a loja com a maquininha</h2>
           </div>
+          {state.numero && (
+            <div className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300 mb-2">
+              Pedido #{state.numero}
+            </div>
+          )}
           <p className="text-sm text-muted-foreground">
             Pagamento em cartão — devolva a maquininha à loja para concluir o recebimento.
           </p>
