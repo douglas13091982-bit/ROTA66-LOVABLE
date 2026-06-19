@@ -27,7 +27,7 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
       )}
 
       <div className="flex-1 min-w-0 flex flex-col gap-1">
-        <h3 className="mp-card-title text-[15px] font-semibold leading-tight truncate">
+        <h3 className="mp-card-title text-[15px] font-semibold leading-tight truncate" style={{ fontFamily: "var(--font-body)" }}>
           {loja.nome}
         </h3>
         {loja.categoria && (
