@@ -109,6 +109,10 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     if (taxaPlano > 0) {
       taxa_entrega = Number((taxa_entrega + taxaPlano).toFixed(2));
     }
+    // Cartão na entrega: dobra a taxa (entregador precisa voltar com a maquininha)
+    if (data.forma_pagamento === "cartao_credito" || data.forma_pagamento === "cartao_debito") {
+      taxa_entrega = Number((taxa_entrega * 2).toFixed(2));
+    }
     const valor_total = valor_produtos + taxa_entrega;
 
     // 4. Inserir pedido como anônimo
