@@ -117,3 +117,49 @@ export const importarCatalogoIfood = createServerFn({ method: "POST" })
 
     return { total: rows.length, com_imagem: comImagem, sem_imagem: semImagem };
   });
+
+const ExtrairInput = z.object({
+  loja_id: z.string().uuid(),
+  url: z.string().trim().url().max(500),
+});
+
+export const extrairCatalogoIfoodPorUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => ExtrairInput.parse(data))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: loja, error: lojaErr } = await supabase
+      .from("lojas")
+      .select("id, owner_id")
+      .eq("id", data.loja_id)
+      .maybeSingle();
+    if (lojaErr) throw new Error(lojaErr.message);
+    if (!loja || loja.owner_id !== userId) throw new Error("Loja não encontrada ou sem permissão");
+
+    const token = process.env.GECKOAPI_TOKEN;
+    if (!token) throw new Error("GECKOAPI_TOKEN não configurado");
+
+    const r = await fetch("https://api.geckoapi.com.br/v1/extract", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        target: "ifood.com.br",
+        type: "pdp",
+        url: data.url,
+      }),
+    });
+
+    const txt = await r.text();
+    if (!r.ok) {
+      throw new Error(`GeckoAPI ${r.status}: ${txt.slice(0, 300)}`);
+    }
+    try {
+      return JSON.parse(txt);
+    } catch {
+      throw new Error("Resposta inválida da GeckoAPI");
+    }
+  });
