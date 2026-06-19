@@ -225,31 +225,76 @@ export function ImportarIfoodDialog({
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
-          <div className="bg-background/50 border border-border rounded-md p-3">
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-              Envie o JSON aqui
-            </p>
-            <p className="text-[11px] text-muted-foreground mb-3">
-              Selecione o arquivo <code className="text-foreground">.json</code> com a estrutura
-              <code className="text-foreground ml-1">{`{ "categorias": [...], "produtos": [...] }`}</code>.
-              <br />Cada produto precisa ter ao menos <code className="text-foreground">nome</code> e <code className="text-foreground">preco</code>.
-              <br /><b className="text-amber-400">Atenção:</b> os produtos atuais da loja serão substituídos.
-            </p>
-            <label className="flex items-center justify-center gap-2 px-3 py-4 bg-background border border-dashed border-border rounded-md text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground cursor-pointer">
-              <Upload className="h-4 w-4" />
-              {arquivo || "Selecionar arquivo .json"}
-              <input
-                type="file"
-                accept=".json,application/json"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) handleArquivo(f);
-                  e.target.value = "";
-                }}
-              />
-            </label>
+          <div className="flex gap-1 p-1 bg-background border border-border rounded-md text-[11px] font-bold uppercase tracking-wider">
+            <button
+              onClick={() => { setModo("url"); setErro(null); }}
+              className={`flex-1 px-3 py-1.5 rounded-sm transition ${modo === "url" ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <Link2 className="h-3 w-3 inline mr-1" /> Por URL
+            </button>
+            <button
+              onClick={() => { setModo("arquivo"); setErro(null); }}
+              className={`flex-1 px-3 py-1.5 rounded-sm transition ${modo === "arquivo" ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              <Upload className="h-3 w-3 inline mr-1" /> Por arquivo JSON
+            </button>
           </div>
+
+          {modo === "url" ? (
+            <div className="bg-background/50 border border-border rounded-md p-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                URL do restaurante no iFood
+              </p>
+              <p className="text-[11px] text-muted-foreground mb-3">
+                Cole a URL pública do restaurante (ex.: <code className="text-foreground">https://www.ifood.com.br/delivery/cidade-uf/nome-do-restaurante/...</code>).
+                <br /><b className="text-amber-400">Atenção:</b> os produtos atuais da loja serão substituídos.
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://www.ifood.com.br/delivery/..."
+                  className="flex-1 px-3 py-2 text-xs bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary"
+                  disabled={buscando}
+                />
+                <button
+                  onClick={handleUrl}
+                  disabled={buscando || !url.trim()}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-gradient-red shadow-red text-primary-foreground disabled:opacity-50"
+                >
+                  {buscando ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link2 className="h-3.5 w-3.5" />}
+                  {buscando ? "Buscando..." : "Buscar"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-background/50 border border-border rounded-md p-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                Envie o JSON aqui
+              </p>
+              <p className="text-[11px] text-muted-foreground mb-3">
+                Selecione o arquivo <code className="text-foreground">.json</code> com a estrutura
+                <code className="text-foreground ml-1">{`{ "categorias": [...], "produtos": [...] }`}</code>.
+                <br />Cada produto precisa ter ao menos <code className="text-foreground">nome</code> e <code className="text-foreground">preco</code>.
+                <br /><b className="text-amber-400">Atenção:</b> os produtos atuais da loja serão substituídos.
+              </p>
+              <label className="flex items-center justify-center gap-2 px-3 py-4 bg-background border border-dashed border-border rounded-md text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground cursor-pointer">
+                <Upload className="h-4 w-4" />
+                {arquivo || "Selecionar arquivo .json"}
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleArquivo(f);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            </div>
+          )}
 
           {erro && (
             <div className="flex items-start gap-2 text-xs text-red-400 bg-red-600/10 border border-red-600/20 rounded-md p-2">
