@@ -8,6 +8,7 @@ import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
 
 import { supabase } from "@/integrations/supabase/client";
@@ -138,6 +139,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
       </div>
 
       {/* Bottom tab bar - mobile only */}
+      <RetornoLojaDialog />
       <nav
         className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)]"
         style={{ background: "#0f304d" }}
