@@ -56,6 +56,10 @@ export function PedidoDrawer({
     detalhe.valor_produtos ?? Number(detalhe.valor_total) - Number(detalhe.taxa_entrega ?? 0),
   );
   const taxa = Number(detalhe.taxa_entrega ?? 0) - bonus;
+  const taxaPorPedido = detalhe.loja_plano_mensal_ativo
+    ? 0
+    : Number(detalhe.loja_taxa_por_pedido ?? 0);
+  const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
   const podeAvancar =
     (detalhe.status === "novo" || detalhe.status === "aceito" || detalhe.status === "em_preparo") &&
     NEXT[detalhe.status];
@@ -133,6 +137,14 @@ export function PedidoDrawer({
             <div className="flex items-center justify-between">
               <span className="text-[var(--panel-text-muted)]">Taxa de entrega</span>
               <span className="pp-num text-[var(--panel-text)]">R$ {taxa.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center justify-between pl-3 text-xs">
+              <span className="text-[var(--panel-text-muted)]">↳ Taxa global (frete)</span>
+              <span className="pp-num text-[var(--panel-text-muted)]">R$ {taxaGlobal.toFixed(2)}</span>
+            </div>
+            <div className="flex items-center justify-between pl-3 text-xs">
+              <span className="text-[var(--panel-text-muted)]">↳ Taxa por pedido (plano)</span>
+              <span className="pp-num text-[var(--panel-text-muted)]">R$ {taxaPorPedido.toFixed(2)}</span>
             </div>
             {bonus > 0 && (
               <div className="flex items-center justify-between">
