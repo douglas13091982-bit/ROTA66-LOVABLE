@@ -56,6 +56,10 @@ export function PedidoDrawer({
     detalhe.valor_produtos ?? Number(detalhe.valor_total) - Number(detalhe.taxa_entrega ?? 0),
   );
   const taxa = Number(detalhe.taxa_entrega ?? 0) - bonus;
+  const taxaPorPedido = detalhe.loja_plano_mensal_ativo
+    ? 0
+    : Number(detalhe.loja_taxa_por_pedido ?? 0);
+  const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
   const podeAvancar =
     (detalhe.status === "novo" || detalhe.status === "aceito" || detalhe.status === "em_preparo") &&
     NEXT[detalhe.status];
