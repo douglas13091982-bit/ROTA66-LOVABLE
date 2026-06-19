@@ -684,6 +684,16 @@
   color: var(--panel-text-muted) !important;
 }
 
+.panel-premium input[data-input-otp] {
+  background: transparent !important;
+  color: transparent !important;
+  caret-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 /* Buttons (default + outline + ghost) — subtle elevation */
 .panel-premium button[class*="bg-primary"]:not([class*="bg-primary/"]) {
   background: linear-gradient(180deg, oklch(0.62 0.26 25), oklch(0.45 0.24 25)) !important;
