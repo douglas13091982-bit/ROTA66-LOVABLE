@@ -4,7 +4,11 @@ import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { FinalizadoBanner } from "./components/FinalizadoBanner";
 import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
-import { RetornoLojaDialog } from "./components/RetornoLojaDialog";
+import {
+  abrirRetornoLoja,
+  lerRetornoLojaSalvo,
+  RetornoLojaDialog,
+} from "./components/RetornoLojaDialog";
 import { useLoteFinalizado } from "./hooks/use-lote-finalizado";
 import {
   usePedidosAtivos,
@@ -24,6 +28,7 @@ export function AtivosPage({ destaque }: Props) {
     useLoteFinalizado(pedidos);
   const { data: recentesEntregues } = usePedidosLoteFinalizado(user?.id, loteFinalizado);
 
+  const retornoSalvo = lerRetornoLojaSalvo();
   const rotas = agruparPorColeta(pedidos ?? []);
 
   const semAtivos = !!pedidos && pedidos.length === 0;
@@ -40,6 +45,10 @@ export function AtivosPage({ destaque }: Props) {
     0,
   );
 
+  const pendenteRetorno = retornoSalvo?.pedidoId
+    ? recentesEntregues?.find((p) => p.id === retornoSalvo.pedidoId)
+    : null;
+
   return (
     <EntregadorShell title="Minhas Entregas">
       {isLoading && <p className="text-muted-foreground">Carregando...</p>}
@@ -50,6 +59,25 @@ export function AtivosPage({ destaque }: Props) {
           totalGanho={totalGanhoLote}
           onDismiss={dismissFinalizado}
         />
+      )}
+
+      {pendenteRetorno && retornoSalvo && (
+        <div className="mb-4 rounded-2xl border border-amber-400/40 bg-amber-500/15 p-4 shadow-soft">
+          <div className="text-[10px] uppercase tracking-[0.2em] text-amber-300 font-bold mb-2">
+            Retorno à loja pendente
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">
+            O pedido #{pendenteRetorno.numero} foi pago com cartão na entrega. Abra a rota de volta para devolver a maquininha.
+          </p>
+          <button
+            onClick={() =>
+              abrirRetornoLoja(retornoSalvo.endereco, retornoSalvo.pedidoId, retornoSalvo.numero)
+            }
+            className="w-full px-4 py-3 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-[0.16em] rounded-xl"
+          >
+            Abrir retorno à loja
+          </button>
+        </div>
       )}
 
       {semAtivos && !mostrarFinalizado && <VazioBanner />}
