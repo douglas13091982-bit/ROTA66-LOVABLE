@@ -1,6 +1,7 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { pageWrapper } from "@/routes/-catalogo-types";
+import { lojaAbertaAgora } from "@/lib/horario-funcionamento";
 import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
 import { CatalogoHeader } from "./components/CatalogoHeader";
