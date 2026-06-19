@@ -20,9 +20,12 @@ export function useConfirmarEntrega(pedidoId: string) {
       return false;
     }
     toast.success("Entrega confirmada! 🎉");
-    qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
     return true;
   }
 
-  return { confirmar, loading };
+  function refresh() {
+    qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+  }
+
+  return { confirmar, loading, refresh };
 }
