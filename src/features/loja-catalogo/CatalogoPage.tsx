@@ -94,6 +94,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
     <div className={pageWrapper}>
       <CatalogoHeader
         loja={loja}
+        aberta={!lojaFechada}
         busca={busca}
         setBusca={setBusca}
         categorias={categorias}

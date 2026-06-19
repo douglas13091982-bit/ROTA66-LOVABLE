@@ -12,6 +12,7 @@ type Loja = {
 
 type Props = {
   loja: Loja;
+  aberta: boolean;
   busca: string;
   setBusca: (v: string) => void;
   categorias: string[];
@@ -19,7 +20,7 @@ type Props = {
   setCatAtiva: (v: string) => void;
 };
 
-export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, setCatAtiva }: Props) {
+export function CatalogoHeader({ loja, aberta, busca, setBusca, categorias, catAtiva, setCatAtiva }: Props) {
   return (
     <header className="cc-glass sticky top-0 z-30">
       <div className="cc-hero-bg cc-noise">
@@ -46,7 +47,7 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
             {loja.logo_url ? (
               <div className="relative shrink-0">
                 <img src={loja.logo_url} alt={loja.nome} className="h-14 w-14 rounded-2xl object-cover border border-border shadow-sm" />
-                <span className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full ring-2 ring-background ${loja.ativa ? "bg-emerald-500" : "bg-muted-foreground"}`} />
+                <span className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full ring-2 ring-background ${aberta ? "bg-emerald-500" : "bg-red-500"}`} />
               </div>
             ) : (
               <div
@@ -60,8 +61,15 @@ export function CatalogoHeader({ loja, busca, setBusca, categorias, catAtiva, se
               <div className="flex items-center gap-1.5">
                 <span className="text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Catálogo</span>
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-                <span className={`text-[9px] font-semibold uppercase tracking-[0.22em] ${loja.ativa ? "text-emerald-600" : "text-muted-foreground"}`}>
-                  {loja.ativa ? "Aberto agora" : "Fechado agora"}
+                <span
+                  className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.18em] px-2 py-0.5 rounded-full ${
+                    aberta
+                      ? "bg-emerald-500/15 text-emerald-600 ring-1 ring-emerald-500/30"
+                      : "bg-red-500/15 text-red-600 ring-1 ring-red-500/30"
+                  }`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${aberta ? "bg-emerald-500" : "bg-red-500"} ${aberta ? "animate-pulse" : ""}`} />
+                  {aberta ? "Loja Aberta" : "Loja Fechada"}
                 </span>
               </div>
               <h1 className="font-display text-[19px] tracking-tight truncate leading-tight cc-ink-text mt-0.5">{loja.nome}</h1>
