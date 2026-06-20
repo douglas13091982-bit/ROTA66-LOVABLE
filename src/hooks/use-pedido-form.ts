@@ -73,6 +73,7 @@ export function usePedidoForm({
   asCliente,
   onSuccess,
 }: Args) {
+  const qc = useQueryClient();
   const enderecoInicial = enderecoInicialOf(enderecosColetaSalvos);
 
   const [enderecoColetaId, setEnderecoColetaId] = useState<string | "custom">(
