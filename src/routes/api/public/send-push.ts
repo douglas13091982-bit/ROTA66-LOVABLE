@@ -41,9 +41,48 @@ export const Route = createFileRoute("/api/public/send-push")({
         const vapidPublic = process.env.VAPID_PUBLIC_KEY!;
         const vapidPrivate = process.env.VAPID_PRIVATE_KEY!;
         const vapidSubject = process.env.VAPID_SUBJECT || "mailto:contato@rota66.app";
+        const oneSignalAppId = "e9e73215-0750-464d-859e-674e97f00a68";
+        const oneSignalRestKey = process.env.ONESIGNAL_REST_API_KEY;
+
+        // Dispara OneSignal em paralelo (APK Android encapsulado).
+        // Não bloqueia o resultado — Web Push continua sendo a métrica principal.
+        const oneSignalPromise = (async () => {
+          if (!oneSignalRestKey) return { onesignal: "not configured" };
+          try {
+            const res = await fetch("https://api.onesignal.com/notifications", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: `Key ${oneSignalRestKey}`,
+              },
+              body: JSON.stringify({
+                app_id: oneSignalAppId,
+                include_aliases: { external_id: [payload.user_id] },
+                target_channel: "push",
+                headings: { en: payload.title, pt: payload.title },
+                contents: { en: payload.body || "", pt: payload.body || "" },
+                url: payload.url ? `https://rotas66.lovable.app${payload.url}` : undefined,
+                data: { url: payload.url || "/entregador/ativos" },
+                android_channel_id: undefined,
+                priority: 10,
+              }),
+            });
+            const text = await res.text();
+            if (!res.ok) {
+              console.error("[send-push] onesignal failed", res.status, text);
+              return { onesignal: `error ${res.status}` };
+            }
+            return { onesignal: "sent" };
+          } catch (e) {
+            console.error("[send-push] onesignal error", e);
+            return { onesignal: "exception" };
+          }
+        })();
+
         if (!vapidPrivate || !vapidPublic) {
           console.error("[send-push] VAPID keys not configured");
-          return new Response("not configured", { status: 500 });
+          const os = await oneSignalPromise;
+          return Response.json({ sent: 0, ...os });
         }
 
         const { data: subs, error } = await supabaseAdmin
@@ -55,7 +94,8 @@ export const Route = createFileRoute("/api/public/send-push")({
           return new Response("db error", { status: 500 });
         }
         if (!subs || subs.length === 0) {
-          return Response.json({ sent: 0 });
+          const os = await oneSignalPromise;
+          return Response.json({ sent: 0, ...os });
         }
 
         const message = JSON.stringify({
@@ -90,7 +130,8 @@ export const Route = createFileRoute("/api/public/send-push")({
           })
         );
 
-        return Response.json({ sent });
+        const os = await oneSignalPromise;
+        return Response.json({ sent, ...os });
       },
     },
   },

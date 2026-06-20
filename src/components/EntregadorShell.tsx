@@ -9,6 +9,7 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
+import { useOneSignalEntregador } from "@/hooks/use-onesignal-entregador";
 
 
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +30,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   const qc = useQueryClient();
   const turnosCount = useTurnosDisponiveisCount();
   useChatNaoLidasGlobal();
+  useOneSignalEntregador();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
   
