@@ -94,7 +94,8 @@ export const Route = createFileRoute("/api/public/send-push")({
           return new Response("db error", { status: 500 });
         }
         if (!subs || subs.length === 0) {
-          return Response.json({ sent: 0 });
+          const os = await oneSignalPromise;
+          return Response.json({ sent: 0, ...os });
         }
 
         const message = JSON.stringify({
@@ -129,7 +130,8 @@ export const Route = createFileRoute("/api/public/send-push")({
           })
         );
 
-        return Response.json({ sent });
+        const os = await oneSignalPromise;
+        return Response.json({ sent, ...os });
       },
     },
   },
