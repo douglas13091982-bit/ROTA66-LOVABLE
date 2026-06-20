@@ -1,4 +1,6 @@
+import { toast } from "sonner";
 import { SectionPanel } from "../ui-atoms";
+import { usePushNotifications } from "@/hooks/use-push-notifications";
 
 type LojaVinc = {
   loja_id: string;
@@ -19,6 +21,27 @@ export function ConfigSection({
   onToggleExternos,
   lojas,
 }: Props) {
+  const push = usePushNotifications();
+  const pushOn = push.state === "granted";
+  const pushDisabled = push.busy || push.state === "loading" || push.state === "unsupported";
+
+  async function togglePush() {
+    try {
+      if (pushOn) {
+        await push.disable();
+        toast.success("Notificações desativadas");
+      } else {
+        await push.enable();
+        if (push.state === "denied" || (typeof Notification !== "undefined" && Notification.permission === "denied")) {
+          toast.error("Permissão negada. Ative manualmente nas configurações do app/navegador.");
+        } else {
+          toast.success("Notificações ativadas");
+        }
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Falha ao alterar notificações");
+    }
+  }
   return (
     <SectionPanel>
       <div className="flex items-start justify-between gap-3 py-1">
