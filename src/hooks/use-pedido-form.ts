@@ -205,9 +205,23 @@ export function usePedidoForm({
       const { data, error } = await supabase
         .from("pedidos")
         .insert(payload as never)
-        .select("numero")
+        .select("*, lojas:loja_id(taxa_por_pedido, plano_mensal_ativo)")
         .single();
       if (error) throw error;
+
+      // Optimistic update: insere o pedido no cache antes do refetch/realtime,
+      // para que apareça instantaneamente ao navegar para /loja/pedidos.
+      const pedidoCache = {
+        ...(data as any),
+        loja_taxa_por_pedido: Number((data as any)?.lojas?.taxa_por_pedido ?? 0),
+        loja_plano_mensal_ativo: Boolean((data as any)?.lojas?.plano_mensal_ativo),
+      };
+      qc.setQueryData(["pedidos", lojaId], (old: any[] | undefined) => {
+        const lista = Array.isArray(old) ? old : [];
+        if (lista.some((p) => p.id === pedidoCache.id)) return lista;
+        return [pedidoCache, ...lista];
+      });
+      qc.invalidateQueries({ queryKey: ["pedidos", lojaId] });
 
       if (!asCliente) {
         await supabase.from("clientes_loja").upsert(
@@ -222,8 +236,8 @@ export function usePedidoForm({
         );
       }
 
-      toast.success(`Pedido #${data.numero} enviado!`);
-      onSuccess?.(data.numero);
+      toast.success(`Pedido #${(data as any).numero} enviado!`);
+      onSuccess?.((data as any).numero);
       resetForm();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro ao criar pedido";
