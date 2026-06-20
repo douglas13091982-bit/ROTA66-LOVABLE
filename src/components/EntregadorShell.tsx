@@ -8,6 +8,7 @@ import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
+import { usePushNotifications } from "@/hooks/use-push-notifications";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
 
