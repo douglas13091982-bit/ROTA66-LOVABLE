@@ -9,7 +9,6 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
-import { useOneSignalEntregador } from "@/hooks/use-onesignal-entregador";
 
 
 import { supabase } from "@/integrations/supabase/client";
