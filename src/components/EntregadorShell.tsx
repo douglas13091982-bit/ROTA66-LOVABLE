@@ -30,8 +30,24 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   const qc = useQueryClient();
   const turnosCount = useTurnosDisponiveisCount();
   useChatNaoLidasGlobal();
+  const push = usePushNotifications();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
+
+  // Pede permissão de push automaticamente na 1ª vez (somente quando há usuário e estado === "default")
+  useEffect(() => {
+    if (!user?.id) return;
+    if (push.state !== "default") return;
+    const key = `push-prompted-${user.id}`;
+    if (typeof window === "undefined") return;
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, "1");
+    // pequeno delay para não atropelar o load
+    const t = setTimeout(() => {
+      push.enable().catch(() => {});
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [user?.id, push.state, push.enable]);
   
 
   useEffect(() => {
