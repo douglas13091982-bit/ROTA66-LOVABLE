@@ -49,6 +49,7 @@ import { Route as AuthenticatedEntregadorAtivosRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authenticated/admin/suporte'
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
+import { Route as AuthenticatedAdminPushTestRouteImport } from './routes/_authenticated/admin/push-test'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminNotificacaoSomLojaRouteImport } from './routes/_authenticated/admin/notificacao-som-loja'
@@ -287,6 +288,12 @@ const AuthenticatedAdminRoteirizacaoRoute =
     path: '/roteirizacao',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPushTestRoute =
+  AuthenticatedAdminPushTestRouteImport.update({
+    id: '/push-test',
+    path: '/push-test',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPlanosRoute =
   AuthenticatedAdminPlanosRouteImport.update({
     id: '/planos',
@@ -404,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/push-test': typeof AuthenticatedAdminPushTestRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -457,6 +465,7 @@ export interface FileRoutesByTo {
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/admin/push-test': typeof AuthenticatedAdminPushTestRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -515,6 +524,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
+  '/_authenticated/admin/push-test': typeof AuthenticatedAdminPushTestRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/_authenticated/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -573,6 +583,7 @@ export interface FileRouteTypes {
     | '/admin/notificacao-som-loja'
     | '/admin/pedidos'
     | '/admin/planos'
+    | '/admin/push-test'
     | '/admin/roteirizacao'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -626,6 +637,7 @@ export interface FileRouteTypes {
     | '/admin/notificacao-som-loja'
     | '/admin/pedidos'
     | '/admin/planos'
+    | '/admin/push-test'
     | '/admin/roteirizacao'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -683,6 +695,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/notificacao-som-loja'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
+    | '/_authenticated/admin/push-test'
     | '/_authenticated/admin/roteirizacao'
     | '/_authenticated/admin/suporte'
     | '/_authenticated/admin/tarifas'
@@ -1014,6 +1027,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRoteirizacaoRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/push-test': {
+      id: '/_authenticated/admin/push-test'
+      path: '/push-test'
+      fullPath: '/admin/push-test'
+      preLoaderRoute: typeof AuthenticatedAdminPushTestRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/planos': {
       id: '/_authenticated/admin/planos'
       path: '/planos'
@@ -1137,6 +1157,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminNotificacaoSomLojaRoute: typeof AuthenticatedAdminNotificacaoSomLojaRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
+  AuthenticatedAdminPushTestRoute: typeof AuthenticatedAdminPushTestRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
   AuthenticatedAdminSuporteRoute: typeof AuthenticatedAdminSuporteRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
@@ -1162,6 +1183,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminNotificacaoSomLojaRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
+    AuthenticatedAdminPushTestRoute: AuthenticatedAdminPushTestRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
     AuthenticatedAdminSuporteRoute: AuthenticatedAdminSuporteRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,

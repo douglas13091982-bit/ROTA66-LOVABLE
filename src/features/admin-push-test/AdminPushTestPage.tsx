@@ -58,9 +58,9 @@ export function AdminPushTestPage() {
     setError(null);
     setResult(null);
     try {
-      const res = await enviar({
+      const res = (await enviar({
         data: { entregador_id: entregadorId, title, body, url },
-      });
+      })) as OneSignalTestResult;
       setResult(res);
       if (res.ok) toast.success(`OneSignal respondeu ${res.status}`);
       else toast.error(`OneSignal retornou ${res.status}`);

@@ -11,10 +11,12 @@ const InputSchema = z.object({
   url: z.string().max(500).default("/entregador/ativos"),
 });
 
+type JsonValue = string | number | boolean | null | { [k: string]: JsonValue } | JsonValue[];
+
 export type OneSignalTestResult = {
   ok: boolean;
   status: number;
-  response: unknown;
+  response: JsonValue;
   request: {
     app_id: string;
     external_id: string;
@@ -66,10 +68,10 @@ export const enviarPushTesteOneSignal = createServerFn({ method: "POST" })
       body: JSON.stringify(payload),
     });
 
-    let parsed: unknown;
+    let parsed: JsonValue;
     const text = await res.text();
     try {
-      parsed = JSON.parse(text);
+      parsed = JSON.parse(text) as JsonValue;
     } catch {
       parsed = text;
     }
