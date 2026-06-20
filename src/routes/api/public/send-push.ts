@@ -91,8 +91,7 @@ export const Route = createFileRoute("/api/public/send-push")({
           })
         );
 
-        const os = await oneSignalPromise;
-        return Response.json({ sent, ...os });
+        return Response.json({ sent });
       },
     },
   },
