@@ -22,6 +22,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding" },
   { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios" },
   { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk" },
+  { to: "/admin/push-test", label: "Push de teste", icon: Bell, area: null, superOnly: true },
   { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
   { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, superOnly: true },
