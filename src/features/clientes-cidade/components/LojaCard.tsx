@@ -52,16 +52,16 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
         <h3
-          className="mp-card-title text-[16px] font-semibold leading-tight truncate"
+          className="mp-card-title text-[15px] font-medium leading-tight truncate"
           style={{ fontFamily: "var(--font-body)" }}
         >
           {loja.nome}
         </h3>
-        <div className="flex items-center gap-1.5 text-[12px] mp-muted flex-wrap">
-          <Star className="h-3.5 w-3.5 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
-          <span className="font-semibold text-[var(--rota-gold)]">Novo</span>
+        <div className="flex items-center gap-1.5 text-[13px] mp-muted flex-wrap font-normal">
+          <Star className="h-3 w-3 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
+          <span className="text-[var(--rota-gold)]">Novo</span>
           {loja.categoria && (
             <>
               <span className="opacity-50">•</span>
@@ -69,8 +69,8 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
             </>
           )}
         </div>
-        <div className="text-[12px] mp-muted">
-          Frete <span className="font-semibold text-foreground/90">{freteLabel}</span>
+        <div className="text-[13px] mp-muted font-normal">
+          Frete <span>{freteLabel}</span>
           {frete && (
             <span className="opacity-60"> · {frete.km.toFixed(1)} km</span>
           )}
