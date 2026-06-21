@@ -60,21 +60,6 @@ export function CategoriasFiltro({ value, onChange }: Props) {
         className="flex gap-3 overflow-x-auto px-4 pb-1 snap-x scroll-smooth"
         style={{ scrollbarWidth: "none" }}
       >
-        <button
-          onClick={() => onChange("")}
-          className={`shrink-0 snap-start flex flex-col items-center gap-1 w-[68px] ${
-            value === "" ? "opacity-100" : "opacity-80"
-          }`}
-        >
-          <div
-            className={`h-[48px] w-[68px] rounded-lg flex items-center justify-center bg-white/95 ${
-              value === "" ? "ring-2 ring-[var(--rota-red)]" : ""
-            }`}
-          >
-            <span className="text-[22px]">🍽️</span>
-          </div>
-          <span className="text-[10px] font-semibold text-center leading-tight">Todas</span>
-        </button>
         {LOJA_CATEGORIAS.map((c) => {
           const icon = ICONS[c.value];
           const active = value === c.value;
