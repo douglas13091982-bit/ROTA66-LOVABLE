@@ -55,6 +55,7 @@ export function AdminCategoriasPage() {
       label: novoLabel,
       ordem: Number(novoOrdem) || 0,
       icone: novoIcone,
+      icone_url: novoIconeUrl,
     });
     setCriando(false);
     if (ok) {
@@ -62,6 +63,7 @@ export function AdminCategoriasPage() {
       setNovoLabel("");
       setNovoOrdem("0");
       setNovoIcone(null);
+      setNovoIconeUrl(null);
     }
   }
 
@@ -70,6 +72,7 @@ export function AdminCategoriasPage() {
     setEditLabel(c.label);
     setEditOrdem(String(c.ordem));
     setEditIcone(c.icone ?? null);
+    setEditIconeUrl(c.icone_url ?? null);
   }
 
   async function salvarEdicao(c: LojaCategoriaRow) {
@@ -77,6 +80,7 @@ export function AdminCategoriasPage() {
       label: editLabel.trim(),
       ordem: Number(editOrdem) || 0,
       icone: editIcone,
+      icone_url: editIconeUrl,
     });
     if (ok) setEditId(null);
   }
