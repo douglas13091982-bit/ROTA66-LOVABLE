@@ -1,4 +1,4 @@
-import { LOJA_CATEGORIAS } from "@/lib/loja-categorias";
+import { useLojaCategorias } from "@/hooks/use-loja-categorias";
 
 import iconRestaurante from "@/assets/categorias/restaurante.png";
 import iconLanchonete from "@/assets/categorias/lanchonete.png";
@@ -54,13 +54,14 @@ interface Props {
 }
 
 export function CategoriasFiltro({ value, onChange }: Props) {
+  const { categorias } = useLojaCategorias();
   return (
     <div className="max-w-2xl mx-auto pb-3 pt-2 relative">
       <div
         className="flex gap-3 overflow-x-auto px-4 pb-1 snap-x scroll-smooth"
         style={{ scrollbarWidth: "none" }}
       >
-        {LOJA_CATEGORIAS.map((c) => {
+        {categorias.map((c) => {
           const icon = ICONS[c.value];
           const active = value === c.value;
           return (

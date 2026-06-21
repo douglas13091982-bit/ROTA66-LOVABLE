@@ -1,6 +1,7 @@
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits, sanitizeName } from "@/lib/sanitize";
-import { LOJA_CATEGORIAS, type LojaCategoria } from "@/lib/loja-categorias";
+import { useLojaCategorias } from "@/hooks/use-loja-categorias";
+import type { LojaCategoria } from "@/lib/loja-categorias";
 import { progressiveFormatCnpj } from "../logic/format-progressivo";
 
 type Props = {
@@ -28,6 +29,7 @@ export function LojaFields({
   contratoVersao,
   onOpenContrato,
 }: Props) {
+  const { categorias } = useLojaCategorias();
   return (
     <>
       <AuthInput
@@ -61,7 +63,7 @@ export function LojaFields({
           className="w-full bg-background/60 border border-border/60 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/25 transition-all duration-300 ease-premium"
         >
           <option value="">Selecione...</option>
-          {LOJA_CATEGORIAS.map((c) => (
+          {categorias.map((c) => (
             <option key={c.value} value={c.value}>
               {c.label}
             </option>

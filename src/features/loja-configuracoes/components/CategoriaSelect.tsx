@@ -1,4 +1,5 @@
-import { LOJA_CATEGORIAS, type LojaCategoria } from "@/lib/loja-categorias";
+import { useLojaCategorias } from "@/hooks/use-loja-categorias";
+import type { LojaCategoria } from "@/lib/loja-categorias";
 
 export function CategoriaSelect({
   value,
@@ -7,6 +8,7 @@ export function CategoriaSelect({
   value: LojaCategoria | "";
   onChange: (v: LojaCategoria | "") => void;
 }) {
+  const { categorias } = useLojaCategorias();
   return (
     <label className="block">
       <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
@@ -18,7 +20,7 @@ export function CategoriaSelect({
         className="w-full bg-background border border-border rounded-md px-4 py-3 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
       >
         <option value="">Selecione...</option>
-        {LOJA_CATEGORIAS.map((c) => (
+        {categorias.map((c) => (
           <option key={c.value} value={c.value}>
             {c.label}
           </option>
