@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
-import { ReceiptText, Loader2 } from "lucide-react";
+import { ReceiptText, Loader2, Star } from "lucide-react";
+import { AvaliacaoDialog } from "./AvaliacaoDialog";
 
 interface PedidoRow {
   id: string;
@@ -54,6 +55,7 @@ export function PedidosDialog({
   const [loading, setLoading] = useState(false);
   const [pedidos, setPedidos] = useState<PedidoRow[]>([]);
   const [erro, setErro] = useState<string | null>(null);
+  const [avaliando, setAvaliando] = useState<{ lojaId: string; lojaNome: string; pedidoId: string } | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -162,12 +164,42 @@ export function PedidosDialog({
                       {qtd} {qtd === 1 ? "item" : "itens"}
                     </div>
                   )}
+                  {p.status === "entregue" && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAvaliando({
+                          lojaId: p.loja_id,
+                          lojaNome: p.loja_nome ?? "Loja",
+                          pedidoId: p.id,
+                        })
+                      }
+                      className="mt-1 inline-flex items-center gap-1.5 self-start text-[12px] font-medium px-2.5 py-1 rounded-full border transition hover:opacity-80"
+                      style={{
+                        borderColor: "rgba(212,168,76,0.45)",
+                        color: "var(--rota-gold)",
+                        background: "rgba(212,168,76,0.10)",
+                      }}
+                    >
+                      <Star className="h-3.5 w-3.5" />
+                      Avaliar loja
+                    </button>
+                  )}
                 </li>
               );
             })}
           </ul>
         )}
       </DialogContent>
+      {avaliando && (
+        <AvaliacaoDialog
+          open={!!avaliando}
+          onOpenChange={(v) => !v && setAvaliando(null)}
+          lojaId={avaliando.lojaId}
+          lojaNome={avaliando.lojaNome}
+          pedidoId={avaliando.pedidoId}
+        />
+      )}
     </Dialog>
   );
 }

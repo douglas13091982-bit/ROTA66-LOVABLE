@@ -4,15 +4,17 @@ import { Star } from "lucide-react";
 import { labelCategoria } from "@/lib/loja-categorias";
 import type { LojaPublica } from "../logic/types";
 import type { FreteInfo } from "../hooks/use-fretes-lojas";
+import type { AvaliacaoResumo } from "../hooks/use-avaliacoes-lojas";
 
 interface Props {
   loja: LojaPublica;
   frete?: FreteInfo | null;
   freteCarregando?: boolean;
   semEndereco?: boolean;
+  avaliacao?: AvaliacaoResumo | null;
 }
 
-export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
+export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao }: Props) {
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
 
   let freteLabel: string;
@@ -61,7 +63,14 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
         </h3>
         <div className="flex items-center gap-1.5 text-[13px] mp-muted flex-wrap font-normal">
           <Star className="h-3 w-3 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
-          <span className="text-[var(--rota-gold)]">Novo</span>
+          {avaliacao && avaliacao.total > 0 ? (
+            <span className="text-[var(--rota-gold)] font-medium">
+              {avaliacao.media.toFixed(1)}
+              <span className="opacity-60 font-normal"> ({avaliacao.total})</span>
+            </span>
+          ) : (
+            <span className="text-[var(--rota-gold)]">Novo</span>
+          )}
           {loja.categoria && (
             <>
               <span className="opacity-50">•</span>
