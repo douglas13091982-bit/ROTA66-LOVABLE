@@ -128,7 +128,15 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
         <div className="flex justify-center mt-2 mb-1">
           <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
         </div>
-        <p className="text-center text-[12px] font-semibold uppercase tracking-[0.28em] text-white/80 mt-1">
+        <p
+          className="text-center text-[12px] font-semibold uppercase tracking-[0.28em] mt-1 animate-fade-in bg-clip-text text-transparent"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, rgba(255,255,255,0.55) 0%, #ffffff 25%, var(--rota-gold,#d4a84c) 50%, #ffffff 75%, rgba(255,255,255,0.55) 100%)",
+            backgroundSize: "200% 100%",
+            animation: "fade-in 0.6s ease-out, mp-shimmer 3.5s linear infinite",
+          }}
+        >
           Peça seu delivery
         </p>
 
