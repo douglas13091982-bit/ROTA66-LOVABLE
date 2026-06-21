@@ -4,6 +4,7 @@ import { useLojasFiltro } from "./hooks/use-lojas-filtro";
 import { CidadeHero } from "./components/CidadeHero";
 import { CategoriasFiltro } from "./components/CategoriasFiltro";
 import { LojasList } from "./components/LojasList";
+import { BottomNavCliente } from "./components/BottomNavCliente";
 
 interface Props {
   cidade: string;
@@ -17,7 +18,7 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
     useLojasFiltro(lojas);
 
   return (
-    <div className="mp-splash min-h-screen pb-[calc(env(safe-area-inset-bottom)+2rem)]">
+    <div className="mp-splash min-h-screen pb-[calc(env(safe-area-inset-bottom)+5rem)]">
       <header className="mp-hero sticky top-0 z-30">
         <CidadeHero
           cidade={cidade}
@@ -33,6 +34,8 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
       <main className="max-w-2xl mx-auto px-4 pt-5">
         <LojasList lojas={filtradas} isLoading={isLoading} cidade={cidade} />
       </main>
+
+      <BottomNavCliente cidade={cidade} uf={uf} />
     </div>
   );
 }
