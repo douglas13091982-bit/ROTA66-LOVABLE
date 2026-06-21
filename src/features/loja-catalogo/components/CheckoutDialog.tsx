@@ -68,9 +68,7 @@ export function CheckoutDialog({
   const { taxa: taxaCalculada, info: taxaInfo } = useTarifaEntrega(lojaId, lojaCoords, entregaCoords);
   const temCoords =
     entregaCoords.lat != null && entregaCoords.lng != null && lojaCoords.lat != null && lojaCoords.lng != null;
-  const taxaBruta = temCoords ? taxaCalculada : taxaBase;
-  const ehCartaoEntrega = form.forma_pagamento === "cartao_credito";
-  const taxa = ehCartaoEntrega ? Number((taxaBruta * 2).toFixed(2)) : taxaBruta;
+  const taxa = temCoords ? taxaCalculada : taxaBase;
   const total = subtotal + taxa;
   const [saving, setSaving] = useState(false);
   const [pedidoPagar, setPedidoPagar] = useState<{ id: string; numero: number } | null>(null);

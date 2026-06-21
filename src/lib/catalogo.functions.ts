@@ -17,7 +17,7 @@ const InputSchema = z.object({
   complemento: z.string().trim().max(200).optional().nullable(),
   cidade: z.string().trim().max(120).optional().nullable(),
   observacoes: z.string().trim().max(500).optional().nullable(),
-  forma_pagamento: z.enum(["pix", "dinheiro", "cartao_credito", "cartao_debito", "pix_online", "cartao_online"]),
+  forma_pagamento: z.enum(["pix", "dinheiro", "cartao", "cartao_credito", "cartao_debito", "pix_online", "cartao_online"]),
   troco_para: z.number().nullable().optional(),
   itens: z.array(ItemSchema).min(1).max(50),
 });
@@ -108,10 +108,6 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const taxaPlano = planoAtivo ? 0 : Number((loja as any).taxa_por_pedido ?? 0) || 0;
     if (taxaPlano > 0) {
       taxa_entrega = Number((taxa_entrega + taxaPlano).toFixed(2));
-    }
-    // Cartão na entrega: dobra a taxa (entregador precisa voltar com a maquininha)
-    if (data.forma_pagamento === "cartao_credito" || data.forma_pagamento === "cartao_debito") {
-      taxa_entrega = Number((taxa_entrega * 2).toFixed(2));
     }
     const valor_total = valor_produtos + taxa_entrega;
 

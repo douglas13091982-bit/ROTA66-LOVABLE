@@ -102,9 +102,8 @@ export function usePedidoForm({
 
   // Inicializa com taxa base se a calculada ainda for 0
   const taxaBruta = taxa || Number(taxaBase) || 0;
-  // Cartão na entrega: dobra a taxa (entregador precisa voltar com a maquininha)
-  const ehCartaoEntrega = formaPagamento === "cartao";
-  const taxaAtual = ehCartaoEntrega ? taxaBruta * 2 : taxaBruta;
+  const taxaAtual = taxaBruta;
+  const ehCartaoEntrega = false;
   const taxaFinal = taxaAtual + (Number(bonus) || 0);
   const valorProdutos = itens.reduce(
     (s, i) => s + (Number(i.qtd) || 0) * (Number(i.preco) || 0),
