@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Home, UserRound, UserPlus, LogIn, LogOut } from "lucide-react";
+import { Home, UserRound, UserPlus, LogIn, LogOut, ReceiptText } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PerfilDialog } from "./PerfilDialog";
+import { PedidosDialog } from "./PedidosDialog";
 
 interface Props {
   cidade: string;
@@ -14,6 +15,8 @@ export function BottomNavCliente({ cidade, uf }: Props) {
   const navigate = useNavigate();
   const [logado, setLogado] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
+  const [pedidosOpen, setPedidosOpen] = useState(false);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -49,6 +52,7 @@ export function BottomNavCliente({ cidade, uf }: Props) {
   const items: Item[] = logado
     ? [
         { label: "Início", icon: Home, onClick: handleInicio },
+        { label: "Pedidos", icon: ReceiptText, onClick: () => setPedidosOpen(true) },
         { label: "Perfil", icon: UserRound, onClick: () => setPerfilOpen(true) },
         { label: "Sair", icon: LogOut, onClick: handleSair, danger: true },
       ]
@@ -91,6 +95,7 @@ export function BottomNavCliente({ cidade, uf }: Props) {
         </div>
       </nav>
       <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />
+      <PedidosDialog open={pedidosOpen} onOpenChange={setPedidosOpen} />
     </>
   );
 }
