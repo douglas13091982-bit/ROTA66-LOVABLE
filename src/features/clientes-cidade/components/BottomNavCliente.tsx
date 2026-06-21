@@ -15,6 +15,8 @@ export function BottomNavCliente({ cidade, uf }: Props) {
   const navigate = useNavigate();
   const [logado, setLogado] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
+  const [pedidosOpen, setPedidosOpen] = useState(false);
+
 
   useEffect(() => {
     let cancelled = false;
