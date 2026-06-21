@@ -62,12 +62,12 @@ export function CategoriasFiltro({ value, onChange }: Props) {
       >
         <button
           onClick={() => onChange("")}
-          className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[72px] ${
+          className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[88px] ${
             value === "" ? "opacity-100" : "opacity-80"
           }`}
         >
           <div
-            className={`h-[68px] w-[68px] rounded-2xl flex items-center justify-center bg-white/95 ${
+            className={`h-[64px] w-[88px] rounded-xl flex items-center justify-center bg-white/95 ${
               value === "" ? "ring-2 ring-[var(--rota-red)]" : ""
             }`}
           >
@@ -82,12 +82,12 @@ export function CategoriasFiltro({ value, onChange }: Props) {
             <button
               key={c.value}
               onClick={() => onChange(c.value)}
-              className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[72px] ${
+              className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[88px] ${
                 active ? "opacity-100" : "opacity-90"
               }`}
             >
               <div
-                className={`h-[68px] w-[68px] rounded-2xl flex items-center justify-center bg-white/95 overflow-hidden ${
+                className={`h-[64px] w-[88px] rounded-xl flex items-center justify-center bg-white/95 overflow-hidden ${
                   active ? "ring-2 ring-[var(--rota-red)]" : ""
                 }`}
               >
@@ -96,9 +96,9 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     src={icon}
                     alt={c.label}
                     loading="lazy"
-                    width={68}
-                    height={68}
-                    className="h-[60px] w-[60px] object-contain"
+                    width={88}
+                    height={64}
+                    className="h-[56px] w-[72px] object-contain"
                   />
                 ) : (
                   <span className="text-[28px]">🛍️</span>
