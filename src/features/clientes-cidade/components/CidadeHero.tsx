@@ -221,15 +221,6 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
           </Select>
         </div>
 
-        <div className="relative mt-3">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 mp-muted" />
-          <input
-            value={busca}
-            onChange={(e) => onBuscaChange(e.target.value)}
-            placeholder="Buscar loja…"
-            className="mp-input w-full pl-10 pr-3 py-3 rounded-2xl text-[14px] transition"
-          />
-        </div>
       </div>
       <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />
     </div>
