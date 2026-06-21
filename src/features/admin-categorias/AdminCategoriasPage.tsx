@@ -175,7 +175,7 @@ export function AdminCategoriasPage() {
                   >
                     {editing ? (
                       <>
-                        <div className="flex-1 grid grid-cols-[1fr_80px_160px] gap-2">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_80px_160px] gap-2">
                           <input
                             value={editLabel}
                             onChange={(e) => setEditLabel(e.target.value)}
@@ -188,6 +188,9 @@ export function AdminCategoriasPage() {
                             className="bg-black/30 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white"
                           />
                           <IconPicker value={editIcone} onChange={setEditIcone} />
+                          <div className="md:col-span-3">
+                            <CategoriaIconUploader value={editIconeUrl} onChange={setEditIconeUrl} />
+                          </div>
                         </div>
                         <button
                           onClick={() => salvarEdicao(c)}
