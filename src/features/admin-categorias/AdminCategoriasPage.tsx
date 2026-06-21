@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { useAdminPermissoes } from "@/hooks/use-admin-permissoes";
 import { useLojaCategorias, type LojaCategoriaRow } from "@/hooks/use-loja-categorias";
 import { IconPicker } from "./components/IconPicker";
+import { CategoriaIconUploader } from "./components/CategoriaIconUploader";
 import { getCategoriaIcon } from "@/lib/categoria-icons";
 
 export function AdminCategoriasPage() {
