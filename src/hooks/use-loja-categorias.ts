@@ -8,6 +8,7 @@ export type LojaCategoriaRow = {
   label: string;
   ordem: number;
   ativo: boolean;
+  icone: string | null;
 };
 
 const KEY = ["loja-categorias"] as const;
@@ -32,7 +33,7 @@ export function useLojaCategorias(opts?: { incluirInativas?: boolean }) {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: KEY });
 
-  async function create(input: { value: string; label: string; ordem?: number }) {
+  async function create(input: { value: string; label: string; ordem?: number; icone?: string | null }) {
     const value = input.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, "_");
     if (!value || !input.label.trim()) {
       toast.error("Informe identificador e nome");
@@ -42,6 +43,7 @@ export function useLojaCategorias(opts?: { incluirInativas?: boolean }) {
       value,
       label: input.label.trim(),
       ordem: input.ordem ?? 0,
+      icone: input.icone ?? null,
     });
     if (error) {
       toast.error(error.message);
@@ -52,7 +54,7 @@ export function useLojaCategorias(opts?: { incluirInativas?: boolean }) {
     return true;
   }
 
-  async function update(id: string, patch: Partial<Pick<LojaCategoriaRow, "label" | "ordem" | "ativo">>) {
+  async function update(id: string, patch: Partial<Pick<LojaCategoriaRow, "label" | "ordem" | "ativo" | "icone">>) {
     const { error } = await (supabase as any)
       .from("loja_categorias")
       .update(patch)

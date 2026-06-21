@@ -3,6 +3,8 @@ import { Plus, Pencil, Trash2, Check, X, EyeOff, Eye } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminPermissoes } from "@/hooks/use-admin-permissoes";
 import { useLojaCategorias, type LojaCategoriaRow } from "@/hooks/use-loja-categorias";
+import { IconPicker } from "./components/IconPicker";
+import { getCategoriaIcon } from "@/lib/categoria-icons";
 
 export function AdminCategoriasPage() {
   const { isSuper, loading: permLoading } = useAdminPermissoes();
@@ -13,11 +15,13 @@ export function AdminCategoriasPage() {
   const [novoValue, setNovoValue] = useState("");
   const [novoLabel, setNovoLabel] = useState("");
   const [novoOrdem, setNovoOrdem] = useState("0");
+  const [novoIcone, setNovoIcone] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editOrdem, setEditOrdem] = useState("0");
+  const [editIcone, setEditIcone] = useState<string | null>(null);
 
   if (permLoading) {
     return (
@@ -47,12 +51,14 @@ export function AdminCategoriasPage() {
       value: novoValue,
       label: novoLabel,
       ordem: Number(novoOrdem) || 0,
+      icone: novoIcone,
     });
     setCriando(false);
     if (ok) {
       setNovoValue("");
       setNovoLabel("");
       setNovoOrdem("0");
+      setNovoIcone(null);
     }
   }
 
@@ -60,12 +66,14 @@ export function AdminCategoriasPage() {
     setEditId(c.id);
     setEditLabel(c.label);
     setEditOrdem(String(c.ordem));
+    setEditIcone(c.icone ?? null);
   }
 
   async function salvarEdicao(c: LojaCategoriaRow) {
     const ok = await update(c.id, {
       label: editLabel.trim(),
       ordem: Number(editOrdem) || 0,
+      icone: editIcone,
     });
     if (ok) setEditId(null);
   }
@@ -120,6 +128,12 @@ export function AdminCategoriasPage() {
               />
             </label>
           </div>
+          <div>
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">
+              Ícone
+            </span>
+            <IconPicker value={novoIcone} onChange={setNovoIcone} />
+          </div>
           <button
             type="submit"
             disabled={criando}
@@ -148,7 +162,7 @@ export function AdminCategoriasPage() {
                   >
                     {editing ? (
                       <>
-                        <div className="flex-1 grid grid-cols-[1fr_90px] gap-2">
+                        <div className="flex-1 grid grid-cols-[1fr_80px_160px] gap-2">
                           <input
                             value={editLabel}
                             onChange={(e) => setEditLabel(e.target.value)}
@@ -160,6 +174,7 @@ export function AdminCategoriasPage() {
                             onChange={(e) => setEditOrdem(e.target.value)}
                             className="bg-black/30 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white"
                           />
+                          <IconPicker value={editIcone} onChange={setEditIcone} />
                         </div>
                         <button
                           onClick={() => salvarEdicao(c)}
@@ -178,6 +193,14 @@ export function AdminCategoriasPage() {
                       </>
                     ) : (
                       <>
+                        {(() => {
+                          const Icon = getCategoriaIcon(c.icone);
+                          return (
+                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0">
+                              {Icon ? <Icon className="h-4 w-4" /> : <span className="text-white/30 text-[10px]">—</span>}
+                            </div>
+                          );
+                        })()}
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-white truncate">
                             {c.label}{" "}

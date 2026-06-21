@@ -1,0 +1,1 @@
+ALTER TABLE public.loja_categorias ADD COLUMN IF NOT EXISTS icone text;

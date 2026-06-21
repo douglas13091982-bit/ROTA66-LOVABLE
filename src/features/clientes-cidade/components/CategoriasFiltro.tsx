@@ -1,4 +1,5 @@
 import { useLojaCategorias } from "@/hooks/use-loja-categorias";
+import { getCategoriaIcon } from "@/lib/categoria-icons";
 
 import iconRestaurante from "@/assets/categorias/restaurante.png";
 import iconLanchonete from "@/assets/categorias/lanchonete.png";
@@ -63,6 +64,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
       >
         {categorias.map((c) => {
           const icon = ICONS[c.value];
+          const LucideIcon = getCategoriaIcon(c.icone);
           const active = value === c.value;
           return (
             <button
@@ -86,6 +88,8 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     height={48}
                     className="h-[42px] w-[56px] object-contain"
                   />
+                ) : LucideIcon ? (
+                  <LucideIcon className="h-6 w-6 text-[var(--rota-red)]" />
                 ) : (
                   <span className="text-[22px]">🛍️</span>
                 )}
