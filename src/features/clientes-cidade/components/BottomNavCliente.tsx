@@ -95,6 +95,7 @@ export function BottomNavCliente({ cidade, uf }: Props) {
         </div>
       </nav>
       <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />
+      <PedidosDialog open={pedidosOpen} onOpenChange={setPedidosOpen} />
     </>
   );
 }
