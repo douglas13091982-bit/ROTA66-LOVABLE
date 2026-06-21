@@ -63,7 +63,14 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
         </h3>
         <div className="flex items-center gap-1.5 text-[13px] mp-muted flex-wrap font-normal">
           <Star className="h-3 w-3 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
-          <span className="text-[var(--rota-gold)]">Novo</span>
+          {avaliacao && avaliacao.total > 0 ? (
+            <span className="text-[var(--rota-gold)] font-medium">
+              {avaliacao.media.toFixed(1)}
+              <span className="opacity-60 font-normal"> ({avaliacao.total})</span>
+            </span>
+          ) : (
+            <span className="text-[var(--rota-gold)]">Novo</span>
+          )}
           {loja.categoria && (
             <>
               <span className="opacity-50">•</span>
