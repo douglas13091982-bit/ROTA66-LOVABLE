@@ -8,7 +8,7 @@ export function useLojasCidade(cidade: string, uf?: string) {
     queryFn: async () => {
       let q = (supabase as any)
         .from("lojas_publicas")
-        .select("id, nome, slug, telefone, endereco, cidade, estado, logo_url, taxa_entrega_base, categoria, ativa")
+        .select("id, nome, slug, telefone, endereco, cidade, estado, logo_url, taxa_entrega_base, categoria, ativa, endereco_lat, endereco_lng")
         .eq("catalogo_ativo", true)
         .ilike("cidade", cidade.trim());
       if (uf) q = q.or(`estado.is.null,estado.ilike.${uf.trim()}`);

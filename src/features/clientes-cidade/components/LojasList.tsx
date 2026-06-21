@@ -1,6 +1,7 @@
 import { Store } from "lucide-react";
 import type { LojaPublica } from "../logic/types";
 import { LojaCard } from "./LojaCard";
+import { useFretesLojas } from "../hooks/use-fretes-lojas";
 
 interface Props {
   lojas: LojaPublica[];
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function LojasList({ lojas, isLoading, cidade }: Props) {
+  const { fretes, temEndereco, carregando } = useFretesLojas(lojas);
+
   if (isLoading) {
     return <div className="text-center mp-muted py-16 text-sm">Carregando lojas...</div>;
   }
@@ -31,9 +34,20 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
           {lojas.length} {lojas.length === 1 ? "loja" : "lojas"}
         </span>
       </div>
+      {!temEndereco && !carregando && (
+        <p className="mp-muted text-[11px] px-1 mb-2">
+          Cadastre seu endereço no perfil para ver o frete exato de cada loja.
+        </p>
+      )}
       <div className="flex flex-col divide-y divide-white/5">
         {lojas.map((l) => (
-          <LojaCard key={l.id} loja={l} />
+          <LojaCard
+            key={l.id}
+            loja={l}
+            frete={fretes.get(l.id) ?? null}
+            freteCarregando={carregando}
+            semEndereco={!temEndereco}
+          />
         ))}
       </div>
     </section>

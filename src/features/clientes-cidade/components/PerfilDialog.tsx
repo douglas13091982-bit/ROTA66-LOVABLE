@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { AddressAutocomplete, type AddressSelection } from "@/components/AddressAutocomplete";
 
 const UFS = [
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR",
@@ -47,6 +48,8 @@ export function PerfilDialog({
     endereco: "",
     cidade: "",
     estado: "",
+    endereco_lat: null as number | null,
+    endereco_lng: null as number | null,
   });
 
   useEffect(() => {
@@ -63,7 +66,7 @@ export function PerfilDialog({
       const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, phone, endereco, cidade, estado")
+        .select("full_name, phone, endereco, cidade, estado, endereco_lat, endereco_lng")
         .eq("id", auth.user.id)
         .maybeSingle();
       const p = (data as any) ?? {};
@@ -73,6 +76,8 @@ export function PerfilDialog({
         endereco: p.endereco ?? meta.endereco ?? "",
         cidade: p.cidade ?? meta.cidade ?? "",
         estado: p.estado ?? meta.estado ?? "",
+        endereco_lat: typeof p.endereco_lat === "number" ? p.endereco_lat : null,
+        endereco_lng: typeof p.endereco_lng === "number" ? p.endereco_lng : null,
       });
       setLoading(false);
     })();
@@ -97,6 +102,8 @@ export function PerfilDialog({
         endereco: form.endereco.trim().slice(0, 200) || null,
         cidade,
         estado: estado || null,
+        endereco_lat: form.endereco_lat,
+        endereco_lng: form.endereco_lng,
       }, { onConflict: "id" });
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -144,12 +151,26 @@ export function PerfilDialog({
             </div>
             <div>
               <Label className="text-xs">Endereço</Label>
-              <Input
+              <AddressAutocomplete
                 value={form.endereco}
-                onChange={(e) => setForm((f) => ({ ...f, endereco: e.target.value }))}
+                onChange={(v) => setForm((f) => ({ ...f, endereco: v }))}
+                onSelect={(s: AddressSelection) =>
+                  setForm((f) => ({
+                    ...f,
+                    endereco: s.endereco,
+                    cidade: s.cidade || f.cidade,
+                    estado: s.estado || f.estado,
+                    endereco_lat: s.lat,
+                    endereco_lng: s.lng,
+                  }))
+                }
                 placeholder="Rua, número, bairro"
-                maxLength={200}
               />
+              {form.endereco_lat != null && form.endereco_lng != null && (
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Localização capturada — frete será calculado a partir daqui.
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-[1fr_auto] gap-2">
               <div>
