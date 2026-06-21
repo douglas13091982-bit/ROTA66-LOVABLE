@@ -28,7 +28,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         className={btn(value === "proximos")}
         onClick={() => onChange("proximos")}
       >
-        <MapPin className="h-3.5 w-3.5" />
+        <MapPin className="h-3 w-3" />
         Mais próximos
       </button>
       <button
@@ -38,7 +38,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         className={btn(value === "valor")}
         onClick={() => onChange("valor")}
       >
-        <DollarSign className="h-3.5 w-3.5" />
+        <DollarSign className="h-3 w-3" />
         Maior valor
       </button>
     </div>
