@@ -9,7 +9,7 @@ export type PagOpt = { v: FormaPagamento; l: string };
 
 export function pagamentoOptions(_mpAtivo: boolean): PagOpt[] {
   return [
-    { v: "cartao", l: "Cartão" },
-    { v: "pix", l: "PIX" },
+    { v: "cartao_online", l: "Cartão" },
+    { v: "pix_online", l: "PIX" },
   ];
 }
