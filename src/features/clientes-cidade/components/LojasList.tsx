@@ -49,6 +49,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
             frete={fretes.get(l.id) ?? null}
             freteCarregando={carregando}
             semEndereco={!temEndereco}
+            avaliacao={avaliacoes.get(l.id) ?? null}
           />
         ))}
       </div>
