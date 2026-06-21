@@ -140,14 +140,8 @@ export function PedidoForm({
             }
           >
             <option value="pix">PIX</option>
-            <option value="dinheiro">Dinheiro</option>
-            <option value="cartao">Cartão na entrega</option>
+            <option value="cartao">Cartão</option>
           </select>
-          {form.formaPagamento === "cartao" && (
-            <p className="mt-2 text-[11px] text-amber-500 font-semibold leading-snug">
-              Taxa de entrega dobrada (R$ {form.taxa.toFixed(2)}): o entregador precisa retornar à loja para devolver a maquininha.
-            </p>
-          )}
         </div>
         <TaxaSection
           taxa={form.taxa}
