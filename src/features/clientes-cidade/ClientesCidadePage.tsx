@@ -18,7 +18,7 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
     useLojasFiltro(lojas);
 
   return (
-    <div className="mp-splash min-h-screen pb-[calc(env(safe-area-inset-bottom)+5rem)]">
+    <div className="catalogo-clean mp-splash min-h-screen pb-[calc(env(safe-area-inset-bottom)+5rem)]">
       <header className="mp-hero sticky top-0 z-30">
         <CidadeHero
           cidade={cidade}
