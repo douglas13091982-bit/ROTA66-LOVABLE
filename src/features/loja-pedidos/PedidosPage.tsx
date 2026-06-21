@@ -7,7 +7,6 @@ import { COLUMNS } from "./logic/constants";
 import { montarLotesEmPreparo } from "./logic/agrupador";
 import {
   usePedidosLoja,
-  usePedidosRealtime,
   useChatMensagensEntregador,
   useAutoArquivar,
   useRaioAgrupamentoKm,
