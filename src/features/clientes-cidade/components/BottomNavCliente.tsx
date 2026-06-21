@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Home, UserRound, UserPlus, LogIn, LogOut } from "lucide-react";
+import { Home, UserRound, UserPlus, LogIn, LogOut, ReceiptText } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { PerfilDialog } from "./PerfilDialog";
+import { PedidosDialog } from "./PedidosDialog";
 
 interface Props {
   cidade: string;
