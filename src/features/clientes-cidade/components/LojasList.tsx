@@ -2,6 +2,7 @@ import { Store } from "lucide-react";
 import type { LojaPublica } from "../logic/types";
 import { LojaCard } from "./LojaCard";
 import { useFretesLojas } from "../hooks/use-fretes-lojas";
+import { useAvaliacoesLojas } from "../hooks/use-avaliacoes-lojas";
 
 interface Props {
   lojas: LojaPublica[];
@@ -11,6 +12,7 @@ interface Props {
 
 export function LojasList({ lojas, isLoading, cidade }: Props) {
   const { fretes, temEndereco, carregando } = useFretesLojas(lojas);
+  const avaliacoes = useAvaliacoesLojas(lojas.map((l) => l.id));
 
   if (isLoading) {
     return <div className="text-center mp-muted py-16 text-sm">Carregando lojas...</div>;
