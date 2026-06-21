@@ -8,7 +8,7 @@ interface Props {
 
 export function OrdenacaoToggle({ value, onChange }: Props) {
   const btn = (active: boolean) =>
-    `flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wide rounded-md transition ${
+    `flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wide rounded-md transition ${
       active
         ? "bg-white/10 text-white shadow-inner"
         : "text-white/55 hover:text-white/80"
