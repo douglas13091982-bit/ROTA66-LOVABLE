@@ -3,13 +3,32 @@ import { Star } from "lucide-react";
 
 import { labelCategoria } from "@/lib/loja-categorias";
 import type { LojaPublica } from "../logic/types";
+import type { FreteInfo } from "../hooks/use-fretes-lojas";
 
-export function LojaCard({ loja }: { loja: LojaPublica }) {
-  const taxa = Number(loja.taxa_entrega_base) || 0;
-  const taxaLabel =
-    taxa > 0
-      ? `R$ ${taxa.toFixed(2).replace(".", ",")}`
+interface Props {
+  loja: LojaPublica;
+  frete?: FreteInfo | null;
+  freteCarregando?: boolean;
+  semEndereco?: boolean;
+}
+
+export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
+  const taxaBase = Number(loja.taxa_entrega_base) || 0;
+
+  let freteLabel: string;
+  if (frete) {
+    freteLabel = `R$ ${frete.valor.toFixed(2).replace(".", ",")}`;
+  } else if (freteCarregando) {
+    freteLabel = "calculando…";
+  } else if (semEndereco) {
+    freteLabel = taxaBase > 0
+      ? `a partir de R$ ${taxaBase.toFixed(2).replace(".", ",")}`
+      : "informe seu endereço";
+  } else {
+    freteLabel = taxaBase > 0
+      ? `R$ ${taxaBase.toFixed(2).replace(".", ",")}`
       : "A combinar";
+  }
 
   return (
     <Link
@@ -51,7 +70,10 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
           )}
           <span className="opacity-50">•</span>
           <span>
-            Frete <span className="font-semibold text-foreground/90">{taxaLabel}</span>
+            Frete <span className="font-semibold text-foreground/90">{freteLabel}</span>
+            {frete && (
+              <span className="opacity-60"> · {frete.km.toFixed(1)} km</span>
+            )}
           </span>
         </div>
       </div>

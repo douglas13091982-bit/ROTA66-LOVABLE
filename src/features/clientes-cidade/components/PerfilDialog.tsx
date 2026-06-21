@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { AddressAutocomplete, type AddressSelection } from "@/components/AddressAutocomplete";
 
 const UFS = [
   "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR",
@@ -47,6 +48,8 @@ export function PerfilDialog({
     endereco: "",
     cidade: "",
     estado: "",
+    endereco_lat: null as number | null,
+    endereco_lng: null as number | null,
   });
 
   useEffect(() => {
@@ -63,7 +66,7 @@ export function PerfilDialog({
       const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
       const { data } = await supabase
         .from("profiles")
-        .select("full_name, phone, endereco, cidade, estado")
+        .select("full_name, phone, endereco, cidade, estado, endereco_lat, endereco_lng")
         .eq("id", auth.user.id)
         .maybeSingle();
       const p = (data as any) ?? {};
@@ -73,6 +76,8 @@ export function PerfilDialog({
         endereco: p.endereco ?? meta.endereco ?? "",
         cidade: p.cidade ?? meta.cidade ?? "",
         estado: p.estado ?? meta.estado ?? "",
+        endereco_lat: typeof p.endereco_lat === "number" ? p.endereco_lat : null,
+        endereco_lng: typeof p.endereco_lng === "number" ? p.endereco_lng : null,
       });
       setLoading(false);
     })();
