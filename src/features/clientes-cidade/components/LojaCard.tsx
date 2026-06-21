@@ -69,8 +69,9 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
               <span className="opacity-60 font-normal"> ({avaliacao.total})</span>
             </span>
           ) : (
-            <span className="text-[var(--rota-gold)]">Novo</span>
+            <span className="text-[var(--rota-gold)] font-medium">5.0</span>
           )}
+
           {loja.categoria && (
             <>
               <span className="opacity-50">•</span>
