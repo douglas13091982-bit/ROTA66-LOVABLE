@@ -4,15 +4,17 @@ import { Star } from "lucide-react";
 import { labelCategoria } from "@/lib/loja-categorias";
 import type { LojaPublica } from "../logic/types";
 import type { FreteInfo } from "../hooks/use-fretes-lojas";
+import type { AvaliacaoResumo } from "../hooks/use-avaliacoes-lojas";
 
 interface Props {
   loja: LojaPublica;
   frete?: FreteInfo | null;
   freteCarregando?: boolean;
   semEndereco?: boolean;
+  avaliacao?: AvaliacaoResumo | null;
 }
 
-export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
+export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao }: Props) {
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
 
   let freteLabel: string;
