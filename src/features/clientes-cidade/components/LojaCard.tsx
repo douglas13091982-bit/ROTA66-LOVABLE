@@ -15,27 +15,27 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="flex items-center gap-3 py-3 px-1 w-full active:opacity-70 transition"
+      className="flex items-center gap-4 w-full px-3 py-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] active:opacity-80 transition"
     >
       {loja.logo_url ? (
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="h-14 w-14 rounded-full object-cover shrink-0"
+          className="h-16 w-16 rounded-2xl object-cover shrink-0"
           style={{ border: "1px solid rgba(222,205,180,0.18)" }}
         />
       ) : (
         <div
-          className="h-14 w-14 rounded-full shrink-0 flex items-center justify-center text-[#decdb4] font-display text-xl"
+          className="h-16 w-16 rounded-2xl shrink-0 flex items-center justify-center text-[#decdb4] font-display text-2xl"
           style={{ background: "linear-gradient(135deg,#bb1010,#7a0a0a)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+      <div className="flex-1 min-w-0 flex flex-col gap-1">
         <h3
-          className="mp-card-title text-[15px] font-semibold leading-tight truncate"
+          className="mp-card-title text-[16px] font-semibold leading-tight truncate"
           style={{ fontFamily: "var(--font-body)" }}
         >
           {loja.nome}
