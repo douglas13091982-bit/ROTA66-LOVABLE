@@ -68,6 +68,16 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
               <span className="truncate">{labelCategoria(loja.categoria)}</span>
             </>
           )}
+          <span
+            className="ml-1 px-2 py-0.5 rounded-full text-[11px] font-medium border"
+            style={{
+              borderColor: "rgba(187,16,16,0.35)",
+              color: "var(--rota-red)",
+              background: "rgba(187,16,16,0.06)",
+            }}
+          >
+            Ver Catálogo
+          </span>
         </div>
         <div className="text-[13px] mp-muted font-normal">
           Frete <span>{freteLabel}</span>
