@@ -68,13 +68,12 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
               <span className="truncate">{labelCategoria(loja.categoria)}</span>
             </>
           )}
-          <span className="opacity-50">•</span>
-          <span>
-            Frete <span className="font-semibold text-foreground/90">{freteLabel}</span>
-            {frete && (
-              <span className="opacity-60"> · {frete.km.toFixed(1)} km</span>
-            )}
-          </span>
+        </div>
+        <div className="text-[12px] mp-muted">
+          Frete <span className="font-semibold text-foreground/90">{freteLabel}</span>
+          {frete && (
+            <span className="opacity-60"> · {frete.km.toFixed(1)} km</span>
+          )}
         </div>
       </div>
     </Link>
