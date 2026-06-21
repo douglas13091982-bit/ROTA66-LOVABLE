@@ -10,6 +10,8 @@ import { useMpPublicConfig } from "../hooks/use-catalogo";
 import { pagamentoOptions } from "../logic/pagamento";
 import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
+import { supabase } from "@/integrations/supabase/client";
+import { resolveAddressToPlace } from "@/lib/google-maps-places";
 
 type Props = {
   slug: string;
@@ -92,6 +94,43 @@ export function CheckoutDialog({
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = prev;
+    };
+  }, []);
+
+  // Prefill cliente data (nome, telefone, endereço) a partir do perfil do marketplace.
+  useEffect(() => {
+    let cancelado = false;
+    (async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData.user;
+      if (!user || cancelado) return;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, phone, endereco")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (cancelado) return;
+      setForm((f) => ({
+        ...f,
+        cliente_nome: f.cliente_nome || profile?.full_name || "",
+        cliente_telefone: f.cliente_telefone || profile?.phone || "",
+        cliente_email: f.cliente_email || user.email || "",
+        endereco_entrega: f.endereco_entrega || profile?.endereco || "",
+      }));
+      // Geocodifica endereço do perfil para calcular o frete automaticamente.
+      if (profile?.endereco) {
+        try {
+          const place = await resolveAddressToPlace(profile.endereco);
+          if (cancelado) return;
+          setEntregaCoords({ lat: place.lat, lng: place.lng });
+          setForm((f) => ({ ...f, endereco_entrega: f.endereco_entrega || place.address }));
+        } catch {
+          // sem coords — usuário pode reescrever no autocomplete
+        }
+      }
+    })();
+    return () => {
+      cancelado = true;
     };
   }, []);
 
