@@ -9,6 +9,7 @@ export type LojaCategoriaRow = {
   ordem: number;
   ativo: boolean;
   icone: string | null;
+  icone_url: string | null;
 };
 
 const KEY = ["loja-categorias"] as const;
