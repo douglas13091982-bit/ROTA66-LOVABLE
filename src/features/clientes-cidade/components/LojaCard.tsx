@@ -15,7 +15,7 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="flex items-center gap-4 w-full px-3 py-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] active:opacity-80 transition"
+      className="flex items-center gap-4 w-full py-3 active:opacity-70 transition"
     >
       {loja.logo_url ? (
         <img

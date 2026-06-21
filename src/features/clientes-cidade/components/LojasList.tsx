@@ -31,7 +31,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
           {lojas.length} {lojas.length === 1 ? "loja" : "lojas"}
         </span>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col divide-y divide-white/5">
         {lojas.map((l) => (
           <LojaCard key={l.id} loja={l} />
         ))}
