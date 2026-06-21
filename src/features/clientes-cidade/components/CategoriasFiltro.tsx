@@ -63,6 +63,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
         style={{ scrollbarWidth: "none" }}
       >
         {categorias.map((c) => {
+          const uploaded = c.icone_url;
           const icon = ICONS[c.value];
           const LucideIcon = getCategoriaIcon(c.icone);
           const active = value === c.value;
@@ -79,7 +80,14 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                   active ? "ring-2 ring-[var(--rota-red)]" : ""
                 }`}
               >
-                {icon ? (
+                {uploaded ? (
+                  <img
+                    src={uploaded}
+                    alt={c.label}
+                    loading="lazy"
+                    className="h-[42px] w-[56px] object-contain"
+                  />
+                ) : icon ? (
                   <img
                     src={icon}
                     alt={c.label}
