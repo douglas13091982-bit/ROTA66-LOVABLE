@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
@@ -11,6 +11,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
   
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
+  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, superOnly: true },
   { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas" },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
   { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas" },
