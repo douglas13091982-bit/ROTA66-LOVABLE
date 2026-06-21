@@ -10,6 +10,8 @@ import { useMpPublicConfig } from "../hooks/use-catalogo";
 import { pagamentoOptions } from "../logic/pagamento";
 import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
+import { supabase } from "@/integrations/supabase/client";
+import { resolveAddressToPlace } from "@/lib/google-maps-places";
 
 type Props = {
   slug: string;
