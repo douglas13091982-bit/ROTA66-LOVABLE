@@ -35,6 +35,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const qc = useQueryClient();
   useChatNaoLidasGlobal();
   const suporteBadge = useSuporteBadge("loja", loja?.id);
+  usePedidosRealtime(loja?.id);
   
   
   
