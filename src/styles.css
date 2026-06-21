@@ -1121,7 +1121,7 @@
 }
 .mp-splash .mp-hero {
   background: linear-gradient(180deg, rgba(0, 57, 101, 0.55) 0%, rgba(10, 20, 40, 0) 100%);
-  border-bottom: 1px solid var(--mp-border);
+  border-bottom: 3px solid #da161a;
   backdrop-filter: blur(14px) saturate(140%);
 }
 .mp-splash .mp-title { color: #fff; letter-spacing: -0.02em; }
