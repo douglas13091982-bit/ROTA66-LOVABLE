@@ -164,12 +164,42 @@ export function PedidosDialog({
                       {qtd} {qtd === 1 ? "item" : "itens"}
                     </div>
                   )}
+                  {p.status === "entregue" && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setAvaliando({
+                          lojaId: p.loja_id,
+                          lojaNome: p.loja_nome ?? "Loja",
+                          pedidoId: p.id,
+                        })
+                      }
+                      className="mt-1 inline-flex items-center gap-1.5 self-start text-[12px] font-medium px-2.5 py-1 rounded-full border transition hover:opacity-80"
+                      style={{
+                        borderColor: "rgba(212,168,76,0.45)",
+                        color: "var(--rota-gold)",
+                        background: "rgba(212,168,76,0.10)",
+                      }}
+                    >
+                      <Star className="h-3.5 w-3.5" />
+                      Avaliar loja
+                    </button>
+                  )}
                 </li>
               );
             })}
           </ul>
         )}
       </DialogContent>
+      {avaliando && (
+        <AvaliacaoDialog
+          open={!!avaliando}
+          onOpenChange={(v) => !v && setAvaliando(null)}
+          lojaId={avaliando.lojaId}
+          lojaNome={avaliando.lojaNome}
+          pedidoId={avaliando.pedidoId}
+        />
+      )}
     </Dialog>
   );
 }
