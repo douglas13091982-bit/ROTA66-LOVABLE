@@ -105,11 +105,11 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
           <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
         </div>
 
-        <div className="mt-3">
+        <div className="mt-2 flex justify-center">
           <Select value={cidades.some((c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey) ? selectedKey : undefined} onValueChange={handleCidadeChange}>
-            <SelectTrigger className="mp-input w-full rounded-2xl py-3 text-[14px]">
-              <div className="flex items-center gap-2 min-w-0">
-                <MapPin className="h-4 w-4 mp-muted shrink-0" />
+            <SelectTrigger className="w-auto h-auto gap-1.5 px-2.5 py-1 rounded-full bg-transparent border border-white/15 text-[12px] font-medium text-white/80 hover:text-white hover:border-white/30 transition shadow-none focus:ring-0 focus:ring-offset-0">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <MapPin className="h-3.5 w-3.5 opacity-70 shrink-0" />
                 <SelectValue placeholder={`${cidade}${uf ? ` - ${uf}` : ""}`}>
                   <span className="truncate">{cidade}{uf ? ` - ${uf}` : ""}</span>
                 </SelectValue>
