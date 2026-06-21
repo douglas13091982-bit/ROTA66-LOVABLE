@@ -128,6 +128,12 @@ export function AdminCategoriasPage() {
               />
             </label>
           </div>
+          <div>
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">
+              Ícone
+            </span>
+            <IconPicker value={novoIcone} onChange={setNovoIcone} />
+          </div>
           <button
             type="submit"
             disabled={criando}
@@ -156,7 +162,7 @@ export function AdminCategoriasPage() {
                   >
                     {editing ? (
                       <>
-                        <div className="flex-1 grid grid-cols-[1fr_90px] gap-2">
+                        <div className="flex-1 grid grid-cols-[1fr_80px_160px] gap-2">
                           <input
                             value={editLabel}
                             onChange={(e) => setEditLabel(e.target.value)}
@@ -168,6 +174,7 @@ export function AdminCategoriasPage() {
                             onChange={(e) => setEditOrdem(e.target.value)}
                             className="bg-black/30 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white"
                           />
+                          <IconPicker value={editIcone} onChange={setEditIcone} />
                         </div>
                         <button
                           onClick={() => salvarEdicao(c)}
@@ -186,6 +193,14 @@ export function AdminCategoriasPage() {
                       </>
                     ) : (
                       <>
+                        {(() => {
+                          const Icon = getCategoriaIcon(c.icone);
+                          return (
+                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0">
+                              {Icon ? <Icon className="h-4 w-4" /> : <span className="text-white/30 text-[10px]">—</span>}
+                            </div>
+                          );
+                        })()}
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-white truncate">
                             {c.label}{" "}
