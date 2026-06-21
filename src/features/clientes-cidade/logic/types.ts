@@ -9,6 +9,8 @@ export type LojaPublica = {
   logo_url: string | null;
   taxa_entrega_base: number | null;
   categoria: string | null;
+  endereco_lat: number | null;
+  endereco_lng: number | null;
 };
 
 export type ClientesCidadeSearch = { uf?: string };
