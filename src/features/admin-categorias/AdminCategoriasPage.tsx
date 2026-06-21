@@ -17,12 +17,14 @@ export function AdminCategoriasPage() {
   const [novoLabel, setNovoLabel] = useState("");
   const [novoOrdem, setNovoOrdem] = useState("0");
   const [novoIcone, setNovoIcone] = useState<string | null>(null);
+  const [novoIconeUrl, setNovoIconeUrl] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editOrdem, setEditOrdem] = useState("0");
   const [editIcone, setEditIcone] = useState<string | null>(null);
+  const [editIconeUrl, setEditIconeUrl] = useState<string | null>(null);
 
   if (permLoading) {
     return (
