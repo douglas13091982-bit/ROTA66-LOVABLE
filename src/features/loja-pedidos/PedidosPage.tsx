@@ -7,7 +7,6 @@ import { COLUMNS } from "./logic/constants";
 import { montarLotesEmPreparo } from "./logic/agrupador";
 import {
   usePedidosLoja,
-  usePedidosRealtime,
   useChatMensagensEntregador,
   useAutoArquivar,
   useRaioAgrupamentoKm,
@@ -33,7 +32,7 @@ export function PedidosPage() {
   const pedidosRef = useSyncedRef<Pedido[]>(pedidos ?? []);
   const detalheIdRef = useSyncedRef<string | null>(detalhe?.id ?? null);
 
-  usePedidosRealtime(loja?.id);
+  
   useChatMensagensEntregador({
     lojaId: loja?.id,
     pedidos,

@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
+import { usePedidosRealtime } from "@/features/loja-pedidos/hooks/use-pedidos-loja";
 
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -34,6 +35,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const qc = useQueryClient();
   useChatNaoLidasGlobal();
   const suporteBadge = useSuporteBadge("loja", loja?.id);
+  usePedidosRealtime(loja?.id);
   
   
   
