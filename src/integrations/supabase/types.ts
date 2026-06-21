@@ -965,6 +965,36 @@ export type Database = {
           },
         ]
       }
+      loja_categorias: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          label: string
+          ordem: number
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          label: string
+          ordem?: number
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          label?: string
+          ordem?: number
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       loja_entregadores: {
         Row: {
           ativo: boolean

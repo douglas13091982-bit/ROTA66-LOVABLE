@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Star } from "lucide-react";
 
-import { labelCategoria } from "@/lib/loja-categorias";
+import { useLojaCategorias, labelCategoriaDinamico } from "@/hooks/use-loja-categorias";
 import type { LojaPublica } from "../logic/types";
 import type { FreteInfo } from "../hooks/use-fretes-lojas";
 import type { AvaliacaoResumo } from "../hooks/use-avaliacoes-lojas";
@@ -15,6 +15,7 @@ interface Props {
 }
 
 export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao }: Props) {
+  const { categorias } = useLojaCategorias();
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
 
   let freteLabel: string;
@@ -75,7 +76,7 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
           {loja.categoria && (
             <>
               <span className="opacity-50">•</span>
-              <span className="truncate">{labelCategoria(loja.categoria)}</span>
+              <span className="truncate">{labelCategoriaDinamico(loja.categoria, categorias)}</span>
             </>
           )}
           <span

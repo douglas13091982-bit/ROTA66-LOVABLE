@@ -59,6 +59,7 @@ import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCreditosEntregadorRouteImport } from './routes/_authenticated/admin/creditos-entregador'
 import { Route as AuthenticatedAdminContratosRouteImport } from './routes/_authenticated/admin/contratos'
+import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_authenticated/admin/categorias'
 import { Route as AuthenticatedAdminBrandingRouteImport } from './routes/_authenticated/admin/branding'
 import { Route as AuthenticatedAdminAppApkRouteImport } from './routes/_authenticated/admin/app-apk'
 import { Route as AuthenticatedAdminAnunciosRouteImport } from './routes/_authenticated/admin/anuncios'
@@ -347,6 +348,12 @@ const AuthenticatedAdminContratosRoute =
     path: '/contratos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminCategoriasRoute =
+  AuthenticatedAdminCategoriasRouteImport.update({
+    id: '/categorias',
+    path: '/categorias',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminBrandingRoute =
   AuthenticatedAdminBrandingRouteImport.update({
     id: '/branding',
@@ -401,6 +408,7 @@ export interface FileRoutesByFullPath {
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/admin/branding': typeof AuthenticatedAdminBrandingRoute
+  '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -455,6 +463,7 @@ export interface FileRoutesByTo {
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/admin/branding': typeof AuthenticatedAdminBrandingRoute
+  '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -514,6 +523,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/_authenticated/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/_authenticated/admin/branding': typeof AuthenticatedAdminBrandingRoute
+  '/_authenticated/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/_authenticated/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/_authenticated/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -573,6 +583,7 @@ export interface FileRouteTypes {
     | '/admin/anuncios'
     | '/admin/app-apk'
     | '/admin/branding'
+    | '/admin/categorias'
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
@@ -627,6 +638,7 @@ export interface FileRouteTypes {
     | '/admin/anuncios'
     | '/admin/app-apk'
     | '/admin/branding'
+    | '/admin/categorias'
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
@@ -685,6 +697,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/anuncios'
     | '/_authenticated/admin/app-apk'
     | '/_authenticated/admin/branding'
+    | '/_authenticated/admin/categorias'
     | '/_authenticated/admin/contratos'
     | '/_authenticated/admin/creditos-entregador'
     | '/_authenticated/admin/dashboard'
@@ -1098,6 +1111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContratosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/categorias': {
+      id: '/_authenticated/admin/categorias'
+      path: '/categorias'
+      fullPath: '/admin/categorias'
+      preLoaderRoute: typeof AuthenticatedAdminCategoriasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/branding': {
       id: '/_authenticated/admin/branding'
       path: '/branding'
@@ -1148,6 +1168,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAnunciosRoute: typeof AuthenticatedAdminAnunciosRoute
   AuthenticatedAdminAppApkRoute: typeof AuthenticatedAdminAppApkRoute
   AuthenticatedAdminBrandingRoute: typeof AuthenticatedAdminBrandingRoute
+  AuthenticatedAdminCategoriasRoute: typeof AuthenticatedAdminCategoriasRoute
   AuthenticatedAdminContratosRoute: typeof AuthenticatedAdminContratosRoute
   AuthenticatedAdminCreditosEntregadorRoute: typeof AuthenticatedAdminCreditosEntregadorRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
@@ -1170,6 +1191,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminAnunciosRoute: AuthenticatedAdminAnunciosRoute,
     AuthenticatedAdminAppApkRoute: AuthenticatedAdminAppApkRoute,
     AuthenticatedAdminBrandingRoute: AuthenticatedAdminBrandingRoute,
+    AuthenticatedAdminCategoriasRoute: AuthenticatedAdminCategoriasRoute,
     AuthenticatedAdminContratosRoute: AuthenticatedAdminContratosRoute,
     AuthenticatedAdminCreditosEntregadorRoute:
       AuthenticatedAdminCreditosEntregadorRoute,
