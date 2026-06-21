@@ -101,7 +101,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
           </div>
         )}
 
-        <div className="flex justify-center -mt-8 mb-1">
+        <div className="flex justify-center mt-2 mb-1">
           <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
         </div>
 
