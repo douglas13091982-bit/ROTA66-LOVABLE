@@ -40,7 +40,7 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
         >
           {loja.nome}
         </h3>
-        <div className="flex items-center gap-1.5 text-[12px] mp-muted">
+        <div className="flex items-center gap-1.5 text-[12px] mp-muted flex-wrap">
           <Star className="h-3.5 w-3.5 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
           <span className="font-semibold text-[var(--rota-gold)]">Novo</span>
           {loja.categoria && (
@@ -49,9 +49,10 @@ export function LojaCard({ loja }: { loja: LojaPublica }) {
               <span className="truncate">{labelCategoria(loja.categoria)}</span>
             </>
           )}
-        </div>
-        <div className="text-[12px] mp-muted truncate">
-          Taxa de entrega <span className="font-semibold text-foreground/90">{taxaLabel}</span>
+          <span className="opacity-50">•</span>
+          <span>
+            Frete <span className="font-semibold text-foreground/90">{taxaLabel}</span>
+          </span>
         </div>
       </div>
     </Link>
