@@ -62,18 +62,18 @@ export function CategoriasFiltro({ value, onChange }: Props) {
       >
         <button
           onClick={() => onChange("")}
-          className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[88px] ${
+          className={`shrink-0 snap-start flex flex-col items-center gap-1 w-[68px] ${
             value === "" ? "opacity-100" : "opacity-80"
           }`}
         >
           <div
-            className={`h-[64px] w-[88px] rounded-xl flex items-center justify-center bg-white/95 ${
+            className={`h-[48px] w-[68px] rounded-lg flex items-center justify-center bg-white/95 ${
               value === "" ? "ring-2 ring-[var(--rota-red)]" : ""
             }`}
           >
-            <span className="text-[28px]">🍽️</span>
+            <span className="text-[22px]">🍽️</span>
           </div>
-          <span className="text-[11px] font-semibold text-center leading-tight">Todas</span>
+          <span className="text-[10px] font-semibold text-center leading-tight">Todas</span>
         </button>
         {LOJA_CATEGORIAS.map((c) => {
           const icon = ICONS[c.value];
@@ -82,12 +82,12 @@ export function CategoriasFiltro({ value, onChange }: Props) {
             <button
               key={c.value}
               onClick={() => onChange(c.value)}
-              className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[88px] ${
+              className={`shrink-0 snap-start flex flex-col items-center gap-1 w-[68px] ${
                 active ? "opacity-100" : "opacity-90"
               }`}
             >
               <div
-                className={`h-[64px] w-[88px] rounded-xl flex items-center justify-center bg-white/95 overflow-hidden ${
+                className={`h-[48px] w-[68px] rounded-lg flex items-center justify-center bg-white/95 overflow-hidden ${
                   active ? "ring-2 ring-[var(--rota-red)]" : ""
                 }`}
               >
@@ -96,15 +96,15 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     src={icon}
                     alt={c.label}
                     loading="lazy"
-                    width={88}
-                    height={64}
-                    className="h-[56px] w-[72px] object-contain"
+                    width={68}
+                    height={48}
+                    className="h-[42px] w-[56px] object-contain"
                   />
                 ) : (
-                  <span className="text-[28px]">🛍️</span>
+                  <span className="text-[22px]">🛍️</span>
                 )}
               </div>
-              <span className="text-[11px] font-semibold text-center leading-tight line-clamp-2">
+              <span className="text-[10px] font-semibold text-center leading-tight line-clamp-2">
                 {c.label}
               </span>
             </button>
