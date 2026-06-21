@@ -66,7 +66,11 @@ export function BottomNavCliente({ cidade, uf }: Props) {
     <>
       <nav
         className="fixed bottom-0 inset-x-0 z-40 border-t border-white/10 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_rgba(0,0,0,0.6)]"
-        style={{ background: "#0f304d" }}
+        style={{
+          background:
+            "linear-gradient(0deg, rgba(0,57,101,0.55) 0%, rgba(10,20,40,0) 100%), #0a1428",
+          backdropFilter: "blur(14px) saturate(140%)",
+        }}
       >
         <div
           className="grid mx-auto max-w-2xl"
