@@ -212,8 +212,14 @@ export function AdminCategoriasPage() {
                         {(() => {
                           const Icon = getCategoriaIcon(c.icone);
                           return (
-                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0">
-                              {Icon ? <Icon className="h-4 w-4" /> : <span className="text-white/30 text-[10px]">—</span>}
+                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0 overflow-hidden">
+                              {c.icone_url ? (
+                                <img src={c.icone_url} alt="" className="h-7 w-7 object-contain" />
+                              ) : Icon ? (
+                                <Icon className="h-4 w-4" />
+                              ) : (
+                                <span className="text-white/30 text-[10px]">—</span>
+                              )}
                             </div>
                           );
                         })()}
