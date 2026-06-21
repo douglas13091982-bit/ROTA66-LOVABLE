@@ -71,9 +71,9 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco }: Props) {
           <span
             className="ml-1 px-2 py-0.5 rounded-full text-[11px] font-medium border"
             style={{
-              borderColor: "rgba(187,16,16,0.35)",
-              color: "var(--rota-red)",
-              background: "rgba(187,16,16,0.06)",
+              borderColor: "rgba(212,168,76,0.45)",
+              color: "var(--rota-gold)",
+              background: "rgba(212,168,76,0.10)",
             }}
           >
             Ver Catálogo
