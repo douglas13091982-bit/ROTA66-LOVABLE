@@ -52,6 +52,7 @@ export function BottomNavCliente({ cidade, uf }: Props) {
   const items: Item[] = logado
     ? [
         { label: "Início", icon: Home, onClick: handleInicio },
+        { label: "Pedidos", icon: ReceiptText, onClick: () => setPedidosOpen(true) },
         { label: "Perfil", icon: UserRound, onClick: () => setPerfilOpen(true) },
         { label: "Sair", icon: LogOut, onClick: handleSair, danger: true },
       ]
