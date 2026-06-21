@@ -139,7 +139,7 @@ export function RotaCardDisponivel({
 
         {temCartao && (
           <div className="mb-4 rounded-lg border border-[oklch(0.78_0.16_75_/_0.35)] bg-[oklch(0.78_0.16_75_/_0.08)] px-3 py-2.5 text-[11px] font-semibold leading-snug text-[oklch(0.88_0.14_80)] text-center">
-            💳 Cartão na entrega em pedido desta rota — taxa dobrada: retorno à loja para devolver a maquininha.
+            💳 Cartão na entrega em pedido desta rota — retorno à loja para devolver a maquininha.
           </div>
         )}
 
