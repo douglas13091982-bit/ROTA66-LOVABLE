@@ -969,6 +969,7 @@ export type Database = {
         Row: {
           ativo: boolean
           created_at: string
+          icone: string | null
           id: string
           label: string
           ordem: number
@@ -978,6 +979,7 @@ export type Database = {
         Insert: {
           ativo?: boolean
           created_at?: string
+          icone?: string | null
           id?: string
           label: string
           ordem?: number
@@ -987,6 +989,7 @@ export type Database = {
         Update: {
           ativo?: boolean
           created_at?: string
+          icone?: string | null
           id?: string
           label?: string
           ordem?: number
