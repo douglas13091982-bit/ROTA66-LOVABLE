@@ -88,24 +88,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
   return (
     <div>
       <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
-        {!logado && (
-          <div className="flex items-center justify-end gap-2 mb-2">
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/cadastro", search: { role: "cliente" } })}
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
-            >
-              <UserPlus className="h-3.5 w-3.5 shrink-0" />
-              <span>Cadastrar</span>
-            </button>
-          </div>
-        )}
-
-        <div className="flex justify-center mt-2 mb-1">
-          <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
-        </div>
-
-        <div className="mt-2 flex justify-center">
+        <div className="flex items-center justify-between gap-2 mb-2">
           <Select value={cidades.some((c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey) ? selectedKey : undefined} onValueChange={handleCidadeChange}>
             <SelectTrigger className="w-auto h-auto gap-1.5 px-2.5 py-1 rounded-full bg-transparent border border-white/15 text-[12px] font-medium text-white/80 hover:text-white hover:border-white/30 transition shadow-none focus:ring-0 focus:ring-offset-0">
               <div className="flex items-center gap-1.5 min-w-0">
@@ -129,6 +112,21 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
               })}
             </SelectContent>
           </Select>
+
+          {!logado && (
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/cadastro", search: { role: "cliente" } })}
+              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
+            >
+              <UserPlus className="h-3.5 w-3.5 shrink-0" />
+              <span>Cadastrar</span>
+            </button>
+          )}
+        </div>
+
+        <div className="flex justify-center mt-2 mb-1">
+          <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
         </div>
 
       </div>
