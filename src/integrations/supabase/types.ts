@@ -910,6 +910,61 @@ export type Database = {
           },
         ]
       }
+      loja_avaliacoes: {
+        Row: {
+          cliente_user_id: string
+          comentario: string | null
+          created_at: string
+          id: string
+          loja_id: string
+          nota: number
+          pedido_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cliente_user_id: string
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          loja_id: string
+          nota: number
+          pedido_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cliente_user_id?: string
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          loja_id?: string
+          nota?: number
+          pedido_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loja_avaliacoes_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_avaliacoes_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_avaliacoes_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       loja_entregadores: {
         Row: {
           ativo: boolean
