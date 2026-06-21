@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { useAdminPermissoes } from "@/hooks/use-admin-permissoes";
 import { useLojaCategorias, type LojaCategoriaRow } from "@/hooks/use-loja-categorias";
 import { IconPicker } from "./components/IconPicker";
+import { CategoriaIconUploader } from "./components/CategoriaIconUploader";
 import { getCategoriaIcon } from "@/lib/categoria-icons";
 
 export function AdminCategoriasPage() {
@@ -16,12 +17,14 @@ export function AdminCategoriasPage() {
   const [novoLabel, setNovoLabel] = useState("");
   const [novoOrdem, setNovoOrdem] = useState("0");
   const [novoIcone, setNovoIcone] = useState<string | null>(null);
+  const [novoIconeUrl, setNovoIconeUrl] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editOrdem, setEditOrdem] = useState("0");
   const [editIcone, setEditIcone] = useState<string | null>(null);
+  const [editIconeUrl, setEditIconeUrl] = useState<string | null>(null);
 
   if (permLoading) {
     return (
@@ -52,6 +55,7 @@ export function AdminCategoriasPage() {
       label: novoLabel,
       ordem: Number(novoOrdem) || 0,
       icone: novoIcone,
+      icone_url: novoIconeUrl,
     });
     setCriando(false);
     if (ok) {
@@ -59,6 +63,7 @@ export function AdminCategoriasPage() {
       setNovoLabel("");
       setNovoOrdem("0");
       setNovoIcone(null);
+      setNovoIconeUrl(null);
     }
   }
 
@@ -67,6 +72,7 @@ export function AdminCategoriasPage() {
     setEditLabel(c.label);
     setEditOrdem(String(c.ordem));
     setEditIcone(c.icone ?? null);
+    setEditIconeUrl(c.icone_url ?? null);
   }
 
   async function salvarEdicao(c: LojaCategoriaRow) {
@@ -74,6 +80,7 @@ export function AdminCategoriasPage() {
       label: editLabel.trim(),
       ordem: Number(editOrdem) || 0,
       icone: editIcone,
+      icone_url: editIconeUrl,
     });
     if (ok) setEditId(null);
   }
@@ -134,6 +141,12 @@ export function AdminCategoriasPage() {
             </span>
             <IconPicker value={novoIcone} onChange={setNovoIcone} />
           </div>
+          <div>
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">
+              Imagem personalizada (SVG/PNG) — substitui o ícone
+            </span>
+            <CategoriaIconUploader value={novoIconeUrl} onChange={setNovoIconeUrl} />
+          </div>
           <button
             type="submit"
             disabled={criando}
@@ -162,7 +175,7 @@ export function AdminCategoriasPage() {
                   >
                     {editing ? (
                       <>
-                        <div className="flex-1 grid grid-cols-[1fr_80px_160px] gap-2">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-[1fr_80px_160px] gap-2">
                           <input
                             value={editLabel}
                             onChange={(e) => setEditLabel(e.target.value)}
@@ -175,6 +188,9 @@ export function AdminCategoriasPage() {
                             className="bg-black/30 border border-white/10 rounded-md px-3 py-1.5 text-sm text-white"
                           />
                           <IconPicker value={editIcone} onChange={setEditIcone} />
+                          <div className="md:col-span-3">
+                            <CategoriaIconUploader value={editIconeUrl} onChange={setEditIconeUrl} />
+                          </div>
                         </div>
                         <button
                           onClick={() => salvarEdicao(c)}
@@ -196,8 +212,14 @@ export function AdminCategoriasPage() {
                         {(() => {
                           const Icon = getCategoriaIcon(c.icone);
                           return (
-                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0">
-                              {Icon ? <Icon className="h-4 w-4" /> : <span className="text-white/30 text-[10px]">—</span>}
+                            <div className="h-9 w-9 grid place-items-center rounded-md bg-white/5 text-[var(--rota-gold)] shrink-0 overflow-hidden">
+                              {c.icone_url ? (
+                                <img src={c.icone_url} alt="" className="h-7 w-7 object-contain" />
+                              ) : Icon ? (
+                                <Icon className="h-4 w-4" />
+                              ) : (
+                                <span className="text-white/30 text-[10px]">—</span>
+                              )}
                             </div>
                           );
                         })()}
