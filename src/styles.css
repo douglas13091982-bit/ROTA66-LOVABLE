@@ -108,8 +108,8 @@
   --input: #e9e5dd;
   --ring: var(--rota-red);
 
-  /* Tipografia premium */
-  --font-display: 'Sora', system-ui, sans-serif;
+  /* Tipografia premium - estilo marketplace limpo (iFood-like) */
+  --font-display: 'Manrope', system-ui, sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
 
   /* Sombras suaves e elevadas */
@@ -132,14 +132,19 @@
   letter-spacing: -0.01em;
 }
 
+.catalogo-clean,
+.catalogo-clean * {
+  font-family: var(--font-body);
+}
+
 .catalogo-clean h1,
 .catalogo-clean h2,
 .catalogo-clean h3,
 .catalogo-clean h4,
 .catalogo-clean .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.025em;
-  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-weight: 600;
 }
 
 /* ===== Utilitários premium escopados ===== */
