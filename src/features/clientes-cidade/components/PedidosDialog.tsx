@@ -55,6 +55,7 @@ export function PedidosDialog({
   const [loading, setLoading] = useState(false);
   const [pedidos, setPedidos] = useState<PedidoRow[]>([]);
   const [erro, setErro] = useState<string | null>(null);
+  const [avaliando, setAvaliando] = useState<{ lojaId: string; lojaNome: string; pedidoId: string } | null>(null);
 
   useEffect(() => {
     if (!open) return;
