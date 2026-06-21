@@ -970,6 +970,7 @@ export type Database = {
           ativo: boolean
           created_at: string
           icone: string | null
+          icone_url: string | null
           id: string
           label: string
           ordem: number
@@ -980,6 +981,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           icone?: string | null
+          icone_url?: string | null
           id?: string
           label: string
           ordem?: number
@@ -990,6 +992,7 @@ export type Database = {
           ativo?: boolean
           created_at?: string
           icone?: string | null
+          icone_url?: string | null
           id?: string
           label?: string
           ordem?: number
