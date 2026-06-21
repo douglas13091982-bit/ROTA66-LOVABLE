@@ -25,6 +25,9 @@ export function usePedidosLoja(lojaId: string | undefined) {
         .from("pedidos")
         .select("*, lojas:loja_id(taxa_por_pedido, plano_mensal_ativo)")
         .eq("loja_id", lojaId!)
+        // Oculta pedidos online enquanto o pagamento não é confirmado pelo MP.
+        // Assim que o webhook aprovar, o status muda para "em_preparo" e o pedido aparece.
+        .neq("status", "aguardando_pagamento")
         .order("created_at", { ascending: false })
         .limit(100);
       if (error) throw error;
