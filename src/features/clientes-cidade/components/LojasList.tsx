@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { Store } from "lucide-react";
 import type { LojaPublica } from "../logic/types";
 import { LojaCard } from "./LojaCard";
@@ -10,9 +11,40 @@ interface Props {
   cidade: string;
 }
 
+type Ordem = "padrao" | "mais_avaliadas" | "melhor_nota";
+
+const OPCOES: { value: Ordem; label: string }[] = [
+  { value: "padrao", label: "Padrão" },
+  { value: "melhor_nota", label: "Melhor nota" },
+  { value: "mais_avaliadas", label: "Mais avaliadas" },
+];
+
 export function LojasList({ lojas, isLoading, cidade }: Props) {
   const { fretes, temEndereco, carregando } = useFretesLojas(lojas);
   const avaliacoes = useAvaliacoesLojas(lojas.map((l) => l.id));
+  const [ordem, setOrdem] = useState<Ordem>("padrao");
+
+  const lojasOrdenadas = useMemo(() => {
+    if (ordem === "padrao") return lojas;
+    const copy = [...lojas];
+    if (ordem === "mais_avaliadas") {
+      copy.sort((a, b) => {
+        const ta = avaliacoes.get(a.id)?.total ?? 0;
+        const tb = avaliacoes.get(b.id)?.total ?? 0;
+        return tb - ta;
+      });
+    } else if (ordem === "melhor_nota") {
+      copy.sort((a, b) => {
+        const ra = avaliacoes.get(a.id);
+        const rb = avaliacoes.get(b.id);
+        const ma = ra && ra.total > 0 ? ra.media : 5;
+        const mb = rb && rb.total > 0 ? rb.media : 5;
+        if (mb !== ma) return mb - ma;
+        return (rb?.total ?? 0) - (ra?.total ?? 0);
+      });
+    }
+    return copy;
+  }, [lojas, avaliacoes, ordem]);
 
   if (isLoading) {
     return <div className="text-center mp-muted py-16 text-sm">Carregando lojas...</div>;
@@ -36,13 +68,33 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
           {lojas.length} {lojas.length === 1 ? "loja" : "lojas"}
         </span>
       </div>
+      <div className="flex items-center gap-2 px-1 mb-2 overflow-x-auto">
+        {OPCOES.map((op) => {
+          const ativo = ordem === op.value;
+          return (
+            <button
+              key={op.value}
+              type="button"
+              onClick={() => setOrdem(op.value)}
+              className="px-3 py-1 rounded-full text-[11px] font-medium border whitespace-nowrap transition"
+              style={{
+                borderColor: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.30)",
+                color: ativo ? "#04274f" : "var(--rota-gold)",
+                background: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.08)",
+              }}
+            >
+              {op.label}
+            </button>
+          );
+        })}
+      </div>
       {!temEndereco && !carregando && (
         <p className="mp-muted text-[11px] px-1 mb-2">
           Cadastre seu endereço no perfil para ver o frete exato de cada loja.
         </p>
       )}
       <div className="flex flex-col divide-y divide-white/5">
-        {lojas.map((l) => (
+        {lojasOrdenadas.map((l) => (
           <LojaCard
             key={l.id}
             loja={l}
