@@ -3,6 +3,8 @@ import { Plus, Pencil, Trash2, Check, X, EyeOff, Eye } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminPermissoes } from "@/hooks/use-admin-permissoes";
 import { useLojaCategorias, type LojaCategoriaRow } from "@/hooks/use-loja-categorias";
+import { IconPicker } from "./components/IconPicker";
+import { getCategoriaIcon } from "@/lib/categoria-icons";
 
 export function AdminCategoriasPage() {
   const { isSuper, loading: permLoading } = useAdminPermissoes();
@@ -13,11 +15,13 @@ export function AdminCategoriasPage() {
   const [novoValue, setNovoValue] = useState("");
   const [novoLabel, setNovoLabel] = useState("");
   const [novoOrdem, setNovoOrdem] = useState("0");
+  const [novoIcone, setNovoIcone] = useState<string | null>(null);
   const [criando, setCriando] = useState(false);
 
   const [editId, setEditId] = useState<string | null>(null);
   const [editLabel, setEditLabel] = useState("");
   const [editOrdem, setEditOrdem] = useState("0");
+  const [editIcone, setEditIcone] = useState<string | null>(null);
 
   if (permLoading) {
     return (
@@ -47,12 +51,14 @@ export function AdminCategoriasPage() {
       value: novoValue,
       label: novoLabel,
       ordem: Number(novoOrdem) || 0,
+      icone: novoIcone,
     });
     setCriando(false);
     if (ok) {
       setNovoValue("");
       setNovoLabel("");
       setNovoOrdem("0");
+      setNovoIcone(null);
     }
   }
 
@@ -60,12 +66,14 @@ export function AdminCategoriasPage() {
     setEditId(c.id);
     setEditLabel(c.label);
     setEditOrdem(String(c.ordem));
+    setEditIcone(c.icone ?? null);
   }
 
   async function salvarEdicao(c: LojaCategoriaRow) {
     const ok = await update(c.id, {
       label: editLabel.trim(),
       ordem: Number(editOrdem) || 0,
+      icone: editIcone,
     });
     if (ok) setEditId(null);
   }
