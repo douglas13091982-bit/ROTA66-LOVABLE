@@ -64,6 +64,7 @@ import { Route as AuthenticatedAdminAppApkRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminAnunciosRouteImport } from './routes/_authenticated/admin/anuncios'
 import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenticated/admin/admins'
 import { Route as ApiPublicMpWebhookLojaIdRouteImport } from './routes/api/public/mp-webhook.$lojaId'
+import { Route as ApiPublicHooksMpPollPendentesRouteImport } from './routes/api/public/hooks/mp-poll-pendentes'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -376,6 +377,12 @@ const ApiPublicMpWebhookLojaIdRoute =
     path: '/$lojaId',
     getParentRoute: () => ApiPublicMpWebhookRoute,
   } as any)
+const ApiPublicHooksMpPollPendentesRoute =
+  ApiPublicHooksMpPollPendentesRouteImport.update({
+    id: '/api/public/hooks/mp-poll-pendentes',
+    path: '/api/public/hooks/mp-poll-pendentes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -431,6 +438,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/loja/': typeof AuthenticatedLojaIndexRoute
+  '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
 export interface FileRoutesByTo {
@@ -484,6 +492,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/entregador': typeof AuthenticatedEntregadorIndexRoute
   '/loja': typeof AuthenticatedLojaIndexRoute
+  '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
 export interface FileRoutesById {
@@ -542,6 +551,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/_authenticated/loja/': typeof AuthenticatedLojaIndexRoute
+  '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
 export interface FileRouteTypes {
@@ -600,6 +610,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/entregador/'
     | '/loja/'
+    | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -653,6 +664,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
+    | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   id:
     | '__root__'
@@ -710,6 +722,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/entregador/'
     | '/_authenticated/loja/'
+    | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesById: FileRoutesById
 }
@@ -730,6 +743,7 @@ export interface RootRouteChildren {
   ApiPublicMpWebhookPlataformaRoute: typeof ApiPublicMpWebhookPlataformaRoute
   ApiPublicPwaIconDotpngRoute: typeof ApiPublicPwaIconDotpngRoute
   ApiPublicSendPushRoute: typeof ApiPublicSendPushRoute
+  ApiPublicHooksMpPollPendentesRoute: typeof ApiPublicHooksMpPollPendentesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1119,6 +1133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMpWebhookLojaIdRouteImport
       parentRoute: typeof ApiPublicMpWebhookRoute
     }
+    '/api/public/hooks/mp-poll-pendentes': {
+      id: '/api/public/hooks/mp-poll-pendentes'
+      path: '/api/public/hooks/mp-poll-pendentes'
+      fullPath: '/api/public/hooks/mp-poll-pendentes'
+      preLoaderRoute: typeof ApiPublicHooksMpPollPendentesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -1277,6 +1298,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicMpWebhookPlataformaRoute: ApiPublicMpWebhookPlataformaRoute,
   ApiPublicPwaIconDotpngRoute: ApiPublicPwaIconDotpngRoute,
   ApiPublicSendPushRoute: ApiPublicSendPushRoute,
+  ApiPublicHooksMpPollPendentesRoute: ApiPublicHooksMpPollPendentesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
