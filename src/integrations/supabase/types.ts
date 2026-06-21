@@ -1561,6 +1561,8 @@ export type Database = {
           cpf: string | null
           created_at: string
           endereco: string | null
+          endereco_lat: number | null
+          endereco_lng: number | null
           estado: string | null
           full_name: string | null
           id: string
@@ -1576,6 +1578,8 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           endereco?: string | null
+          endereco_lat?: number | null
+          endereco_lng?: number | null
           estado?: string | null
           full_name?: string | null
           id: string
@@ -1591,6 +1595,8 @@ export type Database = {
           cpf?: string | null
           created_at?: string
           endereco?: string | null
+          endereco_lat?: number | null
+          endereco_lng?: number | null
           estado?: string | null
           full_name?: string | null
           id?: string
