@@ -141,6 +141,12 @@ export function AdminCategoriasPage() {
             </span>
             <IconPicker value={novoIcone} onChange={setNovoIcone} />
           </div>
+          <div>
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-white/50 mb-1">
+              Imagem personalizada (SVG/PNG) — substitui o ícone
+            </span>
+            <CategoriaIconUploader value={novoIconeUrl} onChange={setNovoIconeUrl} />
+          </div>
           <button
             type="submit"
             disabled={criando}
