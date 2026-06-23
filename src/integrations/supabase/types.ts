@@ -2398,6 +2398,13 @@ export type Database = {
         Args: { _agendamento_id: string }
         Returns: undefined
       }
+      entregador_pagar_mensalidade_com_saldo: {
+        Args: { _valor: number }
+        Returns: {
+          saldo_creditos: number
+          saldo_saque: number
+        }[]
+      }
       entregador_pode_receber_ofertas: {
         Args: { _entregador_id: string }
         Returns: boolean
