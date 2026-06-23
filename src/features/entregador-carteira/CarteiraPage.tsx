@@ -5,6 +5,8 @@ import { PasseMensalCard } from "./components/PasseMensalCard";
 import { BloqueioAlert } from "./components/BloqueioAlert";
 import { HistoricoTransacoes } from "./components/HistoricoTransacoes";
 import { SaqueCard } from "./components/SaqueCard";
+import { PagarMensalidadeComSaldoCard } from "./components/PagarMensalidadeComSaldoCard";
+
 
 
 export function CarteiraPage() {
@@ -35,6 +37,15 @@ export function CarteiraPage() {
             A cobrança de mensalidade está desativada no momento. Você pode operar normalmente.
           </div>
         )}
+
+        {featureAtiva && (
+          <PagarMensalidadeComSaldoCard
+            mensalidadeValor={Number(saldo?.mensalidade_valor ?? 0)}
+            mensalidadePaga={saldo?.mensalidade_paga === true}
+          />
+        )}
+
+
 
         {saldo?.bloqueado && <BloqueioAlert />}
 
