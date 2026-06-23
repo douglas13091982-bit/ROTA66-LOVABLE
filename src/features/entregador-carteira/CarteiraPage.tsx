@@ -5,6 +5,8 @@ import { PasseMensalCard } from "./components/PasseMensalCard";
 import { BloqueioAlert } from "./components/BloqueioAlert";
 import { HistoricoTransacoes } from "./components/HistoricoTransacoes";
 import { SaqueCard } from "./components/SaqueCard";
+import { PagarMensalidadeComSaldoCard } from "./components/PagarMensalidadeComSaldoCard";
+
 
 
 export function CarteiraPage() {
