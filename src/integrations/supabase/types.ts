@@ -538,6 +538,8 @@ export type Database = {
           pix_cidade_sistema: string | null
           pix_titular_sistema: string | null
           prazo_pagamento_dias: number
+          saque_dia_semana: number
+          saque_valor_minimo: number
           singleton: boolean
           taxa_por_pedido: number
           updated_at: string
@@ -551,6 +553,8 @@ export type Database = {
           pix_cidade_sistema?: string | null
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
+          saque_dia_semana?: number
+          saque_valor_minimo?: number
           singleton?: boolean
           taxa_por_pedido?: number
           updated_at?: string
@@ -564,6 +568,8 @@ export type Database = {
           pix_cidade_sistema?: string | null
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
+          saque_dia_semana?: number
+          saque_valor_minimo?: number
           singleton?: boolean
           taxa_por_pedido?: number
           updated_at?: string
@@ -807,6 +813,54 @@ export type Database = {
         }
         Relationships: []
       }
+      entregador_saques: {
+        Row: {
+          comprovante_url: string | null
+          created_at: string
+          entregador_id: string
+          id: string
+          motivo_rejeicao: string | null
+          observacoes_admin: string | null
+          pago_em: string | null
+          pix_chave: string
+          rejeitado_em: string | null
+          solicitado_em: string
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          comprovante_url?: string | null
+          created_at?: string
+          entregador_id: string
+          id?: string
+          motivo_rejeicao?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave: string
+          rejeitado_em?: string | null
+          solicitado_em?: string
+          status?: string
+          updated_at?: string
+          valor: number
+        }
+        Update: {
+          comprovante_url?: string | null
+          created_at?: string
+          entregador_id?: string
+          id?: string
+          motivo_rejeicao?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave?: string
+          rejeitado_em?: string | null
+          solicitado_em?: string
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       entregador_status: {
         Row: {
           entregador_id: string
@@ -854,6 +908,74 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      entregadores_saldo_saque: {
+        Row: {
+          entregador_id: string
+          saldo: number
+          total_recebido: number
+          total_sacado: number
+          updated_at: string
+        }
+        Insert: {
+          entregador_id: string
+          saldo?: number
+          total_recebido?: number
+          total_sacado?: number
+          updated_at?: string
+        }
+        Update: {
+          entregador_id?: string
+          saldo?: number
+          total_recebido?: number
+          total_sacado?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      entregadores_saldo_saque_movimentos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          entregador_id: string
+          id: string
+          pedido_id: string | null
+          saldo_apos: number
+          saque_id: string | null
+          tipo: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          entregador_id: string
+          id?: string
+          pedido_id?: string | null
+          saldo_apos: number
+          saque_id?: string | null
+          tipo: string
+          valor: number
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          entregador_id?: string
+          id?: string
+          pedido_id?: string | null
+          saldo_apos?: number
+          saque_id?: string | null
+          tipo?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entregadores_saldo_saque_movimentos_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       loja_aceites_contrato: {
         Row: {
@@ -1242,6 +1364,151 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: true
             referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lojas_recargas_mp: {
+        Row: {
+          aprovado_em: string | null
+          created_at: string
+          id: string
+          loja_id: string
+          mp_payment_id: string | null
+          mp_preference_id: string | null
+          pix_qrcode: string | null
+          pix_qrcode_base64: string | null
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          aprovado_em?: string | null
+          created_at?: string
+          id?: string
+          loja_id: string
+          mp_payment_id?: string | null
+          mp_preference_id?: string | null
+          pix_qrcode?: string | null
+          pix_qrcode_base64?: string | null
+          status?: string
+          updated_at?: string
+          valor: number
+        }
+        Update: {
+          aprovado_em?: string | null
+          created_at?: string
+          id?: string
+          loja_id?: string
+          mp_payment_id?: string | null
+          mp_preference_id?: string | null
+          pix_qrcode?: string | null
+          pix_qrcode_base64?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lojas_recargas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_recargas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lojas_saldo: {
+        Row: {
+          loja_id: string
+          saldo: number
+          updated_at: string
+        }
+        Insert: {
+          loja_id: string
+          saldo?: number
+          updated_at?: string
+        }
+        Update: {
+          loja_id?: string
+          saldo?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lojas_saldo_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: true
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saldo_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: true
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lojas_saldo_movimentos: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          loja_id: string
+          pedido_id: string | null
+          saldo_apos: number
+          tipo: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          loja_id: string
+          pedido_id?: string | null
+          saldo_apos: number
+          tipo: string
+          valor: number
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          loja_id?: string
+          pedido_id?: string | null
+          saldo_apos?: number
+          tipo?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lojas_saldo_movimentos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saldo_movimentos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saldo_movimentos_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
             referencedColumns: ["id"]
           },
         ]
@@ -2063,6 +2330,27 @@ export type Database = {
         }
         Returns: number
       }
+      aplicar_movimento_entregador_saque: {
+        Args: {
+          _delta: number
+          _descricao: string
+          _entregador_id: string
+          _pedido_id: string
+          _saque_id: string
+          _tipo: string
+        }
+        Returns: number
+      }
+      aplicar_movimento_loja_saldo: {
+        Args: {
+          _delta: number
+          _descricao: string
+          _loja_id: string
+          _pedido_id: string
+          _tipo: string
+        }
+        Returns: number
+      }
       buscar_entregador: {
         Args: { termo: string }
         Returns: {
@@ -2127,6 +2415,22 @@ export type Database = {
           saldo: number
           saldo_minimo: number
         }[]
+      }
+      entregador_saldo_saque_resumo: {
+        Args: never
+        Returns: {
+          dia_semana_permitido: number
+          pode_sacar_hoje: boolean
+          saldo: number
+          tem_saque_pendente: boolean
+          total_recebido: number
+          total_sacado: number
+          valor_minimo: number
+        }[]
+      }
+      entregador_solicitar_saque: {
+        Args: { _pix_chave: string; _valor: number }
+        Returns: string
       }
       entregadores_online_admin: {
         Args: never
@@ -2345,6 +2649,10 @@ export type Database = {
         Args: { _loja_id: string }
         Returns: boolean
       }
+      loja_recarregar_saldo_manual: {
+        Args: { _descricao: string; _loja_id: string; _valor: number }
+        Returns: number
+      }
       loja_tem_catalogo_publico: {
         Args: { _loja_id: string }
         Returns: boolean
@@ -2488,6 +2796,38 @@ export type Database = {
           status_conta: string
           ultima_competencia_cobrada: string
         }[]
+      }
+      super_admin_listar_saldos_lojas: {
+        Args: never
+        Returns: {
+          loja_id: string
+          loja_nome: string
+          saldo: number
+          updated_at: string
+        }[]
+      }
+      super_admin_listar_saques: {
+        Args: never
+        Returns: {
+          entregador_id: string
+          entregador_nome: string
+          entregador_phone: string
+          id: string
+          motivo_rejeicao: string
+          pago_em: string
+          pix_chave: string
+          solicitado_em: string
+          status: string
+          valor: number
+        }[]
+      }
+      super_admin_marcar_saque_pago: {
+        Args: { _comprovante_url: string; _saque_id: string }
+        Returns: undefined
+      }
+      super_admin_rejeitar_saque: {
+        Args: { _motivo: string; _saque_id: string }
+        Returns: undefined
       }
       unificar_lote_coleta: {
         Args: {
