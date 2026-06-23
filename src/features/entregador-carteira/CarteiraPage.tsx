@@ -38,6 +38,15 @@ export function CarteiraPage() {
           </div>
         )}
 
+        {featureAtiva && (
+          <PagarMensalidadeComSaldoCard
+            mensalidadeValor={Number(saldo?.mensalidade_valor ?? 0)}
+            mensalidadePaga={saldo?.mensalidade_paga === true}
+          />
+        )}
+
+
+
         {saldo?.bloqueado && <BloqueioAlert />}
 
         <SaqueCard />
