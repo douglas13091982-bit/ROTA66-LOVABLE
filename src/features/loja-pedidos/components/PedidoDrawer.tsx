@@ -19,7 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { EntregadorPixCard } from "@/components/EntregadorPixCard";
-import { ChatPedidoButton } from "@/components/ChatPedido";
+
 import { formatDateTime } from "@/lib/format";
 import { STATUS_LABEL, STATUS_COLOR, NEXT } from "../logic/constants";
 import { imprimirPedido } from "../logic/print-pedido";
