@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Settings, CreditCard, QrCode, Receipt, FileText, LayoutDashboard } from "lucide-react";
+import { Bell, Settings, CreditCard, QrCode, Receipt, FileText, LayoutDashboard, Wallet } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminFinanceiro } from "./hooks/use-admin-financeiro";
 import { PagamentosAguardando } from "./components/PagamentosAguardando";
@@ -9,11 +9,23 @@ import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
 import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
+import { SaldosLojasSection } from "./components/SaldosLojasSection";
 
 type TabKey =
   | "pendentes"
   | "visao-geral"
+  | "saldos-lojas"
   | "config"
+  | "mercado-pago"
+  | "pix"
+  | "mensalidades"
+  | "cobrancas";
+
+const TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
+  { key: "pendentes", label: "Pendentes", Icon: Bell },
+  { key: "visao-geral", label: "Visão geral", Icon: LayoutDashboard },
+  { key: "saldos-lojas", label: "Saldos das lojas", Icon: Wallet },
+
   | "mercado-pago"
   | "pix"
   | "mensalidades"
