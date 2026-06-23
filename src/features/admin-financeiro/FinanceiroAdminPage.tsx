@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Settings, CreditCard, QrCode, Receipt, FileText, LayoutDashboard } from "lucide-react";
+import { Bell, Settings, CreditCard, QrCode, Receipt, FileText, LayoutDashboard, Wallet } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminFinanceiro } from "./hooks/use-admin-financeiro";
 import { PagamentosAguardando } from "./components/PagamentosAguardando";
@@ -9,10 +9,12 @@ import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
 import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
+import { SaldosLojasSection } from "./components/SaldosLojasSection";
 
 type TabKey =
   | "pendentes"
   | "visao-geral"
+  | "saldos-lojas"
   | "config"
   | "mercado-pago"
   | "pix"
@@ -22,12 +24,14 @@ type TabKey =
 const TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
   { key: "pendentes", label: "Pendentes", Icon: Bell },
   { key: "visao-geral", label: "Visão geral", Icon: LayoutDashboard },
+  { key: "saldos-lojas", label: "Saldos das lojas", Icon: Wallet },
   { key: "config", label: "Configurações", Icon: Settings },
   { key: "mercado-pago", label: "Mercado Pago", Icon: CreditCard },
   { key: "pix", label: "PIX manual", Icon: QrCode },
   { key: "mensalidades", label: "Mensalidades", Icon: Receipt },
   { key: "cobrancas", label: "Cobranças", Icon: FileText },
 ];
+
 
 export function FinanceiroAdminPage() {
   const {
@@ -94,6 +98,9 @@ export function FinanceiroAdminPage() {
         )}
 
         {tab === "visao-geral" && <CobrancasUnificadasSection />}
+
+        {tab === "saldos-lojas" && <SaldosLojasSection />}
+
 
         {tab === "config" && (
           <ConfiguracoesSection
