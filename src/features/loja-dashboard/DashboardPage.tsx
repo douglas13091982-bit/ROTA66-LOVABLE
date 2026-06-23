@@ -9,6 +9,7 @@ import { EntregadoresLista } from "./components/EntregadoresLista";
 import { CatalogoPublicoCard } from "./components/CatalogoPublicoCard";
 import { MeuPlanoCard } from "./components/MeuPlanoCard";
 import { FinanceiroResumoDashboard } from "./components/FinanceiroResumoDashboard";
+import { SaldoEntregaCard } from "./components/SaldoEntregaCard";
 
 export function DashboardPage() {
   const { data: loja, isLoading } = useMinhaLoja();
