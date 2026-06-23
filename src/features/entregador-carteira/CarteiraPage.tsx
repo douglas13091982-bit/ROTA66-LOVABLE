@@ -38,6 +38,10 @@ export function CarteiraPage() {
 
         {saldo?.bloqueado && <BloqueioAlert />}
 
+        <SaqueCard />
+
+
+
         <HistoricoTransacoes isLoading={txQ.isLoading} transacoes={txQ.data ?? []} />
       </div>
     </EntregadorShell>
