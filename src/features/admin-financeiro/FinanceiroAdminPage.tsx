@@ -25,21 +25,13 @@ const TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
   { key: "pendentes", label: "Pendentes", Icon: Bell },
   { key: "visao-geral", label: "Visão geral", Icon: LayoutDashboard },
   { key: "saldos-lojas", label: "Saldos das lojas", Icon: Wallet },
-
-  | "mercado-pago"
-  | "pix"
-  | "mensalidades"
-  | "cobrancas";
-
-const TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
-  { key: "pendentes", label: "Pendentes", Icon: Bell },
-  { key: "visao-geral", label: "Visão geral", Icon: LayoutDashboard },
   { key: "config", label: "Configurações", Icon: Settings },
   { key: "mercado-pago", label: "Mercado Pago", Icon: CreditCard },
   { key: "pix", label: "PIX manual", Icon: QrCode },
   { key: "mensalidades", label: "Mensalidades", Icon: Receipt },
   { key: "cobrancas", label: "Cobranças", Icon: FileText },
 ];
+
 
 export function FinanceiroAdminPage() {
   const {
