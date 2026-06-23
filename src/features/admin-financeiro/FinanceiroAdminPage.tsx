@@ -99,6 +99,9 @@ export function FinanceiroAdminPage() {
 
         {tab === "visao-geral" && <CobrancasUnificadasSection />}
 
+        {tab === "saldos-lojas" && <SaldosLojasSection />}
+
+
         {tab === "config" && (
           <ConfiguracoesSection
             config={config}
