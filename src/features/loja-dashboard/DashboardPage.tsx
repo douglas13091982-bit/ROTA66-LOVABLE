@@ -41,6 +41,7 @@ export function DashboardPage() {
       <LojaHeader nome={loja.nome} ativa={loja.ativa} />
 
       <MeuPlanoCard lojaId={loja.id} planoIdAtual={(loja as any).plano_id ?? null} />
+      <SaldoEntregaCard lojaId={loja.id} />
 
       <FinanceiroResumoDashboard />
 
