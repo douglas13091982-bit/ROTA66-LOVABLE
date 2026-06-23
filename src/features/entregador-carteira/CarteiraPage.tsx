@@ -4,6 +4,8 @@ import { usePixRecarga } from "./hooks/use-pix-recarga";
 import { PasseMensalCard } from "./components/PasseMensalCard";
 import { BloqueioAlert } from "./components/BloqueioAlert";
 import { HistoricoTransacoes } from "./components/HistoricoTransacoes";
+import { SaqueCard } from "./components/SaqueCard";
+
 
 export function CarteiraPage() {
   const { saldoQ, cfgQ, txQ } = useCarteira();
