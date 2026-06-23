@@ -68,7 +68,7 @@ export function useAdminSaldosLojas() {
       const { data, error } = await supabase.rpc("loja_recarregar_saldo_manual", {
         _loja_id: params.loja_id,
         _valor: params.valor,
-        _descricao: params.descricao ?? null,
+        _descricao: params.descricao ?? "Ajuste manual super admin",
       });
       if (error) throw error;
       return data as number;
