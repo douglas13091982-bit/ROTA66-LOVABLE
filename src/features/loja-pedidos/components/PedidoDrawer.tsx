@@ -19,7 +19,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { EntregadorPixCard } from "@/components/EntregadorPixCard";
-import { ChatPedidoButton } from "@/components/ChatPedido";
+
 import { formatDateTime } from "@/lib/format";
 import { STATUS_LABEL, STATUS_COLOR, NEXT } from "../logic/constants";
 import { imprimirPedido } from "../logic/print-pedido";
@@ -159,24 +159,7 @@ export function PedidoDrawer({
           </div>
 
           {detalhe.entregador_id && (
-            <>
-              <EntregadorPixCard
-                pedidoId={detalhe.id}
-                valor={Number(detalhe.taxa_entrega ?? 0)}
-                entregaPaga={!!detalhe.entrega_paga}
-                entregaPagaEm={detalhe.entrega_paga_em}
-                onPagoChange={(pago) =>
-                  onUpdateDetalhe({
-                    ...detalhe,
-                    entrega_paga: pago,
-                    entrega_paga_em: new Date().toISOString(),
-                  })
-                }
-              />
-              <div className="flex justify-end">
-                <ChatPedidoButton pedidoId={detalhe.id} pedidoNumero={detalhe.numero} senderRole="loja" contraparteNome="Entregador" />
-              </div>
-            </>
+            <EntregadorPixCard pedidoId={detalhe.id} pedidoNumero={detalhe.numero} />
           )}
 
           {detalhe.codigo_entrega && (
