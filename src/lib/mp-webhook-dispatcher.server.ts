@@ -204,6 +204,50 @@ async function processRecargaEntregador(
   return new Response(`ok recarga ${paymentId}`, { status: 200 });
 }
 
+async function processRecargaLoja(
+  paymentId: string,
+  payment: { status: string; external_reference?: string },
+): Promise<Response> {
+  const ref = String(payment.external_reference ?? "");
+  const recargaId = ref.slice("loja_recarga:".length);
+  if (!recargaId) return new Response("invalid ref", { status: 200 });
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: rec } = await supabaseAdmin
+    .from("lojas_recargas_mp" as any)
+    .select("id, loja_id, valor, aprovado_em")
+    .eq("id", recargaId)
+    .maybeSingle();
+  if (!rec) return new Response("recarga not found", { status: 200 });
+  const r = rec as any;
+
+  await supabaseAdmin
+    .from("lojas_recargas_mp" as any)
+    .update({ status: payment.status, mp_payment_id: paymentId } as any)
+    .eq("id", recargaId);
+
+  if (payment.status === "approved" && !r.aprovado_em) {
+    const { data: claim } = await supabaseAdmin
+      .from("lojas_recargas_mp" as any)
+      .update({ aprovado_em: new Date().toISOString() } as any)
+      .eq("id", recargaId)
+      .is("aprovado_em", null)
+      .select("id")
+      .maybeSingle();
+    if (claim) {
+      await supabaseAdmin.rpc("aplicar_movimento_loja_saldo" as any, {
+        _loja_id: r.loja_id,
+        _delta: Number(r.valor),
+        _tipo: "recarga",
+        _pedido_id: null,
+        _descricao: `Recarga PIX MP #${paymentId}`,
+      });
+    }
+  }
+  return new Response(`ok loja_recarga ${paymentId}`, { status: 200 });
+}
+
+
 /**
  * Dispatcher único. Verifica assinatura com a chave da plataforma e despacha.
  * @param strict Se true, recusa requisições sem cabeçalhos de assinatura.
@@ -254,6 +298,9 @@ export async function handleMpPlataformaWebhook(
     }
     if (ref.startsWith("cobranca:")) {
       return await processCobrancaLoja(paymentId, payment);
+    }
+    if (ref.startsWith("loja_recarga:")) {
+      return await processRecargaLoja(paymentId, payment);
     }
     if (ref.startsWith("recarga:")) {
       return await processRecargaEntregador(paymentId, payment);
