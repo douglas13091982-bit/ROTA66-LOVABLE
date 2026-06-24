@@ -27,7 +27,7 @@ const ITEMS: Item[] = [
 type Props = {
   openSection: SectionKey;
   setOpenSection: (s: SectionKey) => void;
-  renderSection: (key: Exclude<MenuKey, "carteira">) => ReactNode;
+  renderSection: (key: Exclude<MenuKey, "carteira" | "mensalidade">) => ReactNode;
 };
 
 export function MenuList({ openSection, setOpenSection, renderSection }: Props) {
@@ -65,7 +65,7 @@ export function MenuList({ openSection, setOpenSection, renderSection }: Props) 
             )}
             {isOpen && !isLink && (
               <div className="px-2 pb-5 -mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
-                {renderSection(m.key as Exclude<MenuKey, "carteira">)}
+                {renderSection(m.key as Exclude<MenuKey, "carteira" | "mensalidade">)}
               </div>
             )}
           </div>
