@@ -50,7 +50,7 @@ export function PerfilPage() {
     galleryRef.current?.click();
   }
 
-  function renderSection(key: Exclude<MenuKey, "carteira">) {
+  function renderSection(key: Exclude<MenuKey, "carteira" | "mensalidade">) {
     switch (key) {
       case "info":
         return (

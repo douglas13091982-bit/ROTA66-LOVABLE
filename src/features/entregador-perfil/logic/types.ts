@@ -1,5 +1,5 @@
 export type SectionKey = "info" | "pagamentos" | "seguranca" | "ajuda" | "config" | null;
-export type MenuKey = Exclude<SectionKey, null> | "carteira";
+export type MenuKey = Exclude<SectionKey, null> | "carteira" | "mensalidade";
 export type TipoVeiculo = "moto" | "carro";
 
 export type PerfilForm = {
