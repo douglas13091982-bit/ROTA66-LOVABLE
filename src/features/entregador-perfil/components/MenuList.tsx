@@ -3,6 +3,7 @@ import {
   ChevronRight,
   CreditCard,
   HelpCircle,
+  Receipt,
   Settings,
   Shield,
   User,
@@ -15,7 +16,8 @@ type Item = { key: MenuKey; icon: typeof User; label: string; to?: string };
 
 const ITEMS: Item[] = [
   { key: "info", icon: User, label: "Informações Pessoais" },
-  { key: "carteira", icon: Wallet, label: "Mensalidade", to: "/entregador/carteira" },
+  { key: "carteira", icon: Wallet, label: "Carteira", to: "/entregador/carteira" },
+  { key: "mensalidade", icon: Receipt, label: "Cobrança de mensalidade", to: "/entregador/mensalidade" },
   { key: "pagamentos", icon: CreditCard, label: "Pagamentos e Ganhos" },
   { key: "seguranca", icon: Shield, label: "Segurança e Senha" },
   { key: "ajuda", icon: HelpCircle, label: "Central de Ajuda" },
