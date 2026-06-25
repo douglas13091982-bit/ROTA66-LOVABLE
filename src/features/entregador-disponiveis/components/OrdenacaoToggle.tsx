@@ -17,7 +17,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
 
   return (
     <div
-      className="mb-4 relative flex p-1 h-12 rounded-full items-center bg-[#16223a] shadow-inner border border-white/5"
+      className="mb-4 relative flex p-1 h-12 rounded-full items-center bg-[#1e3a8a] dark:bg-[#16223a] shadow-inner border border-white/5"
       role="tablist"
       aria-label="Ordenar pedidos"
     >
