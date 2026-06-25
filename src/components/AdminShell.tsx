@@ -91,7 +91,10 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
           {visibleNav.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
-            const badge = item.to === "/admin/suporte" ? suporteBadge : 0;
+            const badge =
+              item.to === "/admin/suporte" ? suporteBadge :
+              item.to === "/admin/alertas" ? alertasCount : 0;
+
             return (
               <Link
                 key={item.to}
