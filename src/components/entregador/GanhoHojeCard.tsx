@@ -16,24 +16,28 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
   }, [hide]);
 
   return (
-    <div className="mb-5 px-1">
-      <div className="pp-eyebrow mb-2 text-[10px] text-center">Ganhos do dia</div>
-      <div className="flex flex-col items-center gap-1">
-        <div className="flex items-center gap-2">
-          <div
-            className="text-4xl font-bold tracking-tight leading-none text-white text-center"
-            style={{ textShadow: "0 4px 24px oklch(0.78 0.16 75 / 0.25)" }}
-          >
-            {hide ? "R$ ••••" : `R$ ${valor.toFixed(2)}`}
-          </div>
-          <button
-            onClick={() => setHide((v) => !v)}
-            className="inline-flex items-center justify-center h-10 w-10 rounded-full text-white/45 hover:text-white transition-all duration-300"
-            aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
-          >
-            {hide ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
-          </button>
+    <div className="mb-6 px-1 text-center">
+      <div
+        className="mb-1 text-[11px] font-bold uppercase tracking-[0.28em]"
+        style={{ color: "#6b7280" }}
+      >
+        Ganhos do dia
+      </div>
+      <div className="flex items-center justify-center gap-2">
+        <div
+          className="text-[40px] font-extrabold leading-none tracking-tight"
+          style={{ color: "#0f172a" }}
+        >
+          {hide ? "R$ ••••" : `R$ ${valor.toFixed(2)}`}
         </div>
+        <button
+          onClick={() => setHide((v) => !v)}
+          className="inline-flex items-center justify-center h-9 w-9 rounded-full transition"
+          style={{ color: "#9ca3af" }}
+          aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
+        >
+          {hide ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </button>
       </div>
     </div>
   );

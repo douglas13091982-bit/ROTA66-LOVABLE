@@ -85,29 +85,33 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
-    <div className="flex flex-col items-center gap-2">
-      <div className="pp-eyebrow text-[10px]">Estado atual</div>
+    <div className="flex flex-col items-center gap-3">
+      <span
+        data-estado-atual-badge
+        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[0.22em]"
+        style={{ background: "#f3e8ff", color: "#dc2626" }}
+      >
+        Estado atual
+      </span>
       <button
         onClick={toggle}
-        className="relative inline-flex items-center h-12 rounded-full border border-white/10 bg-black/60 p-1.5 shadow-[inset_0_2px_8px_rgba(0,0,0,0.7)] transition-all duration-300"
+        data-status-toggle
+        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300"
+        style={{ background: "#e5e7eb" }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
         <span
           className={`grid place-items-center h-9 w-14 rounded-full transition-all duration-300 ${
-            !online
-              ? "bg-white/[0.06] border border-white/10 text-white shadow-[inset_0_1px_2px_rgba(255,255,255,0.08)]"
-              : "text-white/40"
+            !online ? "bg-white shadow text-[#6b7280]" : "text-[#6b7280]/60"
           }`}
         >
           <Power className="h-4 w-4" />
         </span>
         <span
-          className={`px-6 h-9 grid place-items-center rounded-full text-xs font-bold tracking-[0.28em] transition-all duration-300 ${
-            online
-              ? "text-white border border-[oklch(0.6_0.18_155_/_0.55)] shadow-[0_8px_24px_-6px_oklch(0.6_0.18_155_/_0.6)]"
-              : "text-white/45"
+          className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
+            online ? "text-white" : "text-[#6b7280]/70"
           }`}
-          style={online ? { background: "linear-gradient(135deg, oklch(0.55 0.16 155), oklch(0.42 0.14 155))" } : undefined}
+          style={online ? { background: "#22c55e", boxShadow: "0 6px 18px -6px rgba(34,197,94,0.55)" } : undefined}
         >
           ON
         </span>
