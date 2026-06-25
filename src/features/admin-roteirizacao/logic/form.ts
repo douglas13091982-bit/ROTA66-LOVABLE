@@ -10,6 +10,7 @@ export type RoteirizacaoForm = {
   max_paradas_por_rota_carro: string;
   entregador_online_ttl_min: string;
   raio_agrupamento_preparo_km: string;
+  raio_maximo_coleta_km: string;
   catalogo_horizontal_min_produtos: string;
   catalogo_horizontal_min_categorias: string;
   pool_aberto_scope: PoolAbertoScope;
@@ -22,6 +23,7 @@ export const INITIAL_FORM: RoteirizacaoForm = {
   max_paradas_por_rota_carro: "12",
   entregador_online_ttl_min: "10",
   raio_agrupamento_preparo_km: "1.5",
+  raio_maximo_coleta_km: "15",
   catalogo_horizontal_min_produtos: "50",
   catalogo_horizontal_min_categorias: "5",
   pool_aberto_scope: "vinculados_e_externos",
@@ -35,6 +37,7 @@ export function fromRow(data: any): RoteirizacaoForm {
     max_paradas_por_rota_carro: String(data.max_paradas_por_rota_carro ?? 12),
     entregador_online_ttl_min: String(data.entregador_online_ttl_min ?? 10),
     raio_agrupamento_preparo_km: String(((data.raio_agrupamento_preparo_meters ?? 1500) / 1000).toFixed(1)),
+    raio_maximo_coleta_km: String(data.raio_maximo_coleta_km ?? 15),
     catalogo_horizontal_min_produtos: String(data.catalogo_horizontal_min_produtos ?? 50),
     catalogo_horizontal_min_categorias: String(data.catalogo_horizontal_min_categorias ?? 5),
     pool_aberto_scope: (data.pool_aberto_scope ?? "vinculados_e_externos") as PoolAbertoScope,
@@ -52,11 +55,15 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
   const paradasCarro = Number(form.max_paradas_por_rota_carro);
   const ttl = Number(form.entregador_online_ttl_min);
   const raioKm = Number(form.raio_agrupamento_preparo_km);
+  const raioMaxColeta = Number(form.raio_maximo_coleta_km);
   const catMinProd = Number(form.catalogo_horizontal_min_produtos);
   const catMinCat = Number(form.catalogo_horizontal_min_categorias);
 
   if (![minutes, km, paradas, paradasCarro, ttl, raioKm].every((n) => Number.isFinite(n) && n > 0)) {
     return { ok: false, error: "Todos os valores devem ser positivos" };
+  }
+  if (!Number.isFinite(raioMaxColeta) || raioMaxColeta < 0) {
+    return { ok: false, error: "Raio máximo de coleta inválido (use 0 para desativar)" };
   }
   if (![catMinProd, catMinCat].every((n) => Number.isFinite(n) && n >= 1)) {
     return { ok: false, error: "Os limites do catálogo devem ser números inteiros ≥ 1" };
@@ -82,6 +89,7 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
       max_paradas_por_rota_carro: paradasCarro,
       entregador_online_ttl_min: ttl,
       raio_agrupamento_preparo_meters: Math.round(raioKm * 1000),
+      raio_maximo_coleta_km: raioMaxColeta,
       catalogo_horizontal_min_produtos: Math.round(catMinProd),
       catalogo_horizontal_min_categorias: Math.round(catMinCat),
       pool_aberto_scope: form.pool_aberto_scope,
