@@ -94,16 +94,6 @@ export function RotasDisponiveisList({
           <br />
           Disponíveis
         </h2>
-        <div
-          className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] pt-2 max-w-[80px] leading-tight"
-          style={{ color: "#ef4444" }}
-        >
-          <span
-            className="h-2 w-2 rounded-full animate-pulse shrink-0"
-            style={{ background: "#ef4444" }}
-          />
-          Em tempo real
-        </div>
       </div>
 
       <OrdenacaoToggle value={ordenacao} onChange={onOrdenacaoChange} />
