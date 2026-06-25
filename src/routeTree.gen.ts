@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BaixarAppRouteImport } from './routes/baixar-app'
@@ -69,6 +70,11 @@ import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenti
 import { Route as ApiPublicMpWebhookLojaIdRouteImport } from './routes/api/public/mp-webhook.$lojaId'
 import { Route as ApiPublicHooksMpPollPendentesRouteImport } from './routes/api/public/hooks/mp-poll-pendentes'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -410,6 +416,7 @@ export interface FileRoutesByFullPath {
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/loja': typeof AuthenticatedLojaRouteRouteWithChildren
@@ -470,6 +477,7 @@ export interface FileRoutesByTo {
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -529,6 +537,7 @@ export interface FileRoutesById {
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/_authenticated/loja': typeof AuthenticatedLojaRouteRouteWithChildren
@@ -591,6 +600,7 @@ export interface FileRouteTypes {
     | '/baixar-app'
     | '/cadastro'
     | '/login'
+    | '/reset-password'
     | '/admin'
     | '/entregador'
     | '/loja'
@@ -651,6 +661,7 @@ export interface FileRouteTypes {
     | '/baixar-app'
     | '/cadastro'
     | '/login'
+    | '/reset-password'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
@@ -709,6 +720,7 @@ export interface FileRouteTypes {
     | '/baixar-app'
     | '/cadastro'
     | '/login'
+    | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/entregador'
     | '/_authenticated/loja'
@@ -771,6 +783,7 @@ export interface RootRouteChildren {
   BaixarAppRoute: typeof BaixarAppRoute
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   CSlugRoute: typeof CSlugRoute
   ClientesCidadeRoute: typeof ClientesCidadeRoute
   LojaSlugRoute: typeof LojaSlugRoute
@@ -787,6 +800,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -1354,6 +1374,7 @@ const rootRouteChildren: RootRouteChildren = {
   BaixarAppRoute: BaixarAppRoute,
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   CSlugRoute: CSlugRoute,
   ClientesCidadeRoute: ClientesCidadeRoute,
   LojaSlugRoute: LojaSlugRoute,
