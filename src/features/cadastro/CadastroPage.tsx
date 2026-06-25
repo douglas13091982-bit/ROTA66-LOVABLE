@@ -82,6 +82,14 @@ export function CadastroPage({
 
             {role && <RoleBadge role={role} />}
 
+            {role === "loja_admin" && refCodigo && (
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-200">
+                {indicador
+                  ? <>Indicado por <strong>{indicador.fullName || "entregador parceiro"}</strong> ({refCodigo})</>
+                  : <>Validando código <strong>{refCodigo}</strong>…</>}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <AuthInput
                 label={role === "loja_admin" ? "Nome do responsável" : "Nome completo"}
