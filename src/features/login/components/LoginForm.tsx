@@ -4,6 +4,9 @@ import {
   PrimaryButton,
 } from "@/components/AuthCard";
 import { sanitizeEmail } from "@/lib/sanitize";
+import { useState } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LoginFormProps {
   email: string;
@@ -22,6 +25,26 @@ export function LoginForm({
   onPasswordChange,
   onSubmit,
 }: LoginFormProps) {
+  const [sendingReset, setSendingReset] = useState(false);
+
+  async function handleForgot() {
+    const target = email.trim();
+    if (!target) {
+      toast.error("Digite seu e-mail no campo acima para receber o link.");
+      return;
+    }
+    setSendingReset(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(target, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setSendingReset(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Enviamos um link de redefinição para seu e-mail.");
+  }
+
   return (
     <form onSubmit={onSubmit}>
       <AuthInput
@@ -42,6 +65,16 @@ export function LoginForm({
         onChange={(e) => onPasswordChange(e.target.value)}
         placeholder="••••••••"
       />
+      <div className="-mt-2 mb-5 flex justify-end">
+        <button
+          type="button"
+          onClick={handleForgot}
+          disabled={sendingReset}
+          className="text-xs font-bold uppercase tracking-[0.18em] text-primary hover:underline disabled:opacity-50"
+        >
+          {sendingReset ? "Enviando..." : "Esqueci minha senha"}
+        </button>
+      </div>
       <PrimaryButton type="submit" disabled={loading}>
         {loading ? "Entrando..." : "Entrar"}
       </PrimaryButton>
