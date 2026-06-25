@@ -32,8 +32,8 @@ export function GanhosChart({
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="barGanho" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="oklch(0.78 0.18 155)" stopOpacity={0.95} />
-                <stop offset="100%" stopColor="oklch(0.55 0.16 155)" stopOpacity={0.65} />
+                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.95} />
+                <stop offset="100%" stopColor="#b91c1c" stopOpacity={0.75} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} vertical={false} opacity={0.4} />
