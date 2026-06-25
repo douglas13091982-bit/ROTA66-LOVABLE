@@ -8,7 +8,7 @@ interface Props {
 
 export function OrdenacaoToggle({ value, onChange }: Props) {
   const pill = (active: boolean) =>
-    `flex-1 inline-flex items-center justify-center gap-1.5 h-11 rounded-full text-[11px] font-extrabold uppercase tracking-[0.18em] transition`;
+    `flex-1 inline-flex items-center justify-center gap-1.5 h-11 rounded-full text-[9px] font-extrabold uppercase tracking-[0.12em] transition`;
 
   return (
     <div
