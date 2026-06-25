@@ -29,7 +29,9 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
   { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, superOnly: true },
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
+  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
 ];
+
 
 export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
