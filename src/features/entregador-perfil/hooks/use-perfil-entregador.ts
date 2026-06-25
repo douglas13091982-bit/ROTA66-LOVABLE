@@ -110,6 +110,7 @@ export function usePerfilEntregador(userId: string | undefined) {
     tipoVeiculo,
     avatarUrl,
     setAvatarUrl,
+    codigoIndicacao,
     saving,
     savingExternos,
     savingVeiculo,
