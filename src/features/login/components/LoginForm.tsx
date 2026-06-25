@@ -25,24 +25,29 @@ export function LoginForm({
   onPasswordChange,
   onSubmit,
 }: LoginFormProps) {
-  const [sendingReset, setSendingReset] = useState(false);
+  const [sending, setSending] = useState(false);
 
   async function handleForgot() {
     const target = email.trim();
     if (!target) {
-      toast.error("Digite seu e-mail no campo acima para receber o link.");
+      toast.error("Digite seu e-mail no campo acima para solicitar.");
       return;
     }
-    setSendingReset(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(target, {
-      redirectTo: `${window.location.origin}/reset-password`,
+    setSending(true);
+    const { data, error } = await supabase.rpc("solicitar_reset_senha" as any, {
+      _email: target,
     });
-    setSendingReset(false);
+    setSending(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    toast.success("Enviamos um link de redefinição para seu e-mail.");
+    const res = data as any;
+    toast.success(
+      res?.message ??
+        "Pedido enviado. Aguarde o administrador liberar e te enviar o link.",
+      { duration: 6000 },
+    );
   }
 
   return (
@@ -69,10 +74,10 @@ export function LoginForm({
         <button
           type="button"
           onClick={handleForgot}
-          disabled={sendingReset}
+          disabled={sending}
           className="text-xs font-bold uppercase tracking-[0.18em] text-primary hover:underline disabled:opacity-50"
         >
-          {sendingReset ? "Enviando..." : "Esqueci minha senha"}
+          {sending ? "Enviando..." : "Esqueci minha senha"}
         </button>
       </div>
       <PrimaryButton type="submit" disabled={loading}>

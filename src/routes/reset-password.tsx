@@ -1,36 +1,59 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AuthCard, AuthPasswordInput, PrimaryButton } from "@/components/AuthCard";
 import { supabase } from "@/integrations/supabase/client";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+import { redefinirSenhaComToken } from "@/lib/password-reset.functions";
+
+type Search = { token?: string };
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
+  const { token } = useSearch({ from: "/reset-password" }) as Search;
   const [ready, setReady] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
+  const [valid, setValid] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [emailHint, setEmailHint] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Supabase processa o hash (#access_token=...&type=recovery) automaticamente
-    // e dispara PASSWORD_RECOVERY. Também verificamos a sessão atual.
-    const sub = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY" || session) {
-        setHasSession(true);
+    let alive = true;
+    (async () => {
+      if (!token) {
+        setErrorMsg(
+          "Link inválido. Solicite uma nova redefinição em \"Esqueci minha senha\" na tela de login.",
+        );
+        setReady(true);
+        return;
+      }
+      const { data, error } = await supabase.rpc("validar_token_reset" as any, {
+        _token: token,
+      });
+      if (!alive) return;
+      if (error) {
+        setErrorMsg(error.message);
+      } else {
+        const res = data as any;
+        if (res?.ok) {
+          setValid(true);
+          setEmailHint(res.email ?? null);
+        } else {
+          setErrorMsg(res?.message ?? "Link inválido.");
+        }
       }
       setReady(true);
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setHasSession(true);
-      setReady(true);
-    });
-    return () => sub.data.subscription.unsubscribe();
-  }, []);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [token]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!token) return;
     if (password.length < 6) {
       toast.error("A senha precisa ter ao menos 6 caracteres.");
       return;
@@ -40,33 +63,36 @@ function ResetPasswordPage() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.updateUser({ password });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-      return;
+    try {
+      await redefinirSenhaComToken({ data: { token, password } });
+      toast.success("Senha atualizada com sucesso! Faça login.");
+      await supabase.auth.signOut().catch(() => {});
+      navigate({ to: "/login" });
+    } catch (err: any) {
+      toast.error(err?.message ?? "Não foi possível redefinir a senha.");
+    } finally {
+      setLoading(false);
     }
-    toast.success("Senha atualizada com sucesso!");
-    await supabase.auth.signOut();
-    navigate({ to: "/login" });
   }
 
   return (
     <AuthCard
       title="NOVA SENHA"
       subtitle={
-        hasSession
-          ? "Defina uma nova senha para sua conta."
-          : "Abra o link de redefinição enviado para seu e-mail."
+        valid
+          ? `Defina uma nova senha${emailHint ? ` para ${emailHint}` : ""}.`
+          : "Use o link liberado pelo administrador para redefinir sua senha."
       }
     >
       {!ready ? (
-        <p className="text-sm text-muted-foreground">Carregando...</p>
-      ) : !hasSession ? (
-        <p className="text-sm text-muted-foreground">
-          Link inválido ou expirado. Volte para o login e solicite um novo link
-          em "Esqueci minha senha".
-        </p>
+        <p className="text-sm text-muted-foreground">Validando link...</p>
+      ) : !valid ? (
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">{errorMsg}</p>
+          <PrimaryButton type="button" onClick={() => navigate({ to: "/login" })}>
+            Voltar para login
+          </PrimaryButton>
+        </div>
       ) : (
         <form onSubmit={handleSubmit}>
           <AuthPasswordInput
@@ -96,6 +122,9 @@ function ResetPasswordPage() {
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
+  validateSearch: (s: Record<string, unknown>): Search => ({
+    token: typeof s.token === "string" ? s.token : undefined,
+  }),
   head: () => ({ meta: [{ title: "Redefinir senha — ROTA 66" }] }),
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
   notFoundComponent: () => <GlobalErrorBoundary statusCode={404} />,
