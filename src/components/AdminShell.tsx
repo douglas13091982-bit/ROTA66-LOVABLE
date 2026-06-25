@@ -1,11 +1,13 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
+import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
+
 
 const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
