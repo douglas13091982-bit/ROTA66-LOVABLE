@@ -40,6 +40,7 @@ export function usePerfilEntregador(userId: string | undefined) {
       setAceitaExternos(!!(profile as any).aceita_pedidos_externos);
       setAvatarUrl((profile as any).avatar_url ?? null);
       setTipoVeiculo(((profile as any).tipo_veiculo as TipoVeiculo) ?? "moto");
+      setCodigoIndicacao((profile as any).codigo_indicacao ?? null);
     }
   }, [profile]);
 
