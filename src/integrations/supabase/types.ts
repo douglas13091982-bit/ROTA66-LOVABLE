@@ -2090,6 +2090,81 @@ export type Database = {
           },
         ]
       }
+      system_alerts: {
+        Row: {
+          created_at: string
+          id: string
+          mensagem: string
+          metadata: Json | null
+          metric_value: number | null
+          resolvido: boolean
+          resolvido_em: string | null
+          resolvido_por: string | null
+          severidade: string
+          threshold: number | null
+          tipo: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mensagem: string
+          metadata?: Json | null
+          metric_value?: number | null
+          resolvido?: boolean
+          resolvido_em?: string | null
+          resolvido_por?: string | null
+          severidade: string
+          threshold?: number | null
+          tipo: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mensagem?: string
+          metadata?: Json | null
+          metric_value?: number | null
+          resolvido?: boolean
+          resolvido_em?: string | null
+          resolvido_por?: string | null
+          severidade?: string
+          threshold?: number | null
+          tipo?: string
+        }
+        Relationships: []
+      }
+      system_alerts_config: {
+        Row: {
+          connections_crit: number
+          connections_warn: number
+          pedidos_pagamento_pendente_min: number
+          query_max_ms_crit: number
+          query_mean_ms_crit: number
+          query_mean_ms_warn: number
+          singleton: boolean
+          updated_at: string
+        }
+        Insert: {
+          connections_crit?: number
+          connections_warn?: number
+          pedidos_pagamento_pendente_min?: number
+          query_max_ms_crit?: number
+          query_mean_ms_crit?: number
+          query_mean_ms_warn?: number
+          singleton?: boolean
+          updated_at?: string
+        }
+        Update: {
+          connections_crit?: number
+          connections_warn?: number
+          pedidos_pagamento_pendente_min?: number
+          query_max_ms_crit?: number
+          query_mean_ms_crit?: number
+          query_mean_ms_warn?: number
+          singleton?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tarifas_globais: {
         Row: {
           ativa: boolean
@@ -2365,6 +2440,7 @@ export type Database = {
         Returns: Json
       }
       cancelar_turno: { Args: { _agendamento_id: string }; Returns: undefined }
+      check_system_alerts: { Args: never; Returns: number }
       cobrar_mensalidades_entregador: { Args: never; Returns: number }
       conceder_admin: {
         Args: { _email: string; _permissoes: Json }
@@ -2748,6 +2824,7 @@ export type Database = {
           status: Database["public"]["Enums"]["pedido_status"]
         }[]
       }
+      resolver_system_alert: { Args: { _alert_id: string }; Returns: undefined }
       revogar_admin: { Args: { _user_id: string }; Returns: undefined }
       salvar_config_creditos: {
         Args: {

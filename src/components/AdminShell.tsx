@@ -1,11 +1,13 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
+import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
+
 
 const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
@@ -27,7 +29,9 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
   { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, superOnly: true },
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
+  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
 ];
+
 
 export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -41,6 +45,8 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   });
   const { logoUrl, nomeSistema } = useBranding();
   const suporteBadge = useSuporteBadge("admin");
+  const { data: alertasCount = 0 } = useSystemAlertsCount();
+
   
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -85,7 +91,10 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
           {visibleNav.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
-            const badge = item.to === "/admin/suporte" ? suporteBadge : 0;
+            const badge =
+              item.to === "/admin/suporte" ? suporteBadge :
+              item.to === "/admin/alertas" ? alertasCount : 0;
+
             return (
               <Link
                 key={item.to}
