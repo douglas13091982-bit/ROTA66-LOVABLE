@@ -11,8 +11,8 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
     [
       "flex-1 flex items-center justify-center gap-1.5 h-full rounded-full transition-all duration-300",
       active
-        ? "bg-gradient-to-r from-[#ef4444] to-[#dc2626] shadow-lg shadow-red-500/30 ring-1 ring-[#f87171]/30 text-white"
-        : "text-white hover:text-white",
+        ? "bg-gradient-to-r from-[#ef4444] to-[#dc2626] shadow-lg shadow-red-500/30 ring-1 ring-[#f87171]/30 [&_*]:!text-white"
+        : "[&_*]:!text-white",
     ].join(" ");
 
   return (
