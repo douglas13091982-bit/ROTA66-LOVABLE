@@ -17,10 +17,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
 
   return (
     <div className="mb-6 px-1 text-center">
-      <div
-        className="mb-1 text-[11px] font-bold uppercase tracking-[0.28em]"
-        style={{ color: "#374151" }}
-      >
+      <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.28em] text-white">
         Ganhos do dia
       </div>
       <div className="flex items-center justify-center gap-2">
