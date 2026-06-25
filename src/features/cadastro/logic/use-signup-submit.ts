@@ -20,9 +20,10 @@ type Deps = {
   form: SignupForm;
   contratoAtivo: ContratoAtivo;
   contratoLoading: boolean;
+  indicadorId?: string | null;
 };
 
-export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading }: Deps) {
+export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId }: Deps) {
   const navigate = useNavigate();
 
   async function checarCpfDisponivel(cpfDigits: string): Promise<boolean> {
