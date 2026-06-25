@@ -64,6 +64,7 @@ import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminBrandingRouteImport } from './routes/_authenticated/admin/branding'
 import { Route as AuthenticatedAdminAppApkRouteImport } from './routes/_authenticated/admin/app-apk'
 import { Route as AuthenticatedAdminAnunciosRouteImport } from './routes/_authenticated/admin/anuncios'
+import { Route as AuthenticatedAdminAlertasRouteImport } from './routes/_authenticated/admin/alertas'
 import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenticated/admin/admins'
 import { Route as ApiPublicMpWebhookLojaIdRouteImport } from './routes/api/public/mp-webhook.$lojaId'
 import { Route as ApiPublicHooksMpPollPendentesRouteImport } from './routes/api/public/hooks/mp-poll-pendentes'
@@ -379,6 +380,12 @@ const AuthenticatedAdminAnunciosRoute =
     path: '/anuncios',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminAlertasRoute =
+  AuthenticatedAdminAlertasRouteImport.update({
+    id: '/alertas',
+    path: '/alertas',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminsRoute =
   AuthenticatedAdminAdminsRouteImport.update({
     id: '/admins',
@@ -412,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
+  '/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/admin/branding': typeof AuthenticatedAdminBrandingRoute
@@ -468,6 +476,7 @@ export interface FileRoutesByTo {
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes': typeof ClientesIndexRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
+  '/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/admin/branding': typeof AuthenticatedAdminBrandingRoute
@@ -529,6 +538,7 @@ export interface FileRoutesById {
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
   '/_authenticated/admin/admins': typeof AuthenticatedAdminAdminsRoute
+  '/_authenticated/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/_authenticated/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
   '/_authenticated/admin/app-apk': typeof AuthenticatedAdminAppApkRoute
   '/_authenticated/admin/branding': typeof AuthenticatedAdminBrandingRoute
@@ -590,6 +600,7 @@ export interface FileRouteTypes {
     | '/rastreio/$pedidoId'
     | '/clientes/'
     | '/admin/admins'
+    | '/admin/alertas'
     | '/admin/anuncios'
     | '/admin/app-apk'
     | '/admin/branding'
@@ -646,6 +657,7 @@ export interface FileRouteTypes {
     | '/rastreio/$pedidoId'
     | '/clientes'
     | '/admin/admins'
+    | '/admin/alertas'
     | '/admin/anuncios'
     | '/admin/app-apk'
     | '/admin/branding'
@@ -706,6 +718,7 @@ export interface FileRouteTypes {
     | '/rastreio/$pedidoId'
     | '/clientes/'
     | '/_authenticated/admin/admins'
+    | '/_authenticated/admin/alertas'
     | '/_authenticated/admin/anuncios'
     | '/_authenticated/admin/app-apk'
     | '/_authenticated/admin/branding'
@@ -1159,6 +1172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAnunciosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/alertas': {
+      id: '/_authenticated/admin/alertas'
+      path: '/alertas'
+      fullPath: '/admin/alertas'
+      preLoaderRoute: typeof AuthenticatedAdminAlertasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/admins': {
       id: '/_authenticated/admin/admins'
       path: '/admins'
@@ -1185,6 +1205,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminsRoute: typeof AuthenticatedAdminAdminsRoute
+  AuthenticatedAdminAlertasRoute: typeof AuthenticatedAdminAlertasRoute
   AuthenticatedAdminAnunciosRoute: typeof AuthenticatedAdminAnunciosRoute
   AuthenticatedAdminAppApkRoute: typeof AuthenticatedAdminAppApkRoute
   AuthenticatedAdminBrandingRoute: typeof AuthenticatedAdminBrandingRoute
@@ -1208,6 +1229,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminAdminsRoute: AuthenticatedAdminAdminsRoute,
+    AuthenticatedAdminAlertasRoute: AuthenticatedAdminAlertasRoute,
     AuthenticatedAdminAnunciosRoute: AuthenticatedAdminAnunciosRoute,
     AuthenticatedAdminAppApkRoute: AuthenticatedAdminAppApkRoute,
     AuthenticatedAdminBrandingRoute: AuthenticatedAdminBrandingRoute,
