@@ -28,6 +28,12 @@ export function DisponiveisPage() {
     estouOnline,
   } = usePedidosDisponiveis(dismissed);
 
+  // Dispara o som configurado pelo admin sempre que aparece um grupo novo
+  // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
+  // (gesto do usuário) e do pré-carregamento do MP3.
+  usePopupNotificacao(grupos);
+
+
 
   // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
   // ser referencialmente estável — caso contrário, todo tick de polling
