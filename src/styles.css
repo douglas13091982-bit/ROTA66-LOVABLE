@@ -1379,3 +1379,198 @@ html.light .panel-premium [data-nav-badge] * {
   0% { background-position: 200% 50%; }
   100% { background-position: -200% 50%; }
 }
+
+/* ===========================================================
+   LIGHT THEME v2 — refinamento iFood-like p/ app do entregador
+   Especificação: fundos brancos/cinza muito claro, cards arredondados,
+   primária coral (#EF4444), texto preto, cinzas neutros, sombras suaves
+   =========================================================== */
+html.light {
+  --rota-red: #EF4444;
+  --rota-red-dark: #DC2626;
+  --background: #FFFFFF;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #EF4444;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F2F3F5;
+  --secondary-foreground: #0F172A;
+  --muted: #F2F3F5;
+  --muted-foreground: #6B7280;
+  --accent: #EF4444;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #EF4444;
+
+  --panel-bg: #FFFFFF;
+  --panel-bg-elev: #FFFFFF;
+  --panel-text: #0F172A;
+  --panel-text-dim: #374151;
+  --panel-text-muted: #6B7280;
+  --panel-border: #E5E7EB;
+  --panel-border-strong: #D1D5DB;
+
+  --shadow-card: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -16px rgba(15,23,42,0.10);
+  --shadow-elevated: 0 2px 6px rgba(15,23,42,0.05), 0 18px 40px -22px rgba(239,68,68,0.18);
+  --shadow-red: 0 10px 28px -12px rgba(239,68,68,0.45);
+}
+
+html.light body,
+html.light .panel-premium {
+  background: #FFFFFF !important;
+  color: #0F172A;
+}
+
+/* Cards translúcidos brancos/pretos → cinza muito claro */
+html.light .panel-premium .bg-white\/5,
+html.light .panel-premium .bg-white\/8,
+html.light .panel-premium .bg-white\/10,
+html.light .panel-premium .bg-white\/15,
+html.light .panel-premium .bg-white\/\[0\.02\],
+html.light .panel-premium .bg-white\/\[0\.025\],
+html.light .panel-premium .bg-white\/\[0\.03\],
+html.light .panel-premium .bg-white\/\[0\.04\],
+html.light .panel-premium .bg-white\/\[0\.05\],
+html.light .panel-premium .bg-white\/\[0\.06\],
+html.light .panel-premium .bg-white\/\[0\.08\],
+html.light .panel-premium .bg-black\/30,
+html.light .panel-premium .bg-black\/40,
+html.light .panel-premium .bg-black\/60,
+html.light .panel-premium .bg-black\/70 {
+  background-color: #F2F3F5 !important;
+  border-color: #E5E7EB !important;
+}
+
+html.light .panel-premium [class*="rounded-2xl"][class*="bg-card"],
+html.light .panel-premium .glass,
+html.light .panel-premium .glass-strong {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  backdrop-filter: none !important;
+  box-shadow: var(--shadow-card) !important;
+}
+html.light .panel-premium [class*="rounded-2xl"][class*="bg-card"]::before {
+  display: none !important;
+}
+
+/* Texto: primário preto, secundário cinza */
+html.light .panel-premium,
+html.light .panel-premium .text-white,
+html.light .panel-premium .text-white\/95,
+html.light .panel-premium .text-white\/90,
+html.light .panel-premium [class*="text-white\\/9"] {
+  color: #0F172A !important;
+  text-shadow: none !important;
+}
+html.light .panel-premium .text-white\/40,
+html.light .panel-premium .text-white\/50,
+html.light .panel-premium .text-white\/55,
+html.light .panel-premium .text-white\/60,
+html.light .panel-premium .text-white\/70,
+html.light .panel-premium .text-white\/80,
+html.light .panel-premium .text-muted-foreground,
+html.light .panel-premium [class*="text-white\\/4"],
+html.light .panel-premium [class*="text-white\\/5"],
+html.light .panel-premium [class*="text-white\\/6"],
+html.light .panel-premium [class*="text-white\\/7"],
+html.light .panel-premium [class*="text-white\\/8"] {
+  color: #6B7280 !important;
+}
+
+/* Bordas brancas translúcidas */
+html.light .panel-premium [class*="border-white\\/"],
+html.light .panel-premium .border-white\/5,
+html.light .panel-premium .border-white\/8,
+html.light .panel-premium .border-white\/10,
+html.light .panel-premium .border-white\/20,
+html.light .panel-premium .border-white\/30 {
+  border-color: #E5E7EB !important;
+}
+
+/* Primária / vermelho coral */
+html.light .panel-premium .bg-gradient-red,
+html.light .panel-premium [class*="bg-[#da161a]"],
+html.light .panel-premium [class*="bg-primary"]:not([class*="bg-primary/"]),
+html.light .panel-premium [class*="bg-destructive"] {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: var(--shadow-red) !important;
+}
+html.light .panel-premium .bg-gradient-red *,
+html.light .panel-premium [class*="bg-[#da161a]"] *,
+html.light .panel-premium [class*="bg-primary"]:not([class*="bg-primary/"]) *,
+html.light .panel-premium [class*="bg-destructive"] *,
+html.light .panel-premium [data-nav-badge],
+html.light .panel-premium [data-nav-badge] * {
+  color: #FFFFFF !important;
+}
+
+/* "EM TEMPO REAL" / pulse dots em vermelho */
+html.light .panel-premium .text-red-400,
+html.light .panel-premium .text-red-500,
+html.light .panel-premium .text-rose-400,
+html.light .panel-premium .text-rose-500 {
+  color: #DC2626 !important;
+}
+
+/* Bottom nav: branca com sombra superior */
+html.light nav[data-entregador-nav] {
+  background: #FFFFFF !important;
+  border-top: 1px solid #E5E7EB !important;
+  box-shadow: 0 -8px 24px -12px rgba(15,23,42,0.10) !important;
+}
+html.light nav[data-entregador-nav] a[data-nav-link] {
+  color: #6B7280 !important;
+}
+html.light nav[data-entregador-nav] a[data-nav-link][data-active="true"],
+html.light nav[data-entregador-nav] a[data-nav-link][data-active="true"] svg {
+  color: #EF4444 !important;
+}
+
+/* Inputs no claro */
+html.light .panel-premium input:not([type="checkbox"]):not([type="radio"]),
+html.light .panel-premium select,
+html.light .panel-premium textarea,
+html.light .panel-premium [role="combobox"] {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #0F172A !important;
+}
+html.light .panel-premium input:focus-visible,
+html.light .panel-premium select:focus-visible,
+html.light .panel-premium textarea:focus-visible {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.16) !important;
+}
+html.light .panel-premium input::placeholder,
+html.light .panel-premium textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+/* Tabelas no claro */
+html.light .panel-premium thead tr { border-bottom-color: #E5E7EB !important; }
+html.light .panel-premium thead th { color: #6B7280 !important; }
+html.light .panel-premium tbody tr { border-bottom-color: #F2F3F5 !important; }
+html.light .panel-premium tbody tr:hover { background: #FAFAFB !important; }
+
+/* Remove sombras escuras herdadas */
+html.light .panel-premium .shadow-soft,
+html.light .panel-premium .shadow-card {
+  box-shadow: var(--shadow-card) !important;
+}
+html.light .panel-premium .shadow-elevated {
+  box-shadow: var(--shadow-elevated) !important;
+}
+
+/* Esconde grids/overlays escuros */
+html.light .panel-premium .ring-grid,
+html.light .panel-premium .pp-grid-overlay,
+html.light .panel-premium .bg-gradient-radial-red {
+  background-image: none !important;
+}
