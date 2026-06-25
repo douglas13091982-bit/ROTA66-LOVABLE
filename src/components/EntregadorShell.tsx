@@ -162,6 +162,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
       {/* Bottom tab bar - mobile only */}
       <RetornoLojaDialog />
       <nav
+        data-entregador-nav
         className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)]"
         style={{ background: "#0f304d" }}
       >
@@ -174,6 +175,8 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
               <Link
                 key={item.to}
                 to={item.to}
+                data-nav-link
+                data-active={active ? "true" : "false"}
                 className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
                   active ? "text-[#da161a]" : "text-white hover:text-[#da161a]"
                 }`}
@@ -194,6 +197,7 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
                   />
                   {badge > 0 && (
                     <span
+                      data-nav-badge
                       className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f304d]"
                       style={{
                         background: "linear-gradient(135deg, #da161a, #8a0d10)",
