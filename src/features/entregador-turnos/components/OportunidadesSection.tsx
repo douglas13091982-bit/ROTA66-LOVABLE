@@ -20,8 +20,11 @@ export function OportunidadesSection({ loading, disponiveis, onAceitar }: Props)
           <Loader2 className="h-4 w-4 animate-spin" /> Carregando...
         </div>
       ) : disponiveis.length === 0 ? (
-        <div className="bg-card border border-border rounded-lg p-8 text-center shadow-card">
-          <p className="text-sm font-medium" style={{ color: "#ef4444" }}>
+        <div
+          className="rounded-lg p-8 text-center shadow-card"
+          style={{ background: "#ef4444", border: "1px solid #ef4444" }}
+        >
+          <p className="text-sm font-medium" style={{ color: "#ffffff" }}>
             Nenhum turno disponível no momento. Quando uma loja publicar, você verá aqui em tempo
             real.
           </p>
