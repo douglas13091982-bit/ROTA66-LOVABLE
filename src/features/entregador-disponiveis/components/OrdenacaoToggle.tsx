@@ -9,7 +9,7 @@ interface Props {
 export function OrdenacaoToggle({ value, onChange }: Props) {
   const segment = (active: boolean) =>
     [
-      "flex-1 flex items-center justify-center gap-1.5 h-full rounded-full transition-all duration-300",
+      "flex-1 flex items-center justify-center gap-1.5 h-full rounded-2xl transition-all duration-300",
       active
         ? "bg-gradient-to-r from-[#ef4444] to-[#dc2626] shadow-lg shadow-red-500/30 ring-1 ring-[#f87171]/30 text-white"
         : "text-white hover:text-white",
@@ -17,7 +17,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
 
   return (
     <div
-      className="mb-4 relative flex p-1 h-9 rounded-full items-center bg-[#16223a] shadow-inner border border-white/5"
+      className="mb-4 relative flex p-1 h-12 rounded-2xl items-center bg-[#16223a] shadow-inner border border-white/5"
       role="tablist"
       aria-label="Ordenar pedidos"
     >
