@@ -11,7 +11,7 @@ type Props = {
 export function OportunidadesSection({ loading, disponiveis, onAceitar }: Props) {
   return (
     <section>
-      <h2 className="font-display text-xl mb-3 flex items-center gap-2">
+      <h2 className="font-display text-xl mb-3 flex items-center gap-2 text-black dark:text-white">
         <CalendarClock className="h-5 w-5 text-primary" /> Oportunidades disponíveis
       </h2>
 
