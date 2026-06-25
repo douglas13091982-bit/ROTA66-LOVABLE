@@ -181,6 +181,13 @@ export type Database = {
             foreignKeyName: "agendamentos_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agendamentos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -358,6 +365,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobrancas_faturas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1030,6 +1044,13 @@ export type Database = {
             foreignKeyName: "loja_aceites_contrato_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_aceites_contrato_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -1072,6 +1093,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_avaliacoes_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1154,6 +1182,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_entregadores_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1328,6 +1363,13 @@ export type Database = {
             foreignKeyName: "lojas_enderecos_coleta_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_enderecos_coleta_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -1370,6 +1412,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: true
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_pagamento_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: true
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1433,6 +1482,13 @@ export type Database = {
             foreignKeyName: "lojas_recargas_mp_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_recargas_mp_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -1460,6 +1516,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: true
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saldo_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: true
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1508,6 +1571,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saldo_movimentos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
             referencedColumns: ["id"]
           },
           {
@@ -1856,6 +1926,13 @@ export type Database = {
             foreignKeyName: "pedidos_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -2146,6 +2223,13 @@ export type Database = {
             foreignKeyName: "suporte_tickets_loja_id_fkey"
             columns: ["loja_id"]
             isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "suporte_tickets_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
             referencedRelation: "lojas_publicas"
             referencedColumns: ["id"]
           },
@@ -2288,6 +2372,51 @@ export type Database = {
       }
     }
     Views: {
+      lojas_para_entregador: {
+        Row: {
+          categoria: Database["public"]["Enums"]["loja_categoria"] | null
+          cidade: string | null
+          endereco: string | null
+          endereco_lat: number | null
+          endereco_lng: number | null
+          estado: string | null
+          horario_funcionamento: Json | null
+          id: string | null
+          logo_url: string | null
+          nome: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["status_moderacao"] | null
+        }
+        Insert: {
+          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          cidade?: string | null
+          endereco?: string | null
+          endereco_lat?: number | null
+          endereco_lng?: number | null
+          estado?: string | null
+          horario_funcionamento?: Json | null
+          id?: string | null
+          logo_url?: string | null
+          nome?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["status_moderacao"] | null
+        }
+        Update: {
+          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          cidade?: string | null
+          endereco?: string | null
+          endereco_lat?: number | null
+          endereco_lng?: number | null
+          estado?: string | null
+          horario_funcionamento?: Json | null
+          id?: string | null
+          logo_url?: string | null
+          nome?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["status_moderacao"] | null
+        }
+        Relationships: []
+      }
       lojas_publicas: {
         Row: {
           ativa: boolean | null
