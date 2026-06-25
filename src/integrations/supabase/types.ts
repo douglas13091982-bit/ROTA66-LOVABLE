@@ -1184,6 +1184,7 @@ export type Database = {
           fechado_manualmente: boolean
           horario_funcionamento: Json
           id: string
+          indicado_por_entregador_id: string | null
           logo_url: string | null
           mensalidade_valor: number | null
           nome: string
@@ -1216,6 +1217,7 @@ export type Database = {
           fechado_manualmente?: boolean
           horario_funcionamento?: Json
           id?: string
+          indicado_por_entregador_id?: string | null
           logo_url?: string | null
           mensalidade_valor?: number | null
           nome: string
@@ -1248,6 +1250,7 @@ export type Database = {
           fechado_manualmente?: boolean
           horario_funcionamento?: Json
           id?: string
+          indicado_por_entregador_id?: string | null
           logo_url?: string | null
           mensalidade_valor?: number | null
           nome?: string
@@ -1263,6 +1266,13 @@ export type Database = {
           usar_horario_automatico?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "lojas_indicado_por_entregador_id_fkey"
+            columns: ["indicado_por_entregador_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "lojas_plano_id_fkey"
             columns: ["plano_id"]
@@ -1919,6 +1929,7 @@ export type Database = {
           aceita_pedidos_externos: boolean
           avatar_url: string | null
           cidade: string | null
+          codigo_indicacao: string | null
           cpf: string | null
           created_at: string
           endereco: string | null
@@ -1936,6 +1947,7 @@ export type Database = {
           aceita_pedidos_externos?: boolean
           avatar_url?: string | null
           cidade?: string | null
+          codigo_indicacao?: string | null
           cpf?: string | null
           created_at?: string
           endereco?: string | null
@@ -1953,6 +1965,7 @@ export type Database = {
           aceita_pedidos_externos?: boolean
           avatar_url?: string | null
           cidade?: string | null
+          codigo_indicacao?: string | null
           cpf?: string | null
           created_at?: string
           endereco?: string | null
@@ -2437,6 +2450,13 @@ export type Database = {
           phone: string
         }[]
       }
+      buscar_indicador_por_codigo: {
+        Args: { _codigo: string }
+        Returns: {
+          full_name: string
+          id: string
+        }[]
+      }
       calcular_tarifa_global: { Args: { _km: number }; Returns: number }
       calcular_taxa_publica: {
         Args: { _entrega_lat: number; _entrega_lng: number; _loja_id: string }
@@ -2545,6 +2565,7 @@ export type Database = {
         Returns: undefined
       }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
+      gerar_codigo_indicacao: { Args: never; Returns: string }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
       get_config_creditos_admin: {
