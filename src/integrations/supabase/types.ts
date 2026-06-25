@@ -1592,6 +1592,51 @@ export type Database = {
         }
         Relationships: []
       }
+      password_reset_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          observacao: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: string
+          token: string | null
+          token_expires_at: string | null
+          updated_at: string
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          observacao?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          observacao?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: string
+          token?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       pedido_mensagens: {
         Row: {
           created_at: string
@@ -2442,6 +2487,7 @@ export type Database = {
         }
         Returns: number
       }
+      aprovar_reset_senha: { Args: { _request_id: string }; Returns: Json }
       buscar_entregador: {
         Args: { termo: string }
         Returns: {
@@ -2848,6 +2894,10 @@ export type Database = {
           status: Database["public"]["Enums"]["pedido_status"]
         }[]
       }
+      rejeitar_reset_senha: {
+        Args: { _motivo?: string; _request_id: string }
+        Returns: Json
+      }
       resolver_system_alert: { Args: { _alert_id: string }; Returns: undefined }
       revogar_admin: { Args: { _user_id: string }; Returns: undefined }
       salvar_config_creditos: {
@@ -2882,6 +2932,7 @@ export type Database = {
             }
             Returns: undefined
           }
+      solicitar_reset_senha: { Args: { _email: string }; Returns: Json }
       status_pagamento_pedido: {
         Args: { _pedido_id: string }
         Returns: {
@@ -2950,6 +3001,7 @@ export type Database = {
           rota_ordem: number
         }[]
       }
+      validar_token_reset: { Args: { _token: string }; Returns: Json }
     }
     Enums: {
       admin_area:
