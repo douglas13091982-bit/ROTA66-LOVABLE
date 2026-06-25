@@ -54,6 +54,10 @@ export function LojaCard({
 
       <EntregadoresResumo lojaId={l.id} />
 
+      <IndicadoPorBadge entregadorId={l.indicado_por_entregador_id} />
+
+
+
       <LojaManageDialog
         loja={l}
         onSetStatus={onSetStatus}
