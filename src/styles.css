@@ -594,31 +594,33 @@ html.light nav[data-entregador-nav] [data-nav-badge] {
 }
 
 /* ===========================================================
-   LIGHT THEME — overrides para componentes do entregador
-   Mapeia classes hardcoded (text-white/X, bg-white/X, bg-black/X,
-   border-white/X) para a paleta clara, mantendo o look & feel.
-   Escopo: tudo dentro de .panel-premium (shell do entregador).
+   LIGHT THEME — overrides sutis para o shell do entregador
+   Remapeia apenas classes translúcidas hardcoded (white/X, black/X)
+   para tons claros equivalentes. NÃO força cores em texto/botão —
+   deixa o sistema de tokens semânticos (shadcn) trabalhar.
    =========================================================== */
 
-/* Todo texto preto no tema claro do entregador */
-html.light .panel-premium,
-html.light .panel-premium * {
-  color: #000000;
+/* Cor padrão de texto = navy escuro, herda naturalmente */
+html.light .panel-premium {
+  color: #0f1b2d;
 }
 
-/* Manter branco em superfícies vermelhas/coloridas (botões, badges, chips ON) */
-html.light .panel-premium [class*="bg-[#da161a]"],
-html.light .panel-premium [class*="bg-[#da161a]"] *,
-html.light .panel-premium [class*="bg-primary"],
-html.light .panel-premium [class*="bg-primary"] *,
-html.light .panel-premium [class*="bg-destructive"],
-html.light .panel-premium [class*="bg-destructive"] *,
-html.light .panel-premium [data-nav-badge],
-html.light .panel-premium [data-nav-badge] * {
-  color: #ffffff !important;
+/* Texto translúcido branco → cinza escuro legível */
+html.light .panel-premium [class*="text-white\\/"],
+html.light .panel-premium .text-white\/40,
+html.light .panel-premium .text-white\/50,
+html.light .panel-premium .text-white\/60,
+html.light .panel-premium .text-white\/70,
+html.light .panel-premium .text-white\/80,
+html.light .panel-premium .text-white\/90 {
+  color: #5b6677;
+}
+html.light .panel-premium .text-white\/95,
+html.light .panel-premium .text-white {
+  color: #0f1b2d;
 }
 
-/* Backgrounds em branco translúcido → cinza muito claro */
+/* Backgrounds em branco translúcido → cinza muito claro (cards/superfícies) */
 html.light .panel-premium .bg-white\/5,
 html.light .panel-premium .bg-white\/8,
 html.light .panel-premium .bg-white\/10,
@@ -630,48 +632,41 @@ html.light .panel-premium .bg-white\/\[0\.04\],
 html.light .panel-premium .bg-white\/\[0\.05\],
 html.light .panel-premium .bg-white\/\[0\.06\],
 html.light .panel-premium .bg-white\/\[0\.08\] {
-  background-color: #f1f3f7 !important;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 27, 45, 0.04), 0 4px 12px -6px rgba(15, 27, 45, 0.06);
 }
 
-/* Backgrounds em preto translúcido → cinza claro */
+/* Backgrounds em preto translúcido → cinza claro suave */
 html.light .panel-premium .bg-black\/30,
 html.light .panel-premium .bg-black\/40,
 html.light .panel-premium .bg-black\/60,
 html.light .panel-premium .bg-black\/70 {
-  background-color: #eef0f4 !important;
+  background-color: #eef0f4;
 }
 
-/* Bordas brancas translúcidas → bordas cinza claro */
+/* Bordas brancas translúcidas → borda neutra clara */
 html.light .panel-premium .border-white\/5,
 html.light .panel-premium .border-white\/8,
 html.light .panel-premium .border-white\/10,
 html.light .panel-premium .border-white\/20,
 html.light .panel-premium .border-white\/30 {
-  border-color: #e3e6ec !important;
+  border-color: #e3e6ec;
 }
 
 /* Card / surfaces base */
 html.light .panel-premium .bg-card { background-color: #ffffff; }
 html.light .panel-premium .bg-background { background-color: #f6f7f9; }
 
-/* TODOS os botões em vermelho Rota 66, exceto os explicitamente neutros */
-html.light .panel-premium button:not([data-nav-link]):not([aria-label="Ficar offline"]):not([aria-label="Ficar online"]):not([data-variant="ghost"]):not([data-variant="outline"]):not([data-variant="secondary"]):not([data-keep-style]) {
-  background: linear-gradient(135deg, #da161a, #8a0d10) !important;
-  color: #ffffff !important;
-  border-color: #8a0d10 !important;
-  box-shadow: 0 8px 20px -10px rgba(218, 22, 26, 0.55) !important;
-}
-html.light .panel-premium button:not([data-nav-link]):not([aria-label="Ficar offline"]):not([aria-label="Ficar online"]):not([data-variant="ghost"]):not([data-variant="outline"]):not([data-variant="secondary"]):not([data-keep-style]) * {
-  color: #ffffff !important;
-}
-
-/* Toggle ON/OFF: pílula clara, label ON continua verde/branco */
-html.light .panel-premium button[aria-label="Ficar offline"],
-html.light .panel-premium button[aria-label="Ficar online"] {
-  background-color: #eef0f4 !important;
-  border-color: #d6dae3 !important;
-  box-shadow: inset 0 1px 2px rgba(15, 27, 45, 0.08) !important;
-  color: #0f1b2d !important;
+/* Em superfícies vermelhas (brand) o texto continua branco — preservar */
+html.light .panel-premium [class*="bg-[#da161a]"],
+html.light .panel-premium [class*="bg-[#da161a]"] *,
+html.light .panel-premium [class*="bg-primary"]:not([class*="bg-primary/"]),
+html.light .panel-premium [class*="bg-primary"]:not([class*="bg-primary/"]) *,
+html.light .panel-premium [class*="bg-destructive"],
+html.light .panel-premium [class*="bg-destructive"] *,
+html.light .panel-premium [data-nav-badge],
+html.light .panel-premium [data-nav-badge] * {
+  color: #ffffff;
 }
 
 
