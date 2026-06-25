@@ -586,6 +586,86 @@ html.light nav[data-entregador-nav] [data-nav-badge] {
   --tw-ring-color: #ffffff !important;
 }
 
+/* ===========================================================
+   LIGHT THEME — overrides para componentes do entregador
+   Mapeia classes hardcoded (text-white/X, bg-white/X, bg-black/X,
+   border-white/X) para a paleta clara, mantendo o look & feel.
+   Escopo: tudo dentro de .panel-premium (shell do entregador).
+   =========================================================== */
+
+/* Texto branco com opacidade → texto navy/cinza no claro */
+html.light .panel-premium .text-white\/30,
+html.light .panel-premium .text-white\/35,
+html.light .panel-premium .text-white\/40,
+html.light .panel-premium .text-white\/45 {
+  color: #8a93a3 !important;
+}
+html.light .panel-premium .text-white\/50,
+html.light .panel-premium .text-white\/55,
+html.light .panel-premium .text-white\/60,
+html.light .panel-premium .text-white\/65 {
+  color: #5b6677 !important;
+}
+html.light .panel-premium .text-white\/70,
+html.light .panel-premium .text-white\/75,
+html.light .panel-premium .text-white\/80,
+html.light .panel-premium .text-white\/85,
+html.light .panel-premium .text-white\/90,
+html.light .panel-premium .text-white\/95 {
+  color: #2a3445 !important;
+}
+
+/* Backgrounds em branco translúcido → cinza muito claro */
+html.light .panel-premium .bg-white\/5,
+html.light .panel-premium .bg-white\/8,
+html.light .panel-premium .bg-white\/10,
+html.light .panel-premium .bg-white\/15,
+html.light .panel-premium .bg-white\/\[0\.02\],
+html.light .panel-premium .bg-white\/\[0\.025\],
+html.light .panel-premium .bg-white\/\[0\.03\],
+html.light .panel-premium .bg-white\/\[0\.04\],
+html.light .panel-premium .bg-white\/\[0\.05\],
+html.light .panel-premium .bg-white\/\[0\.06\],
+html.light .panel-premium .bg-white\/\[0\.08\] {
+  background-color: #f1f3f7 !important;
+}
+
+/* Backgrounds em preto translúcido → cinza claro */
+html.light .panel-premium .bg-black\/30,
+html.light .panel-premium .bg-black\/40,
+html.light .panel-premium .bg-black\/60,
+html.light .panel-premium .bg-black\/70 {
+  background-color: #eef0f4 !important;
+  color: #0f1b2d;
+}
+
+/* Bordas brancas translúcidas → bordas cinza claro */
+html.light .panel-premium .border-white\/5,
+html.light .panel-premium .border-white\/8,
+html.light .panel-premium .border-white\/10,
+html.light .panel-premium .border-white\/20,
+html.light .panel-premium .border-white\/30 {
+  border-color: #e3e6ec !important;
+}
+
+/* Card / surfaces base no tema claro */
+html.light .panel-premium .bg-card {
+  background-color: #ffffff;
+}
+html.light .panel-premium .bg-background {
+  background-color: #f6f7f9;
+}
+
+/* Toggle ON/OFF do header — fundo escuro vira pílula clara */
+html.light .panel-premium button[aria-label="Ficar offline"],
+html.light .panel-premium button[aria-label="Ficar online"] {
+  background-color: #eef0f4 !important;
+  border-color: #d6dae3 !important;
+  box-shadow: inset 0 1px 2px rgba(15, 27, 45, 0.08) !important;
+}
+
+
+
 @layer base {
   * {
     border-color: var(--color-border);
