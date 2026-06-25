@@ -5,7 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 export function AnunciosEntregador() {
   const { data: anuncios } = useQuery({
     queryKey: ["anuncios-entregador"],
-    refetchInterval: 60_000,
+    staleTime: 5 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnWindowFocus: false,
+
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("anuncios_entregador")
