@@ -13,9 +13,10 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   return (
     <div className="group flex items-start justify-between gap-3 px-4 py-3 border-b border-border/30 last:border-b-0 transition-colors duration-200 hover:bg-white/[0.02]">
       <div className="min-w-0 flex-1">
-        <div className="font-bold text-foreground truncate">
-          {lojaNome} <span className="text-foreground">#{pedido.numero}</span>
+        <div className="font-bold !text-black truncate">
+          {lojaNome} <span className="!text-black">#{pedido.numero}</span>
         </div>
+
         <div className="flex items-center gap-2 mt-1">
           <span className="text-[11px] text-muted-foreground">{hora}</span>
           <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#ef4444]/15 text-[#ef4444]">
