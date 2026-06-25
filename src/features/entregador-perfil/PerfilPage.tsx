@@ -10,6 +10,7 @@ import { MenuList } from "./components/MenuList";
 import { LogoutButton } from "./components/LogoutButton";
 import { InfoSection } from "./components/sections/InfoSection";
 import { PagamentosSection } from "./components/sections/PagamentosSection";
+import { IndicacaoSection } from "./components/sections/IndicacaoSection";
 import { SegurancaSection } from "./components/sections/SegurancaSection";
 import { AjudaSection } from "./components/sections/AjudaSection";
 import { ConfigSection } from "./components/sections/ConfigSection";
