@@ -617,7 +617,8 @@ html.light .panel-premium .text-white\/90 {
 }
 html.light .panel-premium .text-white\/95,
 html.light .panel-premium .text-white {
-  color: #0f1b2d;
+  color: #000000;
+  text-shadow: none !important;
 }
 
 /* Backgrounds em branco translúcido → cinza muito claro (cards/superfícies) */
