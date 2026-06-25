@@ -14,7 +14,10 @@ import type { Role } from "./logic/roles";
 import { useSignupForm } from "./logic/use-signup-form";
 import { useSignupSubmit } from "./logic/use-signup-submit";
 
-export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
+export function CadastroPage({
+  initialRole,
+  refCodigo,
+}: { initialRole?: Role; refCodigo?: string } = {}) {
   const [step, setStep] = useState<"select" | "form">(initialRole ? "form" : "select");
   const [role, setRole] = useState<Role | null>(initialRole ?? null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +25,14 @@ export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
 
   const { form, update, handleAvatarChange } = useSignupForm();
   const { contrato: contratoAtivo, loading: contratoLoading } = useContratoAtivo();
-  const { submit } = useSignupSubmit({ role, form, contratoAtivo, contratoLoading });
+  const indicador = useIndicador(refCodigo);
+  const { submit } = useSignupSubmit({
+    role,
+    form,
+    contratoAtivo,
+    contratoLoading,
+    indicadorId: indicador?.id ?? null,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
