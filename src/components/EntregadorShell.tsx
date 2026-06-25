@@ -86,13 +86,6 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
 
   const StatusToggleLarge = (
     <div className="flex flex-col items-center gap-3">
-      <span
-        data-estado-atual-badge
-        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-[0.22em]"
-        style={{ background: "#f3e8ff", color: "#dc2626" }}
-      >
-        Estado atual
-      </span>
       <button
         onClick={toggle}
         data-status-toggle
