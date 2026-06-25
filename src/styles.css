@@ -526,6 +526,13 @@ html.light {
   --shadow-red: 0 10px 30px -10px oklch(0.55 0.26 25 / 0.35);
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -16px oklch(0 0 0 / 0.18);
   --gradient-hero: linear-gradient(180deg, #ffffff 0%, #f6f7f9 60%, oklch(0.55 0.26 25 / 0.08) 100%);
+
+  /* Painel premium (entregador shell) no claro */
+  --panel-bg: #f6f7f9;
+  --panel-bg-elev: #ffffff;
+  --panel-text: #0f1b2d;
+  --panel-text-dim: #3a4658;
+  --panel-text-muted: #5b6677;
 }
 
 html.light .panel-premium {
