@@ -37,5 +37,36 @@ export function useCarteira() {
     },
   });
 
+  // Realtime: atualiza saldo e histórico quando um pedido é entregue / saque processado
+  useEffect(() => {
+    let cancelled = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user?.id;
+      if (!uid || cancelled) return;
+      channel = supabase
+        .channel(`entregador-saldo-${uid}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
+          () => qc.invalidateQueries({ queryKey: ["entregador-saldo"] }),
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
+            qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
+          },
+        )
+        .subscribe();
+    })();
+    return () => {
+      cancelled = true;
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [qc]);
+
   return { saldoQ, cfgQ, txQ };
 }
