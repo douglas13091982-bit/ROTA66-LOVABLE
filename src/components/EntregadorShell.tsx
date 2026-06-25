@@ -143,6 +143,9 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
         <main className="flex-1 px-4 py-4 pb-24 relative">
+          <div className="absolute top-3 right-3 z-10">
+            <ThemeToggle />
+          </div>
           <div className="pp-reveal">
             {path.startsWith("/entregador/disponiveis") ? (
               <div className="flex flex-col items-center justify-center gap-2 mb-4 pt-6">
