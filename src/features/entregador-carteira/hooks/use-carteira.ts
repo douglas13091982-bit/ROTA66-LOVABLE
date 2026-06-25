@@ -1,8 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { ConfigCreditos, SaldoEntregador, TransacaoCredito } from "../logic/types";
 
 export function useCarteira() {
+  const qc = useQueryClient();
+
   const saldoQ = useQuery({
     queryKey: ["entregador-saldo"],
     queryFn: async (): Promise<SaldoEntregador> => {
@@ -33,6 +36,37 @@ export function useCarteira() {
       return (data ?? []) as unknown as TransacaoCredito[];
     },
   });
+
+  // Realtime: atualiza saldo e histórico quando um pedido é entregue / saque processado
+  useEffect(() => {
+    let cancelled = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user?.id;
+      if (!uid || cancelled) return;
+      channel = supabase
+        .channel(`entregador-saldo-${uid}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
+          () => qc.invalidateQueries({ queryKey: ["entregador-saldo"] }),
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
+            qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
+          },
+        )
+        .subscribe();
+    })();
+    return () => {
+      cancelled = true;
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [qc]);
 
   return { saldoQ, cfgQ, txQ };
 }

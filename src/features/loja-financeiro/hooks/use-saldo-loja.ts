@@ -98,6 +98,32 @@ export function useSaldoLoja(lojaId: string | null | undefined) {
     return () => clearInterval(interval);
   }, [recarga, consultar, qc, lojaId]);
 
+  // Realtime: atualiza saldo e movimentos automaticamente (ex: débito ao entregar pedido)
+  useEffect(() => {
+    if (!lojaId) return;
+    const channel = supabase
+      .channel(`loja-saldo-${lojaId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "lojas_saldo", filter: `loja_id=eq.${lojaId}` },
+        () => {
+          qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "lojas_saldo_movimentos", filter: `loja_id=eq.${lojaId}` },
+        () => {
+          qc.invalidateQueries({ queryKey: ["loja-saldo-movs", lojaId] });
+          qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [lojaId, qc]);
+
   return {
     saldoQ,
     movsQ,
