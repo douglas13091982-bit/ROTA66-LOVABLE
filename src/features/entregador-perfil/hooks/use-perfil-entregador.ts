@@ -23,7 +23,7 @@ export function usePerfilEntregador(userId: string | undefined) {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "full_name, phone, pix_chave, aceita_pedidos_externos, avatar_url, tipo_veiculo",
+          "full_name, phone, pix_chave, aceita_pedidos_externos, avatar_url, tipo_veiculo, codigo_indicacao",
         )
         .eq("id", userId!)
         .maybeSingle();
