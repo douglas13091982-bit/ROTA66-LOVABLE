@@ -53,6 +53,7 @@ import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
+import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
 import { Route as AuthenticatedAdminNotificacaoSomLojaRouteImport } from './routes/_authenticated/admin/notificacao-som-loja'
 import { Route as AuthenticatedAdminNotificacaoSomRouteImport } from './routes/_authenticated/admin/notificacao-som'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
@@ -315,6 +316,12 @@ const AuthenticatedAdminPedidosRoute =
     path: '/pedidos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPasswordResetRoute =
+  AuthenticatedAdminPasswordResetRouteImport.update({
+    id: '/password-reset',
+    path: '/password-reset',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminNotificacaoSomLojaRoute =
   AuthenticatedAdminNotificacaoSomLojaRouteImport.update({
     id: '/notificacao-som-loja',
@@ -439,6 +446,7 @@ export interface FileRoutesByFullPath {
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
+  '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -497,6 +505,7 @@ export interface FileRoutesByTo {
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
+  '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -560,6 +569,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/_authenticated/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/_authenticated/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
+  '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
@@ -623,6 +633,7 @@ export interface FileRouteTypes {
     | '/admin/lojas'
     | '/admin/notificacao-som'
     | '/admin/notificacao-som-loja'
+    | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
     | '/admin/roteirizacao'
@@ -681,6 +692,7 @@ export interface FileRouteTypes {
     | '/admin/lojas'
     | '/admin/notificacao-som'
     | '/admin/notificacao-som-loja'
+    | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
     | '/admin/roteirizacao'
@@ -743,6 +755,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/lojas'
     | '/_authenticated/admin/notificacao-som'
     | '/_authenticated/admin/notificacao-som-loja'
+    | '/_authenticated/admin/password-reset'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
     | '/_authenticated/admin/roteirizacao'
@@ -1108,6 +1121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/password-reset': {
+      id: '/_authenticated/admin/password-reset'
+      path: '/password-reset'
+      fullPath: '/admin/password-reset'
+      preLoaderRoute: typeof AuthenticatedAdminPasswordResetRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/notificacao-som-loja': {
       id: '/_authenticated/admin/notificacao-som-loja'
       path: '/notificacao-som-loja'
@@ -1238,6 +1258,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
   AuthenticatedAdminNotificacaoSomRoute: typeof AuthenticatedAdminNotificacaoSomRoute
   AuthenticatedAdminNotificacaoSomLojaRoute: typeof AuthenticatedAdminNotificacaoSomLojaRoute
+  AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
@@ -1265,6 +1286,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminNotificacaoSomRoute,
     AuthenticatedAdminNotificacaoSomLojaRoute:
       AuthenticatedAdminNotificacaoSomLojaRoute,
+    AuthenticatedAdminPasswordResetRoute: AuthenticatedAdminPasswordResetRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
