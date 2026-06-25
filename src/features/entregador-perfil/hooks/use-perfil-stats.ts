@@ -27,13 +27,14 @@ export function useLojasVinculo(userId: string | undefined) {
         .eq("entregador_id", userId!);
       if (!vinc || vinc.length === 0) return [];
       const ids = vinc.map((v) => v.loja_id);
-      const { data: lojas } = await supabase
+      const { data: lojasRaw } = await supabase
         .from("lojas_para_entregador" as any)
         .select("id, nome")
         .in("id", ids);
+      const lojas = (lojasRaw ?? []) as unknown as Array<{ id: string; nome: string | null }>;
       return vinc.map((v) => ({
         ...v,
-        loja: lojas?.find((l) => l.id === v.loja_id),
+        loja: lojas.find((l) => l.id === v.loja_id),
       }));
     },
   });
