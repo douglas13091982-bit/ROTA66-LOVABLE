@@ -28,7 +28,7 @@ export function useLojasVinculo(userId: string | undefined) {
       if (!vinc || vinc.length === 0) return [];
       const ids = vinc.map((v) => v.loja_id);
       const { data: lojas } = await supabase
-        .from("lojas")
+        .from("lojas_para_entregador" as any)
         .select("id, nome")
         .in("id", ids);
       return vinc.map((v) => ({
