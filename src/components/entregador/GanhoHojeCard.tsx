@@ -19,7 +19,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
     <div className="mb-6 px-1 text-center">
       <div
         className="mb-1 text-[11px] font-bold uppercase tracking-[0.28em]"
-        style={{ color: "#6b7280" }}
+        style={{ color: "#374151" }}
       >
         Ganhos do dia
       </div>

@@ -1399,7 +1399,7 @@ html.light {
   --secondary: #F2F3F5;
   --secondary-foreground: #0F172A;
   --muted: #F2F3F5;
-  --muted-foreground: #6B7280;
+  --muted-foreground: #374151;
   --accent: #EF4444;
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
@@ -1412,7 +1412,7 @@ html.light {
   --panel-bg-elev: #FFFFFF;
   --panel-text: #0F172A;
   --panel-text-dim: #374151;
-  --panel-text-muted: #6B7280;
+  --panel-text-muted: #374151;
   --panel-border: #E5E7EB;
   --panel-border-strong: #D1D5DB;
 
@@ -1480,7 +1480,7 @@ html.light .panel-premium [class*="text-white\\/5"],
 html.light .panel-premium [class*="text-white\\/6"],
 html.light .panel-premium [class*="text-white\\/7"],
 html.light .panel-premium [class*="text-white\\/8"] {
-  color: #6B7280 !important;
+  color: #374151 !important;
 }
 
 /* Bordas brancas translúcidas */
@@ -1526,7 +1526,7 @@ html.light nav[data-entregador-nav] {
   box-shadow: 0 -8px 24px -12px rgba(15,23,42,0.10) !important;
 }
 html.light nav[data-entregador-nav] a[data-nav-link] {
-  color: #6B7280 !important;
+  color: #374151 !important;
 }
 html.light nav[data-entregador-nav] a[data-nav-link][data-active="true"],
 html.light nav[data-entregador-nav] a[data-nav-link][data-active="true"] svg {
@@ -1555,7 +1555,7 @@ html.light .panel-premium textarea::placeholder {
 
 /* Tabelas no claro */
 html.light .panel-premium thead tr { border-bottom-color: #E5E7EB !important; }
-html.light .panel-premium thead th { color: #6B7280 !important; }
+html.light .panel-premium thead th { color: #374151 !important; }
 html.light .panel-premium tbody tr { border-bottom-color: #F2F3F5 !important; }
 html.light .panel-premium tbody tr:hover { background: #FAFAFB !important; }
 

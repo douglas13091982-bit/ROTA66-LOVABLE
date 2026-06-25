@@ -102,14 +102,14 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
       >
         <span
           className={`grid place-items-center h-9 w-14 rounded-full transition-all duration-300 ${
-            !online ? "bg-white shadow text-[#6b7280]" : "text-[#6b7280]/60"
+            !online ? "bg-white shadow text-[#374151]" : "text-[#374151]/60"
           }`}
         >
           <Power className="h-4 w-4" />
         </span>
         <span
           className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-[#6b7280]/70"
+            online ? "text-white" : "text-[#374151]/70"
           }`}
           style={online ? { background: "#22c55e", boxShadow: "0 6px 18px -6px rgba(34,197,94,0.55)" } : undefined}
         >
