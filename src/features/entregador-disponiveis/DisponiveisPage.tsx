@@ -6,6 +6,7 @@ import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
+import { usePopupNotificacao } from "@/hooks/use-popup-notificacao";
 import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
