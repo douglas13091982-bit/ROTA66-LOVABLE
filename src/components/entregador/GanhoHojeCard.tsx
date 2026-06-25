@@ -24,10 +24,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
         Ganhos do dia
       </div>
       <div className="flex items-center justify-center gap-2">
-        <div
-          className="text-[40px] font-extrabold leading-none tracking-tight"
-          style={{ color: "#0f172a" }}
-        >
+        <div className="text-[40px] font-extrabold leading-none tracking-tight text-white">
           {hide ? "R$ ••••" : `R$ ${valor.toFixed(2)}`}
         </div>
         <button
