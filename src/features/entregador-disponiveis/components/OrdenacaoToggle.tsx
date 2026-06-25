@@ -7,12 +7,17 @@ interface Props {
 }
 
 export function OrdenacaoToggle({ value, onChange }: Props) {
-  const pill = (active: boolean) =>
-    `flex-1 inline-flex items-center justify-center gap-1.5 h-8 rounded-full text-[9px] font-extrabold uppercase tracking-[0.12em] transition`;
+  const segment = (active: boolean) =>
+    [
+      "flex-1 flex items-center justify-center gap-1.5 h-full rounded-full transition-all duration-300",
+      active
+        ? "bg-gradient-to-r from-[#ef4444] to-[#dc2626] shadow-lg shadow-red-500/30 ring-1 ring-[#f87171]/30 text-white"
+        : "text-slate-400 hover:text-slate-200",
+    ].join(" ");
 
   return (
     <div
-      className="mb-4 flex gap-2"
+      className="mb-4 relative flex p-1 h-9 rounded-full items-center bg-[#16223a] shadow-inner border border-white/5"
       role="tablist"
       aria-label="Ordenar pedidos"
     >
@@ -20,39 +25,25 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         type="button"
         role="tab"
         aria-selected={value === "proximos"}
-        className={pill(value === "proximos")}
+        className={segment(value === "proximos")}
         onClick={() => onChange("proximos")}
-        style={
-          value === "proximos"
-            ? {
-                background: "#ef4444",
-                color: "#ffffff",
-                boxShadow: "0 8px 20px -10px rgba(239,68,68,0.6)",
-              }
-            : { background: "#f1f3f7", color: "#374151" }
-        }
       >
-        <MapPin className="h-3.5 w-3.5" />
-        Mais próximos
+        <MapPin className="h-3 w-3" strokeWidth={2.5} />
+        <span className="text-[9px] font-extrabold tracking-widest uppercase">
+          Mais Próximos
+        </span>
       </button>
       <button
         type="button"
         role="tab"
         aria-selected={value === "valor"}
-        className={pill(value === "valor")}
+        className={segment(value === "valor")}
         onClick={() => onChange("valor")}
-        style={
-          value === "valor"
-            ? {
-                background: "#ef4444",
-                color: "#ffffff",
-                boxShadow: "0 8px 20px -10px rgba(239,68,68,0.6)",
-              }
-            : { background: "#f1f3f7", color: "#374151" }
-        }
       >
-        <DollarSign className="h-3.5 w-3.5" />
-        Maior valor
+        <DollarSign className="h-3 w-3" strokeWidth={2.5} />
+        <span className="text-[9px] font-extrabold tracking-widest uppercase">
+          Maior Valor
+        </span>
       </button>
     </div>
   );
