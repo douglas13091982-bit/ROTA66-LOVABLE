@@ -15,7 +15,7 @@ export function ResumoPeriodo({
         <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-2">
           {periodo === "semanal" ? "Últimos 7 dias" : "Últimos 6 meses"}
         </div>
-        <div className="font-display text-4xl md:text-5xl text-emerald-400 leading-none whitespace-nowrap">
+        <div className="font-display text-4xl md:text-5xl text-[#ef4444] leading-none whitespace-nowrap">
           R$ {totalPeriodo.toFixed(2)}
         </div>
       </div>
