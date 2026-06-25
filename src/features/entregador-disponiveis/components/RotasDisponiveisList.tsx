@@ -87,15 +87,22 @@ export function RotasDisponiveisList({
 
   return (
     <div className="max-w-xl mx-auto">
-      <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-xl font-bold text-white tracking-tight">Rotas Disponíveis</h2>
+      <div className="flex items-start justify-between gap-3 mb-4 px-1">
+        <h2
+          className="text-[26px] font-extrabold leading-[1.05] tracking-tight"
+          style={{ color: "#0f172a" }}
+        >
+          Rotas
+          <br />
+          Disponíveis
+        </h2>
         <div
-          className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em]"
-          style={{ color: "oklch(0.72 0.18 27)" }}
+          className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-[0.12em] pt-2 max-w-[80px] leading-tight"
+          style={{ color: "#ef4444" }}
         >
           <span
-            className="h-1.5 w-1.5 rounded-full animate-pulse"
-            style={{ background: "oklch(0.65 0.22 27)" }}
+            className="h-2 w-2 rounded-full animate-pulse shrink-0"
+            style={{ background: "#ef4444" }}
           />
           Em tempo real
         </div>
@@ -104,14 +111,21 @@ export function RotasDisponiveisList({
       <OrdenacaoToggle value={ordenacao} onChange={onOrdenacaoChange} />
 
       {isLoading && grupos.length === 0 && (
-        <p className="text-white/45 text-sm px-1">Carregando pedidos...</p>
+        <p className="text-sm px-1" style={{ color: "#6b7280" }}>Carregando pedidos...</p>
       )}
 
       {!isLoading && grupos.length === 0 && (
-        <div className="text-center py-10 px-4 rounded-xl border border-white/5 bg-white/[0.02]">
-          <Package className="h-10 w-10 text-white/30 mx-auto mb-3" />
-          <p className="text-white/55 text-sm">Nenhum pedido disponível no momento.</p>
-          <p className="text-white/35 text-xs mt-1">
+        <div
+          className="text-center py-12 px-4 rounded-3xl"
+          style={{ background: "#f1f3f7" }}
+        >
+          <div className="mx-auto mb-4 w-16 h-16 grid place-items-center">
+            <Package className="h-14 w-14" style={{ color: "#cbd5e1", strokeWidth: 1.4 }} />
+          </div>
+          <p className="text-[15px] font-semibold" style={{ color: "#0f172a" }}>
+            Nenhum pedido disponível no momento
+          </p>
+          <p className="text-xs mt-1.5" style={{ color: "#9ca3af" }}>
             Assim que uma loja liberar, aparece aqui.
           </p>
         </div>
