@@ -13,8 +13,12 @@ import { RoleBadge, RoleSelector } from "./components/RoleSelector";
 import type { Role } from "./logic/roles";
 import { useSignupForm } from "./logic/use-signup-form";
 import { useSignupSubmit } from "./logic/use-signup-submit";
+import { useIndicador } from "./logic/use-indicador";
 
-export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
+export function CadastroPage({
+  initialRole,
+  refCodigo,
+}: { initialRole?: Role; refCodigo?: string } = {}) {
   const [step, setStep] = useState<"select" | "form">(initialRole ? "form" : "select");
   const [role, setRole] = useState<Role | null>(initialRole ?? null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +26,14 @@ export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
 
   const { form, update, handleAvatarChange } = useSignupForm();
   const { contrato: contratoAtivo, loading: contratoLoading } = useContratoAtivo();
-  const { submit } = useSignupSubmit({ role, form, contratoAtivo, contratoLoading });
+  const indicador = useIndicador(refCodigo);
+  const { submit } = useSignupSubmit({
+    role,
+    form,
+    contratoAtivo,
+    contratoLoading,
+    indicadorId: indicador?.id ?? null,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +81,14 @@ export function CadastroPage({ initialRole }: { initialRole?: Role } = {}) {
             </button>
 
             {role && <RoleBadge role={role} />}
+
+            {role === "loja_admin" && refCodigo && (
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-200">
+                {indicador
+                  ? <>Indicado por <strong>{indicador.fullName || "entregador parceiro"}</strong> ({refCodigo})</>
+                  : <>Validando código <strong>{refCodigo}</strong>…</>}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit}>
               <AuthInput

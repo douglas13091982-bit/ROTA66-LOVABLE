@@ -11,6 +11,7 @@ export function usePerfilEntregador(userId: string | undefined) {
   const [aceitaExternos, setAceitaExternos] = useState(false);
   const [tipoVeiculo, setTipoVeiculo] = useState<TipoVeiculo>("moto");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [codigoIndicacao, setCodigoIndicacao] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [savingExternos, setSavingExternos] = useState(false);
   const [savingVeiculo, setSavingVeiculo] = useState(false);
@@ -22,7 +23,7 @@ export function usePerfilEntregador(userId: string | undefined) {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "full_name, phone, pix_chave, aceita_pedidos_externos, avatar_url, tipo_veiculo",
+          "full_name, phone, pix_chave, aceita_pedidos_externos, avatar_url, tipo_veiculo, codigo_indicacao",
         )
         .eq("id", userId!)
         .maybeSingle();
@@ -39,6 +40,7 @@ export function usePerfilEntregador(userId: string | undefined) {
       setAceitaExternos(!!(profile as any).aceita_pedidos_externos);
       setAvatarUrl((profile as any).avatar_url ?? null);
       setTipoVeiculo(((profile as any).tipo_veiculo as TipoVeiculo) ?? "moto");
+      setCodigoIndicacao((profile as any).codigo_indicacao ?? null);
     }
   }, [profile]);
 
@@ -108,6 +110,7 @@ export function usePerfilEntregador(userId: string | undefined) {
     tipoVeiculo,
     avatarUrl,
     setAvatarUrl,
+    codigoIndicacao,
     saving,
     savingExternos,
     savingVeiculo,
