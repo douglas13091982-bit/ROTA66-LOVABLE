@@ -1,8 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { ConfigCreditos, SaldoEntregador, TransacaoCredito } from "../logic/types";
 
 export function useCarteira() {
+  const qc = useQueryClient();
+
   const saldoQ = useQuery({
     queryKey: ["entregador-saldo"],
     queryFn: async (): Promise<SaldoEntregador> => {
