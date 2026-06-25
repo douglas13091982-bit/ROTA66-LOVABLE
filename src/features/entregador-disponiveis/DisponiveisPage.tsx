@@ -6,6 +6,7 @@ import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
+import { usePopupNotificacao } from "@/hooks/use-popup-notificacao";
 import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
@@ -26,6 +27,12 @@ export function DisponiveisPage() {
     taxaParaExibir,
     estouOnline,
   } = usePedidosDisponiveis(dismissed);
+
+  // Dispara o som configurado pelo admin sempre que aparece um grupo novo
+  // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
+  // (gesto do usuário) e do pré-carregamento do MP3.
+  usePopupNotificacao(grupos);
+
 
 
   // Bridge estável: PedidoListItem agora memoiza, então este callback PRECISA
