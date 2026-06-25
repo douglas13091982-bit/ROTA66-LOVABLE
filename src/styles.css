@@ -536,8 +536,14 @@ html.light {
 }
 
 html.light .panel-premium {
-  background: #f6f7f9;
+  background: #ffffff;
   color: #0f1b2d;
+}
+/* esconde o overlay de grid no claro (deixa fundo branco limpo como o stitch) */
+html.light .panel-premium .ring-grid,
+html.light .panel-premium .bg-gradient-radial-red {
+  background-image: none !important;
+  background: #ffffff !important;
 }
 html.light .panel-premium .pp-grid-overlay {
   background-image:
