@@ -86,6 +86,14 @@ export function RoteirizacaoForm() {
         </select>
       </Field>
 
+      <Field icon={<MapPinned className="h-4 w-4 text-primary" />} label="Raio máximo do entregador até a coleta (km)"
+        hint="Esconde do pool pedidos cuja coleta esteja mais longe que esse raio da posição atual do entregador. Use 0 para desativar o filtro. Entregadores sem GPS recente continuam vendo todos os pedidos.">
+        <input type="number" min="0" step="0.5" value={form.raio_maximo_coleta_km}
+          onChange={set("raio_maximo_coleta_km")} className={numberInputClass} />
+      </Field>
+
+
+
 
       <div className="pt-4 mt-2 border-t border-border">
         <h2 className="text-sm font-bold flex items-center gap-2 mb-1">
