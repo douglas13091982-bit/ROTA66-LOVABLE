@@ -100,14 +100,11 @@ export function RotasDisponiveisList({
       )}
 
       {!isLoading && grupos.length === 0 && (
-        <div
-          className="text-center py-12 px-4 rounded-3xl"
-          style={{ background: "#f1f3f7" }}
-        >
+        <div className="text-center py-12 px-4 rounded-3xl bg-transparent">
           <div className="mx-auto mb-4 w-16 h-16 grid place-items-center">
             <Package className="h-14 w-14" style={{ color: "#cbd5e1", strokeWidth: 1.4 }} />
           </div>
-          <p className="text-[15px] font-semibold" style={{ color: "#0f172a" }}>
+          <p className="text-[15px] font-semibold text-white">
             Nenhum pedido disponível no momento
           </p>
           <p className="text-xs mt-1.5" style={{ color: "#9ca3af" }}>
