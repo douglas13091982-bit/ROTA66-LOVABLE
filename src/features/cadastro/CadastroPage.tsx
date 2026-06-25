@@ -13,6 +13,7 @@ import { RoleBadge, RoleSelector } from "./components/RoleSelector";
 import type { Role } from "./logic/roles";
 import { useSignupForm } from "./logic/use-signup-form";
 import { useSignupSubmit } from "./logic/use-signup-submit";
+import { useIndicador } from "./logic/use-indicador";
 
 export function CadastroPage({
   initialRole,
