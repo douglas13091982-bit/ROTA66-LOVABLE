@@ -83,6 +83,8 @@ export function PerfilPage() {
         );
       case "seguranca":
         return <SegurancaSection email={user?.email} />;
+      case "indicacao":
+        return <IndicacaoSection codigo={perfil.codigoIndicacao} />;
       case "ajuda":
         return (
           <AjudaSection suporteWhatsapp={suporteWhatsapp} suporteHorario={suporteHorario} />
