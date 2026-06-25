@@ -1,6 +1,7 @@
 import { Store } from "lucide-react";
 import { statusOf } from "../logic/constants";
 import { EntregadoresResumo } from "./EntregadoresResumo";
+import { IndicadoPorBadge } from "./IndicadoPorBadge";
 import { LojaManageDialog } from "./LojaManageDialog";
 
 interface Props {
