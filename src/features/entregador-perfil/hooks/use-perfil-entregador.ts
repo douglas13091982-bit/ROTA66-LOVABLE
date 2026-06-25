@@ -11,6 +11,7 @@ export function usePerfilEntregador(userId: string | undefined) {
   const [aceitaExternos, setAceitaExternos] = useState(false);
   const [tipoVeiculo, setTipoVeiculo] = useState<TipoVeiculo>("moto");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [codigoIndicacao, setCodigoIndicacao] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [savingExternos, setSavingExternos] = useState(false);
   const [savingVeiculo, setSavingVeiculo] = useState(false);
