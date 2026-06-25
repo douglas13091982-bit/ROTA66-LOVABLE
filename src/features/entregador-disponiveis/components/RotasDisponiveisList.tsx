@@ -96,7 +96,7 @@ export function RotasDisponiveisList({
       <OrdenacaoToggle value={ordenacao} onChange={onOrdenacaoChange} />
 
       {isLoading && grupos.length === 0 && (
-        <p className="text-sm px-1" style={{ color: "#6b7280" }}>Carregando pedidos...</p>
+        <p className="text-sm px-1" style={{ color: "#374151" }}>Carregando pedidos...</p>
       )}
 
       {!isLoading && grupos.length === 0 && (
