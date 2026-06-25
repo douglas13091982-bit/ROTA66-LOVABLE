@@ -65,6 +65,7 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
         cnpj: cnpjDigits,
         telefone: form.phone,
         categoria: form.categoria || null,
+        indicado_por_entregador_id: indicadorId || null,
       } as any)
       .select("id")
       .single();
