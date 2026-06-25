@@ -6,6 +6,7 @@ import {
   Receipt,
   Settings,
   Shield,
+  Store,
   User,
   Wallet,
 } from "lucide-react";
@@ -19,6 +20,7 @@ const ITEMS: Item[] = [
   { key: "carteira", icon: Wallet, label: "Carteira", to: "/entregador/carteira" },
   { key: "mensalidade", icon: Receipt, label: "Cobrança de mensalidade", to: "/entregador/mensalidade" },
   { key: "pagamentos", icon: CreditCard, label: "Pagamentos e Ganhos" },
+  { key: "indicacao", icon: Store, label: "Indicar uma loja" },
   { key: "seguranca", icon: Shield, label: "Segurança e Senha" },
   { key: "ajuda", icon: HelpCircle, label: "Central de Ajuda" },
   { key: "config", icon: Settings, label: "Configurações do App" },
