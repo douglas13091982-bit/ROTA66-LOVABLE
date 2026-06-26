@@ -1574,3 +1574,27 @@ html.light .panel-premium .pp-grid-overlay,
 html.light .panel-premium .bg-gradient-radial-red {
   background-image: none !important;
 }
+
+/* Card de pedido na lista (Disponíveis) */
+.pedido-list-card {
+  background: oklch(0.13 0.012 260);
+  border: 1px solid oklch(1 0 0 / 0.06);
+  box-shadow: 0 8px 24px -16px oklch(0 0 0 / 0.6);
+}
+html.light .pedido-list-card {
+  background: #f3f4f6;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 14px -8px rgba(15, 23, 42, 0.12);
+}
+html.light .pedido-list-card .text-white,
+html.light .pedido-list-card .text-white\/85,
+html.light .pedido-list-card .text-white\/75 {
+  color: #0f172a !important;
+}
+html.light .pedido-list-card .text-white\/55,
+html.light .pedido-list-card .text-white\/60 {
+  color: #374151 !important;
+}
+html.light .pedido-list-card .text-white\/30 {
+  color: rgba(15, 23, 42, 0.35) !important;
+}
