@@ -140,7 +140,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
         <main className="flex-1 px-4 py-4 pb-24 relative">
-          <div className="absolute top-3 right-3 z-10">
+          <div className="fixed top-3 right-3 z-50">
             <ThemeToggle />
           </div>
           <div className="pp-reveal">
