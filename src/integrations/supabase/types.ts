@@ -2733,6 +2733,14 @@ export type Database = {
         Args: { _codigo: string; _pedido_id: string }
         Returns: boolean
       }
+      confirmar_pagamento_pedido_legado: {
+        Args: { _mp_payment_id: string; _mp_status: string; _pedido_id: string }
+        Returns: {
+          id: string
+          numero: number
+          status: Database["public"]["Enums"]["pedido_status"]
+        }[]
+      }
       consolidar_mensalidade_loja: {
         Args: { _competencia?: string; _loja_id: string }
         Returns: string
