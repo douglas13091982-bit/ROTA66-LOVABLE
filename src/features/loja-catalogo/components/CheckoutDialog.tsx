@@ -64,6 +64,7 @@ export function CheckoutDialog({
     forma_pagamento: "pix",
     troco_para: "",
   });
+  const [pendentePagar, setPendentePagar] = useState<{ pendente_id: string } | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
   const { taxa: taxaCalculada, info: taxaInfo } = useTarifaEntrega(lojaId, lojaCoords, entregaCoords);
   const temCoords =
@@ -71,7 +72,7 @@ export function CheckoutDialog({
   const taxa = temCoords ? taxaCalculada : taxaBase;
   const total = subtotal + taxa;
   const [saving, setSaving] = useState(false);
-  const [pedidoPagar, setPedidoPagar] = useState<{ id: string; numero: number } | null>(null);
+  
   const sheetRef = useRef<HTMLDivElement>(null);
 
   const { data: mpConfig } = useMpPublicConfig(lojaId);
@@ -160,11 +161,11 @@ export function CheckoutDialog({
           itens: cartItems.map((i) => ({ produto_id: i.produto.id, qtd: i.qtd })),
         },
       });
-      if (res.aguardando_pagamento) {
-        setPedidoPagar({ id: res.id, numero: res.numero });
+      if (res.aguardando_pagamento && res.pendente_id) {
+        setPendentePagar({ pendente_id: res.pendente_id });
         setStep("pagar");
-      } else {
-        onSuccess(res);
+      } else if (res.id && res.numero) {
+        onSuccess({ id: res.id, numero: res.numero });
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Falha ao enviar pedido");
@@ -174,7 +175,7 @@ export function CheckoutDialog({
   }
 
   const title =
-    step === "carrinho" ? "Seu carrinho" : step === "dados" ? "Dados de entrega" : `Pagamento · #${pedidoPagar?.numero}`;
+    step === "carrinho" ? "Seu carrinho" : step === "dados" ? "Dados de entrega" : "Pagamento";
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center" onClick={onClose}>
@@ -227,17 +228,16 @@ export function CheckoutDialog({
             />
           )}
 
-          {step === "pagar" && pedidoPagar && mpConfig?.public_key && (
+          {step === "pagar" && pendentePagar && mpConfig?.public_key && (
             <PagamentoMercadoPago
-              pedidoId={pedidoPagar.id}
-              numero={pedidoPagar.numero}
+              pendenteId={pendentePagar.pendente_id}
               valor={total}
               metodo={form.forma_pagamento as "pix_online" | "cartao_online"}
               publicKey={mpConfig.public_key}
               payerNome={form.cliente_nome}
               payerEmail={form.cliente_email}
               payerDoc={form.cliente_doc}
-              onAprovado={() => onSuccess(pedidoPagar)}
+              onAprovado={(pedido) => onSuccess(pedido)}
             />
           )}
         </div>

@@ -83,7 +83,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       itensSnapshot.push({ produto_id: p.id, nome: p.nome, preco, qtd: it.qtd, subtotal });
     }
 
-    // 3. Calcular taxa de entrega (usa as mesmas tarifas dos pedidos da loja)
+    // 3. Calcular taxa de entrega
     const coletaLat = (loja as any).endereco_lat as number | null;
     const coletaLng = (loja as any).endereco_lng as number | null;
     const entregaLat = data.endereco_entrega_lat ?? null;
@@ -101,9 +101,6 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
     }
-    // Soma a taxa do plano da loja na taxa de entrega cobrada do cliente
-    // (loja repassa esse valor ao sistema depois via cobrancas_loja).
-    // Lojas com plano mensal ativo não acrescentam nada.
     const planoAtivo = Boolean((loja as any).plano_mensal_ativo);
     const taxaPlano = planoAtivo ? 0 : Number((loja as any).taxa_por_pedido ?? 0) || 0;
     if (taxaPlano > 0) {
@@ -111,10 +108,54 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     }
     const valor_total = valor_produtos + taxa_entrega;
 
-    // 4. Inserir pedido como anônimo
     const isOnline = data.forma_pagamento === "pix_online" || data.forma_pagamento === "cartao_online";
-    const statusInicial = isOnline ? "aguardando_pagamento" : "em_preparo";
 
+    // 4a. Pagamento ONLINE: NÃO cria pedido ainda. Cria apenas snapshot pendente.
+    if (isOnline) {
+      const snapshot = {
+        cliente_nome: data.cliente_nome,
+        cliente_telefone: data.cliente_telefone,
+        endereco_entrega: data.endereco_entrega,
+        endereco_entrega_lat: entregaLat,
+        endereco_entrega_lng: entregaLng,
+        complemento: data.complemento ?? null,
+        cidade: data.cidade ?? null,
+        endereco_coleta: loja.endereco ?? null,
+        endereco_coleta_lat: coletaLat,
+        endereco_coleta_lng: coletaLng,
+        observacoes: data.observacoes ?? null,
+        forma_pagamento: data.forma_pagamento,
+        troco_para: null,
+        itens: itensSnapshot,
+        valor_produtos,
+        taxa_entrega,
+        valor_total,
+      };
+
+      const { data: pend, error: pendErr } = await supabaseAdmin
+        .from("pedidos_pendentes_pagamento" as any)
+        .insert({
+          loja_id: loja.id,
+          forma_pagamento: data.forma_pagamento,
+          valor_total,
+          dados: snapshot as any,
+          status: "aguardando",
+        } as any)
+        .select("id")
+        .single();
+      if (pendErr) throw new Error(pendErr.message);
+
+      return {
+        aguardando_pagamento: true as const,
+        pendente_id: (pend as any).id as string,
+        valor_total,
+        // legado: id/numero ficam null até o pagamento confirmar
+        id: null,
+        numero: null,
+      };
+    }
+
+    // 4b. Pagamento OFFLINE (pix/dinheiro): cria pedido direto em em_preparo.
     const { data: pedido, error: insErr } = await supabaseAdmin
       .from("pedidos")
       .insert({
@@ -137,12 +178,17 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         valor_produtos,
         taxa_entrega,
         valor_total,
-        status: statusInicial,
+        status: "em_preparo",
       })
       .select("id, numero")
       .single();
     if (insErr) throw new Error(insErr.message);
 
-    return { id: pedido.id, numero: pedido.numero, aguardando_pagamento: isOnline };
+    return {
+      aguardando_pagamento: false as const,
+      id: pedido.id,
+      numero: pedido.numero,
+      pendente_id: null,
+      valor_total,
+    };
   });
-

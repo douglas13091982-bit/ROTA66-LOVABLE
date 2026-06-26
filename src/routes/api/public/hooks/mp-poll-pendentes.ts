@@ -1,9 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Cron de fallback: consulta o Mercado Pago para pedidos online ainda
- * `aguardando_pagamento` (criados nas últimas 24h e com `mp_payment_id`)
- * e atualiza o status — cobre casos em que o webhook do MP falhou/atrasou.
+ * Cron de fallback: consulta o Mercado Pago para pagamentos do catálogo
+ * ainda pendentes (criados nas últimas 24h e com `mp_payment_id`) e:
+ *   - se aprovado: materializa o pedido em `public.pedidos`
+ *   - se cancelado/rejeitado: marca o pendente como cancelado
+ * Cobre casos em que o webhook do MP falhou/atrasou.
+ *
+ * Também cobre pedidos antigos (compatibilidade) que ainda estão em
+ * `pedidos.aguardando_pagamento`.
  *
  * Auth: header `apikey` deve bater com SUPABASE_PUBLISHABLE_KEY.
  * É chamado pelo pg_cron a cada 5 minutos.
@@ -22,29 +27,24 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
         const { getMpConfigByLojaId, mpGetPayment } = await import("@/lib/mercadopago.server");
 
         const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        const { data: pendentes, error } = await supabaseAdmin
-          .from("pedidos")
-          .select("id, loja_id, mp_payment_id")
-          .eq("status", "aguardando_pagamento")
-          .not("mp_payment_id", "is", null)
-          .gte("created_at", cutoff)
-          .limit(100);
-
-        if (error) {
-          console.error("[mp-poll-pendentes] query error", error.message);
-          return new Response(JSON.stringify({ ok: false, error: error.message }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
-
         const lojaCache = new Map<string, Awaited<ReturnType<typeof getMpConfigByLojaId>>>();
         let aprovados = 0;
         let cancelados = 0;
         let inalterados = 0;
         let erros = 0;
+        let varridos = 0;
 
-        for (const p of pendentes ?? []) {
+        // 1) Pendentes na nova tabela
+        const { data: pendentes } = await supabaseAdmin
+          .from("pedidos_pendentes_pagamento" as any)
+          .select("id, loja_id, mp_payment_id, status")
+          .eq("status", "aguardando")
+          .not("mp_payment_id", "is", null)
+          .gte("created_at", cutoff)
+          .limit(100);
+
+        varridos += pendentes?.length ?? 0;
+        for (const p of (pendentes ?? []) as any[]) {
           const lojaId = p.loja_id as string;
           const paymentId = String(p.mp_payment_id);
           try {
@@ -53,15 +53,61 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
               cfg = await getMpConfigByLojaId(lojaId);
               lojaCache.set(lojaId, cfg);
             }
-            if (!cfg) {
-              erros++;
-              continue;
-            }
-
+            if (!cfg) { erros++; continue; }
             const payment = await mpGetPayment(cfg.access_token, paymentId);
             const aprovado = payment.status === "approved";
             const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
+            if (aprovado) {
+              await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+                _pendente_id: p.id,
+                _mp_payment_id: paymentId,
+                _mp_status: payment.status,
+              } as any);
+              aprovados++;
+            } else if (cancelado) {
+              await supabaseAdmin
+                .from("pedidos_pendentes_pagamento" as any)
+                .update({ status: "cancelado", mp_payment_status: payment.status } as any)
+                .eq("id", p.id);
+              cancelados++;
+            } else {
+              if (payment.status && payment.status !== "pending") {
+                await supabaseAdmin
+                  .from("pedidos_pendentes_pagamento" as any)
+                  .update({ mp_payment_status: payment.status } as any)
+                  .eq("id", p.id);
+              }
+              inalterados++;
+            }
+          } catch (e: any) {
+            erros++;
+            console.error("[mp-poll-pendentes] pendente", p.id, e?.message ?? e);
+          }
+        }
 
+        // 2) Compat: pedidos legados ainda em aguardando_pagamento
+        const { data: legados } = await supabaseAdmin
+          .from("pedidos")
+          .select("id, loja_id, mp_payment_id")
+          .eq("status", "aguardando_pagamento")
+          .not("mp_payment_id", "is", null)
+          .gte("created_at", cutoff)
+          .limit(100);
+
+        varridos += legados?.length ?? 0;
+        for (const p of legados ?? []) {
+          const lojaId = p.loja_id as string;
+          const paymentId = String(p.mp_payment_id);
+          try {
+            let cfg = lojaCache.get(lojaId);
+            if (cfg === undefined) {
+              cfg = await getMpConfigByLojaId(lojaId);
+              lojaCache.set(lojaId, cfg);
+            }
+            if (!cfg) { erros++; continue; }
+            const payment = await mpGetPayment(cfg.access_token, paymentId);
+            const aprovado = payment.status === "approved";
+            const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
             const update: Record<string, unknown> = { mp_payment_status: payment.status };
             if (aprovado) {
               update.status = "em_preparo";
@@ -73,8 +119,6 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             } else {
               inalterados++;
             }
-
-            // Só toca quando mudou algo relevante — evita updates ruidosos no realtime.
             if (aprovado || cancelado || (payment.status && payment.status !== "pending")) {
               await supabaseAdmin
                 .from("pedidos")
@@ -84,19 +128,12 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             }
           } catch (e: any) {
             erros++;
-            console.error("[mp-poll-pendentes] pedido", p.id, e?.message ?? e);
+            console.error("[mp-poll-pendentes] legado", p.id, e?.message ?? e);
           }
         }
 
         return new Response(
-          JSON.stringify({
-            ok: true,
-            varridos: pendentes?.length ?? 0,
-            aprovados,
-            cancelados,
-            inalterados,
-            erros,
-          }),
+          JSON.stringify({ ok: true, varridos, aprovados, cancelados, inalterados, erros }),
           { headers: { "Content-Type": "application/json" } },
         );
       },
