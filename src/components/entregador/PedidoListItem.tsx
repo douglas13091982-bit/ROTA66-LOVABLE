@@ -77,12 +77,7 @@ function PedidoListItemBase({
 
   return (
     <div
-      className="relative rounded-xl px-4 py-3.5 mb-3 transition-all duration-300 hover:-translate-y-0.5"
-      style={{
-        background: "oklch(0.13 0.012 260)",
-        border: "1px solid oklch(1 0 0 / 0.06)",
-        boxShadow: "0 8px 24px -16px oklch(0 0 0 / 0.6)",
-      }}
+      className="pedido-list-card relative rounded-xl px-4 py-3.5 mb-3 transition-all duration-300 hover:-translate-y-0.5"
     >
       <div className="flex items-center justify-between gap-3 mb-1.5">
         <div className="flex items-center gap-2 text-[12px] font-semibold">
