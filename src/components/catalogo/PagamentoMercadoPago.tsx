@@ -38,24 +38,23 @@ function detectBrand(num: string): string | null {
   return null;
 }
 
-interface Props {
-  pedidoId: string;
-  numero: number;
+export interface PagamentoMpProps {
+  pendenteId: string;
   valor: number;
   metodo: "pix_online" | "cartao_online";
   publicKey: string;
   payerNome: string;
   payerEmail: string;
   payerDoc: string;
-  onAprovado: () => void;
+  onAprovado: (pedido: { id: string; numero: number }) => void;
 }
 
-export function PagamentoMercadoPago(props: Props) {
+export function PagamentoMercadoPago(props: PagamentoMpProps) {
   if (props.metodo === "pix_online") return <PagamentoPix {...props} />;
   return <PagamentoCartao {...props} />;
 }
 
-function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onAprovado }: Props) {
+function PagamentoPix({ pendenteId, valor, payerNome, payerEmail, payerDoc, onAprovado }: PagamentoMpProps) {
   const criar = useServerFn(criarPagamentoPix);
   const consultar = useServerFn(consultarStatusPagamento);
   const [loading, setLoading] = useState(true);
@@ -70,7 +69,7 @@ function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onApro
     (async () => {
       try {
         const res = await criar({
-          data: { pedido_id: pedidoId, payer_email: payerEmail, payer_doc: payerDoc, payer_nome: payerNome },
+          data: { pendente_id: pendenteId, payer_email: payerEmail, payer_doc: payerDoc, payer_nome: payerNome },
         });
         setQr({ code: res.qr_code, base64: res.qr_code_base64 });
       } catch (e: any) {
@@ -79,16 +78,16 @@ function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onApro
         setLoading(false);
       }
     })();
-  }, [pedidoId, payerEmail, payerDoc, payerNome, criar]);
+  }, [pendenteId, payerEmail, payerDoc, payerNome, criar]);
 
   useEffect(() => {
     if (!qr || aprovado || erro) return;
     const tick = async () => {
       try {
-        const r = await consultar({ data: { pedido_id: pedidoId } });
-        if (r.aprovado_em || r.mp_status === "approved") {
+        const r = await consultar({ data: { pendente_id: pendenteId } });
+        if (r.aprovado && r.pedido_id && r.numero != null) {
           setAprovado(true);
-          onAprovado();
+          onAprovado({ id: r.pedido_id, numero: r.numero });
         }
       } catch {
         /* ignore */
@@ -96,7 +95,7 @@ function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onApro
     };
     const iv = setInterval(tick, 3500);
     return () => clearInterval(iv);
-  }, [qr, aprovado, erro, pedidoId, consultar, onAprovado]);
+  }, [qr, aprovado, erro, pendenteId, consultar, onAprovado]);
 
   const copiar = () => {
     if (!qr?.code) return;
@@ -118,6 +117,7 @@ function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onApro
       <div className="text-center py-6">
         <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-2" />
         <p className="font-bold">Pagamento aprovado!</p>
+        <p className="text-xs text-muted-foreground mt-1">Pedido criado.</p>
       </div>
     );
   }
@@ -153,12 +153,14 @@ function PagamentoPix({ pedidoId, valor, payerNome, payerEmail, payerDoc, onApro
       <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
         <Loader2 className="h-3 w-3 animate-spin" /> Aguardando pagamento…
       </div>
-      <p className="text-[11px] text-muted-foreground">O Pix expira em 30 minutos.</p>
+      <p className="text-[11px] text-muted-foreground">
+        O pedido será criado e enviado à loja somente após a confirmação do pagamento.
+      </p>
     </div>
   );
 }
 
-function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onAprovado }: Props) {
+function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, onAprovado }: PagamentoMpProps) {
   const criar = useServerFn(criarPagamentoCartao);
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -195,7 +197,6 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
       const docDigits = payerDoc.replace(/\D/g, "");
       const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
-      // Descobrir payment_method_id pelo bin (MP exige 6 dígitos)
       if (cardNumber.length < 6) throw new Error("Número do cartão incompleto");
       let pm: any = null;
       try {
@@ -205,7 +206,6 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
         console.error("[MP] getPaymentMethods erro", err);
       }
       if (!pm) {
-        // Fallback: detecta bandeira local (Visa, Master, Amex, Elo, Hiper, Diners)
         const local = detectBrand(cardNumber);
         if (!local) throw new Error("Bandeira do cartão não reconhecida");
         pm = { id: local };
@@ -224,7 +224,7 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
 
       const res = await criar({
         data: {
-          pedido_id: pedidoId,
+          pendente_id: pendenteId,
           card_token: tokenRes.id,
           installments: form.installments,
           payment_method_id: pm.id,
@@ -233,9 +233,9 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
           payer_doc: payerDoc,
         },
       });
-      if (res.aprovado) {
+      if (res.aprovado && res.pedido_id && res.numero != null) {
         setAprovado(true);
-        onAprovado();
+        onAprovado({ id: res.pedido_id, numero: res.numero });
       } else {
         setErro(`Pagamento não aprovado: ${res.status_detail ?? res.status}`);
       }
@@ -251,6 +251,7 @@ function PagamentoCartao({ pedidoId, valor, publicKey, payerEmail, payerDoc, onA
       <div className="text-center py-6">
         <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-2" />
         <p className="font-bold">Pagamento aprovado!</p>
+        <p className="text-xs text-muted-foreground mt-1">Pedido criado.</p>
       </div>
     );
   }
