@@ -199,7 +199,7 @@ function BotaoAceitarPress({
       onPointerLeave={stop}
       onPointerCancel={stop}
       onContextMenu={(e) => e.preventDefault()}
-      className="relative w-full h-10 text-white text-[11px] font-bold uppercase tracking-[0.18em] rounded-lg active:scale-95 transition-all duration-200 overflow-hidden select-none"
+      className="relative w-full h-10 !text-white text-[11px] font-bold uppercase tracking-[0.18em] rounded-lg active:scale-95 transition-all duration-200 overflow-hidden select-none [&_*]:!text-white"
       style={{
         background: "linear-gradient(135deg, #dd0008, #b00006)",
         boxShadow: "0 6px 18px -6px rgba(221, 0, 8, 0.7)",
