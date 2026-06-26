@@ -54,10 +54,23 @@ export function DisponiveisPage() {
     );
   }
 
-  return (
-    <EntregadorShell title="Rotas Disponíveis">
-      <GanhoHojeCard valor={ganhoHoje} />
+  const isListaVisivel = !temRotaAtiva && estouOnline;
 
+  return (
+    <EntregadorShell
+      title="Rotas Disponíveis"
+      topFixed={
+        <>
+          <GanhoHojeCard valor={ganhoHoje} />
+          {isListaVisivel && (
+            <RotasDisponiveisHeader
+              ordenacao={ordenacao}
+              onOrdenacaoChange={setOrdenacao}
+            />
+          )}
+        </>
+      }
+    >
       {temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
