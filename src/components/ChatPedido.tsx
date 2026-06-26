@@ -313,7 +313,7 @@ export function ChatPedidoButton({
   const base =
     variant === "solid"
       ? "inline-flex items-center gap-2 px-3 py-2 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90"
-      : "relative inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-green-600 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition-colors";
+      : "relative inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-green-600 bg-green-600 hover:bg-green-700 !text-white [&_*]:!text-white text-sm font-semibold transition-colors";
 
   return (
     <span
