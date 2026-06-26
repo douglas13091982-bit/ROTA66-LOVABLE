@@ -64,6 +64,7 @@ export function CheckoutDialog({
     forma_pagamento: "pix",
     troco_para: "",
   });
+  const [pendentePagar, setPendentePagar] = useState<{ pendente_id: string } | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
   const { taxa: taxaCalculada, info: taxaInfo } = useTarifaEntrega(lojaId, lojaCoords, entregaCoords);
   const temCoords =
