@@ -228,17 +228,16 @@ export function CheckoutDialog({
             />
           )}
 
-          {step === "pagar" && pedidoPagar && mpConfig?.public_key && (
+          {step === "pagar" && pendentePagar && mpConfig?.public_key && (
             <PagamentoMercadoPago
-              pedidoId={pedidoPagar.id}
-              numero={pedidoPagar.numero}
+              pendenteId={pendentePagar.pendente_id}
               valor={total}
               metodo={form.forma_pagamento as "pix_online" | "cartao_online"}
               publicKey={mpConfig.public_key}
               payerNome={form.cliente_nome}
               payerEmail={form.cliente_email}
               payerDoc={form.cliente_doc}
-              onAprovado={() => onSuccess(pedidoPagar)}
+              onAprovado={(pedido) => onSuccess(pedido)}
             />
           )}
         </div>
