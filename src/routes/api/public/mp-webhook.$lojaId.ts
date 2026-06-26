@@ -72,23 +72,42 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
 
         try {
           const payment = await mpGetPayment(cfg.access_token, paymentId);
-          const pedidoId = payment.external_reference as unknown as string;
-          if (!pedidoId) return new Response("no external_reference", { status: 200 });
+          const ref = String(payment.external_reference ?? "");
+          if (!ref) return new Response("no external_reference", { status: 200 });
 
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const aprovado = payment.status === "approved";
           const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
 
-          const update: Record<string, unknown> = {
-            mp_payment_status: payment.status,
-          };
+          // Nova arquitetura: pedido só nasce após o pagamento confirmar.
+          if (ref.startsWith("cat_pendente:")) {
+            const pendenteId = ref.slice("cat_pendente:".length);
+            if (aprovado) {
+              await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+                _pendente_id: pendenteId,
+                _mp_payment_id: paymentId,
+                _mp_status: payment.status,
+              } as any);
+            } else {
+              const upd: Record<string, unknown> = { mp_payment_status: payment.status };
+              if (cancelado) upd.status = "cancelado";
+              await supabaseAdmin
+                .from("pedidos_pendentes_pagamento" as any)
+                .update(upd as any)
+                .eq("id", pendenteId);
+            }
+            return new Response("ok", { status: 200 });
+          }
+
+          // Compat: pedidos antigos que já estavam em pedidos.aguardando_pagamento
+          const pedidoId = ref;
+          const update: Record<string, unknown> = { mp_payment_status: payment.status };
           if (aprovado) {
             update.status = "em_preparo";
             update.pagamento_aprovado_em = new Date().toISOString();
           } else if (cancelado) {
             update.status = "cancelado";
           }
-
           await supabaseAdmin
             .from("pedidos")
             .update(update as any)
@@ -97,7 +116,6 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
 
           return new Response("ok", { status: 200 });
         } catch {
-          // Detalhes do erro permanecem apenas em logs internos do provedor de hosting.
           return new Response("error", { status: 500 });
         }
       },
