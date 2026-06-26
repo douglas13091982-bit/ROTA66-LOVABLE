@@ -1598,3 +1598,12 @@ html.light .pedido-list-card .text-white\/60 {
 html.light .pedido-list-card .text-white\/30 {
   color: rgba(15, 23, 42, 0.35) !important;
 }
+
+/* Área fixa (não rola) no topo da tela /entregador/disponiveis */
+.entregador-sticky-top {
+  background: #0f304d;
+}
+html.light .entregador-sticky-top {
+  background: #ffffff;
+}
+
