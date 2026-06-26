@@ -4,11 +4,6 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
 
-/**
- * URL pública usada pelo Mercado Pago para enviar webhooks.
- * Prioriza PUBLIC_HOST (override explícito), depois o host real da requisição.
- * Nunca usa http — webhooks do MP exigem HTTPS.
- */
 function buildWebhookUrl(lojaId: string): string {
   const envHost = process.env.PUBLIC_HOST?.trim();
   let host = envHost && envHost.length > 0 ? envHost : "";
@@ -24,7 +19,6 @@ function buildWebhookUrl(lojaId: string): string {
   }
   return `https://${host}/api/public/mp-webhook/${lojaId}`;
 }
-
 
 // ---------- Config (loja dono) ----------
 
@@ -45,10 +39,14 @@ export const testarConexaoMp = createServerFn({ method: "POST" })
     return result;
   });
 
-// ---------- Pagamento (público) ----------
+// ---------- Pagamento de catálogo (público, baseado em PENDENTE) ----------
+//
+// O pedido só é criado em `public.pedidos` DEPOIS da confirmação de pagamento.
+// Antes disso, o "rascunho" vive em `public.pedidos_pendentes_pagamento` e o
+// external_reference enviado ao Mercado Pago é `cat_pendente:<pendente_id>`.
 
 const PixSchema = z.object({
-  pedido_id: z.string().uuid(),
+  pendente_id: z.string().uuid(),
   payer_email: z.string().email().max(120),
   payer_doc: z.string().trim().min(11).max(18),
   payer_nome: z.string().trim().min(2).max(120),
@@ -59,21 +57,32 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { getMpConfigByLojaId, mpCreatePayment } = await import("@/lib/mercadopago.server");
 
-    const { data: pedido, error: perr } = await supabaseAdmin
-      .from("pedidos")
-      .select("id, loja_id, valor_total, status, mp_payment_id, numero")
-      .eq("id", data.pedido_id)
+    const { data: pend, error: perr } = await supabaseAdmin
+      .from("pedidos_pendentes_pagamento" as any)
+      .select("id, loja_id, valor_total, status, mp_payment_id, mp_pix_qr_code, mp_pix_qr_base64, mp_pix_expira_em")
+      .eq("id", data.pendente_id)
       .maybeSingle();
     if (perr) throw new Error(perr.message);
-    if (!pedido) throw new Error("Pedido não encontrado");
-    if (pedido.status !== "aguardando_pagamento") throw new Error("Pedido não está aguardando pagamento");
-    if (pedido.mp_payment_id) throw new Error("Pagamento já criado para este pedido");
+    if (!pend) throw new Error("Pedido pendente não encontrado");
+    const p = pend as any;
+    if (p.status !== "aguardando") throw new Error("Pedido não está mais aguardando pagamento");
 
-    const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
+    // Idempotência: se já criamos um Pix antes, devolve o mesmo QR
+    if (p.mp_payment_id && p.mp_pix_qr_code) {
+      return {
+        payment_id: String(p.mp_payment_id),
+        qr_code: p.mp_pix_qr_code,
+        qr_code_base64: p.mp_pix_qr_base64 ?? "",
+        ticket_url: "",
+        expira_em: p.mp_pix_expira_em ?? null,
+        status: "pending",
+      };
+    }
+
+    const cfg = await getMpConfigByLojaId(p.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita Pix online");
 
-    const notification_url = buildWebhookUrl(pedido.loja_id as string);
-
+    const notification_url = buildWebhookUrl(p.loja_id as string);
     const expira = new Date(Date.now() + 30 * 60 * 1000);
 
     const docDigits = data.payer_doc.replace(/\D/g, "");
@@ -82,34 +91,39 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
-        transaction_amount: Number(pedido.valor_total),
-        description: `Pedido #${pedido.numero}`,
+        transaction_amount: Number(p.valor_total),
+        description: `Pedido catálogo`,
         payment_method_id: "pix",
         payer: {
           email: data.payer_email,
           first_name: data.payer_nome,
           identification: { type: docType, number: docDigits },
         },
-        external_reference: pedido.id as string,
+        external_reference: `cat_pendente:${p.id}`,
         notification_url,
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
       },
-      `pix-${pedido.id}`,
+      `catpix-${p.id}`,
     );
 
+    const qrCode = payment.point_of_interaction?.transaction_data?.qr_code ?? "";
+    const qrBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64 ?? "";
+
     await supabaseAdmin
-      .from("pedidos")
+      .from("pedidos_pendentes_pagamento" as any)
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
+        mp_pix_qr_code: qrCode,
+        mp_pix_qr_base64: qrBase64,
         mp_pix_expira_em: expira.toISOString(),
       } as any)
-      .eq("id", pedido.id);
+      .eq("id", p.id);
 
     return {
       payment_id: String(payment.id),
-      qr_code: payment.point_of_interaction?.transaction_data?.qr_code ?? "",
-      qr_code_base64: payment.point_of_interaction?.transaction_data?.qr_code_base64 ?? "",
+      qr_code: qrCode,
+      qr_code_base64: qrBase64,
       ticket_url: payment.point_of_interaction?.transaction_data?.ticket_url ?? "",
       expira_em: expira.toISOString(),
       status: payment.status,
@@ -117,7 +131,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
   });
 
 const CartaoSchema = z.object({
-  pedido_id: z.string().uuid(),
+  pendente_id: z.string().uuid(),
   card_token: z.string().min(8).max(200),
   installments: z.number().int().min(1).max(12),
   payment_method_id: z.string().min(2).max(50),
@@ -131,29 +145,29 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { getMpConfigByLojaId, mpCreatePayment } = await import("@/lib/mercadopago.server");
 
-    const { data: pedido, error: perr } = await supabaseAdmin
-      .from("pedidos")
-      .select("id, loja_id, valor_total, status, mp_payment_id, numero")
-      .eq("id", data.pedido_id)
+    const { data: pend, error: perr } = await supabaseAdmin
+      .from("pedidos_pendentes_pagamento" as any)
+      .select("id, loja_id, valor_total, status, mp_payment_id, pedido_id")
+      .eq("id", data.pendente_id)
       .maybeSingle();
     if (perr) throw new Error(perr.message);
-    if (!pedido) throw new Error("Pedido não encontrado");
-    if (pedido.status !== "aguardando_pagamento") throw new Error("Pedido não está aguardando pagamento");
-    if (pedido.mp_payment_id) throw new Error("Pagamento já processado");
+    if (!pend) throw new Error("Pedido pendente não encontrado");
+    const p = pend as any;
+    if (p.status !== "aguardando") throw new Error("Pedido não está mais aguardando pagamento");
+    if (p.mp_payment_id) throw new Error("Pagamento já processado");
 
-    const cfg = await getMpConfigByLojaId(pedido.loja_id as string);
+    const cfg = await getMpConfigByLojaId(p.loja_id as string);
     if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita cartão online");
 
-    const notification_url = buildWebhookUrl(pedido.loja_id as string);
-
+    const notification_url = buildWebhookUrl(p.loja_id as string);
     const docDigits = data.payer_doc.replace(/\D/g, "");
     const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
-        transaction_amount: Number(pedido.valor_total),
-        description: `Pedido #${pedido.numero}`,
+        transaction_amount: Number(p.valor_total),
+        description: `Pedido catálogo`,
         token: data.card_token,
         installments: data.installments,
         payment_method_id: data.payment_method_id,
@@ -162,44 +176,141 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
           email: data.payer_email,
           identification: { type: docType, number: docDigits },
         },
-        external_reference: pedido.id as string,
+        external_reference: `cat_pendente:${p.id}`,
         notification_url,
       },
-      `card-${pedido.id}-${Date.now()}`,
+      `catcard-${p.id}-${Date.now()}`,
     );
 
     const aprovado = payment.status === "approved";
+
     await supabaseAdmin
-      .from("pedidos")
+      .from("pedidos_pendentes_pagamento" as any)
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
-        pagamento_aprovado_em: aprovado ? new Date().toISOString() : null,
-        status: aprovado ? "em_preparo" : "aguardando_pagamento",
       } as any)
-      .eq("id", pedido.id);
+      .eq("id", p.id);
+
+    let pedido_id: string | null = null;
+    let numero: number | null = null;
+
+    if (aprovado) {
+      const { data: novoId, error: matErr } = await supabaseAdmin.rpc(
+        "materializar_pedido_pendente" as any,
+        {
+          _pendente_id: p.id,
+          _mp_payment_id: String(payment.id),
+          _mp_status: payment.status,
+        } as any,
+      );
+      if (matErr) throw new Error(matErr.message);
+      pedido_id = (novoId as unknown as string) ?? null;
+      if (pedido_id) {
+        const { data: novo } = await supabaseAdmin
+          .from("pedidos")
+          .select("numero")
+          .eq("id", pedido_id)
+          .maybeSingle();
+        numero = (novo as any)?.numero ?? null;
+      }
+    } else {
+      const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
+      if (cancelado) {
+        await supabaseAdmin
+          .from("pedidos_pendentes_pagamento" as any)
+          .update({ status: "cancelado" } as any)
+          .eq("id", p.id);
+      }
+    }
 
     return {
       payment_id: String(payment.id),
       status: payment.status,
       status_detail: payment.status_detail,
       aprovado,
+      pedido_id,
+      numero,
     };
   });
 
-const StatusSchema = z.object({ pedido_id: z.string().uuid() });
+const StatusSchema = z.object({ pendente_id: z.string().uuid() });
 
 export const consultarStatusPagamento = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => StatusSchema.parse(d))
   .handler(async ({ data }) => {
-    const { data: p } = await supabaseAdmin
-      .from("pedidos")
-      .select("status, mp_payment_status, pagamento_aprovado_em")
-      .eq("id", data.pedido_id)
+    const { data: pend } = await supabaseAdmin
+      .from("pedidos_pendentes_pagamento" as any)
+      .select("id, status, mp_payment_id, mp_payment_status, pedido_id, loja_id")
+      .eq("id", data.pendente_id)
       .maybeSingle();
+    if (!pend) return { aprovado: false, status: null, mp_status: null, pedido_id: null, numero: null };
+    const p = pend as any;
+
+    // Já materializado: devolve número
+    if (p.pedido_id) {
+      const { data: ped } = await supabaseAdmin
+        .from("pedidos")
+        .select("numero")
+        .eq("id", p.pedido_id)
+        .maybeSingle();
+      return {
+        aprovado: true,
+        status: p.status,
+        mp_status: p.mp_payment_status,
+        pedido_id: p.pedido_id as string,
+        numero: (ped as any)?.numero ?? null,
+      };
+    }
+
+    // Ainda não materializado: tenta confirmar no MP de forma síncrona
+    // para casos em que o webhook não chegou ainda.
+    if (p.mp_payment_id) {
+      try {
+        const { getMpConfigByLojaId, mpGetPayment } = await import("@/lib/mercadopago.server");
+        const cfg = await getMpConfigByLojaId(p.loja_id as string);
+        if (cfg) {
+          const payment = await mpGetPayment(cfg.access_token, String(p.mp_payment_id));
+          if (payment.status === "approved") {
+            const { data: novoId } = await supabaseAdmin.rpc(
+              "materializar_pedido_pendente" as any,
+              {
+                _pendente_id: p.id,
+                _mp_payment_id: String(payment.id),
+                _mp_status: payment.status,
+              } as any,
+            );
+            const pedido_id = (novoId as unknown as string) ?? null;
+            let numero: number | null = null;
+            if (pedido_id) {
+              const { data: ped } = await supabaseAdmin
+                .from("pedidos")
+                .select("numero")
+                .eq("id", pedido_id)
+                .maybeSingle();
+              numero = (ped as any)?.numero ?? null;
+            }
+            return { aprovado: true, status: "aprovado", mp_status: payment.status, pedido_id, numero };
+          }
+          if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
+            await supabaseAdmin
+              .from("pedidos_pendentes_pagamento" as any)
+              .update({ status: "cancelado", mp_payment_status: payment.status } as any)
+              .eq("id", p.id);
+            return { aprovado: false, status: "cancelado", mp_status: payment.status, pedido_id: null, numero: null };
+          }
+          return { aprovado: false, status: p.status, mp_status: payment.status, pedido_id: null, numero: null };
+        }
+      } catch {
+        /* fallback silencioso */
+      }
+    }
+
     return {
-      status: (p as any)?.status ?? null,
-      mp_status: (p as any)?.mp_payment_status ?? null,
-      aprovado_em: (p as any)?.pagamento_aprovado_em ?? null,
+      aprovado: false,
+      status: p.status,
+      mp_status: p.mp_payment_status,
+      pedido_id: null,
+      numero: null,
     };
   });
