@@ -4,9 +4,9 @@ import { SplashEntregadorPage } from "@/features/splash/SplashEntregadorPage";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ROTA 66 — Entregas sem fronteiras" },
-      { name: "description", content: "App do entregador ROTA 66. Acelera, a rota é sua." },
-      { property: "og:title", content: "ROTA 66 — App do Entregador" },
+      { title: "ROTA 66 APP" },
+      { name: "description", content: "ROTA 66 APP — Entregas sem fronteiras." },
+      { property: "og:title", content: "ROTA 66 APP" },
       { property: "og:description", content: "Entregas sem fronteiras." },
     ],
   }),
