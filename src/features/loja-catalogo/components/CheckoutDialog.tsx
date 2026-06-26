@@ -161,11 +161,11 @@ export function CheckoutDialog({
           itens: cartItems.map((i) => ({ produto_id: i.produto.id, qtd: i.qtd })),
         },
       });
-      if (res.aguardando_pagamento) {
-        setPedidoPagar({ id: res.id, numero: res.numero });
+      if (res.aguardando_pagamento && res.pendente_id) {
+        setPendentePagar({ pendente_id: res.pendente_id });
         setStep("pagar");
-      } else {
-        onSuccess(res);
+      } else if (res.id && res.numero) {
+        onSuccess({ id: res.id, numero: res.numero });
       }
     } catch (err: any) {
       toast.error(err?.message ?? "Falha ao enviar pedido");
