@@ -108,24 +108,24 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             const payment = await mpGetPayment(cfg.access_token, paymentId);
             const aprovado = payment.status === "approved";
             const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
-            const update: Record<string, unknown> = { mp_payment_status: payment.status };
-            if (aprovado) {
-              update.status = "em_preparo";
-              update.pagamento_aprovado_em = new Date().toISOString();
-              aprovados++;
-            } else if (cancelado) {
-              update.status = "cancelado";
-              cancelados++;
-            } else {
-              inalterados++;
-            }
             if (aprovado || cancelado || (payment.status && payment.status !== "pending")) {
-              await supabaseAdmin
-                .from("pedidos")
-                .update(update as any)
-                .eq("id", p.id as string)
-                .eq("status", "aguardando_pagamento");
+              const { error: rpcErr } = await supabaseAdmin.rpc(
+                "confirmar_pagamento_pedido_legado" as any,
+                {
+                  _pedido_id: p.id as string,
+                  _mp_payment_id: paymentId,
+                  _mp_status: payment.status,
+                } as any,
+              );
+              if (rpcErr) {
+                erros++;
+                console.error("[mp-poll-pendentes] rpc legado", p.id, rpcErr.message);
+                continue;
+              }
             }
+            if (aprovado) aprovados++;
+            else if (cancelado) cancelados++;
+            else inalterados++;
           } catch (e: any) {
             erros++;
             console.error("[mp-poll-pendentes] legado", p.id, e?.message ?? e);
