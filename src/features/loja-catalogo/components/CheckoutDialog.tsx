@@ -175,7 +175,7 @@ export function CheckoutDialog({
   }
 
   const title =
-    step === "carrinho" ? "Seu carrinho" : step === "dados" ? "Dados de entrega" : `Pagamento · #${pedidoPagar?.numero}`;
+    step === "carrinho" ? "Seu carrinho" : step === "dados" ? "Dados de entrega" : "Pagamento";
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center" onClick={onClose}>
