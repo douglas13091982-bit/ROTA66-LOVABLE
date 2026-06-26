@@ -11,6 +11,7 @@ import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
+import { RotasDisponiveisHeader } from "./components/RotasDisponiveisHeader";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 
 export function DisponiveisPage() {
@@ -53,10 +54,23 @@ export function DisponiveisPage() {
     );
   }
 
-  return (
-    <EntregadorShell title="Rotas Disponíveis">
-      <GanhoHojeCard valor={ganhoHoje} />
+  const isListaVisivel = !temRotaAtiva && estouOnline;
 
+  return (
+    <EntregadorShell
+      title="Rotas Disponíveis"
+      topFixed={
+        <>
+          <GanhoHojeCard valor={ganhoHoje} />
+          {isListaVisivel && (
+            <RotasDisponiveisHeader
+              ordenacao={ordenacao}
+              onOrdenacaoChange={setOrdenacao}
+            />
+          )}
+        </>
+      }
+    >
       {temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (

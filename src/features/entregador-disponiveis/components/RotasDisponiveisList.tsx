@@ -87,14 +87,6 @@ export function RotasDisponiveisList({
 
   return (
     <div className="max-w-xl mx-auto">
-      <div className="flex items-start justify-between gap-3 mb-4 px-1">
-        <h2 className="text-[18px] font-extrabold leading-[1.05] tracking-tight text-white whitespace-nowrap">
-          Rotas Disponíveis
-        </h2>
-      </div>
-
-      <OrdenacaoToggle value={ordenacao} onChange={onOrdenacaoChange} />
-
       {isLoading && grupos.length === 0 && (
         <p className="text-sm px-1" style={{ color: "#374151" }}>Carregando pedidos...</p>
       )}

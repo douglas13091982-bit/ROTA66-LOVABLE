@@ -24,7 +24,7 @@ const NAV = [
 ] as const;
 
 
-export function EntregadorShell({ children, title }: { children: ReactNode; title: string }) {
+export function EntregadorShell({ children, title, topFixed }: { children: ReactNode; title: string; topFixed?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { online, toggle } = useEntregadorStatus();
@@ -145,8 +145,11 @@ export function EntregadorShell({ children, title }: { children: ReactNode; titl
           </div>
           <div className="pp-reveal">
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="flex flex-col items-center justify-center gap-2 mb-4 pt-6">
-                {StatusToggleLarge}
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
+                <div className="flex flex-col items-center justify-center gap-2 mb-4">
+                  {StatusToggleLarge}
+                </div>
+                {topFixed}
               </div>
             ) : (
               <div className="h-6" />
