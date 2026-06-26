@@ -10,12 +10,14 @@ export function StatusTimeline({ status }: { status: string }) {
           const Icon = step.icon;
           const done = idx <= currentStepIdx;
           const current = idx === currentStepIdx;
+          const isEntregue = step.key === "entregue" && done;
+          const showRed = current && !isEntregue;
           return (
             <div key={step.key} className="flex items-center gap-3">
               <div
                 className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${
                   done
-                    ? current
+                    ? showRed
                       ? "bg-gradient-red shadow-red text-primary-foreground"
                       : "bg-emerald-500 text-white"
                     : "bg-muted text-muted-foreground"
