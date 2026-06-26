@@ -556,13 +556,16 @@ html.light .glass {
   backdrop-filter: none;
 }
 
-/* Login/cadastro ficam sobre foto escura; mantém o card escuro mesmo no tema light. */
+/* Login/cadastro ficam sobre foto escura; card transparente em ambos os temas. */
+.auth-card-panel,
 html.light .auth-card-panel {
-  background: linear-gradient(180deg, color-mix(in oklab, var(--rota-navy-deep) 92%, transparent), color-mix(in oklab, var(--rota-navy) 82%, transparent));
+  background: transparent !important;
   border: 1px solid color-mix(in oklab, #ffffff 18%, transparent);
   color: #ffffff;
   backdrop-filter: blur(22px) saturate(145%);
+  box-shadow: none;
 }
+
 
 html.light .auth-card-panel h1,
 html.light .auth-card-panel .text-foreground {
