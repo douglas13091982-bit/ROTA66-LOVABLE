@@ -45,7 +45,7 @@ export function AuthCard({ title, subtitle, children, footer }: {
             />
           </Link>
 
-          <div className="glass rounded-2xl shadow-elevated p-8 md:p-10">
+          <div className="glass auth-card-panel rounded-2xl shadow-elevated p-8 md:p-10">
             <h1 className="font-display text-4xl md:text-5xl tracking-[0.04em] mb-2 leading-tight">{title}</h1>
             {subtitle && <p className="text-muted-foreground text-sm mb-8 leading-relaxed">{subtitle}</p>}
             {children}
