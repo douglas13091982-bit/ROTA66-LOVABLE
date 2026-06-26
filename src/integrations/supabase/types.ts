@@ -1938,6 +1938,86 @@ export type Database = {
           },
         ]
       }
+      pedidos_pendentes_pagamento: {
+        Row: {
+          created_at: string
+          dados: Json
+          forma_pagamento: string
+          id: string
+          loja_id: string
+          mp_payment_id: string | null
+          mp_payment_status: string | null
+          mp_pix_expira_em: string | null
+          mp_pix_qr_base64: string | null
+          mp_pix_qr_code: string | null
+          pedido_id: string | null
+          status: string
+          updated_at: string
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          dados: Json
+          forma_pagamento: string
+          id?: string
+          loja_id: string
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_pix_qr_base64?: string | null
+          mp_pix_qr_code?: string | null
+          pedido_id?: string | null
+          status?: string
+          updated_at?: string
+          valor_total: number
+        }
+        Update: {
+          created_at?: string
+          dados?: Json
+          forma_pagamento?: string
+          id?: string
+          loja_id?: string
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_pix_qr_base64?: string | null
+          mp_pix_qr_code?: string | null
+          pedido_id?: string | null
+          status?: string
+          updated_at?: string
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pedidos_pendentes_pagamento_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_pendentes_pagamento_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_pendentes_pagamento_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pedidos_pendentes_pagamento_pedido_id_fkey"
+            columns: ["pedido_id"]
+            isOneToOne: false
+            referencedRelation: "pedidos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planos_loja: {
         Row: {
           ativo: boolean
@@ -2944,6 +3024,14 @@ export type Database = {
         Returns: boolean
       }
       marcar_ticket_lido: { Args: { _ticket_id: string }; Returns: undefined }
+      materializar_pedido_pendente: {
+        Args: {
+          _mp_payment_id: string
+          _mp_status: string
+          _pendente_id: string
+        }
+        Returns: string
+      }
       minhas_areas_admin: {
         Args: never
         Returns: {
