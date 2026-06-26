@@ -72,7 +72,7 @@ export function CheckoutDialog({
   const taxa = temCoords ? taxaCalculada : taxaBase;
   const total = subtotal + taxa;
   const [saving, setSaving] = useState(false);
-  const [pedidoPagar, setPedidoPagar] = useState<{ id: string; numero: number } | null>(null);
+  
   const sheetRef = useRef<HTMLDivElement>(null);
 
   const { data: mpConfig } = useMpPublicConfig(lojaId);
