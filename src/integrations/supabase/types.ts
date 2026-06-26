@@ -2513,9 +2513,11 @@ export type Database = {
           id: string | null
           logo_url: string | null
           nome: string | null
+          plano_mensal_ativo: boolean | null
           slug: string | null
           status: Database["public"]["Enums"]["status_moderacao"] | null
           taxa_entrega_base: number | null
+          taxa_por_pedido: number | null
           telefone: string | null
           usar_horario_automatico: boolean | null
         }
@@ -2534,9 +2536,11 @@ export type Database = {
           id?: string | null
           logo_url?: string | null
           nome?: string | null
+          plano_mensal_ativo?: boolean | null
           slug?: string | null
           status?: Database["public"]["Enums"]["status_moderacao"] | null
           taxa_entrega_base?: number | null
+          taxa_por_pedido?: number | null
           telefone?: string | null
           usar_horario_automatico?: boolean | null
         }
@@ -2555,9 +2559,11 @@ export type Database = {
           id?: string | null
           logo_url?: string | null
           nome?: string | null
+          plano_mensal_ativo?: boolean | null
           slug?: string | null
           status?: Database["public"]["Enums"]["status_moderacao"] | null
           taxa_entrega_base?: number | null
+          taxa_por_pedido?: number | null
           telefone?: string | null
           usar_horario_automatico?: boolean | null
         }

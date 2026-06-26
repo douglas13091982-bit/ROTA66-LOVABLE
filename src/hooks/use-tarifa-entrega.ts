@@ -30,11 +30,22 @@ async function buscarTaxaPlanoLoja(
   lojaId: string,
 ): Promise<{ taxa: number; planoMensalAtivo: boolean }> {
   if (!lojaId) return { taxa: 0, planoMensalAtivo: false };
-  const { data } = await supabase
-    .from("lojas")
+  // Tenta primeiro a view pública (acessível a anônimos no catálogo)
+  let data: any = null;
+  const pub = await (supabase as any)
+    .from("lojas_publicas")
     .select("taxa_por_pedido, plano_mensal_ativo")
     .eq("id", lojaId)
     .maybeSingle();
+  data = pub.data;
+  if (!data) {
+    const r = await supabase
+      .from("lojas")
+      .select("taxa_por_pedido, plano_mensal_ativo")
+      .eq("id", lojaId)
+      .maybeSingle();
+    data = r.data;
+  }
   return {
     taxa: Number((data as any)?.taxa_por_pedido ?? 0) || 0,
     planoMensalAtivo: Boolean((data as any)?.plano_mensal_ativo),
