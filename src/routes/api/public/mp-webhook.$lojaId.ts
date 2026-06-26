@@ -101,18 +101,11 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
 
           // Compat: pedidos antigos que já estavam em pedidos.aguardando_pagamento
           const pedidoId = ref;
-          const update: Record<string, unknown> = { mp_payment_status: payment.status };
-          if (aprovado) {
-            update.status = "em_preparo";
-            update.pagamento_aprovado_em = new Date().toISOString();
-          } else if (cancelado) {
-            update.status = "cancelado";
-          }
-          await supabaseAdmin
-            .from("pedidos")
-            .update(update as any)
-            .eq("id", pedidoId)
-            .eq("loja_id", lojaId);
+          await supabaseAdmin.rpc("confirmar_pagamento_pedido_legado" as any, {
+            _pedido_id: pedidoId,
+            _mp_payment_id: paymentId,
+            _mp_status: payment.status,
+          } as any);
 
           return new Response("ok", { status: 200 });
         } catch {
