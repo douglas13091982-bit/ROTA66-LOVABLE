@@ -49,6 +49,14 @@ export function DisponiveisPage() {
     [aceitarGrupo],
   );
 
+  if (!aprovado) {
+    return (
+      <EntregadorShell title="Disponíveis">
+        <AguardandoAprovacaoEstado bloqueado={bloqueado} />
+      </EntregadorShell>
+    );
+  }
+
   if (semVinculoNemExterno) {
     return (
       <EntregadorShell title="Disponíveis">
