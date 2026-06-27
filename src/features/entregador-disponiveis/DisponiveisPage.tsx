@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
