@@ -30,22 +30,17 @@ export function AguardandoAprovacaoEstado({
       {!bloqueado && (
         <Link
           to="/entregador/perfil"
-          className="block rounded-2xl border-2 border-amber-500/50 bg-amber-500/10 p-5 hover:bg-amber-500/15 transition"
+          className="block rounded-2xl border-2 border-amber-500 bg-amber-500 p-5 text-center hover:bg-amber-600 transition"
         >
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/20">
-              <KeyRound className="h-5 w-5 text-amber-500" />
-            </div>
-            <div className="text-left">
-              <p className="font-bold text-sm uppercase tracking-wide text-amber-600 dark:text-amber-400 mb-1">
-                Cadastre sua chave PIX
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Cadastre sua chave PIX antes de ser aprovado para receber seus ganhos
-                sem atraso. Toque aqui para ir ao seu perfil.
-              </p>
-            </div>
+          <div className="flex items-center justify-center gap-2">
+            <KeyRound className="h-5 w-5 text-white" />
+            <span className="font-bold text-sm uppercase tracking-wide text-white">
+              Cadastrar chave PIX
+            </span>
           </div>
+          <p className="text-xs text-white/90 mt-2">
+            Complete seu cadastro antes da aprovação para receber seus ganhos.
+          </p>
         </Link>
       )}
     </div>
