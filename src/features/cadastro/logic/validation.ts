@@ -14,6 +14,17 @@ type Ctx = {
 
 /** Retorna true se passou na validação; senão exibe toast e retorna false. */
 export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx): boolean {
+  // Campos obrigatórios para TODOS os perfis — evita perfis vazios no banco
+  const fullName = form.fullName.trim();
+  if (fullName.length < 3) return fail("Informe seu nome completo (mínimo 3 caracteres)");
+  if (fullName.length > 120) return fail("Nome muito longo (máximo 120 caracteres)");
+
+  const phoneDigits = onlyDigits(form.phone);
+  if (!phoneDigits) return fail("Telefone é obrigatório");
+  if (phoneDigits.length < 10 || phoneDigits.length > 13) {
+    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999)");
+  }
+
   if (!passwordMeetsRequirements(form.password)) {
     toast.error("A senha não atende a todos os requisitos");
     return false;
