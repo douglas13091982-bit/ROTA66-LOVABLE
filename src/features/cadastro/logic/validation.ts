@@ -14,6 +14,17 @@ type Ctx = {
 
 /** Retorna true se passou na validação; senão exibe toast e retorna false. */
 export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx): boolean {
+  // Campos obrigatórios para TODOS os perfis — evita perfis vazios no banco
+  const fullName = form.fullName.trim();
+  if (fullName.length < 3) return fail("Informe seu nome completo (mínimo 3 caracteres)");
+  if (fullName.length > 120) return fail("Nome muito longo (máximo 120 caracteres)");
+
+  const phoneDigits = onlyDigits(form.phone);
+  if (!phoneDigits) return fail("Telefone é obrigatório");
+  if (phoneDigits.length < 10 || phoneDigits.length > 13) {
+    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999)");
+  }
+
   if (!passwordMeetsRequirements(form.password)) {
     toast.error("A senha não atende a todos os requisitos");
     return false;
@@ -59,9 +70,16 @@ function fail(msg: string) {
 
 export function buildSignupMetadata(role: Role, form: SignupForm) {
   const cpfDigits = onlyDigits(form.cpf);
+  const fullName = form.fullName.trim();
+  const phone = form.phone.trim();
+  // Garantia: nunca enviar string vazia — o trigger create_profile_from_signup
+  // confia nesses campos para popular o profile.
+  if (!fullName || !phone) {
+    throw new Error("Nome e telefone são obrigatórios para criar a conta.");
+  }
   return {
-    full_name: form.fullName,
-    phone: form.phone,
+    full_name: fullName,
+    phone,
     role,
     cpf: cpfDigits || undefined,
     tipo_veiculo: role === "entregador" ? form.tipoVeiculo : undefined,
