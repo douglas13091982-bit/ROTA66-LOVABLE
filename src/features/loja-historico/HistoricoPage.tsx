@@ -214,7 +214,7 @@ export function HistoricoPage() {
         <ResumoCard label="Cancelados" value={String(totais.cancelados)} accent="text-zinc-400" />
         <ResumoCard
           label="Receita (entregues)"
-          value={formatBRL(totais.receitaEntregue)}
+          value={formatCurrency(totais.receitaEntregue)}
           accent="text-white"
         />
       </div>
@@ -260,7 +260,7 @@ export function HistoricoPage() {
                       <div className="truncate max-w-[260px]">{p.endereco_entrega ?? "—"}</div>
                     </td>
                     <td className="px-3 py-2.5 text-right font-semibold text-white">
-                      {formatBRL(Number(p.valor_total ?? 0))}
+                      {formatCurrency(Number(p.valor_total ?? 0))}
                     </td>
                     <td className="px-3 py-2.5">
                       <span
