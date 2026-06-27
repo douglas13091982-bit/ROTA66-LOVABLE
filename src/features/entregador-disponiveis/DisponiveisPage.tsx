@@ -12,6 +12,8 @@ import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
 import { RotasDisponiveisHeader } from "./components/RotasDisponiveisHeader";
+import { AguardandoAprovacaoEstado } from "./components/AguardandoAprovacaoEstado";
+import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 
 export function DisponiveisPage() {
