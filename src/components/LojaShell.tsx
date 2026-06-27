@@ -16,6 +16,7 @@ import { usePedidosRealtime } from "@/features/loja-pedidos/hooks/use-pedidos-lo
 const NAV = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/loja/pedidos", label: "Pedidos", icon: ClipboardList },
+  { to: "/loja/historico", label: "Histórico", icon: History },
   { to: "/loja/novo-pedido", label: "Novo pedido", icon: PlusCircle },
   { to: "/loja/agendamentos", label: "Agendamentos", icon: CalendarClock },
   { to: "/loja/produtos", label: "Catálogo", icon: Package },
