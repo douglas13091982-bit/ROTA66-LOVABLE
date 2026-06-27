@@ -30,7 +30,7 @@ export function AguardandoAprovacaoEstado({
       {!bloqueado && (
         <Link
           to="/entregador/perfil"
-          className="block rounded-2xl border-2 border-amber-500 bg-amber-500 p-5 text-center hover:bg-amber-600 transition"
+          className="block rounded-2xl border-2 border-red-600 bg-red-600 p-5 text-center hover:bg-red-700 transition"
         >
           <div className="flex items-center justify-center gap-2">
             <KeyRound className="h-5 w-5 text-white" />
