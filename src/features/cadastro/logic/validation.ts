@@ -70,9 +70,16 @@ function fail(msg: string) {
 
 export function buildSignupMetadata(role: Role, form: SignupForm) {
   const cpfDigits = onlyDigits(form.cpf);
+  const fullName = form.fullName.trim();
+  const phone = form.phone.trim();
+  // Garantia: nunca enviar string vazia — o trigger create_profile_from_signup
+  // confia nesses campos para popular o profile.
+  if (!fullName || !phone) {
+    throw new Error("Nome e telefone são obrigatórios para criar a conta.");
+  }
   return {
-    full_name: form.fullName,
-    phone: form.phone,
+    full_name: fullName,
+    phone,
     role,
     cpf: cpfDigits || undefined,
     tipo_veiculo: role === "entregador" ? form.tipoVeiculo : undefined,
