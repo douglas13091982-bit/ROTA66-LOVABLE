@@ -47,7 +47,7 @@ export function EntregadorFields({
         <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
           Tipo de veículo <span className="text-destructive">*</span>
         </span>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {VEICULOS.map(({ value, label, Icon, desc }) => (
             <button
               key={value}
