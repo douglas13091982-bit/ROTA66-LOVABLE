@@ -17,14 +17,22 @@ export function PlanoSelectSection({ lojaId, planoIdAtual, onChanged }: Props) {
 
   async function salvar() {
     if (!value) return;
+    const plano = (planos ?? []).find((p) => p.id === value);
+    if (!plano) return toast.error("Plano não encontrado");
     setSaving(true);
     const { error } = await (supabase as any)
       .from("lojas")
-      .update({ plano_id: value })
+      .update({
+        plano_id: value,
+        mensalidade_valor: Number(plano.mensalidade_valor),
+        taxa_por_pedido: Number(plano.taxa_por_pedido),
+        dia_vencimento_mensalidade: Number(plano.dia_vencimento),
+        plano_mensal_ativo: true,
+      })
       .eq("id", lojaId);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Plano atualizado");
+    toast.success("Plano aplicado e valores sincronizados");
     onChanged();
   }
 
