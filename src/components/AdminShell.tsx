@@ -18,6 +18,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
   { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas" },
   { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
+  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, superOnly: true },
   { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos" },
   { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao" },
   { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som" },
