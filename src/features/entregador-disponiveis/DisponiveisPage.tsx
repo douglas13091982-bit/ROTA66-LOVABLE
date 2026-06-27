@@ -37,12 +37,6 @@ export function DisponiveisPage() {
   // (gesto do usuário) e do pré-carregamento do MP3.
   usePopupNotificacao(aprovado ? grupos : []);
 
-  // Redireciona entregadores pendentes direto para o cadastro da chave PIX
-  useEffect(() => {
-    if (!isLoadingStatus && !aprovado && !bloqueado) {
-      void navigate({ to: "/entregador/perfil", replace: true });
-    }
-  }, [isLoadingStatus, aprovado, bloqueado, navigate]);
 
 
 
