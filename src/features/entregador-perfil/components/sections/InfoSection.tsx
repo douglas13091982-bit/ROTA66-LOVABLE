@@ -1,4 +1,4 @@
-import { Bike, Camera, Car, Image as ImageIcon } from "lucide-react";
+import { Bike, Camera, Car, Image as ImageIcon, Zap } from "lucide-react";
 import type { TipoVeiculo } from "../../logic/types";
 import { Field, PrimaryBtn, SectionPanel, SmallBtn } from "../ui-atoms";
 
