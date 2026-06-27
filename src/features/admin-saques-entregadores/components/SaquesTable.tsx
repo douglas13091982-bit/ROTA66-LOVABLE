@@ -147,7 +147,7 @@ export function SaquesTable({
             </button>
             <button
               onClick={() => {
-                if (!motivo.trim()) return toast?.error?.("Informe o motivo");
+                if (!motivo.trim()) return toast.error("Informe o motivo");
                 onRejeitar(rejeitando, motivo);
                 setRejeitando(null);
                 setMotivo("");
