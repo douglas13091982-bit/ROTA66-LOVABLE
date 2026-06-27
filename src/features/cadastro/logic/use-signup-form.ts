@@ -15,7 +15,7 @@ export type SignupForm = {
   estado: string;
   email: string;
   password: string;
-  tipoVeiculo: "moto" | "carro";
+  tipoVeiculo: "moto" | "carro" | "bike_eletrica";
   aceiteContrato: boolean;
   avatarFile: File | null;
   avatarPreview: string | null;
