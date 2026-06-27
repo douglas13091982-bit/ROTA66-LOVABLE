@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
@@ -30,19 +30,13 @@ export function DisponiveisPage() {
     taxaParaExibir,
     estouOnline,
   } = usePedidosDisponiveis(dismissed);
-  const { aprovado, bloqueado, isLoading: isLoadingStatus } = useEntregadorAprovacao();
+  const { aprovado, bloqueado } = useEntregadorAprovacao();
 
   // Dispara o som configurado pelo admin sempre que aparece um grupo novo
   // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
   // (gesto do usuário) e do pré-carregamento do MP3.
   usePopupNotificacao(aprovado ? grupos : []);
 
-  // Redireciona entregadores pendentes direto para o cadastro da chave PIX
-  useEffect(() => {
-    if (!isLoadingStatus && !aprovado && !bloqueado) {
-      void navigate({ to: "/entregador/perfil", replace: true });
-    }
-  }, [isLoadingStatus, aprovado, bloqueado, navigate]);
 
 
 
