@@ -3311,7 +3311,7 @@ export type Database = {
       suporte_autor_tipo: "loja" | "admin"
       suporte_ticket_prioridade: "normal" | "alta"
       suporte_ticket_status: "aberto" | "respondido" | "fechado"
-      tipo_veiculo: "moto" | "carro" | "caminhonete"
+      tipo_veiculo: "moto" | "carro" | "caminhonete" | "bike_eletrica"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3516,7 +3516,7 @@ export const Constants = {
       suporte_autor_tipo: ["loja", "admin"],
       suporte_ticket_prioridade: ["normal", "alta"],
       suporte_ticket_status: ["aberto", "respondido", "fechado"],
-      tipo_veiculo: ["moto", "carro", "caminhonete"],
+      tipo_veiculo: ["moto", "carro", "caminhonete", "bike_eletrica"],
     },
   },
 } as const
