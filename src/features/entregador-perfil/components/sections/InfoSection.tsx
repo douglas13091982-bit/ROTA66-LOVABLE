@@ -28,11 +28,12 @@ export function InfoSection(p: Props) {
         <label className="block text-[10px] uppercase tracking-[0.22em] text-white/45 font-bold mb-1.5">
           Veículo
         </label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {(
             [
               { v: "moto" as const, label: "Moto", Icon: Bike },
               { v: "carro" as const, label: "Carro", Icon: Car },
+              { v: "bike_eletrica" as const, label: "Bike elétrica", Icon: Zap },
             ]
           ).map(({ v, label, Icon }) => (
             <button
@@ -40,7 +41,7 @@ export function InfoSection(p: Props) {
               type="button"
               onClick={() => p.onSalvarVeiculo(v)}
               disabled={p.savingVeiculo}
-              className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border text-[13px] font-bold transition ${
+              className={`flex items-center justify-center gap-2 px-2 py-2.5 rounded-lg border text-[12px] font-bold transition ${
                 p.tipoVeiculo === v
                   ? "bg-white/10 border-white/30 text-white"
                   : "bg-black/30 border-white/10 text-white/55 hover:text-white/85"
@@ -52,7 +53,7 @@ export function InfoSection(p: Props) {
           ))}
         </div>
         <p className="text-[11px] text-white/45 mt-1.5">
-          Carros podem agrupar mais pedidos por rota.
+          Bike elétrica recebe pedidos com coleta a até 4 km. Carros podem agrupar mais pedidos por rota.
         </p>
       </div>
       <div className="flex flex-wrap gap-2 pt-1">
