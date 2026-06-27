@@ -1,13 +1,14 @@
-import { Bike, Car } from "lucide-react";
+import { Bike, Car, Zap } from "lucide-react";
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits } from "@/lib/sanitize";
 import { progressiveFormatCpf } from "../logic/format-progressivo";
 
-type TipoVeiculo = "moto" | "carro";
+type TipoVeiculo = "moto" | "carro" | "bike_eletrica";
 
 const VEICULOS = [
   { value: "moto" as const, label: "Moto", Icon: Bike, desc: "Entregas rápidas" },
   { value: "carro" as const, label: "Carro", Icon: Car, desc: "Mais pedidos por rota" },
+  { value: "bike_eletrica" as const, label: "Bike elétrica", Icon: Zap, desc: "Coleta até 4 km" },
 ];
 
 type Props = {
