@@ -15,6 +15,15 @@ export function SplashActions() {
       >
         ENTRAR
       </Link>
+      <a
+        href="https://rotas66.com.br"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full text-center rounded-none py-4 text-lg tracking-[0.18em] text-[#decdb4] border border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/40 transition-all duration-300 ease-premium"
+      >
+        SITE ROTA 66
+      </a>
     </div>
   );
 }
+
