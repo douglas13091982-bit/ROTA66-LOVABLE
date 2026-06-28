@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CalcularFreteRouteImport } from './routes/calcular-frete'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BaixarAppRouteImport } from './routes/baixar-app'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -81,6 +82,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalcularFreteRoute = CalcularFreteRouteImport.update({
+  id: '/calcular-frete',
+  path: '/calcular-frete',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -436,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
+  '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
@@ -500,6 +507,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
+  '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/c/$slug': typeof CSlugRoute
@@ -563,6 +571,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/baixar-app': typeof BaixarAppRoute
   '/cadastro': typeof CadastroRoute
+  '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
@@ -629,6 +638,7 @@ export interface FileRouteTypes {
     | '/'
     | '/baixar-app'
     | '/cadastro'
+    | '/calcular-frete'
     | '/login'
     | '/reset-password'
     | '/admin'
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/'
     | '/baixar-app'
     | '/cadastro'
+    | '/calcular-frete'
     | '/login'
     | '/reset-password'
     | '/c/$slug'
@@ -755,6 +766,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/baixar-app'
     | '/cadastro'
+    | '/calcular-frete'
     | '/login'
     | '/reset-password'
     | '/_authenticated/admin'
@@ -821,6 +833,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BaixarAppRoute: typeof BaixarAppRoute
   CadastroRoute: typeof CadastroRoute
+  CalcularFreteRoute: typeof CalcularFreteRoute
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   CSlugRoute: typeof CSlugRoute
@@ -851,6 +864,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calcular-frete': {
+      id: '/calcular-frete'
+      path: '/calcular-frete'
+      fullPath: '/calcular-frete'
+      preLoaderRoute: typeof CalcularFreteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -1440,6 +1460,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BaixarAppRoute: BaixarAppRoute,
   CadastroRoute: CadastroRoute,
+  CalcularFreteRoute: CalcularFreteRoute,
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   CSlugRoute: CSlugRoute,
@@ -1458,13 +1479,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
