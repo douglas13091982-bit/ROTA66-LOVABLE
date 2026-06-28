@@ -32,6 +32,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
   { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
   { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, superOnly: true },
+  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, superOnly: true },
 ];
 
 
