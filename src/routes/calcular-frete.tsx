@@ -126,6 +126,16 @@ function CalcularFretePage() {
         <p className="text-center text-[11px] text-muted-foreground mt-6">
           Simulação baseada nas tarifas globais (moto) + R$ {ADICIONAL_BASICO.toFixed(2)} do plano Básico.
         </p>
+
+        <a
+          href="https://rotas66.com.br"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 block w-full text-center rounded-xl bg-primary text-primary-foreground py-3.5 text-sm font-semibold tracking-wide hover:bg-primary/90 transition-colors"
+        >
+          Visitar rotas66.com.br
+        </a>
+
       </div>
     </div>
   );
