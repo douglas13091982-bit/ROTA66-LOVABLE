@@ -133,7 +133,7 @@ function CalcularFretePage() {
           rel="noopener noreferrer"
           className="mt-4 block w-full text-center rounded-xl bg-primary text-primary-foreground py-3.5 text-sm font-semibold tracking-wide hover:bg-primary/90 transition-colors"
         >
-          Visitar lojas.rotas66.com.br
+          Assinar Plano Rota
         </a>
 
       </div>
