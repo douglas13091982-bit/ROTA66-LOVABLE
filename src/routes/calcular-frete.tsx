@@ -77,7 +77,7 @@ function CalcularFretePage() {
         {/* Título */}
         <div className="text-center mb-5">
           <h1
-            className="text-3xl sm:text-4xl font-extrabold italic tracking-tight"
+            className="text-3xl sm:text-4xl font-extrabold italic tracking-wide"
             style={{ color: NAVY }}
           >
             CÁLCULO DE <span style={{ color: RED }}>FRETE</span>
