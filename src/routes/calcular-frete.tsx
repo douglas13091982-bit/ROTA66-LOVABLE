@@ -67,10 +67,10 @@ function CalcularFretePage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: CREAM }}>
       {/* Header navy */}
       <header
-        className="relative px-6 pt-8 pb-8 flex items-center justify-center"
+        className="relative px-6 pt-10 pb-10 flex items-center justify-center"
         style={{ backgroundColor: NAVY }}
       >
-        <img src={logoUrl} alt={nomeSistema} className="h-20 w-20 object-contain drop-shadow-lg" />
+        <img src={logoUrl} alt={nomeSistema} className="h-32 w-32 object-contain drop-shadow-lg" />
       </header>
 
       <main className="flex-1 px-5 pt-6 pb-10 max-w-xl mx-auto w-full">
