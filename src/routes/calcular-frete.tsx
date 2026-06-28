@@ -128,12 +128,12 @@ function CalcularFretePage() {
         </p>
 
         <a
-          href="https://rotas66.com.br"
+          href="https://lojas.rotas66.com.br/"
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 block w-full text-center rounded-xl bg-primary text-primary-foreground py-3.5 text-sm font-semibold tracking-wide hover:bg-primary/90 transition-colors"
         >
-          Visitar rotas66.com.br
+          Visitar lojas.rotas66.com.br
         </a>
 
       </div>
