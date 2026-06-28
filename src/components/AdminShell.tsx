@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
@@ -32,6 +32,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
   { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
   { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, superOnly: true },
+  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, superOnly: true },
 ];
 
 
