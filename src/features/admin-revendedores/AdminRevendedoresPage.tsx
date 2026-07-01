@@ -105,23 +105,23 @@ export function AdminRevendedoresPage() {
             <h2 className="text-lg font-semibold text-white">Novo revendedor</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
-            <input className="pp-input" placeholder="Nome completo" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
-            <input className="pp-input" placeholder="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input className="pp-input" placeholder="Senha inicial" type="text" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
-            <input className="pp-input" placeholder="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
-            <input className="pp-input" placeholder="CPF/CNPJ" value={form.documento} onChange={(e) => setForm({ ...form, documento: e.target.value })} />
+            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Nome completo" value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} />
+            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="E-mail" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Senha inicial" type="text" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
+            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
+            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="CPF/CNPJ" value={form.documento} onChange={(e) => setForm({ ...form, documento: e.target.value })} />
             <div className="grid grid-cols-3 gap-2 sm:col-span-2">
               <label className="text-xs text-white/70 flex flex-col gap-1">
                 Mensalidade (R$)
-                <input className="pp-input" value={form.mensalidade_valor} onChange={(e) => setForm({ ...form, mensalidade_valor: e.target.value })} />
+                <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.mensalidade_valor} onChange={(e) => setForm({ ...form, mensalidade_valor: e.target.value })} />
               </label>
               <label className="text-xs text-white/70 flex flex-col gap-1">
                 % receita
-                <input className="pp-input" value={form.percentual_receita} onChange={(e) => setForm({ ...form, percentual_receita: e.target.value })} />
+                <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.percentual_receita} onChange={(e) => setForm({ ...form, percentual_receita: e.target.value })} />
               </label>
               <label className="text-xs text-white/70 flex flex-col gap-1">
                 Dia vencimento
-                <input className="pp-input" value={form.dia_vencimento} onChange={(e) => setForm({ ...form, dia_vencimento: e.target.value })} />
+                <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.dia_vencimento} onChange={(e) => setForm({ ...form, dia_vencimento: e.target.value })} />
               </label>
             </div>
           </div>
@@ -173,7 +173,7 @@ export function AdminRevendedoresPage() {
                       Mensalidade (R$)
                       <input
                         defaultValue={r.mensalidade_valor}
-                        className="pp-input text-sm"
+                        className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
                         onBlur={(e) => {
                           const v = Number(e.target.value);
                           if (v !== r.mensalidade_valor) updateMut.mutate({ user_id: r.user_id, mensalidade_valor: v });
@@ -184,7 +184,7 @@ export function AdminRevendedoresPage() {
                       % receita
                       <input
                         defaultValue={r.percentual_receita}
-                        className="pp-input text-sm"
+                        className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
                         onBlur={(e) => {
                           const v = Number(e.target.value);
                           if (v !== r.percentual_receita) updateMut.mutate({ user_id: r.user_id, percentual_receita: v });
@@ -195,7 +195,7 @@ export function AdminRevendedoresPage() {
                       Dia venc.
                       <input
                         defaultValue={r.dia_vencimento}
-                        className="pp-input text-sm"
+                        className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
                         onBlur={(e) => {
                           const v = Math.min(28, Math.max(1, Number(e.target.value) || 5));
                           if (v !== r.dia_vencimento) updateMut.mutate({ user_id: r.user_id, dia_vencimento: v });
