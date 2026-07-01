@@ -216,44 +216,110 @@ export function RevendedorGanhosPage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
-            {rows.map((r) => {
-              const comp = new Date(r.competencia + "T00:00:00");
-              const label = comp.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+          <div>
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">
+              Extrato detalhado por competência
+            </h2>
+            {(() => {
+              const grupos = new Map<string, Row[]>();
+              for (const r of rows) {
+                const key = r.competencia.slice(0, 7); // YYYY-MM
+                if (!grupos.has(key)) grupos.set(key, []);
+                grupos.get(key)!.push(r);
+              }
+              const ordenado = Array.from(grupos.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
+
               return (
-                <div key={r.id} className="pp-card rounded-2xl p-5">
-                  <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
-                    <div>
-                      <div className="text-white font-semibold">{r.loja_nome}</div>
-                      <div className="text-xs text-white/50 capitalize">{label}</div>
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${
-                        r.pago ? "bg-green-600/20 text-green-400" : "bg-yellow-600/20 text-yellow-400"
-                      }`}
-                    >
-                      {r.pago ? "Pago" : "Em aberto"}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3 text-sm">
-                    <div>
-                      <div className="text-xs text-white/50">Valor do plano</div>
-                      <div className="text-white font-semibold">R$ {r.valor_total.toFixed(2)}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-white/50">Taxa ({percentualAdm}%)</div>
-                      <div className="text-white/80 font-semibold">- R$ {r.taxa_admin.toFixed(2)}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-white/50">Líquido</div>
-                      <div className="font-bold" style={{ color: "var(--rota-gold)" }}>
-                        R$ {r.valor_liquido.toFixed(2)}
+                <div className="space-y-6">
+                  {ordenado.map(([mes, itens]) => {
+                    const comp = new Date(mes + "-01T00:00:00");
+                    const label = comp.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+                    const brutoMes = itens.filter((i) => i.pago).reduce((s, i) => s + i.valor_total, 0);
+                    const taxaMes = itens.filter((i) => i.pago).reduce((s, i) => s + i.taxa_admin, 0);
+                    const liqMes = itens.filter((i) => i.pago).reduce((s, i) => s + i.valor_liquido, 0);
+                    const pagas = itens.filter((i) => i.pago).length;
+
+                    return (
+                      <div key={mes} className="pp-card rounded-2xl p-5">
+                        <div className="flex items-center justify-between flex-wrap gap-2 mb-4 pb-3 border-b border-white/10">
+                          <div>
+                            <div className="text-white font-bold capitalize">{label}</div>
+                            <div className="text-xs text-white/50">
+                              {pagas} de {itens.length} loja(s) paga(s)
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-[10px] uppercase text-white/50">Líquido do mês</div>
+                            <div className="font-bold text-lg" style={{ color: "var(--rota-gold)" }}>
+                              R$ {liqMes.toFixed(2)}
+                            </div>
+                            <div className="text-[10px] text-white/40">
+                              Bruto R$ {brutoMes.toFixed(2)} · Taxa R$ {taxaMes.toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          {itens.map((r) => (
+                            <div key={r.id} className="rounded-xl bg-white/5 p-4">
+                              <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                                <div>
+                                  <div className="text-white font-semibold text-sm">{r.loja_nome}</div>
+                                  <div className="text-[11px] text-white/50">
+                                    {r.pago && r.pago_em
+                                      ? `Pago em ${new Date(r.pago_em).toLocaleDateString("pt-BR", {
+                                          day: "2-digit",
+                                          month: "2-digit",
+                                          year: "numeric",
+                                        })} às ${new Date(r.pago_em).toLocaleTimeString("pt-BR", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                        })}`
+                                      : "Aguardando pagamento da loja"}
+                                  </div>
+                                </div>
+                                <span
+                                  className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${
+                                    r.pago ? "bg-green-600/20 text-green-400" : "bg-yellow-600/20 text-yellow-400"
+                                  }`}
+                                >
+                                  {r.pago ? "Pago" : "Em aberto"}
+                                </span>
+                              </div>
+
+                              <div className="rounded-lg bg-black/20 p-3 space-y-1.5 text-xs font-mono">
+                                <div className="flex items-center justify-between text-white/70">
+                                  <span>Valor do plano</span>
+                                  <span className="text-white">R$ {r.valor_total.toFixed(2)}</span>
+                                </div>
+                                <div className="flex items-center justify-between text-white/70">
+                                  <span>Taxa plataforma ({percentualAdm}%)</span>
+                                  <span className="text-red-300">
+                                    − R$ {r.taxa_admin.toFixed(2)}
+                                  </span>
+                                </div>
+                                <div className="border-t border-white/10 pt-1.5 flex items-center justify-between font-bold">
+                                  <span className="text-white/80">
+                                    = Líquido {r.pago ? "recebido" : "previsto"}
+                                  </span>
+                                  <span style={{ color: "var(--rota-gold)" }}>
+                                    R$ {r.valor_liquido.toFixed(2)}
+                                  </span>
+                                </div>
+                                <div className="text-[10px] text-white/40 pt-1">
+                                  Cálculo: {r.valor_total.toFixed(2)} × (100% − {percentualAdm}%) ={" "}
+                                  {r.valor_liquido.toFixed(2)}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               );
-            })}
+            })()}
           </div>
         )}
       </div>
