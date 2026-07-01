@@ -140,7 +140,7 @@ export function RevendedorGanhosPage() {
       <div className="max-w-5xl">
         <h1 className="text-2xl font-bold text-white mb-2">Meus ganhos</h1>
         <p className="text-white/60 text-sm mb-6">
-          Comissão sobre os planos das lojas que você indicou. Taxa da plataforma:{" "}
+          Comissão sobre os planos das lojas que você indicou. Sua comissão:{" "}
           <span className="text-white font-semibold">{percentualAdm}%</span>.
         </p>
 
