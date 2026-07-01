@@ -59,6 +59,7 @@ import { Route as AuthenticatedEntregadorCarteiraRouteImport } from './routes/_a
 import { Route as AuthenticatedEntregadorAtivosRouteImport } from './routes/_authenticated/entregador/ativos'
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authenticated/admin/suporte'
+import { Route as AuthenticatedAdminSaquesRevendedoresRouteImport } from './routes/_authenticated/admin/saques-revendedores'
 import { Route as AuthenticatedAdminSaquesEntregadoresRouteImport } from './routes/_authenticated/admin/saques-entregadores'
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
 import { Route as AuthenticatedAdminRevendedoresRouteImport } from './routes/_authenticated/admin/revendedores'
@@ -361,6 +362,12 @@ const AuthenticatedAdminSuporteRoute =
     path: '/suporte',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSaquesRevendedoresRoute =
+  AuthenticatedAdminSaquesRevendedoresRouteImport.update({
+    id: '/saques-revendedores',
+    path: '/saques-revendedores',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminSaquesEntregadoresRoute =
   AuthenticatedAdminSaquesEntregadoresRouteImport.update({
     id: '/saques-entregadores',
@@ -530,6 +537,7 @@ export interface FileRoutesByFullPath {
   '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
+  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -599,6 +607,7 @@ export interface FileRoutesByTo {
   '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
+  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -674,6 +683,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/_authenticated/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
+  '/_authenticated/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/_authenticated/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
   '/_authenticated/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
@@ -749,6 +759,7 @@ export interface FileRouteTypes {
     | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
+    | '/admin/saques-revendedores'
     | '/admin/suporte'
     | '/admin/tarifas'
     | '/entregador/ativos'
@@ -818,6 +829,7 @@ export interface FileRouteTypes {
     | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
+    | '/admin/saques-revendedores'
     | '/admin/suporte'
     | '/admin/tarifas'
     | '/entregador/ativos'
@@ -892,6 +904,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/revendedores'
     | '/_authenticated/admin/roteirizacao'
     | '/_authenticated/admin/saques-entregadores'
+    | '/_authenticated/admin/saques-revendedores'
     | '/_authenticated/admin/suporte'
     | '/_authenticated/admin/tarifas'
     | '/_authenticated/entregador/ativos'
@@ -1304,6 +1317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSuporteRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/saques-revendedores': {
+      id: '/_authenticated/admin/saques-revendedores'
+      path: '/saques-revendedores'
+      fullPath: '/admin/saques-revendedores'
+      preLoaderRoute: typeof AuthenticatedAdminSaquesRevendedoresRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/saques-entregadores': {
       id: '/_authenticated/admin/saques-entregadores'
       path: '/saques-entregadores'
@@ -1482,6 +1502,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminRevendedoresRoute: typeof AuthenticatedAdminRevendedoresRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
   AuthenticatedAdminSaquesEntregadoresRoute: typeof AuthenticatedAdminSaquesEntregadoresRoute
+  AuthenticatedAdminSaquesRevendedoresRoute: typeof AuthenticatedAdminSaquesRevendedoresRoute
   AuthenticatedAdminSuporteRoute: typeof AuthenticatedAdminSuporteRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1513,6 +1534,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
     AuthenticatedAdminSaquesEntregadoresRoute:
       AuthenticatedAdminSaquesEntregadoresRoute,
+    AuthenticatedAdminSaquesRevendedoresRoute:
+      AuthenticatedAdminSaquesRevendedoresRoute,
     AuthenticatedAdminSuporteRoute: AuthenticatedAdminSuporteRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,

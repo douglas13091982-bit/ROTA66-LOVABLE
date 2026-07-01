@@ -1,8 +1,10 @@
 import { RevendedorShell } from "@/components/RevendedorShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, Wallet } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { TrendingUp, Wallet, ArrowDownToLine } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type Row = {
   id: string;
@@ -15,8 +17,23 @@ type Row = {
   pago_em: string | null;
 };
 
+type Saque = {
+  id: string;
+  valor: number;
+  pix_chave: string;
+  status: string;
+  created_at: string;
+  pago_em: string | null;
+  rejeitado_em: string | null;
+  motivo_rejeicao: string | null;
+};
+
 export function RevendedorGanhosPage() {
   const { user } = useAuth();
+  const qc = useQueryClient();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [pixChave, setPixChave] = useState("");
+  const [valorInput, setValorInput] = useState("");
 
   const { data, isLoading } = useQuery({
     enabled: !!user?.id,
@@ -64,11 +81,59 @@ export function RevendedorGanhosPage() {
     },
   });
 
+  const { data: saques } = useQuery({
+    enabled: !!user?.id,
+    queryKey: ["revendedor-saques", user?.id],
+    queryFn: async (): Promise<Saque[]> => {
+      const { data, error } = await (supabase as any)
+        .from("revendedor_saques")
+        .select("*")
+        .eq("revendedor_user_id", user!.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as Saque[];
+    },
+  });
+
   const rows = data?.rows ?? [];
   const percentualAdm = data?.percentualAdm ?? 0;
+  const totalLiquidoPago = rows.filter((r) => r.pago).reduce((s, r) => s + r.valor_liquido, 0);
   const totalBruto = rows.filter((r) => r.pago).reduce((s, r) => s + r.valor_total, 0);
-  const totalLiquido = rows.filter((r) => r.pago).reduce((s, r) => s + r.valor_liquido, 0);
   const totalTaxa = rows.filter((r) => r.pago).reduce((s, r) => s + r.taxa_admin, 0);
+
+  const jaSacado = (saques ?? [])
+    .filter((s) => s.status === "pago" || s.status === "pendente")
+    .reduce((s, r) => s + Number(r.valor), 0);
+  const disponivel = +(totalLiquidoPago - jaSacado).toFixed(2);
+
+  const solicitarSaque = useMutation({
+    mutationFn: async () => {
+      const valor = Number(valorInput.replace(",", "."));
+      if (!valor || valor <= 0) throw new Error("Informe um valor válido");
+      if (valor > disponivel) throw new Error("Valor maior que o disponível");
+      if (!pixChave.trim()) throw new Error("Informe sua chave PIX");
+      const { error } = await (supabase as any).from("revendedor_saques").insert({
+        revendedor_user_id: user!.id,
+        valor,
+        pix_chave: pixChave.trim(),
+        status: "pendente",
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Solicitação enviada! O admin foi notificado.");
+      setDialogOpen(false);
+      setValorInput("");
+      qc.invalidateQueries({ queryKey: ["revendedor-saques"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Erro ao solicitar saque"),
+  });
+
+  const statusBadge = (s: string) => {
+    if (s === "pago") return "bg-green-600/20 text-green-400";
+    if (s === "rejeitado") return "bg-red-600/20 text-red-400";
+    return "bg-yellow-600/20 text-yellow-400";
+  };
 
   return (
     <RevendedorShell title="Ganhos">
@@ -79,26 +144,66 @@ export function RevendedorGanhosPage() {
           <span className="text-white font-semibold">{percentualAdm}%</span>.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-4">
           <div className="pp-card rounded-2xl p-5">
             <div className="flex items-center gap-2 text-white/50 text-xs mb-1">
-              <Wallet className="h-4 w-4" /> Total bruto (pago)
+              <Wallet className="h-4 w-4" /> Bruto pago
             </div>
-            <div className="text-white text-xl font-bold">R$ {totalBruto.toFixed(2)}</div>
+            <div className="text-white text-lg font-bold">R$ {totalBruto.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
-            <div className="text-white/50 text-xs mb-1">Taxa plataforma ({percentualAdm}%)</div>
-            <div className="text-white text-xl font-bold">R$ {totalTaxa.toFixed(2)}</div>
+            <div className="text-white/50 text-xs mb-1">Taxa ({percentualAdm}%)</div>
+            <div className="text-white text-lg font-bold">R$ {totalTaxa.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
             <div className="flex items-center gap-2 text-xs mb-1" style={{ color: "var(--rota-gold)" }}>
-              <TrendingUp className="h-4 w-4" /> Líquido para você
+              <TrendingUp className="h-4 w-4" /> Líquido total
             </div>
-            <div className="text-xl font-bold" style={{ color: "var(--rota-gold)" }}>
-              R$ {totalLiquido.toFixed(2)}
+            <div className="text-lg font-bold" style={{ color: "var(--rota-gold)" }}>
+              R$ {totalLiquidoPago.toFixed(2)}
             </div>
           </div>
+          <div className="pp-card rounded-2xl p-5">
+            <div className="text-white/50 text-xs mb-1">Disponível p/ saque</div>
+            <div className="text-white text-lg font-bold">R$ {disponivel.toFixed(2)}</div>
+          </div>
         </div>
+
+        <div className="mb-6">
+          <button
+            disabled={disponivel <= 0}
+            onClick={() => setDialogOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ background: "var(--rota-gold)" }}
+          >
+            <ArrowDownToLine className="h-4 w-4" />
+            Sacar ganhos
+          </button>
+        </div>
+
+        {saques && saques.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-2">Meus saques</h2>
+            <div className="space-y-2">
+              {saques.map((s) => (
+                <div key={s.id} className="pp-card rounded-xl p-4 flex items-center justify-between gap-3 flex-wrap">
+                  <div>
+                    <div className="text-white font-semibold">R$ {Number(s.valor).toFixed(2)}</div>
+                    <div className="text-xs text-white/50">
+                      PIX: {s.pix_chave} · {new Date(s.created_at).toLocaleDateString("pt-BR")}
+                    </div>
+                    {s.motivo_rejeicao && (
+                      <div className="text-xs text-red-400 mt-1">Motivo: {s.motivo_rejeicao}</div>
+                    )}
+                  </div>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${statusBadge(s.status)}`}>
+                    {s.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="text-white/50 text-sm">Carregando…</div>
@@ -152,6 +257,45 @@ export function RevendedorGanhosPage() {
           </div>
         )}
       </div>
+
+      {dialogOpen && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setDialogOpen(false)}>
+          <div className="pp-card rounded-2xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-white mb-1">Solicitar saque</h3>
+            <p className="text-xs text-white/60 mb-4">
+              Disponível: <span className="text-white font-semibold">R$ {disponivel.toFixed(2)}</span>
+            </p>
+            <label className="block text-xs text-white/60 mb-1">Valor (R$)</label>
+            <input
+              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm mb-3"
+              value={valorInput}
+              onChange={(e) => setValorInput(e.target.value)}
+              placeholder="0,00"
+              inputMode="decimal"
+            />
+            <label className="block text-xs text-white/60 mb-1">Chave PIX</label>
+            <input
+              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm mb-4"
+              value={pixChave}
+              onChange={(e) => setPixChave(e.target.value)}
+              placeholder="CPF, e-mail, telefone ou aleatória"
+            />
+            <div className="flex gap-2 justify-end">
+              <button className="px-3 py-2 rounded-lg text-sm text-white/70 hover:bg-white/5" onClick={() => setDialogOpen(false)}>
+                Cancelar
+              </button>
+              <button
+                disabled={solicitarSaque.isPending}
+                onClick={() => solicitarSaque.mutate()}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-black disabled:opacity-50"
+                style={{ background: "var(--rota-gold)" }}
+              >
+                {solicitarSaque.isPending ? "Enviando…" : "Solicitar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </RevendedorShell>
   );
 }
