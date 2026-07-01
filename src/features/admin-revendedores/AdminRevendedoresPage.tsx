@@ -182,7 +182,7 @@ export function AdminRevendedoresPage() {
                       />
                     </label>
                     <label className="text-[11px] text-white/60 flex flex-col gap-1">
-                      % receita
+                      % comissão revend.
                       <input
                         defaultValue={r.percentual_receita}
                         className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
