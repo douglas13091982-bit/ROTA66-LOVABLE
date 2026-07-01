@@ -49,12 +49,34 @@ export const listarConvitesLoja = createServerFn({ method: "GET" })
     await assertSuperAdmin(context);
     const { data, error } = await (context.supabase as any)
       .from("revendedor_convites_loja")
-      .select("id, token, loja_id, revendedor_id, email_destinatario, status, expira_em, aceito_em, created_at, lojas:loja_id(nome), revendedores:revendedor_id(nome, email)")
+      .select("id, token, loja_id, revendedor_id, email_destinatario, status, expira_em, aceito_em, created_at")
       .order("created_at", { ascending: false })
       .limit(200);
     if (error) throw new Error(error.message);
-    return (data ?? []) as any[];
+    const rows = (data ?? []) as any[];
+
+    const lojaIds = Array.from(new Set(rows.map((r) => r.loja_id).filter(Boolean)));
+    const revIds = Array.from(new Set(rows.map((r) => r.revendedor_id).filter(Boolean)));
+
+    const [lojasRes, revRes] = await Promise.all([
+      lojaIds.length
+        ? (context.supabase as any).from("lojas").select("id, nome").in("id", lojaIds)
+        : Promise.resolve({ data: [] as any[] }),
+      revIds.length
+        ? (context.supabase as any).from("revendedores").select("id, nome, email").in("id", revIds)
+        : Promise.resolve({ data: [] as any[] }),
+    ]);
+
+    const lojasMap = new Map((lojasRes.data ?? []).map((l: any) => [l.id, l]));
+    const revMap = new Map((revRes.data ?? []).map((r: any) => [r.id, r]));
+
+    return rows.map((r) => ({
+      ...r,
+      lojas: lojasMap.get(r.loja_id) ?? null,
+      revendedores: revMap.get(r.revendedor_id) ?? null,
+    }));
   });
+
 
 export const cancelarConviteLoja = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
