@@ -33,6 +33,7 @@ export function CadastroPage({
     contratoAtivo,
     contratoLoading,
     indicadorId: indicador?.id ?? null,
+    indicadorTipo: indicador?.tipo ?? null,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
