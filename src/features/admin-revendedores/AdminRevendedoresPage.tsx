@@ -221,6 +221,31 @@ export function AdminRevendedoresPage() {
                       />
                     </label>
                   </div>
+                  {(() => {
+                    const lojas = lojasVinculadas?.[r.user_id] ?? [];
+                    return (
+                      <div className="mt-3 pt-3 border-t border-white/10">
+                        <div className="text-[11px] uppercase tracking-wide text-white/50 mb-2">
+                          Lojas vinculadas ({lojas.length})
+                        </div>
+                        {lojas.length === 0 ? (
+                          <div className="text-xs text-white/40">Nenhuma loja vinculada a este revendedor.</div>
+                        ) : (
+                          <div className="flex flex-wrap gap-1.5">
+                            {lojas.map((l) => (
+                              <span
+                                key={l.id}
+                                className={`text-xs px-2 py-1 rounded-md border ${l.ativa ? "border-white/15 bg-white/5 text-white/80" : "border-white/10 bg-white/[0.02] text-white/40 line-through"}`}
+                                title={l.cidade ?? ""}
+                              >
+                                {l.nome}{l.cidade ? ` · ${l.cidade}` : ""}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>
