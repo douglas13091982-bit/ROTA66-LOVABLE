@@ -39,6 +39,23 @@ export function AdminRevendedoresPage() {
     },
   });
 
+  const { data: lojasVinculadas } = useQuery({
+    queryKey: ["admin-revendedores-lojas"],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("lojas")
+        .select("id, nome, cidade, ativa, revendedor_id")
+        .not("revendedor_id", "is", null);
+      if (error) throw error;
+      const map: Record<string, Array<{ id: string; nome: string; cidade: string | null; ativa: boolean }>> = {};
+      for (const l of (data ?? []) as any[]) {
+        (map[l.revendedor_id] ??= []).push({ id: l.id, nome: l.nome, cidade: l.cidade, ativa: l.ativa });
+      }
+      return map;
+    },
+  });
+
+
   const [form, setForm] = useState({
     nome: "",
     email: "",
