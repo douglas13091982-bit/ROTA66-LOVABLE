@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClientesIndexRouteImport } from './routes/clientes.index'
 import { Route as RastreioPedidoIdRouteImport } from './routes/rastreio.$pedidoId'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
+import { Route as ConviteLojaTokenRouteImport } from './routes/convite-loja.$token'
 import { Route as ClientesCidadeRouteImport } from './routes/clientes.$cidade'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
 import { Route as AuthenticatedRevendedorRouteRouteImport } from './routes/_authenticated/revendedor/route'
@@ -127,6 +128,11 @@ const RastreioPedidoIdRoute = RastreioPedidoIdRouteImport.update({
 const LojaSlugRoute = LojaSlugRouteImport.update({
   id: '/loja/$slug',
   path: '/loja/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConviteLojaTokenRoute = ConviteLojaTokenRouteImport.update({
+  id: '/convite-loja/$token',
+  path: '/convite-loja/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClientesCidadeRoute = ClientesCidadeRouteImport.update({
@@ -493,6 +499,7 @@ export interface FileRoutesByFullPath {
   '/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
+  '/convite-loja/$token': typeof ConviteLojaTokenRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
@@ -560,6 +567,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
+  '/convite-loja/$token': typeof ConviteLojaTokenRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes': typeof ClientesIndexRoute
@@ -633,6 +641,7 @@ export interface FileRoutesById {
   '/_authenticated/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
+  '/convite-loja/$token': typeof ConviteLojaTokenRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
@@ -706,6 +715,7 @@ export interface FileRouteTypes {
     | '/revendedor'
     | '/c/$slug'
     | '/clientes/$cidade'
+    | '/convite-loja/$token'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes/'
@@ -773,6 +783,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/c/$slug'
     | '/clientes/$cidade'
+    | '/convite-loja/$token'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes'
@@ -845,6 +856,7 @@ export interface FileRouteTypes {
     | '/_authenticated/revendedor'
     | '/c/$slug'
     | '/clientes/$cidade'
+    | '/convite-loja/$token'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes/'
@@ -914,6 +926,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   CSlugRoute: typeof CSlugRoute
   ClientesCidadeRoute: typeof ClientesCidadeRoute
+  ConviteLojaTokenRoute: typeof ConviteLojaTokenRoute
   LojaSlugRoute: typeof LojaSlugRoute
   RastreioPedidoIdRoute: typeof RastreioPedidoIdRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
@@ -996,6 +1009,13 @@ declare module '@tanstack/react-router' {
       path: '/loja/$slug'
       fullPath: '/loja/$slug'
       preLoaderRoute: typeof LojaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/convite-loja/$token': {
+      id: '/convite-loja/$token'
+      path: '/convite-loja/$token'
+      fullPath: '/convite-loja/$token'
+      preLoaderRoute: typeof ConviteLojaTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clientes/$cidade': {
@@ -1609,6 +1629,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   CSlugRoute: CSlugRoute,
   ClientesCidadeRoute: ClientesCidadeRoute,
+  ConviteLojaTokenRoute: ConviteLojaTokenRoute,
   LojaSlugRoute: LojaSlugRoute,
   RastreioPedidoIdRoute: RastreioPedidoIdRoute,
   ClientesIndexRoute: ClientesIndexRoute,
