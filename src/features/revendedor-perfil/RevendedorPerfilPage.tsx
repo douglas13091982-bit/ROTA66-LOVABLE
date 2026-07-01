@@ -50,7 +50,7 @@ export function RevendedorPerfilPage() {
               <Row label="Documento" value={data.documento ?? "—"} />
               <div className="h-px bg-white/10 my-3" />
               <Row label="Mensalidade fixa" value={`R$ ${Number(data.mensalidade_valor).toFixed(2)}`} />
-              <Row label="% sobre a receita" value={`${Number(data.percentual_receita).toFixed(2)}%`} />
+              <Row label="Minha comissão" value={`${Number(data.percentual_receita).toFixed(2)}%`} />
               <Row label="Dia de vencimento" value={String(data.dia_vencimento)} />
               <Row label="Status" value={data.ativo ? "Ativo" : "Inativo"} />
             </div>

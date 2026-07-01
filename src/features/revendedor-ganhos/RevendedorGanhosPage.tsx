@@ -65,14 +65,14 @@ export function RevendedorGanhosPage() {
 
       const rows: Row[] = (mens ?? []).map((m: any) => {
         const total = Number(m.valor_total ?? m.valor ?? 0);
-        const taxa = +(total * (percentualAdm / 100)).toFixed(2);
+        const liquido = +(total * (percentualAdm / 100)).toFixed(2);
         return {
           id: m.id,
           competencia: m.competencia,
           loja_nome: nomeMap.get(m.loja_id) ?? "—",
           valor_total: total,
-          taxa_admin: taxa,
-          valor_liquido: +(total - taxa).toFixed(2),
+          taxa_admin: +(total - liquido).toFixed(2),
+          valor_liquido: liquido,
           pago: !!m.pago,
           pago_em: m.pago_em,
         };
@@ -140,7 +140,7 @@ export function RevendedorGanhosPage() {
       <div className="max-w-5xl">
         <h1 className="text-2xl font-bold text-white mb-2">Meus ganhos</h1>
         <p className="text-white/60 text-sm mb-6">
-          Comissão sobre os planos das lojas que você indicou. Taxa da plataforma:{" "}
+          Comissão sobre os planos das lojas que você indicou. Sua comissão:{" "}
           <span className="text-white font-semibold">{percentualAdm}%</span>.
         </p>
 
@@ -152,7 +152,7 @@ export function RevendedorGanhosPage() {
             <div className="text-white text-lg font-bold">R$ {totalBruto.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
-            <div className="text-white/50 text-xs mb-1">Taxa ({percentualAdm}%)</div>
+            <div className="text-white/50 text-xs mb-1">Retido plataforma</div>
             <div className="text-white text-lg font-bold">R$ {totalTaxa.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
@@ -293,21 +293,21 @@ export function RevendedorGanhosPage() {
                                   <span className="text-white">R$ {r.valor_total.toFixed(2)}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-white/70">
-                                  <span>Taxa plataforma ({percentualAdm}%)</span>
+                                  <span>Retido plataforma ({(100 - percentualAdm).toFixed(0)}%)</span>
                                   <span className="text-red-300">
                                     − R$ {r.taxa_admin.toFixed(2)}
                                   </span>
                                 </div>
                                 <div className="border-t border-white/10 pt-1.5 flex items-center justify-between font-bold">
                                   <span className="text-white/80">
-                                    = Líquido {r.pago ? "recebido" : "previsto"}
+                                    = Sua comissão ({percentualAdm}%) {r.pago ? "recebida" : "prevista"}
                                   </span>
                                   <span style={{ color: "var(--rota-gold)" }}>
                                     R$ {r.valor_liquido.toFixed(2)}
                                   </span>
                                 </div>
                                 <div className="text-[10px] text-white/40 pt-1">
-                                  Cálculo: {r.valor_total.toFixed(2)} × (100% − {percentualAdm}%) ={" "}
+                                  Cálculo: {r.valor_total.toFixed(2)} × {percentualAdm}% ={" "}
                                   {r.valor_liquido.toFixed(2)}
                                 </div>
                               </div>

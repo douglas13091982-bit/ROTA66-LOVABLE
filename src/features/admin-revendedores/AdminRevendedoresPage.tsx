@@ -117,7 +117,7 @@ export function AdminRevendedoresPage() {
                 <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.mensalidade_valor} onChange={(e) => setForm({ ...form, mensalidade_valor: e.target.value })} />
               </label>
               <label className="text-xs text-white/70 flex flex-col gap-1">
-                % receita
+                % comissão do revendedor
                 <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.percentual_receita} onChange={(e) => setForm({ ...form, percentual_receita: e.target.value })} />
               </label>
               <label className="text-xs text-white/70 flex flex-col gap-1">
@@ -182,7 +182,7 @@ export function AdminRevendedoresPage() {
                       />
                     </label>
                     <label className="text-[11px] text-white/60 flex flex-col gap-1">
-                      % receita
+                      % comissão revend.
                       <input
                         defaultValue={r.percentual_receita}
                         className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
