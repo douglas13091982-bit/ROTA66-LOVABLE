@@ -209,8 +209,6 @@ export function AdminRevendedoresPage() {
             </div>
           )}
         </section>
-
-        <ConvitesLojaSection />
       </div>
     </AdminShell>
   );
