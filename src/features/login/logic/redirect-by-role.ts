@@ -17,6 +17,7 @@ export async function redirectByRole(userId: string, navigate: NavigateFn) {
   if (roles.includes("super_admin") || roles.includes("admin")) {
     return navigate({ to: "/admin", replace: true });
   }
+  if (roles.includes("revendedor")) return navigate({ to: "/revendedor", replace: true });
   if (roles.includes("entregador")) return navigate({ to: "/entregador", replace: true });
   if (roles.includes("loja_admin")) return navigate({ to: "/loja", replace: true });
   if (roles.includes("cliente")) {
