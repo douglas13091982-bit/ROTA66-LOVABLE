@@ -2370,6 +2370,7 @@ export type Database = {
       revendedores: {
         Row: {
           ativo: boolean
+          codigo_indicacao: string | null
           created_at: string
           dia_vencimento: number
           documento: string | null
@@ -2384,6 +2385,7 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean
+          codigo_indicacao?: string | null
           created_at?: string
           dia_vencimento?: number
           documento?: string | null
@@ -2398,6 +2400,7 @@ export type Database = {
         }
         Update: {
           ativo?: boolean
+          codigo_indicacao?: string | null
           created_at?: string
           dia_vencimento?: number
           documento?: string | null
@@ -2915,6 +2918,13 @@ export type Database = {
           id: string
         }[]
       }
+      buscar_revendedor_por_codigo: {
+        Args: { _codigo: string }
+        Returns: {
+          nome: string
+          user_id: string
+        }[]
+      }
       calcular_tarifa_global: { Args: { _km: number }; Returns: number }
       calcular_taxa_publica: {
         Args: { _entrega_lat: number; _entrega_lng: number; _loja_id: string }
@@ -3043,6 +3053,7 @@ export type Database = {
       gerar_cobrancas_revendedores_mensal: { Args: never; Returns: undefined }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
+      gerar_codigo_revendedor: { Args: never; Returns: string }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
       get_config_creditos_admin: {
