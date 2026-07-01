@@ -2367,6 +2367,51 @@ export type Database = {
           },
         ]
       }
+      revendedor_saques: {
+        Row: {
+          created_at: string
+          id: string
+          motivo_rejeicao: string | null
+          observacoes: string | null
+          observacoes_admin: string | null
+          pago_em: string | null
+          pix_chave: string
+          rejeitado_em: string | null
+          revendedor_user_id: string
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          motivo_rejeicao?: string | null
+          observacoes?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave: string
+          rejeitado_em?: string | null
+          revendedor_user_id: string
+          status?: string
+          updated_at?: string
+          valor: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          motivo_rejeicao?: string | null
+          observacoes?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave?: string
+          rejeitado_em?: string | null
+          revendedor_user_id?: string
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       revendedores: {
         Row: {
           ativo: boolean
