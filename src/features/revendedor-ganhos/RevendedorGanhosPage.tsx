@@ -65,14 +65,14 @@ export function RevendedorGanhosPage() {
 
       const rows: Row[] = (mens ?? []).map((m: any) => {
         const total = Number(m.valor_total ?? m.valor ?? 0);
-        const taxa = +(total * (percentualAdm / 100)).toFixed(2);
+        const liquido = +(total * (percentualAdm / 100)).toFixed(2);
         return {
           id: m.id,
           competencia: m.competencia,
           loja_nome: nomeMap.get(m.loja_id) ?? "—",
           valor_total: total,
-          taxa_admin: taxa,
-          valor_liquido: +(total - taxa).toFixed(2),
+          taxa_admin: +(total - liquido).toFixed(2),
+          valor_liquido: liquido,
           pago: !!m.pago,
           pago_em: m.pago_em,
         };
