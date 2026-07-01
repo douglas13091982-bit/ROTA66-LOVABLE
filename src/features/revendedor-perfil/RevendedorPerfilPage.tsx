@@ -117,13 +117,3 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between gap-4 text-sm">
-      <span className="text-white/60">{label}</span>
-      <span className="text-white font-semibold">{value}</span>
-    </div>
-  );
-}
