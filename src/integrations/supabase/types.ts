@@ -1226,6 +1226,7 @@ export type Database = {
           owner_id: string
           plano_id: string | null
           plano_mensal_ativo: boolean
+          revendedor_id: string | null
           slug: string
           status: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base: number
@@ -1259,6 +1260,7 @@ export type Database = {
           owner_id: string
           plano_id?: string | null
           plano_mensal_ativo?: boolean
+          revendedor_id?: string | null
           slug: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1292,6 +1294,7 @@ export type Database = {
           owner_id?: string
           plano_id?: string | null
           plano_mensal_ativo?: boolean
+          revendedor_id?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1314,6 +1317,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "planos_loja"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_revendedor_id_fkey"
+            columns: ["revendedor_id"]
+            isOneToOne: false
+            referencedRelation: "revendedores"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -2216,6 +2226,125 @@ export type Database = {
         }
         Relationships: []
       }
+      revendedor_cobrancas: {
+        Row: {
+          competencia: string
+          created_at: string
+          id: string
+          metodo_pagamento: string | null
+          mp_payment_id: string | null
+          mp_payment_status: string | null
+          mp_pix_expira_em: string | null
+          mp_qr_code: string | null
+          mp_qr_code_base64: string | null
+          mp_ticket_url: string | null
+          pago: boolean
+          pago_em: string | null
+          receita_base: number
+          revendedor_id: string
+          updated_at: string
+          valor_mensalidade: number
+          valor_percentual: number
+          valor_total: number | null
+          vencimento: string
+        }
+        Insert: {
+          competencia: string
+          created_at?: string
+          id?: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
+          pago?: boolean
+          pago_em?: string | null
+          receita_base?: number
+          revendedor_id: string
+          updated_at?: string
+          valor_mensalidade?: number
+          valor_percentual?: number
+          valor_total?: number | null
+          vencimento: string
+        }
+        Update: {
+          competencia?: string
+          created_at?: string
+          id?: string
+          metodo_pagamento?: string | null
+          mp_payment_id?: string | null
+          mp_payment_status?: string | null
+          mp_pix_expira_em?: string | null
+          mp_qr_code?: string | null
+          mp_qr_code_base64?: string | null
+          mp_ticket_url?: string | null
+          pago?: boolean
+          pago_em?: string | null
+          receita_base?: number
+          revendedor_id?: string
+          updated_at?: string
+          valor_mensalidade?: number
+          valor_percentual?: number
+          valor_total?: number | null
+          vencimento?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revendedor_cobrancas_revendedor_id_fkey"
+            columns: ["revendedor_id"]
+            isOneToOne: false
+            referencedRelation: "revendedores"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      revendedores: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          dia_vencimento: number
+          documento: string | null
+          email: string
+          mensalidade_valor: number
+          nome: string
+          observacoes: string | null
+          percentual_receita: number
+          telefone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          dia_vencimento?: number
+          documento?: string | null
+          email: string
+          mensalidade_valor?: number
+          nome: string
+          observacoes?: string | null
+          percentual_receita?: number
+          telefone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          dia_vencimento?: number
+          documento?: string | null
+          email?: string
+          mensalidade_valor?: number
+          nome?: string
+          observacoes?: string | null
+          percentual_receita?: number
+          telefone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       suporte_mensagens: {
         Row: {
           autor_id: string
@@ -2833,6 +2962,7 @@ export type Database = {
         Args: { _ticket_id: string }
         Returns: undefined
       }
+      gerar_cobrancas_revendedores_mensal: { Args: never; Returns: undefined }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
@@ -2937,6 +3067,7 @@ export type Database = {
         Args: { _loja_id: string; _user_id: string }
         Returns: boolean
       }
+      is_revendedor_da_loja: { Args: { _loja_id: string }; Returns: boolean }
       is_valid_cnpj: { Args: { _cnpj: string }; Returns: boolean }
       is_valid_cpf: { Args: { _cpf: string }; Returns: boolean }
       listar_admins: {
@@ -3261,6 +3392,7 @@ export type Database = {
         | "entregador"
         | "cliente"
         | "admin"
+        | "revendedor"
       entregador_credito_tipo:
         | "recarga"
         | "mensalidade"
@@ -3461,7 +3593,14 @@ export const Constants = {
         "concluido",
         "cancelado",
       ],
-      app_role: ["super_admin", "loja_admin", "entregador", "cliente", "admin"],
+      app_role: [
+        "super_admin",
+        "loja_admin",
+        "entregador",
+        "cliente",
+        "admin",
+        "revendedor",
+      ],
       entregador_credito_tipo: [
         "recarga",
         "mensalidade",
