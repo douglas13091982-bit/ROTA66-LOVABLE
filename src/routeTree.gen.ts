@@ -38,6 +38,7 @@ import { Route as ApiPublicMpWebhookRouteImport } from './routes/api/public/mp-w
 import { Route as ApiPublicManifestDotwebmanifestRouteImport } from './routes/api/public/manifest[.]webmanifest'
 import { Route as AuthenticatedRevendedorPerfilRouteImport } from './routes/_authenticated/revendedor/perfil'
 import { Route as AuthenticatedRevendedorLojasRouteImport } from './routes/_authenticated/revendedor/lojas'
+import { Route as AuthenticatedRevendedorGanhosRouteImport } from './routes/_authenticated/revendedor/ganhos'
 import { Route as AuthenticatedRevendedorCobrancasRouteImport } from './routes/_authenticated/revendedor/cobrancas'
 import { Route as AuthenticatedLojaSuporteRouteImport } from './routes/_authenticated/loja/suporte'
 import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authenticated/loja/produtos'
@@ -232,6 +233,12 @@ const AuthenticatedRevendedorLojasRoute =
   AuthenticatedRevendedorLojasRouteImport.update({
     id: '/lojas',
     path: '/lojas',
+    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
+  } as any)
+const AuthenticatedRevendedorGanhosRoute =
+  AuthenticatedRevendedorGanhosRouteImport.update({
+    id: '/ganhos',
+    path: '/ganhos',
     getParentRoute: () => AuthenticatedRevendedorRouteRoute,
   } as any)
 const AuthenticatedRevendedorCobrancasRoute =
@@ -543,6 +550,7 @@ export interface FileRoutesByFullPath {
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
+  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
   '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
@@ -611,6 +619,7 @@ export interface FileRoutesByTo {
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
+  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
   '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
@@ -685,6 +694,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/_authenticated/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/_authenticated/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
+  '/_authenticated/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/_authenticated/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
   '/_authenticated/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
@@ -759,6 +769,7 @@ export interface FileRouteTypes {
     | '/loja/produtos'
     | '/loja/suporte'
     | '/revendedor/cobrancas'
+    | '/revendedor/ganhos'
     | '/revendedor/lojas'
     | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
@@ -827,6 +838,7 @@ export interface FileRouteTypes {
     | '/loja/produtos'
     | '/loja/suporte'
     | '/revendedor/cobrancas'
+    | '/revendedor/ganhos'
     | '/revendedor/lojas'
     | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
@@ -900,6 +912,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/produtos'
     | '/_authenticated/loja/suporte'
     | '/_authenticated/revendedor/cobrancas'
+    | '/_authenticated/revendedor/ganhos'
     | '/_authenticated/revendedor/lojas'
     | '/_authenticated/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
@@ -1142,6 +1155,13 @@ declare module '@tanstack/react-router' {
       path: '/lojas'
       fullPath: '/revendedor/lojas'
       preLoaderRoute: typeof AuthenticatedRevendedorLojasRouteImport
+      parentRoute: typeof AuthenticatedRevendedorRouteRoute
+    }
+    '/_authenticated/revendedor/ganhos': {
+      id: '/_authenticated/revendedor/ganhos'
+      path: '/ganhos'
+      fullPath: '/revendedor/ganhos'
+      preLoaderRoute: typeof AuthenticatedRevendedorGanhosRouteImport
       parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
     '/_authenticated/revendedor/cobrancas': {
@@ -1570,6 +1590,7 @@ const AuthenticatedLojaRouteRouteWithChildren =
 
 interface AuthenticatedRevendedorRouteRouteChildren {
   AuthenticatedRevendedorCobrancasRoute: typeof AuthenticatedRevendedorCobrancasRoute
+  AuthenticatedRevendedorGanhosRoute: typeof AuthenticatedRevendedorGanhosRoute
   AuthenticatedRevendedorLojasRoute: typeof AuthenticatedRevendedorLojasRoute
   AuthenticatedRevendedorPerfilRoute: typeof AuthenticatedRevendedorPerfilRoute
   AuthenticatedRevendedorIndexRoute: typeof AuthenticatedRevendedorIndexRoute
@@ -1579,6 +1600,7 @@ const AuthenticatedRevendedorRouteRouteChildren: AuthenticatedRevendedorRouteRou
   {
     AuthenticatedRevendedorCobrancasRoute:
       AuthenticatedRevendedorCobrancasRoute,
+    AuthenticatedRevendedorGanhosRoute: AuthenticatedRevendedorGanhosRoute,
     AuthenticatedRevendedorLojasRoute: AuthenticatedRevendedorLojasRoute,
     AuthenticatedRevendedorPerfilRoute: AuthenticatedRevendedorPerfilRoute,
     AuthenticatedRevendedorIndexRoute: AuthenticatedRevendedorIndexRoute,
