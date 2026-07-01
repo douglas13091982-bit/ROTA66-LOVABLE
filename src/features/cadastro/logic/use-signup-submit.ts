@@ -21,9 +21,10 @@ type Deps = {
   contratoAtivo: ContratoAtivo;
   contratoLoading: boolean;
   indicadorId?: string | null;
+  indicadorTipo?: "entregador" | "revendedor" | null;
 };
 
-export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId }: Deps) {
+export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId, indicadorTipo }: Deps) {
   const navigate = useNavigate();
 
   async function checarCpfDisponivel(cpfDigits: string): Promise<boolean> {
@@ -65,7 +66,8 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
         cnpj: cnpjDigits,
         telefone: form.phone,
         categoria: form.categoria || null,
-        indicado_por_entregador_id: indicadorId || null,
+        indicado_por_entregador_id: indicadorTipo === "entregador" ? indicadorId || null : null,
+        revendedor_id: indicadorTipo === "revendedor" ? indicadorId || null : null,
       } as any)
       .select("id")
       .single();
