@@ -28,12 +28,6 @@ export function useLoginSubmit() {
       return;
     }
     toast.success("Bem-vindo de volta!");
-    const pendingConvite = (() => { try { return sessionStorage.getItem("convite_loja_pending_token"); } catch { return null; } })();
-    if (pendingConvite) {
-      sessionStorage.removeItem("convite_loja_pending_token");
-      navigate({ to: "/convite-loja/$token", params: { token: pendingConvite } });
-      return;
-    }
     if (data.user) await redirectByRole(data.user.id, navigate);
     else navigate({ to: "/" });
   };
