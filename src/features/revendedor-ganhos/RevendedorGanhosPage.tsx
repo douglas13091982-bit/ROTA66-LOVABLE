@@ -152,7 +152,7 @@ export function RevendedorGanhosPage() {
             <div className="text-white text-lg font-bold">R$ {totalBruto.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
-            <div className="text-white/50 text-xs mb-1">Taxa ({percentualAdm}%)</div>
+            <div className="text-white/50 text-xs mb-1">Retido plataforma</div>
             <div className="text-white text-lg font-bold">R$ {totalTaxa.toFixed(2)}</div>
           </div>
           <div className="pp-card rounded-2xl p-5">
