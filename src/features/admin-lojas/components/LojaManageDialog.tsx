@@ -10,6 +10,7 @@ import { EntregadoresDaLoja } from "./EntregadoresDaLoja";
 import { StatusSection } from "./StatusSection";
 import { CatalogoSection } from "./CatalogoSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
+import { RevendedorSelectSection } from "./RevendedorSelectSection";
 
 interface Props {
   loja: any;
@@ -66,6 +67,12 @@ export function LojaManageDialog({
           <PlanoSelectSection
             lojaId={l.id}
             planoIdAtual={l.plano_id ?? null}
+            onChanged={onChanged}
+          />
+
+          <RevendedorSelectSection
+            lojaId={l.id}
+            revendedorIdAtual={l.revendedor_id ?? null}
             onChanged={onChanged}
           />
 
