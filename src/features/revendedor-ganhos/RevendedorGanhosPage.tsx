@@ -293,21 +293,21 @@ export function RevendedorGanhosPage() {
                                   <span className="text-white">R$ {r.valor_total.toFixed(2)}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-white/70">
-                                  <span>Taxa plataforma ({percentualAdm}%)</span>
+                                  <span>Retido plataforma ({(100 - percentualAdm).toFixed(0)}%)</span>
                                   <span className="text-red-300">
                                     − R$ {r.taxa_admin.toFixed(2)}
                                   </span>
                                 </div>
                                 <div className="border-t border-white/10 pt-1.5 flex items-center justify-between font-bold">
                                   <span className="text-white/80">
-                                    = Líquido {r.pago ? "recebido" : "previsto"}
+                                    = Sua comissão ({percentualAdm}%) {r.pago ? "recebida" : "prevista"}
                                   </span>
                                   <span style={{ color: "var(--rota-gold)" }}>
                                     R$ {r.valor_liquido.toFixed(2)}
                                   </span>
                                 </div>
                                 <div className="text-[10px] text-white/40 pt-1">
-                                  Cálculo: {r.valor_total.toFixed(2)} × (100% − {percentualAdm}%) ={" "}
+                                  Cálculo: {r.valor_total.toFixed(2)} × {percentualAdm}% ={" "}
                                   {r.valor_liquido.toFixed(2)}
                                 </div>
                               </div>
