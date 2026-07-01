@@ -2300,6 +2300,73 @@ export type Database = {
           },
         ]
       }
+      revendedor_convites_loja: {
+        Row: {
+          aceito_em: string | null
+          aceito_por: string | null
+          created_at: string
+          criado_por: string
+          email_destinatario: string | null
+          expira_em: string
+          id: string
+          loja_id: string
+          revendedor_id: string | null
+          status: Database["public"]["Enums"]["convite_loja_status"]
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          aceito_em?: string | null
+          aceito_por?: string | null
+          created_at?: string
+          criado_por: string
+          email_destinatario?: string | null
+          expira_em?: string
+          id?: string
+          loja_id: string
+          revendedor_id?: string | null
+          status?: Database["public"]["Enums"]["convite_loja_status"]
+          token?: string
+          updated_at?: string
+        }
+        Update: {
+          aceito_em?: string | null
+          aceito_por?: string | null
+          created_at?: string
+          criado_por?: string
+          email_destinatario?: string | null
+          expira_em?: string
+          id?: string
+          loja_id?: string
+          revendedor_id?: string | null
+          status?: Database["public"]["Enums"]["convite_loja_status"]
+          token?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revendedor_convites_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revendedor_convites_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "revendedor_convites_loja_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       revendedores: {
         Row: {
           ativo: boolean
@@ -2700,6 +2767,7 @@ export type Database = {
       }
     }
     Functions: {
+      aceitar_convite_loja: { Args: { _token: string }; Returns: Json }
       aceitar_pedido_externo: {
         Args: { _pedido_id: string }
         Returns: {
@@ -2888,6 +2956,16 @@ export type Database = {
           id: string
           titulo: string
           versao: number
+        }[]
+      }
+      convite_loja_publico: {
+        Args: { _token: string }
+        Returns: {
+          email_destinatario: string
+          expira_em: string
+          loja_nome: string
+          status: Database["public"]["Enums"]["convite_loja_status"]
+          tem_revendedor_alvo: boolean
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
@@ -3393,6 +3471,7 @@ export type Database = {
         | "cliente"
         | "admin"
         | "revendedor"
+      convite_loja_status: "pendente" | "aceito" | "expirado" | "cancelado"
       entregador_credito_tipo:
         | "recarga"
         | "mensalidade"
@@ -3601,6 +3680,7 @@ export const Constants = {
         "admin",
         "revendedor",
       ],
+      convite_loja_status: ["pendente", "aceito", "expirado", "cancelado"],
       entregador_credito_tipo: [
         "recarga",
         "mensalidade",
