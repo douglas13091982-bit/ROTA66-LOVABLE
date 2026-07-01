@@ -21,9 +21,10 @@ type Deps = {
   contratoAtivo: ContratoAtivo;
   contratoLoading: boolean;
   indicadorId?: string | null;
+  indicadorTipo?: "entregador" | "revendedor" | null;
 };
 
-export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId }: Deps) {
+export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId, indicadorTipo }: Deps) {
   const navigate = useNavigate();
 
   async function checarCpfDisponivel(cpfDigits: string): Promise<boolean> {
