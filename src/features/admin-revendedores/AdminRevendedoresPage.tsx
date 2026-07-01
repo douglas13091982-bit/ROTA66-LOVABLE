@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Plus, Trash2, Users } from "lucide-react";
 import { criarRevendedor, excluirRevendedor } from "@/lib/revendedores.functions";
+import { ConvitesLojaSection } from "./ConvitesLojaSection";
 
 type Revendedor = {
   user_id: string;
@@ -208,6 +209,8 @@ export function AdminRevendedoresPage() {
             </div>
           )}
         </section>
+
+        <ConvitesLojaSection />
       </div>
     </AdminShell>
   );
