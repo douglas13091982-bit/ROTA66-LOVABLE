@@ -94,17 +94,37 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_140px_auto]">
-        <input
-          value={pix}
-          onChange={(e) => setPix(e.target.value)}
-          placeholder="Sua chave PIX"
-          className="px-3 py-2 rounded-md border border-border bg-background text-sm"
-        />
+      <div className="space-y-2">
+        <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          Chave PIX para receber
+        </label>
+        <div className="flex gap-2">
+          <input
+            value={pix}
+            onChange={(e) => setPix(e.target.value)}
+            placeholder="CPF, e-mail, telefone ou chave aleatória"
+            className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+          />
+          <button
+            type="button"
+            disabled={!pixMudou || !pix.trim() || salvarPixM.isPending}
+            onClick={() => salvarPixM.mutate(pix)}
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-border text-xs font-bold uppercase tracking-wider disabled:opacity-50"
+            title="Salvar como chave padrão"
+          >
+            <Save className="h-3.5 w-3.5" /> Salvar
+          </button>
+        </div>
+        {pixSalvo && !pixMudou && (
+          <p className="text-[11px] text-muted-foreground">Chave PIX salva.</p>
+        )}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <input
           value={valor}
           onChange={(e) => setValor(e.target.value)}
-          placeholder="Valor (R$)"
+          placeholder="Valor a sacar (R$)"
           inputMode="decimal"
           className="px-3 py-2 rounded-md border border-border bg-background text-sm"
         />
@@ -114,7 +134,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
           onClick={handleSolicitar}
           className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider disabled:opacity-50"
         >
-          <Send className="h-3.5 w-3.5" /> Solicitar
+          <Send className="h-3.5 w-3.5" /> Solicitar saque
         </button>
       </div>
       {!pode && !resumoQ.isLoading && (
