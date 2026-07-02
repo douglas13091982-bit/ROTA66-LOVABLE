@@ -994,6 +994,84 @@ export type Database = {
           },
         ]
       }
+      franqueados_config: {
+        Row: {
+          ativo: boolean
+          bloqueado_por_inadimplencia: boolean
+          cidade: string
+          created_at: string
+          dia_vencimento: number
+          dias_tolerancia: number
+          mensalidade_valor: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean
+          bloqueado_por_inadimplencia?: boolean
+          cidade: string
+          created_at?: string
+          dia_vencimento?: number
+          dias_tolerancia?: number
+          mensalidade_valor?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean
+          bloqueado_por_inadimplencia?: boolean
+          cidade?: string
+          created_at?: string
+          dia_vencimento?: number
+          dias_tolerancia?: number
+          mensalidade_valor?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      franqueados_faturas: {
+        Row: {
+          competencia: string
+          created_at: string
+          franqueado_user_id: string
+          id: string
+          mp_link: string | null
+          mp_payment_id: string | null
+          pago_em: string | null
+          status: string
+          updated_at: string
+          valor: number
+          vencimento: string
+        }
+        Insert: {
+          competencia: string
+          created_at?: string
+          franqueado_user_id: string
+          id?: string
+          mp_link?: string | null
+          mp_payment_id?: string | null
+          pago_em?: string | null
+          status?: string
+          updated_at?: string
+          valor: number
+          vencimento: string
+        }
+        Update: {
+          competencia?: string
+          created_at?: string
+          franqueado_user_id?: string
+          id?: string
+          mp_link?: string | null
+          mp_payment_id?: string | null
+          pago_em?: string | null
+          status?: string
+          updated_at?: string
+          valor?: number
+          vencimento?: string
+        }
+        Relationships: []
+      }
       loja_aceites_contrato: {
         Row: {
           aceito_em: string
@@ -2847,6 +2925,10 @@ export type Database = {
           ultima_mensagem_em: string
         }[]
       }
+      admin_ve_cidade: {
+        Args: { _cidade: string; _uid: string }
+        Returns: boolean
+      }
       aplicar_credito_entregador: {
         Args: {
           _competencia?: string
@@ -2910,6 +2992,7 @@ export type Database = {
       }
       cancelar_turno: { Args: { _agendamento_id: string }; Returns: undefined }
       check_system_alerts: { Args: never; Returns: number }
+      cidade_do_franqueado: { Args: { _uid: string }; Returns: string }
       cobrar_mensalidades_entregador: { Args: never; Returns: number }
       conceder_admin: {
         Args: { _email: string; _permissoes: Json }
@@ -3032,6 +3115,7 @@ export type Database = {
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
       gerar_codigo_revendedor: { Args: never; Returns: string }
+      gerar_faturas_franquia: { Args: never; Returns: number }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
       get_config_creditos_admin: {
@@ -3130,6 +3214,7 @@ export type Database = {
         Returns: number
       }
       is_entregador_aprovado: { Args: { _user_id: string }; Returns: boolean }
+      is_franquia_owner: { Args: { _uid: string }; Returns: boolean }
       is_loja_owner: {
         Args: { _loja_id: string; _user_id: string }
         Returns: boolean
