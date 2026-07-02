@@ -25,19 +25,39 @@ export const criarFranqueado = createServerFn({ method: "POST" })
     if (!data.cidade?.trim()) throw new Error("Cidade obrigatória");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = data.email.trim().toLowerCase();
 
-    const { data: created, error: errCreate } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email.trim().toLowerCase(),
-      password: data.senha,
-      email_confirm: true,
-      user_metadata: { full_name: data.nome },
-    });
-    if (errCreate || !created?.user) throw new Error(errCreate?.message ?? "Falha ao criar usuário");
-    const uid = created.user.id;
+    // Verifica se já existe usuário com esse e-mail
+    let uid: string | null = null;
+    const { data: existingList } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
+    const existing = existingList?.users?.find((u: any) => (u.email ?? "").toLowerCase() === email);
 
+    if (existing) {
+      // Se já é franqueado (tem config), erro amigável
+      const { data: cfgExistente } = await supabaseAdmin
+        .from("franqueados_config" as any)
+        .select("user_id")
+        .eq("user_id", existing.id)
+        .maybeSingle();
+      if (cfgExistente) {
+        throw new Error("Já existe um franqueado cadastrado com este e-mail.");
+      }
+      uid = existing.id;
+    } else {
+      const { data: created, error: errCreate } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: data.senha,
+        email_confirm: true,
+        user_metadata: { full_name: data.nome },
+      });
+      if (errCreate || !created?.user) throw new Error(errCreate?.message ?? "Falha ao criar usuário");
+      uid = created.user.id;
+    }
+
+    // Garante role super_admin (idempotente)
     const { error: errRole } = await supabaseAdmin
       .from("user_roles")
-      .insert({ user_id: uid, role: "super_admin" as any });
+      .upsert({ user_id: uid, role: "super_admin" as any }, { onConflict: "user_id,role" });
     if (errRole) throw new Error(errRole.message);
 
     const { error: errCfg } = await supabaseAdmin.from("franqueados_config" as any).insert({
