@@ -94,6 +94,10 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       </div>
 
+      <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 px-3 py-2 text-xs">
+        ⚠️ Mantenha sempre pelo menos <strong>R$ 20,00</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+      </div>
+
       <div className="space-y-2">
         <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
           Chave PIX para receber
