@@ -1,40 +1,44 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
+import { useFranquia } from "@/hooks/use-franquia";
 
 
-const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
+// ownerOnly = só o dono da franquia (você). superOnly = qualquer super_admin (owner + franqueados de cidade).
+const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean; ownerOnly?: boolean; franqueadoOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
-  
+
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
-  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, superOnly: true },
-  { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas" },
+  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, ownerOnly: true },
+  { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas", ownerOnly: true },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
-  { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas" },
+  { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
   { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
-  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, superOnly: true },
-  { to: "/admin/saques-revendedores", label: "Saques revend.", icon: Wallet, area: null, superOnly: true },
-  { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos" },
-  { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao" },
-  { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som" },
-  { to: "/admin/notificacao-som-loja", label: "Som alerta (Loja)", icon: Bell, area: "notificacao_som" },
-  { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding" },
-  { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios" },
-  { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk" },
+  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, ownerOnly: true },
+  { to: "/admin/saques-revendedores", label: "Saques revend.", icon: Wallet, area: null, ownerOnly: true },
+  { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos", ownerOnly: true },
+  { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
+  { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som", ownerOnly: true },
+  { to: "/admin/notificacao-som-loja", label: "Som alerta (Loja)", icon: Bell, area: "notificacao_som", ownerOnly: true },
+  { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
+  { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios", ownerOnly: true },
+  { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk", ownerOnly: true },
   { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
-  { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, superOnly: true },
-  { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
+  { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, ownerOnly: true },
+  { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
   { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, superOnly: true },
-  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
-  { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, superOnly: true },
-  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, superOnly: true },
+  { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
+  { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true },
+  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
+  { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, ownerOnly: true },
+  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, ownerOnly: true },
 ];
 
 
@@ -43,7 +47,10 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { user } = useAuth();
   const { signOut: handleSignOut, loading: signingOut } = useLogout();
   const { isSuper, can } = useAdminPermissoes();
+  const { isOwner, isFranqueado, cidade, bloqueado } = useFranquia();
   const visibleNav = NAV.filter((n) => {
+    if (n.ownerOnly) return isOwner;
+    if (n.franqueadoOnly) return isFranqueado;
     if (n.superOnly) return isSuper;
     if (n.area === null) return true;
     return can(n.area);
@@ -80,7 +87,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               </div>
               <div className="min-w-0">
                 <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
-                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isSuper ? "Super admin" : "Admin"}</div>
+                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isFranqueado ? `Franqueado · ${cidade ?? ""}` : isSuper ? "Super admin" : "Admin"}</div>
               </div>
             </Link>
             <button onClick={() => setOpen(false)} className="md:hidden text-white/60 hover:text-white" aria-label="Fechar menu">
@@ -182,21 +189,45 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
         </header>
 
         <main className="flex-1 px-5 md:px-8 py-6 md:py-8 relative">
+          {isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && (
+            <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 p-4 flex items-center justify-between">
+              <div className="text-sm text-red-200">
+                <span className="font-semibold text-red-300">Acesso bloqueado por inadimplência.</span> Regularize sua mensalidade de franquia.
+              </div>
+              <Link to="/admin/minha-franquia" className="text-xs px-3 py-1.5 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
+            </div>
+          )}
           <div className="pp-reveal">
             {(() => {
               const currentNav = NAV.find((n) => path.startsWith(n.to));
-              const blocked = currentNav?.superOnly
+              const blockedByRole = currentNav?.ownerOnly
+                ? !isOwner
+                : currentNav?.franqueadoOnly
+                ? !isFranqueado
+                : currentNav?.superOnly
                 ? !isSuper
                 : currentNav?.area
                 ? !can(currentNav.area)
                 : false;
-              if (blocked) {
+              const blockedByInadimplencia = isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && !path.startsWith("/admin/dashboard");
+              if (blockedByRole) {
                 return (
                   <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
                     <div className="text-lg font-semibold text-white mb-1">Acesso restrito</div>
                     <div className="text-sm text-white/60">
-                      Você não tem permissão para acessar esta área. Solicite ao super admin.
+                      Você não tem permissão para acessar esta área.
                     </div>
+                  </div>
+                );
+              }
+              if (blockedByInadimplencia) {
+                return (
+                  <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
+                    <div className="text-lg font-semibold text-white mb-1">Acesso bloqueado</div>
+                    <div className="text-sm text-white/60 mb-4">
+                      Regularize a mensalidade de franquia para continuar operando.
+                    </div>
+                    <Link to="/admin/minha-franquia" className="inline-block px-4 py-2 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
                   </div>
                 );
               }

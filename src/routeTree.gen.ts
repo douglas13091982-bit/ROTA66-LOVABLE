@@ -67,7 +67,9 @@ import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
 import { Route as AuthenticatedAdminNotificacaoSomLojaRouteImport } from './routes/_authenticated/admin/notificacao-som-loja'
 import { Route as AuthenticatedAdminNotificacaoSomRouteImport } from './routes/_authenticated/admin/notificacao-som'
+import { Route as AuthenticatedAdminMinhaFranquiaRouteImport } from './routes/_authenticated/admin/minha-franquia'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
+import { Route as AuthenticatedAdminFranqueadosRouteImport } from './routes/_authenticated/admin/franqueados'
 import { Route as AuthenticatedAdminFinanceiroRouteImport } from './routes/_authenticated/admin/financeiro'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin/entregadores'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
@@ -410,11 +412,23 @@ const AuthenticatedAdminNotificacaoSomRoute =
     path: '/notificacao-som',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminMinhaFranquiaRoute =
+  AuthenticatedAdminMinhaFranquiaRouteImport.update({
+    id: '/minha-franquia',
+    path: '/minha-franquia',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminLojasRoute = AuthenticatedAdminLojasRouteImport.update({
   id: '/lojas',
   path: '/lojas',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminFranqueadosRoute =
+  AuthenticatedAdminFranqueadosRouteImport.update({
+    id: '/franqueados',
+    path: '/franqueados',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminFinanceiroRoute =
   AuthenticatedAdminFinanceiroRouteImport.update({
     id: '/financeiro',
@@ -521,7 +535,9 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
+  '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -590,7 +606,9 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
+  '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -665,7 +683,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
+  '/_authenticated/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/_authenticated/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/_authenticated/admin/notificacao-som': typeof AuthenticatedAdminNotificacaoSomRoute
   '/_authenticated/admin/notificacao-som-loja': typeof AuthenticatedAdminNotificacaoSomLojaRoute
   '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -740,7 +760,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/entregadores'
     | '/admin/financeiro'
+    | '/admin/franqueados'
     | '/admin/lojas'
+    | '/admin/minha-franquia'
     | '/admin/notificacao-som'
     | '/admin/notificacao-som-loja'
     | '/admin/password-reset'
@@ -809,7 +831,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/entregadores'
     | '/admin/financeiro'
+    | '/admin/franqueados'
     | '/admin/lojas'
+    | '/admin/minha-franquia'
     | '/admin/notificacao-som'
     | '/admin/notificacao-som-loja'
     | '/admin/password-reset'
@@ -883,7 +907,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/financeiro'
+    | '/_authenticated/admin/franqueados'
     | '/_authenticated/admin/lojas'
+    | '/_authenticated/admin/minha-franquia'
     | '/_authenticated/admin/notificacao-som'
     | '/_authenticated/admin/notificacao-som-loja'
     | '/_authenticated/admin/password-reset'
@@ -1360,11 +1386,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminNotificacaoSomRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/minha-franquia': {
+      id: '/_authenticated/admin/minha-franquia'
+      path: '/minha-franquia'
+      fullPath: '/admin/minha-franquia'
+      preLoaderRoute: typeof AuthenticatedAdminMinhaFranquiaRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/lojas': {
       id: '/_authenticated/admin/lojas'
       path: '/lojas'
       fullPath: '/admin/lojas'
       preLoaderRoute: typeof AuthenticatedAdminLojasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/franqueados': {
+      id: '/_authenticated/admin/franqueados'
+      path: '/franqueados'
+      fullPath: '/admin/franqueados'
+      preLoaderRoute: typeof AuthenticatedAdminFranqueadosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/financeiro': {
@@ -1473,7 +1513,9 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminFinanceiroRoute: typeof AuthenticatedAdminFinanceiroRoute
+  AuthenticatedAdminFranqueadosRoute: typeof AuthenticatedAdminFranqueadosRoute
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
+  AuthenticatedAdminMinhaFranquiaRoute: typeof AuthenticatedAdminMinhaFranquiaRoute
   AuthenticatedAdminNotificacaoSomRoute: typeof AuthenticatedAdminNotificacaoSomRoute
   AuthenticatedAdminNotificacaoSomLojaRoute: typeof AuthenticatedAdminNotificacaoSomLojaRoute
   AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
@@ -1502,7 +1544,9 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
     AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
     AuthenticatedAdminFinanceiroRoute: AuthenticatedAdminFinanceiroRoute,
+    AuthenticatedAdminFranqueadosRoute: AuthenticatedAdminFranqueadosRoute,
     AuthenticatedAdminLojasRoute: AuthenticatedAdminLojasRoute,
+    AuthenticatedAdminMinhaFranquiaRoute: AuthenticatedAdminMinhaFranquiaRoute,
     AuthenticatedAdminNotificacaoSomRoute:
       AuthenticatedAdminNotificacaoSomRoute,
     AuthenticatedAdminNotificacaoSomLojaRoute:
@@ -1668,13 +1712,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
