@@ -1,6 +1,6 @@
 import { EnderecosColetaManager } from "@/components/EnderecosColetaManager";
 import { LojaShell } from "@/components/LojaShell";
-import { MercadoPagoConfig } from "@/components/loja/MercadoPagoConfig";
+
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { CatalogoLayoutPicker } from "./components/CatalogoLayoutPicker";
 import { CategoriaSelect } from "./components/CategoriaSelect";
