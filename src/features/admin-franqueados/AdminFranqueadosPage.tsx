@@ -75,6 +75,20 @@ export function AdminFranqueadosPage() {
     },
   });
 
+  const { data: cidades } = useQuery({
+    queryKey: ["admin-franqueados-cidades"],
+    enabled: isOwner,
+    queryFn: async (): Promise<{ nome: string; uf: string | null }[]> => {
+      const { data, error } = await supabase
+        .from("cidades")
+        .select("nome, uf")
+        .eq("ativo", true)
+        .order("nome");
+      if (error) throw error;
+      return (data ?? []) as any;
+    },
+  });
+
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -174,7 +188,18 @@ export function AdminFranqueadosPage() {
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Senha inicial" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="CPF/CNPJ" value={form.documento} onChange={(e) => setForm({ ...form, documento: e.target.value })} />
-            <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Cidade (exata, ex: Joinville)" value={form.cidade} onChange={(e) => setForm({ ...form, cidade: e.target.value })} />
+            <select
+              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
+              value={form.cidade}
+              onChange={(e) => setForm({ ...form, cidade: e.target.value })}
+            >
+              <option value="">Selecione a cidade…</option>
+              {(cidades ?? []).map((c) => (
+                <option key={c.nome} value={c.nome} className="bg-zinc-900">
+                  {c.nome}{c.uf ? ` - ${c.uf}` : ""}
+                </option>
+              ))}
+            </select>
             <label className="text-xs text-white/70 flex flex-col gap-1">
               Mensalidade franquia (R$)
               <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30" value={form.mensalidade_valor} onChange={(e) => setForm({ ...form, mensalidade_valor: e.target.value })} />
