@@ -1,4 +1,4 @@
-import { Bike, ClipboardList, DollarSign, Store } from "lucide-react";
+import { Bike, Building2, ClipboardList, DollarSign, Store } from "lucide-react";
 import { StatCard } from "./StatCard";
 import type { AdminStats } from "../logic/types";
 
@@ -6,13 +6,19 @@ type Props = { stats: AdminStats | undefined };
 
 export function StatsGrid({ stats }: Props) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 pp-stagger">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8 pp-stagger">
       <StatCard
         icon={Store}
         label="Lojas"
         value={stats?.lojas ?? 0}
         accent
         sub="Cadastradas na plataforma"
+      />
+      <StatCard
+        icon={Building2}
+        label="Franqueados"
+        value={stats?.franqueados ?? 0}
+        sub="Cidades em operação"
       />
       <StatCard
         icon={Bike}
