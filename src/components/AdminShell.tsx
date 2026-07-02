@@ -47,7 +47,10 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { user } = useAuth();
   const { signOut: handleSignOut, loading: signingOut } = useLogout();
   const { isSuper, can } = useAdminPermissoes();
+  const { isOwner, isFranqueado, cidade, bloqueado } = useFranquia();
   const visibleNav = NAV.filter((n) => {
+    if (n.ownerOnly) return isOwner;
+    if (n.franqueadoOnly) return isFranqueado;
     if (n.superOnly) return isSuper;
     if (n.area === null) return true;
     return can(n.area);
