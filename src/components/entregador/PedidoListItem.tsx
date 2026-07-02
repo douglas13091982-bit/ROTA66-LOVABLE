@@ -53,6 +53,10 @@ function PedidoListItemBase({
   onAceitar,
 }: Props) {
   const principal = grupo.items[0];
+  const totalBonus = useMemo(
+    () => grupo.items.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0),
+    [grupo.items],
+  );
   const total = useMemo(
     () =>
       grupo.items.reduce(
@@ -64,18 +68,16 @@ function PedidoListItemBase({
             p.loja_plano_mensal_ativo,
           ),
         0,
-      ),
-    [grupo.items, taxaParaExibir],
+      ) + totalBonus,
+    [grupo.items, taxaParaExibir, totalBonus],
   );
   const km = kmAteLoja(principal, minhaPos);
   const distEntrega = kmEntrega(principal);
   const nomeLoja = principal.loja_nome || "Loja";
   const bairroLoja = principal.loja_bairro;
   const endereco = resumirEnderecoEntrega(principal.endereco_entrega);
-  const totalBonus = useMemo(
-    () => grupo.items.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0),
-    [grupo.items],
-  );
+
+
 
 
   const handleAceitar = useCallback(() => onAceitar(grupo), [onAceitar, grupo]);
