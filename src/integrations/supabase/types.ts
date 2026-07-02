@@ -274,6 +274,36 @@ export type Database = {
         }
         Relationships: []
       }
+      cidades: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          nome: string
+          slug: string
+          uf: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome: string
+          slug: string
+          uf: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          nome?: string
+          slug?: string
+          uf?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       clientes_loja: {
         Row: {
           complemento: string | null
@@ -999,6 +1029,7 @@ export type Database = {
           ativo: boolean
           bloqueado_por_inadimplencia: boolean
           cidade: string
+          city_id: string | null
           created_at: string
           dia_vencimento: number
           dias_tolerancia: number
@@ -1010,6 +1041,7 @@ export type Database = {
           ativo?: boolean
           bloqueado_por_inadimplencia?: boolean
           cidade: string
+          city_id?: string | null
           created_at?: string
           dia_vencimento?: number
           dias_tolerancia?: number
@@ -1021,6 +1053,7 @@ export type Database = {
           ativo?: boolean
           bloqueado_por_inadimplencia?: boolean
           cidade?: string
+          city_id?: string | null
           created_at?: string
           dia_vencimento?: number
           dias_tolerancia?: number
@@ -1028,7 +1061,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "franqueados_config_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       franqueados_faturas: {
         Row: {
@@ -1287,6 +1328,7 @@ export type Database = {
           catalogo_slug: string | null
           categoria: Database["public"]["Enums"]["loja_categoria"] | null
           cidade: string | null
+          city_id: string | null
           cnpj: string | null
           created_at: string
           dia_vencimento_mensalidade: number | null
@@ -1321,6 +1363,7 @@ export type Database = {
           catalogo_slug?: string | null
           categoria?: Database["public"]["Enums"]["loja_categoria"] | null
           cidade?: string | null
+          city_id?: string | null
           cnpj?: string | null
           created_at?: string
           dia_vencimento_mensalidade?: number | null
@@ -1355,6 +1398,7 @@ export type Database = {
           catalogo_slug?: string | null
           categoria?: Database["public"]["Enums"]["loja_categoria"] | null
           cidade?: string | null
+          city_id?: string | null
           cnpj?: string | null
           created_at?: string
           dia_vencimento_mensalidade?: number | null
@@ -1382,6 +1426,13 @@ export type Database = {
           usar_horario_automatico?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "lojas_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "lojas_indicado_por_entregador_id_fkey"
             columns: ["indicado_por_entregador_id"]
@@ -2219,6 +2270,7 @@ export type Database = {
           aceita_pedidos_externos: boolean
           avatar_url: string | null
           cidade: string | null
+          city_id: string | null
           codigo_indicacao: string | null
           cpf: string | null
           created_at: string
@@ -2237,6 +2289,7 @@ export type Database = {
           aceita_pedidos_externos?: boolean
           avatar_url?: string | null
           cidade?: string | null
+          city_id?: string | null
           codigo_indicacao?: string | null
           cpf?: string | null
           created_at?: string
@@ -2255,6 +2308,7 @@ export type Database = {
           aceita_pedidos_externos?: boolean
           avatar_url?: string | null
           cidade?: string | null
+          city_id?: string | null
           codigo_indicacao?: string | null
           cpf?: string | null
           created_at?: string
@@ -2269,7 +2323,15 @@ export type Database = {
           tipo_veiculo?: Database["public"]["Enums"]["tipo_veiculo"]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {
@@ -2929,6 +2991,10 @@ export type Database = {
         Args: { _cidade: string; _uid: string }
         Returns: boolean
       }
+      admin_ve_city_id: {
+        Args: { _city_id: string; _uid: string }
+        Returns: boolean
+      }
       aplicar_credito_entregador: {
         Args: {
           _competencia?: string
@@ -2993,6 +3059,8 @@ export type Database = {
       cancelar_turno: { Args: { _agendamento_id: string }; Returns: undefined }
       check_system_alerts: { Args: never; Returns: number }
       cidade_do_franqueado: { Args: { _uid: string }; Returns: string }
+      cidade_id_do_franqueado: { Args: { _uid: string }; Returns: string }
+      cidade_slug: { Args: { _nome: string; _uf: string }; Returns: string }
       cobrar_mensalidades_entregador: { Args: never; Returns: number }
       conceder_admin: {
         Args: { _email: string; _permissoes: Json }
