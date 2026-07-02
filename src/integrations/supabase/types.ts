@@ -1637,16 +1637,19 @@ export type Database = {
         Row: {
           loja_id: string
           saldo: number
+          saldo_vendas: number
           updated_at: string
         }
         Insert: {
           loja_id: string
           saldo?: number
+          saldo_vendas?: number
           updated_at?: string
         }
         Update: {
           loja_id?: string
           saldo?: number
+          saldo_vendas?: number
           updated_at?: string
         }
         Relationships: [
