@@ -25,9 +25,6 @@ export function useAdminEntregadores() {
           .select("*")
           .in("entregador_id", ids),
       ]);
-      const profMap = new Map<string, any>(
-        (profiles ?? []).map((p: any) => [p.id, p])
-      );
       const stMap = new Map<string, any>(
         (statuses ?? []).map((s: any) => [s.entregador_id, s])
       );
