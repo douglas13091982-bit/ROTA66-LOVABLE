@@ -44,8 +44,6 @@ export function useEntregadoresLista() {
           .in("entregador_id", ids),
       ]);
 
-      const mapProfile = new Map<string, any>();
-      for (const p of profiles ?? []) mapProfile.set(p.id, p);
       const mapStatus = new Map<string, any>();
       for (const s of statusList ?? []) mapStatus.set(s.entregador_id, s);
 
