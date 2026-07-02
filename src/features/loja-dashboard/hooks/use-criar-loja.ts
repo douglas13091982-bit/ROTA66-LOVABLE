@@ -13,9 +13,15 @@ export function useCriarLoja() {
     cnpj: string;
     telefone: string;
     cidade: string;
+    estado?: string;
+    city_id?: string | null;
     plano_id?: string | null;
   }) {
     if (!user) return;
+    if (!input.city_id) {
+      toast.error("Selecione a cidade");
+      return;
+    }
     const cnpjDigits = onlyDigits(input.cnpj);
     if (!cnpjDigits) {
       toast.error("CNPJ é obrigatório");
@@ -42,6 +48,8 @@ export function useCriarLoja() {
         cnpj: cnpjDigits,
         telefone: input.telefone,
         cidade: input.cidade,
+        estado: input.estado ?? null,
+        city_id: input.city_id,
         plano_id: input.plano_id ?? null,
       });
       if (!error) {

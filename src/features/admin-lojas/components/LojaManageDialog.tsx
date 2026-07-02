@@ -11,6 +11,7 @@ import { StatusSection } from "./StatusSection";
 import { CatalogoSection } from "./CatalogoSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
 import { RevendedorSelectSection } from "./RevendedorSelectSection";
+import { CidadeSelectSection } from "./CidadeSelectSection";
 
 interface Props {
   loja: any;
@@ -62,6 +63,12 @@ export function LojaManageDialog({
             slug={l.slug}
             catalogoSlug={l.catalogo_slug}
             onToggle={() => onToggleCatalogo(l.id, !!l.catalogo_ativo)}
+          />
+
+          <CidadeSelectSection
+            lojaId={l.id}
+            cityIdAtual={l.city_id ?? null}
+            onChanged={onChanged}
           />
 
           <PlanoSelectSection
