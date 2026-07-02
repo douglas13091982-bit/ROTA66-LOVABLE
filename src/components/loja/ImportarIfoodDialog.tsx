@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Upload, ShoppingBag, AlertCircle, CheckCircle2, Link2, Loader2, ExternalLink } from "lucide-react";
+import { Upload, ShoppingBag, AlertCircle, CheckCircle2, Link2, Loader2 } from "lucide-react";
 import { importarCatalogoIfood, extrairCatalogoIfoodPorUrl } from "@/lib/importar-ifood.functions";
 
 type ProdutoJson = {
@@ -223,22 +223,6 @@ export function ImportarIfoodDialog({
             <ShoppingBag className="h-4 w-4" /> Importar catálogo do iFood
           </DialogTitle>
         </DialogHeader>
-
-        <div className="flex items-start gap-2 rounded-md border border-primary/20 bg-primary/5 p-2 text-xs text-foreground">
-          <ExternalLink className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-          <div>
-            Integração via{" "}
-            <a
-              href="https://geckoapi.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold underline text-primary hover:text-primary/80"
-            >
-              GeckoAPI
-            </a>
-            . Clique para acessar o painel, pegar sua URL do iFood e importar.
-          </div>
-        </div>
 
         <div className="space-y-4 pt-2">
           <div className="flex gap-1 p-1 bg-background border border-border rounded-md text-[11px] font-bold uppercase tracking-wider">
