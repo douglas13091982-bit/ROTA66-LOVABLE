@@ -6,7 +6,7 @@ export function useAdminStats() {
   return useQuery({
     queryKey: ["admin-stats"],
     queryFn: async (): Promise<AdminStats> => {
-      const [lojas, entregadores, pedidos, gmv] = await Promise.all([
+      const [lojas, entregadores, pedidos, gmv, franqueados] = await Promise.all([
         supabase.from("lojas").select("*", { count: "exact", head: true }),
         supabase
           .from("user_roles")
@@ -14,6 +14,7 @@ export function useAdminStats() {
           .eq("role", "entregador"),
         supabase.from("pedidos").select("*", { count: "exact", head: true }),
         supabase.from("pedidos").select("valor_total").eq("status", "entregue"),
+        supabase.from("franqueados_config").select("*", { count: "exact", head: true }),
       ]);
       const total = (gmv.data ?? []).reduce(
         (s, p) => s + Number(p.valor_total),
@@ -24,6 +25,7 @@ export function useAdminStats() {
         entregadores: entregadores.count ?? 0,
         pedidos: pedidos.count ?? 0,
         gmv: total,
+        franqueados: franqueados.count ?? 0,
       };
     },
   });
