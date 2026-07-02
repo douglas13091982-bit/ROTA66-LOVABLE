@@ -4,7 +4,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
 
-function buildWebhookUrl(lojaId: string): string {
+function buildWebhookUrl(): string {
   const envHost = process.env.PUBLIC_HOST?.trim();
   let host = envHost && envHost.length > 0 ? envHost : "";
   if (!host) {
@@ -14,14 +14,11 @@ function buildWebhookUrl(lojaId: string): string {
       host = "";
     }
   }
-  if (!host) {
-    throw new Error("Host público não configurado para o webhook do Mercado Pago");
-  }
-  return `https://${host}/api/public/mp-webhook/${lojaId}`;
+  if (!host) throw new Error("Host público não configurado para o webhook do Mercado Pago");
+  return `https://${host}/api/public/mp-webhook`;
 }
 
-// ---------- Config (loja dono) ----------
-
+// ---------- Config (compat, mantida) ----------
 const TestarConexaoSchema = z.object({
   loja_id: z.string().uuid(),
   access_token: z.string().min(10).max(500),
@@ -35,15 +32,19 @@ export const testarConexaoMp = createServerFn({ method: "POST" })
     const { data: loja } = await supabase.from("lojas").select("id, owner_id").eq("id", data.loja_id).maybeSingle();
     if (!loja || (loja as any).owner_id !== context.userId) throw new Error("Sem permissão");
     const { mpVerifyToken } = await import("@/lib/mercadopago.server");
-    const result = await mpVerifyToken(data.access_token);
-    return result;
+    return await mpVerifyToken(data.access_token);
   });
 
-// ---------- Pagamento de catálogo (público, baseado em PENDENTE) ----------
-//
-// O pedido só é criado em `public.pedidos` DEPOIS da confirmação de pagamento.
-// Antes disso, o "rascunho" vive em `public.pedidos_pendentes_pagamento` e o
-// external_reference enviado ao Mercado Pago é `cat_pendente:<pendente_id>`.
+// ---------- Pagamento de catálogo (usa conta MP da PLATAFORMA) ----------
+
+async function getPlataformaCfgOrThrow() {
+  const { getPlataformaMp } = await import("@/lib/plataforma-mp.server");
+  const cfg = await getPlataformaMp();
+  if (!cfg || !cfg.access_token) {
+    throw new Error("Pagamento online indisponível: plataforma sem Mercado Pago configurado");
+  }
+  return cfg;
+}
 
 const PixSchema = z.object({
   pendente_id: z.string().uuid(),
@@ -55,7 +56,7 @@ const PixSchema = z.object({
 export const criarPagamentoPix = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => PixSchema.parse(d))
   .handler(async ({ data }) => {
-    const { getMpConfigByLojaId, mpCreatePayment } = await import("@/lib/mercadopago.server");
+    const { mpCreatePayment } = await import("@/lib/mercadopago.server");
 
     const { data: pend, error: perr } = await supabaseAdmin
       .from("pedidos_pendentes_pagamento" as any)
@@ -67,7 +68,6 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
     const p = pend as any;
     if (p.status !== "aguardando") throw new Error("Pedido não está mais aguardando pagamento");
 
-    // Idempotência: se já criamos um Pix antes, devolve o mesmo QR
     if (p.mp_payment_id && p.mp_pix_qr_code) {
       return {
         payment_id: String(p.mp_payment_id),
@@ -79,10 +79,8 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
       };
     }
 
-    const cfg = await getMpConfigByLojaId(p.loja_id as string);
-    if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita Pix online");
-
-    const notification_url = buildWebhookUrl(p.loja_id as string);
+    const cfg = await getPlataformaCfgOrThrow();
+    const notification_url = buildWebhookUrl();
     const expira = new Date(Date.now() + 30 * 60 * 1000);
 
     const docDigits = data.payer_doc.replace(/\D/g, "");
@@ -143,7 +141,7 @@ const CartaoSchema = z.object({
 export const criarPagamentoCartao = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => CartaoSchema.parse(d))
   .handler(async ({ data }) => {
-    const { getMpConfigByLojaId, mpCreatePayment } = await import("@/lib/mercadopago.server");
+    const { mpCreatePayment } = await import("@/lib/mercadopago.server");
 
     const { data: pend, error: perr } = await supabaseAdmin
       .from("pedidos_pendentes_pagamento" as any)
@@ -156,10 +154,8 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
     if (p.status !== "aguardando") throw new Error("Pedido não está mais aguardando pagamento");
     if (p.mp_payment_id) throw new Error("Pagamento já processado");
 
-    const cfg = await getMpConfigByLojaId(p.loja_id as string);
-    if (!cfg || !cfg.ativo) throw new Error("Esta loja não aceita cartão online");
-
-    const notification_url = buildWebhookUrl(p.loja_id as string);
+    const cfg = await getPlataformaCfgOrThrow();
+    const notification_url = buildWebhookUrl();
     const docDigits = data.payer_doc.replace(/\D/g, "");
     const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
@@ -247,7 +243,6 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
     if (!pend) return { aprovado: false, status: null, mp_status: null, pedido_id: null, numero: null };
     const p = pend as any;
 
-    // Já materializado: devolve número
     if (p.pedido_id) {
       const { data: ped } = await supabaseAdmin
         .from("pedidos")
@@ -263,14 +258,12 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
       };
     }
 
-    // Ainda não materializado: tenta confirmar no MP de forma síncrona
-    // para casos em que o webhook não chegou ainda.
     if (p.mp_payment_id) {
       try {
-        const { getMpConfigByLojaId, mpGetPayment } = await import("@/lib/mercadopago.server");
-        const cfg = await getMpConfigByLojaId(p.loja_id as string);
+        const { getPlataformaMp, mpGetPaymentPlataforma } = await import("@/lib/plataforma-mp.server");
+        const cfg = await getPlataformaMp();
         if (cfg) {
-          const payment = await mpGetPayment(cfg.access_token, String(p.mp_payment_id));
+          const payment = await mpGetPaymentPlataforma(cfg, String(p.mp_payment_id));
           if (payment.status === "approved") {
             const { data: novoId } = await supabaseAdmin.rpc(
               "materializar_pedido_pendente" as any,
@@ -302,7 +295,7 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
           return { aprovado: false, status: p.status, mp_status: payment.status, pedido_id: null, numero: null };
         }
       } catch {
-        /* fallback silencioso */
+        /* silencioso */
       }
     }
 
