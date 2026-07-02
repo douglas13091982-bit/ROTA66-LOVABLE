@@ -102,9 +102,8 @@ export function ConfigPage() {
         <EnderecosColetaManager lojaId={loja.id} />
       </div>
 
-      <div className="max-w-2xl mt-6 bg-card border border-border rounded-lg p-8 shadow-card">
-        <MercadoPagoConfig lojaId={loja.id} />
-      </div>
+
+
     </LojaShell>
   );
 }
