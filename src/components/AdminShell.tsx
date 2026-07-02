@@ -189,21 +189,45 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
         </header>
 
         <main className="flex-1 px-5 md:px-8 py-6 md:py-8 relative">
+          {isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && (
+            <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 p-4 flex items-center justify-between">
+              <div className="text-sm text-red-200">
+                <span className="font-semibold text-red-300">Acesso bloqueado por inadimplência.</span> Regularize sua mensalidade de franquia.
+              </div>
+              <Link to="/admin/minha-franquia" className="text-xs px-3 py-1.5 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
+            </div>
+          )}
           <div className="pp-reveal">
             {(() => {
               const currentNav = NAV.find((n) => path.startsWith(n.to));
-              const blocked = currentNav?.superOnly
+              const blockedByRole = currentNav?.ownerOnly
+                ? !isOwner
+                : currentNav?.franqueadoOnly
+                ? !isFranqueado
+                : currentNav?.superOnly
                 ? !isSuper
                 : currentNav?.area
                 ? !can(currentNav.area)
                 : false;
-              if (blocked) {
+              const blockedByInadimplencia = isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && !path.startsWith("/admin/dashboard");
+              if (blockedByRole) {
                 return (
                   <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
                     <div className="text-lg font-semibold text-white mb-1">Acesso restrito</div>
                     <div className="text-sm text-white/60">
-                      Você não tem permissão para acessar esta área. Solicite ao super admin.
+                      Você não tem permissão para acessar esta área.
                     </div>
+                  </div>
+                );
+              }
+              if (blockedByInadimplencia) {
+                return (
+                  <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
+                    <div className="text-lg font-semibold text-white mb-1">Acesso bloqueado</div>
+                    <div className="text-sm text-white/60 mb-4">
+                      Regularize a mensalidade de franquia para continuar operando.
+                    </div>
+                    <Link to="/admin/minha-franquia" className="inline-block px-4 py-2 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
                   </div>
                 );
               }
