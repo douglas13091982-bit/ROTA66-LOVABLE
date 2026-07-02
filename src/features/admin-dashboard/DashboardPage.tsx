@@ -27,6 +27,7 @@ export function DashboardPage() {
   const { data } = useAdminStats();
   return (
     <AdminShell title="Dashboard global">
+      <GeckoApiCard />
       <StatsGrid stats={data} />
       <EntregadoresListaAdmin />
     </AdminShell>
