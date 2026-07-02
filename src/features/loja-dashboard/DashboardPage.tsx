@@ -10,7 +10,6 @@ import { CatalogoPublicoCard } from "./components/CatalogoPublicoCard";
 import { MeuPlanoCard } from "./components/MeuPlanoCard";
 import { FinanceiroResumoDashboard } from "./components/FinanceiroResumoDashboard";
 import { SaldoEntregaCard } from "./components/SaldoEntregaCard";
-import { SaldoCatalogoCard } from "./components/SaldoCatalogoCard";
 
 export function DashboardPage() {
   const { data: loja, isLoading } = useMinhaLoja();
@@ -68,8 +67,6 @@ export function DashboardPage() {
           sub="Vinculados à loja"
         />
       </div>
-
-      <SaldoCatalogoCard lojaId={loja.id} />
 
       <SaldoEntregaCard lojaId={loja.id} />
 

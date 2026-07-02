@@ -22,7 +22,7 @@ export function SaldoEntregaCard({ lojaId }: { lojaId: string }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          <h3 className="font-display text-lg">Saldo de entregas</h3>
+          <h3 className="font-display text-lg">Saldo da loja</h3>
           <Link
             to="/loja/financeiro"
             className="text-xs font-bold uppercase tracking-wider text-primary hover:underline inline-flex items-center gap-1"
@@ -32,7 +32,7 @@ export function SaldoEntregaCard({ lojaId }: { lojaId: string }) {
         </div>
         <div className="mt-2">
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            Disponível para pagar entregadores
+            Usado para pagar entregadores e disponível para saque semanal
           </div>
           <div
             className={`text-2xl font-bold ${
