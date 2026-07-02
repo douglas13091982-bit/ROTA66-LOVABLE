@@ -75,6 +75,20 @@ export function AdminFranqueadosPage() {
     },
   });
 
+  const { data: cidades } = useQuery({
+    queryKey: ["admin-franqueados-cidades"],
+    enabled: isOwner,
+    queryFn: async (): Promise<{ nome: string; uf: string | null }[]> => {
+      const { data, error } = await supabase
+        .from("cidades")
+        .select("nome, uf")
+        .eq("ativo", true)
+        .order("nome");
+      if (error) throw error;
+      return (data ?? []) as any;
+    },
+  });
+
   const [form, setForm] = useState({
     nome: "",
     email: "",
