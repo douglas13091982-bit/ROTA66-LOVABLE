@@ -128,11 +128,7 @@ export function AdminRevendedoresPage() {
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Senha inicial" type="text" value={form.senha} onChange={(e) => setForm({ ...form, senha: e.target.value })} />
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="Telefone" value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} />
             <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" placeholder="CPF/CNPJ" value={form.documento} onChange={(e) => setForm({ ...form, documento: e.target.value })} />
-            <div className="grid grid-cols-3 gap-2 sm:col-span-2">
-              <label className="text-xs text-white/70 flex flex-col gap-1">
-                Mensalidade (R$)
-                <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.mensalidade_valor} onChange={(e) => setForm({ ...form, mensalidade_valor: e.target.value })} />
-              </label>
+            <div className="grid grid-cols-2 gap-2 sm:col-span-2">
               <label className="text-xs text-white/70 flex flex-col gap-1">
                 % comissão do revendedor
                 <input className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-white/40 focus:outline-none focus:border-white/30" value={form.percentual_receita} onChange={(e) => setForm({ ...form, percentual_receita: e.target.value })} />
@@ -186,18 +182,7 @@ export function AdminRevendedoresPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 mt-3">
-                    <label className="text-[11px] text-white/60 flex flex-col gap-1">
-                      Mensalidade (R$)
-                      <input
-                        defaultValue={r.mensalidade_valor}
-                        className="w-full px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-white/30"
-                        onBlur={(e) => {
-                          const v = Number(e.target.value);
-                          if (v !== r.mensalidade_valor) updateMut.mutate({ user_id: r.user_id, mensalidade_valor: v });
-                        }}
-                      />
-                    </label>
+                  <div className="grid grid-cols-2 gap-2 mt-3">
                     <label className="text-[11px] text-white/60 flex flex-col gap-1">
                       % comissão revend.
                       <input
