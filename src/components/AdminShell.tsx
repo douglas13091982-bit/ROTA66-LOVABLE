@@ -10,32 +10,35 @@ import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-
 import { useFranquia } from "@/hooks/use-franquia";
 
 
-const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean }[] = [
+// ownerOnly = só o dono da franquia (você). superOnly = qualquer super_admin (owner + franqueados de cidade).
+const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean; ownerOnly?: boolean; franqueadoOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
-  
+
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
-  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, superOnly: true },
-  { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas" },
+  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, ownerOnly: true },
+  { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas", ownerOnly: true },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
-  { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas" },
+  { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
   { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
-  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, superOnly: true },
-  { to: "/admin/saques-revendedores", label: "Saques revend.", icon: Wallet, area: null, superOnly: true },
-  { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos" },
-  { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao" },
-  { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som" },
-  { to: "/admin/notificacao-som-loja", label: "Som alerta (Loja)", icon: Bell, area: "notificacao_som" },
-  { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding" },
-  { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios" },
-  { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk" },
+  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, ownerOnly: true },
+  { to: "/admin/saques-revendedores", label: "Saques revend.", icon: Wallet, area: null, ownerOnly: true },
+  { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos", ownerOnly: true },
+  { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
+  { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som", ownerOnly: true },
+  { to: "/admin/notificacao-som-loja", label: "Som alerta (Loja)", icon: Bell, area: "notificacao_som", ownerOnly: true },
+  { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
+  { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios", ownerOnly: true },
+  { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk", ownerOnly: true },
   { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
-  { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, superOnly: true },
-  { to: "/admin/admins", label: "Administradores", icon: Users, area: null, superOnly: true },
+  { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, ownerOnly: true },
+  { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
   { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, superOnly: true },
-  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, superOnly: true },
-  { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, superOnly: true },
-  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, superOnly: true },
+  { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
+  { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true },
+  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
+  { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, ownerOnly: true },
+  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, ownerOnly: true },
 ];
 
 
