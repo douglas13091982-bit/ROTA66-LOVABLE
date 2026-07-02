@@ -1344,6 +1344,7 @@ export type Database = {
           mensalidade_valor: number | null
           nome: string
           owner_id: string
+          pix_chave_saque: string | null
           plano_id: string | null
           plano_mensal_ativo: boolean
           revendedor_id: string | null
@@ -1379,6 +1380,7 @@ export type Database = {
           mensalidade_valor?: number | null
           nome: string
           owner_id: string
+          pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
           revendedor_id?: string | null
@@ -1414,6 +1416,7 @@ export type Database = {
           mensalidade_valor?: number | null
           nome?: string
           owner_id?: string
+          pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
           revendedor_id?: string | null
