@@ -45,20 +45,32 @@ export function useCarteira() {
       const { data } = await supabase.auth.getUser();
       const uid = data.user?.id;
       if (!uid || cancelled) return;
+      const invalidarSaldo = () => {
+        qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
+        qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
+        qc.invalidateQueries({ queryKey: ["entregador-ganho-hoje"] });
+      };
       channel = supabase
         .channel(`entregador-saldo-${uid}`)
         .on(
           "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_creditos", filter: `entregador_id=eq.${uid}` },
+          invalidarSaldo,
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "entregador_creditos_transacoes", filter: `entregador_id=eq.${uid}` },
+          invalidarSaldo,
+        )
+        .on(
+          "postgres_changes",
           { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
-          () => qc.invalidateQueries({ queryKey: ["entregador-saldo"] }),
+          invalidarSaldo,
         )
         .on(
           "postgres_changes",
           { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
-          () => {
-            qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
-            qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
-          },
+          invalidarSaldo,
         )
         .subscribe();
     })();
