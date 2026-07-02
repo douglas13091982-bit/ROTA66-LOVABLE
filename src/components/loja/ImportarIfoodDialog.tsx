@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Upload, ShoppingBag, AlertCircle, CheckCircle2, Link2, Loader2 } from "lucide-react";
+import { Upload, ShoppingBag, AlertCircle, CheckCircle2, Link2, Loader2, ExternalLink } from "lucide-react";
 import { importarCatalogoIfood, extrairCatalogoIfoodPorUrl } from "@/lib/importar-ifood.functions";
 
 type ProdutoJson = {
