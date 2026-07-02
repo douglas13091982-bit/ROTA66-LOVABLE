@@ -55,7 +55,7 @@ export function PedidoDrawer({
   const valorProdutos = Number(
     detalhe.valor_produtos ?? Number(detalhe.valor_total) - Number(detalhe.taxa_entrega ?? 0),
   );
-  const taxa = Number(detalhe.taxa_entrega ?? 0) - bonus;
+  const taxa = Number(detalhe.taxa_entrega ?? 0);
   const taxaPorPedido = detalhe.loja_plano_mensal_ativo
     ? 0
     : Number(detalhe.loja_taxa_por_pedido ?? 0);
