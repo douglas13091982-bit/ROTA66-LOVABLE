@@ -69,9 +69,14 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
   const pixSalvo = pixSalvoQ.data ?? "";
   const pixMudou = pix.trim() !== pixSalvo.trim();
 
+  const RESERVA_MIN = 20;
   const handleSolicitar = () => {
     const v = Number(valor.replace(",", "."));
     if (!Number.isFinite(v) || v <= 0) return;
+    if (saldo - v < RESERVA_MIN) {
+      toast.error(`Deixe pelo menos ${brl(RESERVA_MIN)} em saldo para chamar entregadores`);
+      return;
+    }
     solicitarM.mutate(
       { valor: v, pix_chave: pix.trim() },
       { onSuccess: () => { setValor(""); } },
