@@ -88,7 +88,7 @@ export async function imprimirPedido(
   const valorProdutos = Number(
     p.valor_produtos ?? Number(p.valor_total) - Number(p.taxa_entrega ?? 0),
   );
-  const taxa = Number(p.taxa_entrega ?? 0) - Number(p.bonus_entregador ?? 0);
+  const taxa = Number(p.taxa_entrega ?? 0);
   const bonus = Number(p.bonus_entregador ?? 0);
   const total = Number(p.valor_total ?? 0);
 
