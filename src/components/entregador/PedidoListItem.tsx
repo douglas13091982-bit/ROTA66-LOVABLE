@@ -72,6 +72,11 @@ function PedidoListItemBase({
   const nomeLoja = principal.loja_nome || "Loja";
   const bairroLoja = principal.loja_bairro;
   const endereco = resumirEnderecoEntrega(principal.endereco_entrega);
+  const totalBonus = useMemo(
+    () => grupo.items.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0),
+    [grupo.items],
+  );
+
 
   const handleAceitar = useCallback(() => onAceitar(grupo), [onAceitar, grupo]);
 
