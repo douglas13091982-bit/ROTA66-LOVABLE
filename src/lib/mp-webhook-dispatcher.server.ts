@@ -247,6 +247,40 @@ async function processRecargaLoja(
   return new Response(`ok loja_recarga ${paymentId}`, { status: 200 });
 }
 
+async function processCatalogoPedidoPendente(
+  paymentId: string,
+  payment: { status: string; external_reference?: string },
+): Promise<Response> {
+  const ref = String(payment.external_reference ?? "");
+  const pendenteId = ref.slice("cat_pendente:".length);
+  if (!pendenteId) return new Response("invalid ref", { status: 200 });
+
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+  await supabaseAdmin
+    .from("pedidos_pendentes_pagamento" as any)
+    .update({ mp_payment_id: paymentId, mp_payment_status: payment.status } as any)
+    .eq("id", pendenteId);
+
+  if (payment.status === "approved") {
+    // materializa (idempotente) — a função também credita a carteira da loja
+    await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+      _pendente_id: pendenteId,
+      _mp_payment_id: paymentId,
+      _mp_status: payment.status,
+    } as any);
+  } else if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
+    await supabaseAdmin
+      .from("pedidos_pendentes_pagamento" as any)
+      .update({ status: "cancelado" } as any)
+      .eq("id", pendenteId);
+  }
+  return new Response(`ok cat_pendente ${paymentId}`, { status: 200 });
+}
+
+
+
+
 
 /**
  * Dispatcher único. Verifica assinatura com a chave da plataforma e despacha.
