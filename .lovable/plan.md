@@ -1,68 +1,57 @@
-# Franquia por cidade
 
-Transformar o sistema num modelo de franquia: você (owner) gerencia tudo; cada **super admin de cidade** enxerga apenas a operação da sua cidade e paga uma mensalidade de franquia.
+## Objetivo
 
-## 1. Papéis
+Todos os pedidos feitos pelo catálogo público (PIX/Cartão online) passam a ser cobrados **na conta Mercado Pago da plataforma** (a mesma já usada para mensalidades). O valor de cada pedido pago entra como **saldo na carteira da loja**. A loja pode solicitar **1 saque por semana** ao admin, que aprova/paga manualmente (mesmo fluxo já existente para saques de entregador/revendedor).
 
-Novo enum `app_role.owner` acima de `super_admin`.
-- **owner** (você): vê tudo, cadastra super admins de cidade, define planos/tarifas globais, financeiro consolidado, gerencia mensalidades de franquia.
-- **super_admin** (franqueado da cidade): escopo restrito à cidade atribuída.
-- Demais papéis (`loja`, `entregador`, `revendedor`) inalterados.
+## Mudanças
 
-Seu usuário atual é migrado automaticamente para `owner`.
+### 1. Checkout do catálogo usa a conta da plataforma
+- `PagamentoMercadoPago.tsx` e `mercadopago.functions.ts` (`criarPagamentoPedido`) hoje buscam `lojas_pagamento_mp` da loja. Vou trocar para usar `getPlataformaMp()` (de `plataforma-mp.server.ts`).
+- Public key exposta ao Brick de cartão passa a ser `mp_platform_public_key`.
+- `notification_url` aponta para o webhook único `/api/public/mp-webhook` (que roteia para o dispatcher da plataforma quando o `external_reference` for de pedido).
+- Remover UI de configuração de MP por loja em `MercadoPagoConfig.tsx` (some do painel da loja), mantendo a tabela `lojas_pagamento_mp` intacta por compat.
 
-## 2. Escopo do super admin de cidade
+### 2. Crédito automático na carteira ao pagar
+- No dispatcher do webhook da plataforma (`mp-webhook-dispatcher.server.ts`), quando o pagamento aprovado for de um pedido do catálogo (external_reference `pedido:<id>`), chamar uma nova função SQL `creditar_carteira_loja_por_pedido(_pedido_id, _mp_payment_id)`:
+  - marca `pedidos.mp_payment_status='approved'` (idempotente)
+  - insere movimento `credito_venda` em `lojas_saldo_movimentos`
+  - atualiza `lojas_saldo.saldo`
+  - valor creditado = `valor_produtos` (taxa_entrega continua indo para entregador/plataforma como já é hoje)
 
-Cada super_admin tem 1 cidade fixa (`profiles.cidade_atendida`, obrigatório para o papel).
+### 3. Saques da loja (1 por semana)
+Novas tabelas + RPCs espelhando o modelo de `entregador_saques` / `revendedor_saques`:
 
-Enxerga somente onde `cidade = cidade_atendida`:
-- Lojas, entregadores, pedidos, revendedores, financeiro, agendamentos, mensalidades de loja, saques (entregador/revendedor), contratos aceitos, alertas.
-- Pode **criar/editar/suspender** lojas, entregadores e **revendedores** da sua cidade.
-- Pode aprovar entregadores, aprovar saques, aprovar reset de senha — tudo escopado.
+```text
+lojas_saques
+├─ id, loja_id, valor, pix_chave
+├─ status (solicitado|pago|rejeitado)
+├─ solicitado_em, pago_em, rejeitado_em
+├─ motivo_rejeicao, observacoes_admin
+```
 
-Bloqueado para super_admin de cidade (só owner):
-- Planos globais, tarifas globais, categorias globais, branding, contratos (template), configurações de sistema, alertas de infra, roteirização global, notificações som globais, APK, anúncios globais, cadastro de outros super_admins.
+RPCs:
+- `loja_saldo_saque_resumo()` → saldo, pode_sacar_hoje (1x/semana), tem_saque_pendente
+- `loja_solicitar_saque(_valor, _pix_chave)` → valida saldo, valida janela semanal, debita saldo (movimento `saque_solicitado`), cria saque
 
-## 3. Financeiro da franquia
+RLS: dono da loja lê/insere os próprios; admin lê/atualiza tudo.
 
-Nova aba **Franqueados** no menu do owner:
-- Cadastrar franqueado (email, senha, nome, telefone, documento, **cidade**, **mensalidade_franquia**, dia_vencimento).
-- Ver lista, ativar/inativar, editar mensalidade, excluir.
-- Ver mensalidades geradas por franqueado (status: pendente/pago/vencido), com link Mercado Pago (reusa infra `cobrancas_faturas_mp` num escopo `franqueado`).
+### 4. Telas
+- **Loja › Financeiro › aba Carteira**: saldo atual, botão "Solicitar saque", histórico de saques e movimentos. Reutiliza componentes do padrão `entregador-carteira`.
+- **Admin › Saques das lojas** (nova rota `/admin/saques-lojas`, item de menu ao lado de "Saques dos entregadores/revendedores"): mesma UI de `AdminSaquesRevendedoresPage` adaptada.
 
-Página **Minha franquia** para o super_admin de cidade:
-- Vê sua cidade, mensalidade, próximo vencimento, faturas pendentes, botão pagar via MP.
-- Bloqueio automático de acesso se mensalidade vencer > X dias (configurável, padrão 5).
+### 5. Migração de dados
+- Não migra pagamentos antigos.
+- Configurações MP por loja permanecem no banco mas ficam sem uso (podem ser removidas depois).
 
-## 4. Banco de dados
+## Detalhes técnicos
 
-- `ALTER TYPE app_role ADD VALUE 'owner'`.
-- `profiles.cidade_atendida text` (nullable; obrigatória só quando papel = super_admin sem ser owner).
-- Nova tabela `franqueados_config`: user_id, cidade, mensalidade_valor, dia_vencimento, ativo, bloqueado_por_inadimplencia, created_at.
-- Nova tabela `franqueados_faturas`: id, franqueado_user_id, competencia, valor, vencimento, status, mp_payment_id, mp_link, pago_em.
-- Função `has_role` já existe; adicionar `is_owner()`, `cidade_do_admin(uid)`.
-- Reescrever RLS das tabelas operacionais (`lojas`, `pedidos`, `profiles` de entregador, `revendedores`, `mensalidades_loja`, `entregador_saques`, `revendedor_saques`, `agendamentos`, `password_reset_requests`, `system_alerts`) para: `is_owner() OR (has_role(uid,'super_admin') AND cidade = cidade_do_admin(uid))`.
-- pg_cron mensal: gerar fatura de franquia no dia_vencimento de cada franqueado ativo.
+- Todas as alterações de schema (tabelas, funções, RLS, GRANTs) em uma migração única.
+- Webhook: dispatcher precisa reconhecer `external_reference` iniciado por `pedido:` e chamar o novo RPC via `supabaseAdmin`.
+- Idempotência garantida por `mp_payment_id` único no movimento (`descricao` contém o id; adicionar índice único parcial em `lojas_saldo_movimentos(pedido_id) where tipo='credito_venda'`).
+- Janela de "1 saque por semana": bloqueia se existir saque `solicitado` OU se algum saque foi criado nos últimos 7 dias com status ≠ `rejeitado`.
+- Nada muda em pagamento de entrega ao entregador nem em mensalidades.
 
-## 5. Frontend
+## Fora de escopo
 
-- `AdminAreaGate` passa a diferenciar owner vs super_admin_cidade. Menu lateral do `AdminShell` filtra itens: itens “globais” só aparecem para owner.
-- Nova rota `/admin/franqueados` (owner) — CRUD e faturas.
-- Nova rota `/admin/minha-franquia` (super_admin de cidade) — status/pagamento.
-- Todas as queries existentes de `lojas`, `pedidos`, etc. ganham filtro implícito via RLS — não precisa alterar componentes; apenas as telas “globais” são escondidas do menu.
-- Banner vermelho no topo quando `bloqueado_por_inadimplencia = true`, com CTA pagar.
-
-## 6. Detalhes técnicos
-
-- Migração idempotente: cria enum value, tabelas, GRANTs, políticas, funções `SECURITY DEFINER` (`is_owner`, `cidade_do_admin`).
-- Substituir políticas antigas que usavam `has_role(auth.uid(),'super_admin')` por wrapper que aceita owner OU super_admin-da-mesma-cidade.
-- Cobrança MP: reusar `plataforma-mp.server.ts` (mesmo owner MP recebe as mensalidades de franquia).
-- Cron: `SELECT cron.schedule('gerar-faturas-franquia','0 3 * * *', ...)`.
-- Bloqueio de acesso: verificado no `AdminAreaGate` via `franqueados_config.bloqueado_por_inadimplencia`.
-
-## 7. Fora do escopo (para depois)
-
-- Múltiplas cidades por franqueado.
-- Comissão % sobre receita da cidade (só mensalidade fixa agora).
-- Sub-franqueados / hierarquia > 2 níveis.
-- Migração de dados legados por cidade (assume que `lojas.cidade` já está preenchido corretamente).
+- Split automático de pagamento (MP Marketplace) — usaríamos conta única + carteira interna, conforme pedido.
+- Saque automático via PIX API — continua manual pelo admin.

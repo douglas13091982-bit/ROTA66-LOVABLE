@@ -1735,6 +1735,76 @@ export type Database = {
           },
         ]
       }
+      lojas_saques: {
+        Row: {
+          comprovante_url: string | null
+          created_at: string
+          id: string
+          loja_id: string
+          motivo_rejeicao: string | null
+          observacoes_admin: string | null
+          pago_em: string | null
+          pix_chave: string
+          rejeitado_em: string | null
+          solicitado_em: string
+          status: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          comprovante_url?: string | null
+          created_at?: string
+          id?: string
+          loja_id: string
+          motivo_rejeicao?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave: string
+          rejeitado_em?: string | null
+          solicitado_em?: string
+          status?: string
+          updated_at?: string
+          valor: number
+        }
+        Update: {
+          comprovante_url?: string | null
+          created_at?: string
+          id?: string
+          loja_id?: string
+          motivo_rejeicao?: string | null
+          observacoes_admin?: string | null
+          pago_em?: string | null
+          pix_chave?: string
+          rejeitado_em?: string | null
+          solicitado_em?: string
+          status?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lojas_saques_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saques_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lojas_saques_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mensalidades_loja: {
         Row: {
           competencia: string
@@ -3387,6 +3457,20 @@ export type Database = {
       loja_recarregar_saldo_manual: {
         Args: { _descricao: string; _loja_id: string; _valor: number }
         Returns: number
+      }
+      loja_saldo_saque_resumo: {
+        Args: { _loja_id: string }
+        Returns: {
+          pode_sacar_hoje: boolean
+          saldo: number
+          tem_saque_pendente: boolean
+          ultimo_saque_em: string
+          valor_minimo: number
+        }[]
+      }
+      loja_solicitar_saque: {
+        Args: { _loja_id: string; _pix_chave: string; _valor: number }
+        Returns: string
       }
       loja_tem_catalogo_publico: {
         Args: { _loja_id: string }

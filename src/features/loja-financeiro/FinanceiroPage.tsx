@@ -15,6 +15,8 @@ import { MensalidadesTabela } from "./components/MensalidadesTabela";
 import { CobrancasTabela } from "./components/CobrancasTabela";
 import { PreviaSemanaCard } from "./components/PreviaSemanaCard";
 import { SaldoLojaCard } from "./components/SaldoLojaCard";
+import { SaquesLojaCard } from "./components/SaquesLojaCard";
+
 
 export function FinanceiroPage() {
   const { data: loja } = useMinhaLoja();
@@ -61,6 +63,8 @@ export function FinanceiroPage() {
     <LojaShell title="Financeiro">
       <div className="space-y-6 max-w-4xl">
         <SaldoLojaCard lojaId={loja.id} />
+        <SaquesLojaCard lojaId={loja.id} />
+
         <ResumoCards
           totalAberto={totalAberto}
           totalPago={totalPago}

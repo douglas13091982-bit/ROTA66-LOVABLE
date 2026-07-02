@@ -1,6 +1,6 @@
 import { EnderecosColetaManager } from "@/components/EnderecosColetaManager";
 import { LojaShell } from "@/components/LojaShell";
-import { MercadoPagoConfig } from "@/components/loja/MercadoPagoConfig";
+
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { CatalogoLayoutPicker } from "./components/CatalogoLayoutPicker";
 import { CategoriaSelect } from "./components/CategoriaSelect";
@@ -102,9 +102,8 @@ export function ConfigPage() {
         <EnderecosColetaManager lojaId={loja.id} />
       </div>
 
-      <div className="max-w-2xl mt-6 bg-card border border-border rounded-lg p-8 shadow-card">
-        <MercadoPagoConfig lojaId={loja.id} />
-      </div>
+
+
     </LojaShell>
   );
 }
