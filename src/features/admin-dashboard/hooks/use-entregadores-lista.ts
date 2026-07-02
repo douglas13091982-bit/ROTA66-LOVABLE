@@ -1,10 +1,12 @@
 import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 import type { AdminEntregadorItem } from "../logic/types";
 
 export function useEntregadoresLista() {
+  const { user } = useAuth();
   const qc = useQueryClient();
   const { ttlMin, tick } = useOnlineTtlTicker(20_000);
 
@@ -23,7 +25,8 @@ export function useEntregadoresLista() {
   }, [qc]);
 
   const { data: raw, isLoading } = useQuery({
-    queryKey: ["admin-entregadores-lista"],
+    queryKey: ["admin-entregadores-lista", user?.id],
+    enabled: !!user,
     queryFn: async (): Promise<AdminEntregadorItem[]> => {
       const { data: roles } = await supabase
         .from("user_roles")
@@ -34,25 +37,25 @@ export function useEntregadoresLista() {
       if (ids.length === 0) return [];
 
       const [{ data: profiles }, { data: statusList }] = await Promise.all([
-        supabase.from("profiles").select("id, full_name, phone").in("id", ids),
+        supabase.from("profiles").select("id, full_name, phone, city_id").in("id", ids),
         supabase
           .from("entregador_status")
           .select("entregador_id, online, lat, lng, updated_at")
           .in("entregador_id", ids),
       ]);
 
-      const mapProfile = new Map<string, any>();
-      for (const p of profiles ?? []) mapProfile.set(p.id, p);
       const mapStatus = new Map<string, any>();
       for (const s of statusList ?? []) mapStatus.set(s.entregador_id, s);
 
-      return ids.map((id) => {
-        const p = mapProfile.get(id);
+      // A lista final parte dos profiles visíveis pelo RLS. Assim, se o franqueado
+      // não tiver permissão para a cidade do entregador, o card nem é montado.
+      return (profiles ?? []).map((p: any) => {
+        const id = p.id;
         const st = mapStatus.get(id);
         return {
           id,
-          full_name: p?.full_name ?? null,
-          phone: p?.phone ?? null,
+          full_name: p.full_name ?? null,
+          phone: p.phone ?? null,
           online: st?.online ?? false,
           lat: st?.lat ?? null,
           lng: st?.lng ?? null,

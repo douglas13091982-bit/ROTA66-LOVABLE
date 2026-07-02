@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 /** Resumo (total/online) mostrado no cabeçalho do card da loja. */
 export function useEntregadoresResumo(lojaId: string) {
+  const { user } = useAuth();
+
   return useQuery({
-    queryKey: ["admin-loja-entregadores-resumo", lojaId],
+    queryKey: ["admin-loja-entregadores-resumo", lojaId, user?.id],
+    enabled: !!lojaId && !!user,
     queryFn: async () => {
       const { data: vinc } = await supabase
         .from("loja_entregadores")
@@ -13,12 +17,18 @@ export function useEntregadoresResumo(lojaId: string) {
         .eq("ativo", true);
       const ids = (vinc ?? []).map((v: any) => v.entregador_id);
       if (ids.length === 0) return { total: 0, online: 0 };
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id")
+        .in("id", ids);
+      const idsVisiveis = (profs ?? []).map((p: any) => p.id);
+      if (idsVisiveis.length === 0) return { total: 0, online: 0 };
       const { data: stat } = await supabase
         .from("entregador_status")
         .select("entregador_id, online")
-        .in("entregador_id", ids);
+        .in("entregador_id", idsVisiveis);
       const online = (stat ?? []).filter((s: any) => s.online).length;
-      return { total: ids.length, online };
+      return { total: idsVisiveis.length, online };
     },
     refetchInterval: 30_000,
   });
@@ -26,9 +36,11 @@ export function useEntregadoresResumo(lojaId: string) {
 
 /** Lista completa de entregadores vinculados, com profile + status online. */
 export function useEntregadoresDaLoja(lojaId: string, enabled: boolean) {
+  const { user } = useAuth();
+
   return useQuery({
-    queryKey: ["admin-loja-entregadores", lojaId],
-    enabled,
+    queryKey: ["admin-loja-entregadores", lojaId, user?.id],
+    enabled: enabled && !!user,
     queryFn: async () => {
       const { data: vinc, error } = await supabase
         .from("loja_entregadores")
@@ -48,7 +60,9 @@ export function useEntregadoresDaLoja(lojaId: string, enabled: boolean) {
       ]);
       const mapP = new Map((profs ?? []).map((p: any) => [p.id, p]));
       const mapS = new Map((stat ?? []).map((s: any) => [s.entregador_id, s]));
-      return (vinc ?? []).map((v) => ({
+      // A lista final parte apenas dos profiles liberados pelo RLS.
+      // Franqueado não verá vínculo de entregador sem city_id ou de outra cidade.
+      return (vinc ?? []).filter((v) => mapP.has(v.entregador_id)).map((v) => ({
         vinculo_id: v.id,
         ativo: v.ativo,
         id: v.entregador_id,

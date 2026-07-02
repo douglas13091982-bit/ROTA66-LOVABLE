@@ -1,13 +1,16 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import type { EntregadorRow, StatusEntregador } from "../logic/types";
 
 export function useAdminEntregadores() {
+  const { user } = useAuth();
   const qc = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin-entregadores"],
+    queryKey: ["admin-entregadores", user?.id],
+    enabled: !!user,
     queryFn: async (): Promise<EntregadorRow[]> => {
       const { data: roles } = await supabase
         .from("user_roles")
@@ -22,14 +25,13 @@ export function useAdminEntregadores() {
           .select("*")
           .in("entregador_id", ids),
       ]);
-      const profMap = new Map<string, any>(
-        (profiles ?? []).map((p: any) => [p.id, p])
-      );
       const stMap = new Map<string, any>(
         (statuses ?? []).map((s: any) => [s.entregador_id, s])
       );
-      return ids.map((id) => {
-        const p = profMap.get(id) ?? {};
+      // A lista final usa apenas profiles que o RLS liberou para este admin.
+      // Para franqueado, isso remove entregadores sem city_id ou de outra cidade.
+      return (profiles ?? []).map((p: any) => {
+        const id = p.id;
         return {
           id,
           full_name: p.full_name ?? null,

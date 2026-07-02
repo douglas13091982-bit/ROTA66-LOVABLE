@@ -2995,6 +2995,14 @@ export type Database = {
         Args: { _city_id: string; _uid: string }
         Returns: boolean
       }
+      admin_ve_loja: {
+        Args: { _loja_id: string; _uid: string }
+        Returns: boolean
+      }
+      admin_ve_profile: {
+        Args: { _profile_id: string; _uid: string }
+        Returns: boolean
+      }
       aplicar_credito_entregador: {
         Args: {
           _competencia?: string
