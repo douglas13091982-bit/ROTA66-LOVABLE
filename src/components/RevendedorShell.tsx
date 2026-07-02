@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Store, Wallet, User, LogOut, Menu, X, ChevronRight, TrendingUp } from "lucide-react";
+import { Store, User, LogOut, Menu, X, ChevronRight, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
@@ -8,7 +8,6 @@ import { useBranding } from "@/hooks/use-branding";
 const NAV = [
   { to: "/revendedor/lojas", label: "Minhas Lojas", icon: Store },
   { to: "/revendedor/ganhos", label: "Meus Ganhos", icon: TrendingUp },
-  { to: "/revendedor/cobrancas", label: "Cobranças", icon: Wallet },
   { to: "/revendedor/perfil", label: "Perfil", icon: User },
 ];
 
