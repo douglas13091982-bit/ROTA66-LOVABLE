@@ -339,6 +339,10 @@ export async function handleMpPlataformaWebhook(
     if (ref.startsWith("recarga:")) {
       return await processRecargaEntregador(paymentId, payment);
     }
+    if (ref.startsWith("cat_pendente:")) {
+      return await processCatalogoPedidoPendente(paymentId, payment);
+    }
+
     return new Response("unknown reference", { status: 200 });
   } catch (e: any) {
     console.error("[mp-webhook-dispatcher]", e?.message ?? e);
