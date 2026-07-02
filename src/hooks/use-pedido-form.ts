@@ -104,12 +104,14 @@ export function usePedidoForm({
   const taxaBruta = taxa || Number(taxaBase) || 0;
   const taxaAtual = taxaBruta;
   const ehCartaoEntrega = false;
-  const taxaFinal = taxaAtual + (Number(bonus) || 0);
+  const taxaFinal = taxaAtual;
+  const bonusValor = Number(bonus) || 0;
   const valorProdutos = itens.reduce(
     (s, i) => s + (Number(i.qtd) || 0) * (Number(i.preco) || 0),
     0,
   );
-  const valorTotal = valorProdutos + taxaFinal;
+  const valorTotal = valorProdutos + taxaFinal + bonusValor;
+
 
 
   const updateItem = (idx: number, patch: Partial<Item>) =>
