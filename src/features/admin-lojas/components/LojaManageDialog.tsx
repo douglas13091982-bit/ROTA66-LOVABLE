@@ -65,6 +65,12 @@ export function LojaManageDialog({
             onToggle={() => onToggleCatalogo(l.id, !!l.catalogo_ativo)}
           />
 
+          <CidadeSelectSection
+            lojaId={l.id}
+            cityIdAtual={l.city_id ?? null}
+            onChanged={onChanged}
+          />
+
           <PlanoSelectSection
             lojaId={l.id}
             planoIdAtual={l.plano_id ?? null}
