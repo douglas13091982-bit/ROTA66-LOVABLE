@@ -16,6 +16,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
 
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
   { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, ownerOnly: true },
+  { to: "/admin/cidades", label: "Cidades", icon: MapPin, area: null, ownerOnly: true },
   { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas", ownerOnly: true },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
   { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
