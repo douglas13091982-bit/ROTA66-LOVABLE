@@ -3,6 +3,7 @@ export type AdminStats = {
   entregadores: number;
   pedidos: number;
   gmv: number;
+  franqueados: number;
 };
 
 export type AdminEntregadorItem = {
