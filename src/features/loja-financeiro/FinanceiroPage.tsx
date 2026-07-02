@@ -15,6 +15,8 @@ import { MensalidadesTabela } from "./components/MensalidadesTabela";
 import { CobrancasTabela } from "./components/CobrancasTabela";
 import { PreviaSemanaCard } from "./components/PreviaSemanaCard";
 import { SaldoLojaCard } from "./components/SaldoLojaCard";
+import { SaquesLojaCard } from "./components/SaquesLojaCard";
+
 
 export function FinanceiroPage() {
   const { data: loja } = useMinhaLoja();
