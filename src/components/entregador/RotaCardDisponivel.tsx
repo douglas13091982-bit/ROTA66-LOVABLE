@@ -17,22 +17,24 @@ type Props = {
 };
 
 function calcularTotais(items: PedidoDisponivel[], taxaParaExibir: (p: PedidoDisponivel) => number) {
-  const totalLiquido = items.reduce(
-    (s, p) =>
-      s +
-      liquidoEntregador(
-        taxaParaExibir(p),
-        Number(p.loja_taxa_por_pedido ?? 0),
-        p.loja_plano_mensal_ativo,
-      ),
-    0,
-  );
   const totalBonus = items.reduce(
     (s, p) => s + Number(p.bonus_entregador ?? 0),
     0,
   );
+  const totalLiquido =
+    items.reduce(
+      (s, p) =>
+        s +
+        liquidoEntregador(
+          taxaParaExibir(p),
+          Number(p.loja_taxa_por_pedido ?? 0),
+          p.loja_plano_mensal_ativo,
+        ),
+      0,
+    ) + totalBonus;
   return { totalLiquido, totalBonus };
 }
+
 
 function kmAteLojaDoGrupo(items: PedidoDisponivel[], minhaPos: LatLng | null): string | null {
   if (!minhaPos) return null;
