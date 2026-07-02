@@ -34,7 +34,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
   { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, ownerOnly: true },
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
-  { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, superOnly: true },
+  { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, ownerOnly: true },
   { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
   { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true },
   { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
