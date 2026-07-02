@@ -72,6 +72,11 @@ function PedidoListItemBase({
   const nomeLoja = principal.loja_nome || "Loja";
   const bairroLoja = principal.loja_bairro;
   const endereco = resumirEnderecoEntrega(principal.endereco_entrega);
+  const totalBonus = useMemo(
+    () => grupo.items.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0),
+    [grupo.items],
+  );
+
 
   const handleAceitar = useCallback(() => onAceitar(grupo), [onAceitar, grupo]);
 
@@ -107,10 +112,23 @@ function PedidoListItemBase({
             </span>
           )}
         </div>
-        <div className="text-2xl font-bold text-white tracking-tight">
-          R$ {total.toFixed(2).replace(".", ",")}
+        <div className="flex flex-col items-end">
+          <div className="text-2xl font-bold text-white tracking-tight">
+            R$ {total.toFixed(2).replace(".", ",")}
+          </div>
+          {totalBonus > 0 && (
+            <div
+              className="text-[10px] font-bold uppercase tracking-[0.15em] mt-0.5 px-1.5 py-0.5 rounded"
+              style={{ background: "oklch(0.78 0.16 75 / 0.18)", color: "oklch(0.88 0.15 80)" }}
+            >
+              + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
+            </div>
+          )}
         </div>
       </div>
+
+
+
 
       <div className="space-y-3">
         <div className="min-w-0">
