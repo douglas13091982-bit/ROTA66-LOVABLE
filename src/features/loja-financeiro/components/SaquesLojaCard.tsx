@@ -1,5 +1,8 @@
-import { useState } from "react";
-import { Wallet, Send, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { Wallet, Send, CheckCircle2, XCircle, Clock, Save } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
 
 const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -21,21 +24,57 @@ function StatusBadge({ status }: { status: SaqueLojaRow["status"] }) {
 }
 
 export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
+  const qc = useQueryClient();
   const { resumoQ, saquesQ, solicitarM } = useSaquesLoja(lojaId);
   const resumo = resumoQ.data;
   const [pix, setPix] = useState("");
   const [valor, setValor] = useState("");
 
+  const pixSalvoQ = useQuery({
+    queryKey: ["loja-pix-saque", lojaId],
+    enabled: !!lojaId,
+    queryFn: async (): Promise<string> => {
+      const { data, error } = await supabase
+        .from("lojas")
+        .select("pix_chave_saque")
+        .eq("id", lojaId)
+        .maybeSingle();
+      if (error) throw error;
+      return ((data as any)?.pix_chave_saque ?? "") as string;
+    },
+  });
+
+  useEffect(() => {
+    if (pixSalvoQ.data && !pix) setPix(pixSalvoQ.data);
+  }, [pixSalvoQ.data]);
+
+  const salvarPixM = useMutation({
+    mutationFn: async (chave: string) => {
+      const { error } = await supabase
+        .from("lojas")
+        .update({ pix_chave_saque: chave.trim() } as any)
+        .eq("id", lojaId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Chave PIX salva");
+      qc.invalidateQueries({ queryKey: ["loja-pix-saque", lojaId] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Erro ao salvar chave PIX"),
+  });
+
   const saldo = resumo?.saldo ?? 0;
   const min = resumo?.valor_minimo ?? 50;
   const pode = !!resumo?.pode_sacar_hoje;
+  const pixSalvo = pixSalvoQ.data ?? "";
+  const pixMudou = pix.trim() !== pixSalvo.trim();
 
   const handleSolicitar = () => {
     const v = Number(valor.replace(",", "."));
     if (!Number.isFinite(v) || v <= 0) return;
     solicitarM.mutate(
       { valor: v, pix_chave: pix.trim() },
-      { onSuccess: () => { setPix(""); setValor(""); } },
+      { onSuccess: () => { setValor(""); } },
     );
   };
 
@@ -55,17 +94,37 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_140px_auto]">
-        <input
-          value={pix}
-          onChange={(e) => setPix(e.target.value)}
-          placeholder="Sua chave PIX"
-          className="px-3 py-2 rounded-md border border-border bg-background text-sm"
-        />
+      <div className="space-y-2">
+        <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+          Chave PIX para receber
+        </label>
+        <div className="flex gap-2">
+          <input
+            value={pix}
+            onChange={(e) => setPix(e.target.value)}
+            placeholder="CPF, e-mail, telefone ou chave aleatória"
+            className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+          />
+          <button
+            type="button"
+            disabled={!pixMudou || !pix.trim() || salvarPixM.isPending}
+            onClick={() => salvarPixM.mutate(pix)}
+            className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-border text-xs font-bold uppercase tracking-wider disabled:opacity-50"
+            title="Salvar como chave padrão"
+          >
+            <Save className="h-3.5 w-3.5" /> Salvar
+          </button>
+        </div>
+        {pixSalvo && !pixMudou && (
+          <p className="text-[11px] text-muted-foreground">Chave PIX salva.</p>
+        )}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
         <input
           value={valor}
           onChange={(e) => setValor(e.target.value)}
-          placeholder="Valor (R$)"
+          placeholder="Valor a sacar (R$)"
           inputMode="decimal"
           className="px-3 py-2 rounded-md border border-border bg-background text-sm"
         />
@@ -75,7 +134,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
           onClick={handleSolicitar}
           className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider disabled:opacity-50"
         >
-          <Send className="h-3.5 w-3.5" /> Solicitar
+          <Send className="h-3.5 w-3.5" /> Solicitar saque
         </button>
       </div>
       {!pode && !resumoQ.isLoading && (
