@@ -82,7 +82,11 @@ export function FinanceiroPage() {
         />
         <PreviaSemanaCard
           lojaId={loja.id}
-          taxaPorPedido={Number((loja as any).taxa_por_pedido ?? 0)}
+          taxaPorPedido={Number(
+            (loja as any).plano?.taxa_por_pedido ??
+              (loja as any).taxa_por_pedido ??
+              0,
+          )}
           planoMensalAtivo={Boolean((loja as any).plano_mensal_ativo)}
         />
         <CobrancasTabela
