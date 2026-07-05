@@ -141,7 +141,13 @@ export const extrairCatalogoIfoodPorUrl = createServerFn({ method: "POST" })
       .eq("id", data.loja_id)
       .maybeSingle();
     if (lojaErr) throw new Error(lojaErr.message);
-    if (!loja || loja.owner_id !== userId) throw new Error("Loja não encontrada ou sem permissão");
+    if (!loja) throw new Error("Loja não encontrada");
+    if (loja.owner_id !== userId) {
+      const { data: isSuper } = await supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" });
+      const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+      if (!isSuper && !isAdmin) throw new Error("Sem permissão para essa loja");
+    }
+
 
     const token = process.env.GECKOAPI_TOKEN;
     if (!token) throw new Error("GECKOAPI_TOKEN não configurado");
