@@ -34,7 +34,7 @@ export type PedidoDisponivel = {
   /** Se true, a loja tem plano mensal ativo (entregador recebe valor cheio). */
   loja_plano_mensal_ativo?: boolean | null;
 
-  /** Taxa por pedido da loja (vem do plano vinculado). Descontada do entregador. */
+  /** Taxa por pedido da loja (vem do plano vinculado). Cobrança da loja, não do entregador. */
   loja_taxa_por_pedido?: number | string | null;
 
   /** Definido pela RPC `pedidos_pool_externo` em pedidos externos. */
