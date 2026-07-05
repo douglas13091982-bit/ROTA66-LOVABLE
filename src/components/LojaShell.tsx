@@ -36,9 +36,19 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const { logoUrl, nomeSistema } = useBranding();
   const { data: loja } = useMinhaLoja();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const suporteLojaId = useLojaSuporteId();
+  const modoSuporte = !!suporteLojaId && loja?.id === suporteLojaId;
   useChatNaoLidasGlobal();
   const suporteBadge = useSuporteBadge("loja", loja?.id);
   usePedidosRealtime(loja?.id);
+
+  const sairModoSuporte = () => {
+    clearLojaSuporteId();
+    qc.invalidateQueries({ queryKey: ["minha-loja"] });
+    navigate({ to: "/admin/lojas" });
+  };
+
   
   
   
