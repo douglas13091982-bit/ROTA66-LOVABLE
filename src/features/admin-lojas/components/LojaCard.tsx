@@ -1,8 +1,10 @@
-import { Store } from "lucide-react";
+import { Store, LogIn } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { statusOf } from "../logic/constants";
 import { EntregadoresResumo } from "./EntregadoresResumo";
 import { IndicadoPorBadge } from "./IndicadoPorBadge";
 import { LojaManageDialog } from "./LojaManageDialog";
+import { setLojaSuporteId } from "@/hooks/use-loja-suporte";
 
 interface Props {
   loja: any;
@@ -11,6 +13,7 @@ interface Props {
   onToggleCatalogo: (id: string, atual: boolean) => void;
   onChanged: () => void;
 }
+
 
 export function LojaCard({
   loja: l,
