@@ -68,6 +68,15 @@ export function LojaCard({
 
 
 
+      <button
+        type="button"
+        onClick={acessarLoja}
+        className="mt-3 inline-flex items-center justify-center gap-2 h-9 px-3 rounded-md bg-gradient-red text-primary-foreground text-xs font-bold uppercase tracking-wider shadow-red hover:opacity-95 transition"
+      >
+        <LogIn className="h-3.5 w-3.5" />
+        Acessar loja (suporte)
+      </button>
+
       <LojaManageDialog
         loja={l}
         onSetStatus={onSetStatus}
@@ -78,3 +87,4 @@ export function LojaCard({
     </div>
   );
 }
+
