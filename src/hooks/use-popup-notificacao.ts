@@ -8,7 +8,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  DEFAULT_SOM,
   fetchConfigSom,
   instalarDesbloqueioAutomatico,
   pararNotificacao,
