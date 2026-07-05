@@ -2,21 +2,26 @@ import { describe, it, expect } from "vitest";
 import { liquidoEntregador } from "./use-taxa-sistema";
 
 /**
- * Contrato: o entregador recebe a taxa global (frete) integral.
- * A taxa por pedido do plano é cobrança da loja para o sistema e não pode
- * ser descontada do valor exibido/creditado ao entregador.
+ * Contrato: taxa_entrega (cliente) = frete global + taxa por pedido da loja.
+ * O entregador recebe apenas a parcela do frete global, ou seja,
+ * taxa_entrega - taxa_por_pedido_aplicada. Quando o plano mensal da loja
+ * está ativo, a taxa por pedido é zero e o entregador recebe integralmente.
  */
-describe("liquidoEntregador (entregador recebe apenas o frete)", () => {
-  it("não desconta a taxa do plano do valor do entregador", () => {
-    expect(liquidoEntregador(8, 2)).toBe(8);
-    expect(liquidoEntregador(8, 1.5)).toBe(8);
-    expect(liquidoEntregador(10, 0)).toBe(10);
-    expect(liquidoEntregador(10)).toBe(10);
+describe("liquidoEntregador (entregador recebe apenas o frete global)", () => {
+  it("desconta a taxa por pedido da loja quando plano não está ativo", () => {
+    expect(liquidoEntregador(10, 2)).toBe(8);
+    expect(liquidoEntregador(10, 2, false)).toBe(8);
+    expect(liquidoEntregador(9.5, 1.5)).toBe(8);
   });
 
-  it("mantém a taxa global mesmo quando a taxa da loja é maior", () => {
-    expect(liquidoEntregador(2, 5)).toBe(2);
-    expect(liquidoEntregador(2, 2)).toBe(2);
+  it("mantém o valor integral quando o plano mensal está ativo", () => {
+    expect(liquidoEntregador(10, 2, true)).toBe(10);
+    expect(liquidoEntregador(8, 5, true)).toBe(8);
+  });
+
+  it("retorna zero quando a taxa da loja é maior que a taxa de entrega", () => {
+    expect(liquidoEntregador(2, 5)).toBe(0);
+    expect(liquidoEntregador(2, 2)).toBe(0);
   });
 
   it("retorna 0 para taxa ausente, zero ou negativa", () => {
@@ -28,7 +33,7 @@ describe("liquidoEntregador (entregador recebe apenas o frete)", () => {
 
   it("coage strings numéricas", () => {
     expect(liquidoEntregador("10.50")).toBe(10.5);
-    expect(liquidoEntregador("10.50", "2")).toBe(10.5);
+    expect(liquidoEntregador("10.50", "2")).toBe(8.5);
     expect(liquidoEntregador("abc")).toBe(0);
   });
 });

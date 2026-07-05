@@ -1,19 +1,21 @@
 /**
  * Valor líquido que o entregador recebe por uma entrega.
  *
- * Modelo atual: o entregador recebe a **taxa global (frete)** integral.
- * A taxa do plano por pedido fica como cobrança da loja para o sistema e
- * NÃO deve ser abatida do valor exibido/creditado ao entregador.
+ * Modelo: o cliente paga taxa_entrega = tarifa global (frete) + taxa por
+ * pedido do plano da loja. O entregador recebe apenas a parcela da tarifa
+ * global; a taxa por pedido fica retida com a loja para repassar ao sistema.
  *
- * O parâmetro `_planoMensalAtivo` é mantido por compatibilidade com
- * chamadas antigas e é ignorado.
+ * Quando o plano mensal da loja está ativo, a taxa por pedido é zero e o
+ * entregador recebe integralmente a taxa de entrega.
  */
 export function liquidoEntregador(
   taxaEntrega: number | string | null | undefined,
-  _lojaTaxaPorPedido?: number | string | null,
-  _planoMensalAtivo?: boolean | null,
+  lojaTaxaPorPedido?: number | string | null,
+  planoMensalAtivo?: boolean | null,
 ): number {
   const taxa = Number(taxaEntrega);
   if (!Number.isFinite(taxa) || taxa <= 0) return 0;
-  return Number(taxa.toFixed(2));
+  const desconto = planoMensalAtivo ? 0 : Number(lojaTaxaPorPedido ?? 0) || 0;
+  const liquido = Math.max(0, taxa - desconto);
+  return Number(liquido.toFixed(2));
 }

@@ -2,11 +2,12 @@
  * Hook: calcula taxa de entrega automaticamente quando as coordenadas mudam.
  *
  * Modelo:
- *   taxa_entrega = tarifa_global_por_km
+ *   taxa_entrega (paga pelo cliente) = tarifa_global_por_km + taxa_por_pedido_loja
  *
- * A taxa por pedido do plano é uma cobrança separada da loja para o sistema;
- * ela não aumenta o frete do cliente nem reduz o valor do entregador.
+ * O entregador recebe apenas a tarifa global (frete). A taxa por pedido do
+ * plano fica retida com a loja para repassar ao sistema.
  */
+
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,18 +94,19 @@ export function useTarifaEntrega(
       }
 
       const taxaPlano = plano.planoMensalAtivo ? 0 : plano.taxa;
-      const total = Number(valorGlobal.toFixed(2));
+      const total = Number((valorGlobal + taxaPlano).toFixed(2));
       const faixa = encontrarFaixa(km, tarifas);
       setTaxa(total);
       if (faixa) {
         const sufixoPlano =
           taxaPlano > 0
-            ? ` · taxa do plano da loja: R$ ${taxaPlano.toFixed(2)} separada`
+            ? ` + R$ ${taxaPlano.toFixed(2)} da taxa por pedido da loja`
             : "";
         setInfo(
-          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · tarifas globais${sufixoPlano}`,
+          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · frete R$ ${valorGlobal.toFixed(2)}${sufixoPlano}`,
         );
       }
+
     })();
     return () => {
       cancelled = true;
