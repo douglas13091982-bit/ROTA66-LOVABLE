@@ -126,6 +126,12 @@ export function ImportarIfoodDialog({
   const [categorias, setCategorias] = useState<string[]>([]);
   const [erro, setErro] = useState<string | null>(null);
   const [importando, setImportando] = useState(false);
+  const [testando, setTestando] = useState(false);
+  const [testResult, setTestResult] = useState<
+    | { ok: true; status: number; categorias: number; itens: number; amostra: string[]; ms: number }
+    | { ok: false; status: number | null; erro: string; ms: number }
+    | null
+  >(null);
   const importar = useServerFn(importarCatalogoIfood);
   const extrairPorUrl = useServerFn(extrairCatalogoIfoodPorUrl);
 
@@ -137,7 +143,10 @@ export function ImportarIfoodDialog({
     setErro(null);
     setImportando(false);
     setBuscando(false);
+    setTestando(false);
+    setTestResult(null);
   }
+
 
   async function handleArquivo(file: File) {
     setArquivo(file.name);
