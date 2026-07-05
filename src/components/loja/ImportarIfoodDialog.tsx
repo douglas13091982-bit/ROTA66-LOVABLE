@@ -192,6 +192,39 @@ export function ImportarIfoodDialog({
     }
   }
 
+  async function handleTestar() {
+    const u = url.trim();
+    if (!u) {
+      setTestResult({ ok: false, status: null, erro: "Informe a URL primeiro.", ms: 0 });
+      return;
+    }
+    setTestResult(null);
+    setTestando(true);
+    const t0 = performance.now();
+    try {
+      const json = await extrairPorUrl({ data: { loja_id: lojaId, url: u } });
+      const ms = Math.round(performance.now() - t0);
+      const { produtos: lista, categorias: cats } = extrairCatalogo(json);
+      setTestResult({
+        ok: true,
+        status: 200,
+        categorias: cats.length,
+        itens: lista.length,
+        amostra: lista.slice(0, 3).map((p) => `${p.nome} — R$ ${Number(p.preco).toFixed(2)}`),
+        ms,
+      });
+    } catch (e: any) {
+      const ms = Math.round(performance.now() - t0);
+      const msg = String(e?.message ?? "desconhecido");
+      const m = msg.match(/GeckoAPI\s+(\d{3})/i);
+      setTestResult({ ok: false, status: m ? Number(m[1]) : null, erro: msg, ms });
+    } finally {
+      setTestando(false);
+    }
+  }
+
+
+
 
   async function confirmar() {
     if (!produtos?.length) return;
