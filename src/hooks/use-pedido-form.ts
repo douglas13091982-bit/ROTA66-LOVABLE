@@ -179,6 +179,17 @@ export function usePedidoForm({
       const { data: userData } = await supabase.auth.getUser();
       const validItens = itens.filter((i) => i.nome.trim() && i.qtd > 0);
 
+      // Snapshot da taxa do plano aplicada neste pedido — evita que o valor
+      // exibido depois mude quando a loja trocar de plano.
+      const { data: lojaSnap } = await supabase
+        .from("lojas")
+        .select("taxa_por_pedido, plano_mensal_ativo")
+        .eq("id", lojaId)
+        .maybeSingle();
+      const taxaPlanoLoja = Number((lojaSnap as any)?.taxa_por_pedido ?? 0) || 0;
+      const planoMensalAtivo = Boolean((lojaSnap as any)?.plano_mensal_ativo);
+      const taxaPorPedidoAplicada = planoMensalAtivo ? 0 : taxaPlanoLoja;
+
       const payload = {
         loja_id: lojaId,
         cliente_user_id: asCliente && userData.user ? userData.user.id : null,
@@ -191,6 +202,7 @@ export function usePedidoForm({
         itens: validItens,
         valor_produtos: valorProdutos,
         taxa_entrega: taxaFinal,
+        taxa_por_pedido_aplicada: taxaPorPedidoAplicada,
         bonus_entregador: Number(bonus) || 0,
         valor_total: valorTotal,
         forma_pagamento: formaPagamento,
@@ -209,6 +221,7 @@ export function usePedidoForm({
         .select("*, lojas:loja_id(taxa_por_pedido, plano_mensal_ativo)")
         .single();
       if (error) throw error;
+
 
       // Optimistic update: insere o pedido no cache antes do refetch/realtime,
       // para que apareça instantaneamente ao navegar para /loja/pedidos.
