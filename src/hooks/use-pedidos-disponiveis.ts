@@ -14,16 +14,19 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { haversineKm } from "@/lib/geo";
+import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import {
   agruparPedidosPorRota,
   mesclarPedidosDisponiveis,
 } from "@/lib/pedido-agrupador";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
+import type { Database } from "@/integrations/supabase/types";
 
 const POOL_REFETCH_MS = 5_000;
 const ROTA_ATIVA_REFETCH_MS = 15_000;
 const GANHO_REFETCH_MS = 30_000;
+type TipoVeiculo = Database["public"]["Enums"]["tipo_veiculo"];
 
 export type UsePedidosDisponiveisResult = {
   grupos: ReturnType<typeof agruparPedidosPorRota>;
@@ -43,19 +46,27 @@ export function usePedidosDisponiveis(
   const qc = useQueryClient();
   const userId = user?.id;
 
-  const { data: profileFlag } = useQuery({
+  const { data: perfilEntregador } = useQuery({
     queryKey: ["meu-perfil-externo", userId],
     enabled: !!userId,
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("aceita_pedidos_externos")
+        .select("aceita_pedidos_externos, tipo_veiculo")
         .eq("id", userId!)
         .maybeSingle();
-      return !!(data as { aceita_pedidos_externos?: boolean } | null)
-        ?.aceita_pedidos_externos;
+      const perfil = data as {
+        aceita_pedidos_externos?: boolean | null;
+        tipo_veiculo?: string | null;
+      } | null;
+      return {
+        aceitaPedidosExternos: !!perfil?.aceita_pedidos_externos,
+        tipoVeiculo: (perfil?.tipo_veiculo || "moto") as TipoVeiculo,
+      };
     },
   });
+  const aceitaPedidosExternos = !!perfilEntregador?.aceitaPedidosExternos;
+  const tipoVeiculo: TipoVeiculo = perfilEntregador?.tipoVeiculo || "moto";
 
   // Status online do próprio entregador. Quando offline, nenhum pedido deve
   // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
@@ -179,16 +190,29 @@ export function usePedidosDisponiveis(
   });
 
   const { data: tarifasGlobais } = useQuery({
-    queryKey: ["tarifas-globais-moto"],
-    enabled: !!profileFlag,
+    queryKey: ["tarifas-globais-entregador", tipoVeiculo],
+    enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tarifas_globais")
         .select("*")
         .eq("ativa", true)
-        .eq("tipo_veiculo", "moto");
+        .eq("tipo_veiculo", tipoVeiculo);
       if (error) throw error;
-      return (data ?? []) as unknown as TarifaFaixa[];
+      if ((data ?? []).length > 0 || tipoVeiculo === "moto") {
+        return (data ?? []) as unknown as TarifaFaixa[];
+      }
+
+      // Se ainda não houver uma tabela específica para o veículo do entregador,
+      // usa a tarifa global padrão da operação (moto). Isso evita voltar para
+      // snapshots antigos do pedido, como R$ 6,00, quando a global atual é R$ 8,00.
+      const fallback = await supabase
+        .from("tarifas_globais")
+        .select("*")
+        .eq("ativa", true)
+        .eq("tipo_veiculo", "moto");
+      if (fallback.error) throw fallback.error;
+      return (fallback.data ?? []) as unknown as TarifaFaixa[];
     },
   });
 
@@ -269,7 +293,7 @@ export function usePedidosDisponiveis(
     grupos,
     isLoading: loadingVinc || loadingExt,
     temRotaAtiva,
-    semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !profileFlag,
+    semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !aceitaPedidosExternos,
     ganhoHoje: ganhoHoje ?? 0,
     taxaParaExibir,
     estouOnline,
@@ -283,8 +307,20 @@ function criarCalculadorTaxaExibida(
   return (p: PedidoDisponivel): number => {
     const forma = (p.forma_pagamento ?? "").toLowerCase();
     const ehCartao = forma === "cartao" || forma === "cartao_credito" || forma === "cartao_debito";
-    const dobrarSeExterno = (v: number) => (ehCartao && p._externo ? v * 2 : v);
-    if (!p._externo) return Number(p.taxa_entrega) || 0;
+
+    const taxaPlano = p.loja_plano_mensal_ativo
+      ? 0
+      : Number(p.loja_taxa_por_pedido ?? 0) || 0;
+    const tarifaClienteAPartirDoFrete = (freteEntregador: number) => {
+      const frete = ehCartao && p._externo ? freteEntregador * 2 : freteEntregador;
+      return Number((frete + taxaPlano).toFixed(2));
+    };
+    const freteSnapshot = liquidoEntregador(
+      p.taxa_entrega,
+      taxaPlano,
+      p.loja_plano_mensal_ativo,
+    );
+    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []);
 
     if (
       p.endereco_coleta_lat == null ||
@@ -292,7 +328,7 @@ function criarCalculadorTaxaExibida(
       p.endereco_entrega_lat == null ||
       p.endereco_entrega_lng == null
     ) {
-      return dobrarSeExterno(Number(p.taxa_entrega) || 0);
+      return tarifaClienteAPartirDoFrete(freteGlobalMinimo ?? freteSnapshot);
     }
     const km = haversineKm(
       Number(p.endereco_coleta_lat),
@@ -301,7 +337,7 @@ function criarCalculadorTaxaExibida(
       Number(p.endereco_entrega_lng),
     );
     const t = calcularTarifaPorFaixa(km, tarifasGlobais ?? []);
-    return dobrarSeExterno(t != null ? t : Number(p.taxa_entrega) || 0);
+    return tarifaClienteAPartirDoFrete(t ?? freteGlobalMinimo ?? freteSnapshot);
   };
 }
 
