@@ -2031,6 +2031,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_por_pedido_aplicada: number | null
           troco_para: number | null
           updated_at: string
           valor_produtos: number
@@ -2076,6 +2077,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
@@ -2121,6 +2123,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
@@ -3004,6 +3007,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_por_pedido_aplicada: number | null
           troco_para: number | null
           updated_at: string
           valor_produtos: number
