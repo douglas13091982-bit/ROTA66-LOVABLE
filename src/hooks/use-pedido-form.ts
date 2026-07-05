@@ -179,6 +179,17 @@ export function usePedidoForm({
       const { data: userData } = await supabase.auth.getUser();
       const validItens = itens.filter((i) => i.nome.trim() && i.qtd > 0);
 
+      // Snapshot da taxa do plano aplicada neste pedido — evita que o valor
+      // exibido depois mude quando a loja trocar de plano.
+      const { data: lojaSnap } = await supabase
+        .from("lojas")
+        .select("taxa_por_pedido, plano_mensal_ativo")
+        .eq("id", lojaId)
+        .maybeSingle();
+      const taxaPlanoLoja = Number((lojaSnap as any)?.taxa_por_pedido ?? 0) || 0;
+      const planoMensalAtivo = Boolean((lojaSnap as any)?.plano_mensal_ativo);
+      const taxaPorPedidoAplicada = planoMensalAtivo ? 0 : taxaPlanoLoja;
+
       const payload = {
         loja_id: lojaId,
         cliente_user_id: asCliente && userData.user ? userData.user.id : null,
@@ -191,6 +202,7 @@ export function usePedidoForm({
         itens: validItens,
         valor_produtos: valorProdutos,
         taxa_entrega: taxaFinal,
+        taxa_por_pedido_aplicada: taxaPorPedidoAplicada,
         bonus_entregador: Number(bonus) || 0,
         valor_total: valorTotal,
         forma_pagamento: formaPagamento,
@@ -210,13 +222,18 @@ export function usePedidoForm({
         .single();
       if (error) throw error;
 
+
       // Optimistic update: insere o pedido no cache antes do refetch/realtime,
       // para que apareça instantaneamente ao navegar para /loja/pedidos.
       const pedidoCache = {
         ...(data as any),
-        loja_taxa_por_pedido: Number((data as any)?.lojas?.taxa_por_pedido ?? 0),
+        loja_taxa_por_pedido:
+          (data as any)?.taxa_por_pedido_aplicada != null
+            ? Number((data as any).taxa_por_pedido_aplicada)
+            : Number((data as any)?.lojas?.taxa_por_pedido ?? 0),
         loja_plano_mensal_ativo: Boolean((data as any)?.lojas?.plano_mensal_ativo),
       };
+
       qc.setQueryData(["pedidos", lojaId], (old: any[] | undefined) => {
         const lista = Array.isArray(old) ? old : [];
         if (lista.some((p) => p.id === pedidoCache.id)) return lista;
