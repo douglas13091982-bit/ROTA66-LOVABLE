@@ -21,10 +21,12 @@ import {
 } from "@/lib/pedido-agrupador";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
+import type { Database } from "@/integrations/supabase/types";
 
 const POOL_REFETCH_MS = 5_000;
 const ROTA_ATIVA_REFETCH_MS = 15_000;
 const GANHO_REFETCH_MS = 30_000;
+type TipoVeiculo = Database["public"]["Enums"]["tipo_veiculo"];
 
 export type UsePedidosDisponiveisResult = {
   grupos: ReturnType<typeof agruparPedidosPorRota>;
@@ -59,12 +61,12 @@ export function usePedidosDisponiveis(
       } | null;
       return {
         aceitaPedidosExternos: !!perfil?.aceita_pedidos_externos,
-        tipoVeiculo: perfil?.tipo_veiculo || "moto",
+        tipoVeiculo: (perfil?.tipo_veiculo || "moto") as TipoVeiculo,
       };
     },
   });
   const aceitaPedidosExternos = !!perfilEntregador?.aceitaPedidosExternos;
-  const tipoVeiculo = perfilEntregador?.tipoVeiculo || "moto";
+  const tipoVeiculo: TipoVeiculo = perfilEntregador?.tipoVeiculo || "moto";
 
   // Status online do próprio entregador. Quando offline, nenhum pedido deve
   // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
@@ -195,7 +197,7 @@ export function usePedidosDisponiveis(
         .from("tarifas_globais")
         .select("*")
         .eq("ativa", true)
-        .eq("tipo_veiculo", tipoVeiculo as never);
+        .eq("tipo_veiculo", tipoVeiculo);
       if (error) throw error;
       if ((data ?? []).length > 0 || tipoVeiculo === "moto") {
         return (data ?? []) as unknown as TarifaFaixa[];
