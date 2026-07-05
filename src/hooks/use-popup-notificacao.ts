@@ -47,8 +47,8 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
     }
     let cancel = false;
     setSomPronto(false);
-    precarregarSom(somCfg).then(() => {
-      if (!cancel) setSomPronto(true);
+    precarregarSom(somCfg).then((ok) => {
+      if (!cancel) setSomPronto(ok);
     });
     const id = setInterval(() => {
       precarregarSom(somCfg);
