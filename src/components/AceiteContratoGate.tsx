@@ -49,9 +49,10 @@ export function AceiteContratoGate() {
   }, [loja?.id, contrato?.id]);
 
   const precisa =
-    !loading && !!contrato && !!loja?.id && jaAceitou === false;
+    !modoSuporte && !loading && !!contrato && !!loja?.id && jaAceitou === false;
 
   if (!precisa) return null;
+
 
   const handleAceitar = async () => {
     if (!loja?.id || !contrato?.id || !checked || saving) return;
