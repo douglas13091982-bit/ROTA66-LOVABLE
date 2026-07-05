@@ -48,7 +48,7 @@ export function useCarteira() {
       const invalidarSaldo = () => {
         qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
         qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
-        qc.invalidateQueries({ queryKey: ["entregador-ganho-hoje"] });
+        qc.invalidateQueries({ queryKey: ["ganho-hoje", uid] });
       };
       channel = supabase
         .channel(`entregador-saldo-${uid}`)
