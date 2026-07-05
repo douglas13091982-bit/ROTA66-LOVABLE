@@ -33,9 +33,13 @@ export function usePedidosLoja(lojaId: string | undefined) {
       if (error) throw error;
       return (data ?? []).map((p: any) => ({
         ...p,
-        loja_taxa_por_pedido: Number(p.lojas?.taxa_por_pedido ?? 0),
+        loja_taxa_por_pedido:
+          p.taxa_por_pedido_aplicada != null
+            ? Number(p.taxa_por_pedido_aplicada)
+            : Number(p.lojas?.taxa_por_pedido ?? 0),
         loja_plano_mensal_ativo: Boolean(p.lojas?.plano_mensal_ativo),
       })) as Pedido[];
+
     },
   });
 }
