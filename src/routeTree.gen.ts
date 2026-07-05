@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalcularFreteRouteImport } from './routes/calcular-frete'
 import { Route as CadastroRouteImport } from './routes/cadastro'
@@ -21,6 +22,8 @@ import { Route as RastreioPedidoIdRouteImport } from './routes/rastreio.$pedidoI
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as ClientesCidadeRouteImport } from './routes/clientes.$cidade'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AuthenticatedRevendedorRouteRouteImport } from './routes/_authenticated/revendedor/route'
 import { Route as AuthenticatedLojaRouteRouteImport } from './routes/_authenticated/loja/route'
 import { Route as AuthenticatedEntregadorRouteRouteImport } from './routes/_authenticated/entregador/route'
@@ -83,12 +86,18 @@ import { Route as AuthenticatedAdminAppApkRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminAnunciosRouteImport } from './routes/_authenticated/admin/anuncios'
 import { Route as AuthenticatedAdminAlertasRouteImport } from './routes/_authenticated/admin/alertas'
 import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenticated/admin/admins'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as ApiPublicMpWebhookLojaIdRouteImport } from './routes/api/public/mp-webhook.$lojaId'
 import { Route as ApiPublicHooksMpPollPendentesRouteImport } from './routes/api/public/hooks/mp-poll-pendentes'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -145,6 +154,18 @@ const CSlugRoute = CSlugRouteImport.update({
   path: '/c/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedRevendedorRouteRoute =
   AuthenticatedRevendedorRouteRouteImport.update({
     id: '/revendedor',
@@ -509,6 +530,12 @@ const AuthenticatedAdminAdminsRoute =
     path: '/admins',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicMpWebhookLojaIdRoute =
   ApiPublicMpWebhookLojaIdRouteImport.update({
     id: '/$lojaId',
@@ -528,16 +555,20 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/loja': typeof AuthenticatedLojaRouteRouteWithChildren
   '/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
@@ -605,12 +636,16 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes': typeof ClientesIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
@@ -680,16 +715,20 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/calcular-frete': typeof CalcularFreteRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/_authenticated/loja': typeof AuthenticatedLojaRouteRouteWithChildren
   '/_authenticated/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/_authenticated/admin/alertas': typeof AuthenticatedAdminAlertasRoute
   '/_authenticated/admin/anuncios': typeof AuthenticatedAdminAnunciosRoute
@@ -759,16 +798,20 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/calcular-frete'
     | '/login'
+    | '/mcp'
     | '/reset-password'
     | '/admin'
     | '/entregador'
     | '/loja'
     | '/revendedor'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes/'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/admins'
     | '/admin/alertas'
     | '/admin/anuncios'
@@ -836,12 +879,16 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/calcular-frete'
     | '/login'
+    | '/mcp'
     | '/reset-password'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes'
+    | '/.mcp/invoke-tool/$tool'
     | '/admin/admins'
     | '/admin/alertas'
     | '/admin/anuncios'
@@ -910,16 +957,20 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/calcular-frete'
     | '/login'
+    | '/mcp'
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/entregador'
     | '/_authenticated/loja'
     | '/_authenticated/revendedor'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
     | '/rastreio/$pedidoId'
     | '/clientes/'
+    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/admins'
     | '/_authenticated/admin/alertas'
     | '/_authenticated/admin/anuncios'
@@ -989,12 +1040,16 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   CalcularFreteRoute: typeof CalcularFreteRoute
   LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CSlugRoute: typeof CSlugRoute
   ClientesCidadeRoute: typeof ClientesCidadeRoute
   LojaSlugRoute: typeof LojaSlugRoute
   RastreioPedidoIdRoute: typeof RastreioPedidoIdRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicManifestDotwebmanifestRoute: typeof ApiPublicManifestDotwebmanifestRoute
   ApiPublicMpWebhookRoute: typeof ApiPublicMpWebhookRouteWithChildren
   ApiPublicMpWebhookEntregadorRoute: typeof ApiPublicMpWebhookEntregadorRoute
@@ -1011,6 +1066,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1088,6 +1150,20 @@ declare module '@tanstack/react-router' {
       path: '/c/$slug'
       fullPath: '/c/$slug'
       preLoaderRoute: typeof CSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/revendedor': {
@@ -1524,6 +1600,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/mp-webhook/$lojaId': {
       id: '/api/public/mp-webhook/$lojaId'
       path: '/$lojaId'
@@ -1739,12 +1822,17 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroRoute: CadastroRoute,
   CalcularFreteRoute: CalcularFreteRoute,
   LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CSlugRoute: CSlugRoute,
   ClientesCidadeRoute: ClientesCidadeRoute,
   LojaSlugRoute: LojaSlugRoute,
   RastreioPedidoIdRoute: RastreioPedidoIdRoute,
   ClientesIndexRoute: ClientesIndexRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicManifestDotwebmanifestRoute: ApiPublicManifestDotwebmanifestRoute,
   ApiPublicMpWebhookRoute: ApiPublicMpWebhookRouteWithChildren,
   ApiPublicMpWebhookEntregadorRoute: ApiPublicMpWebhookEntregadorRoute,
