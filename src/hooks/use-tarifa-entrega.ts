@@ -94,18 +94,19 @@ export function useTarifaEntrega(
       }
 
       const taxaPlano = plano.planoMensalAtivo ? 0 : plano.taxa;
-      const total = Number(valorGlobal.toFixed(2));
+      const total = Number((valorGlobal + taxaPlano).toFixed(2));
       const faixa = encontrarFaixa(km, tarifas);
       setTaxa(total);
       if (faixa) {
         const sufixoPlano =
           taxaPlano > 0
-            ? ` · taxa do plano da loja: R$ ${taxaPlano.toFixed(2)} separada`
+            ? ` + R$ ${taxaPlano.toFixed(2)} da taxa por pedido da loja`
             : "";
         setInfo(
-          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · tarifas globais${sufixoPlano}`,
+          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · frete R$ ${valorGlobal.toFixed(2)}${sufixoPlano}`,
         );
       }
+
     })();
     return () => {
       cancelled = true;
