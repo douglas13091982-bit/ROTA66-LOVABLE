@@ -56,10 +56,17 @@ export function PedidoDrawer({
     detalhe.valor_produtos ?? Number(detalhe.valor_total) - Number(detalhe.taxa_entrega ?? 0),
   );
   const taxa = Number(detalhe.taxa_entrega ?? 0);
-  const taxaPorPedido = detalhe.loja_plano_mensal_ativo
-    ? 0
-    : Number(detalhe.loja_taxa_por_pedido ?? 0);
+  // Prefere o snapshot da taxa do plano aplicada no momento do pedido.
+  // Fallback (pedidos legados sem snapshot): taxa atual da loja, mas nunca a
+  // ponto de deixar o frete negativo.
+  const taxaPorPedido =
+    detalhe.taxa_por_pedido_aplicada != null
+      ? Number(detalhe.taxa_por_pedido_aplicada)
+      : detalhe.loja_plano_mensal_ativo
+        ? 0
+        : Math.min(Number(detalhe.loja_taxa_por_pedido ?? 0), taxa);
   const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
+
   const podeAvancar =
     (detalhe.status === "novo" || detalhe.status === "aceito" || detalhe.status === "em_preparo") &&
     NEXT[detalhe.status];
