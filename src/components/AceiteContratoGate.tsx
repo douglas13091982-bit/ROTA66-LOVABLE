@@ -2,21 +2,26 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useMinhaLoja } from "@/hooks/use-loja";
+import { useLojaSuporteId } from "@/hooks/use-loja-suporte";
 import { ContratoBody, useContratoAtivo } from "@/components/ContratoView";
 import { toast } from "sonner";
 import { FileText, ScrollText } from "lucide-react";
 
 /**
  * Modal de aceite forçado: se houver contrato ativo não aceito pela loja,
- * bloqueia a interface até a loja aceitar.
+ * bloqueia a interface até a loja aceitar. Nunca é exibido em modo suporte
+ * (admin não pode aceitar em nome do dono).
  */
 export function AceiteContratoGate() {
   const { user } = useAuth();
   const { data: loja } = useMinhaLoja();
+  const suporteLojaId = useLojaSuporteId();
+  const modoSuporte = !!suporteLojaId && loja?.id === suporteLojaId;
   const { contrato, loading } = useContratoAtivo();
   const [jaAceitou, setJaAceitou] = useState<boolean | null>(null);
   const [checked, setChecked] = useState(false);
   const [saving, setSaving] = useState(false);
+
 
   useEffect(() => {
     let alive = true;
@@ -44,9 +49,10 @@ export function AceiteContratoGate() {
   }, [loja?.id, contrato?.id]);
 
   const precisa =
-    !loading && !!contrato && !!loja?.id && jaAceitou === false;
+    !modoSuporte && !loading && !!contrato && !!loja?.id && jaAceitou === false;
 
   if (!precisa) return null;
+
 
   const handleAceitar = async () => {
     if (!loja?.id || !contrato?.id || !checked || saving) return;

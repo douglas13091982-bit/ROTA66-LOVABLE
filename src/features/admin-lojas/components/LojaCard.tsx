@@ -1,8 +1,10 @@
-import { Store } from "lucide-react";
+import { Store, LogIn } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 import { statusOf } from "../logic/constants";
 import { EntregadoresResumo } from "./EntregadoresResumo";
 import { IndicadoPorBadge } from "./IndicadoPorBadge";
 import { LojaManageDialog } from "./LojaManageDialog";
+import { setLojaSuporteId } from "@/hooks/use-loja-suporte";
 
 interface Props {
   loja: any;
@@ -11,6 +13,7 @@ interface Props {
   onToggleCatalogo: (id: string, atual: boolean) => void;
   onChanged: () => void;
 }
+
 
 export function LojaCard({
   loja: l,
@@ -21,9 +24,16 @@ export function LojaCard({
 }: Props) {
   const st = statusOf(l.status);
   const planoAtivo = !!l.plano_mensal_ativo;
+  const navigate = useNavigate();
+
+  const acessarLoja = () => {
+    setLojaSuporteId(l.id);
+    navigate({ to: "/loja/dashboard" });
+  };
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-card flex flex-col">
+
       <div className="flex items-center gap-3 mb-3">
         <div className="h-11 w-11 rounded-md bg-gradient-red shadow-red flex items-center justify-center shrink-0">
           <Store className="h-5 w-5 text-primary-foreground" />
@@ -58,6 +68,15 @@ export function LojaCard({
 
 
 
+      <button
+        type="button"
+        onClick={acessarLoja}
+        className="mt-3 inline-flex items-center justify-center gap-2 h-9 px-3 rounded-md bg-gradient-red text-primary-foreground text-xs font-bold uppercase tracking-wider shadow-red hover:opacity-95 transition"
+      >
+        <LogIn className="h-3.5 w-3.5" />
+        Acessar loja (suporte)
+      </button>
+
       <LojaManageDialog
         loja={l}
         onSetStatus={onSetStatus}
@@ -68,3 +87,4 @@ export function LojaCard({
     </div>
   );
 }
+
