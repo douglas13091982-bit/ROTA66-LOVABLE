@@ -8,7 +8,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  DEFAULT_SOM,
   fetchConfigSom,
   instalarDesbloqueioAutomatico,
   pararNotificacao,
@@ -18,6 +17,9 @@ import {
 import type { GrupoPedido } from "@/types/pedido";
 
 const SOM_STALE_MS = 60_000;
+// A URL assinada do Supabase Storage vive por 1h. Renovamos o pré-carregamento
+// bem antes disso para que o <audio> sempre tenha um src válido pronto.
+const SOM_REFRESH_MS = 30 * 60_000;
 
 export function usePopupNotificacao(grupos: GrupoPedido[]) {
   const [popupOpen, setPopupOpen] = useState(false);
@@ -36,10 +38,12 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
   }, []);
 
   // Pré-carrega o MP3 assim que a config chega, para o play() ser instantâneo.
+  // Reprecarrega periodicamente porque a URL assinada do Storage expira em 1h.
   useEffect(() => {
-    if (somCfg?.audio_path) {
-      precarregarSom(somCfg);
-    }
+    if (!somCfg?.audio_path) return;
+    precarregarSom(somCfg);
+    const id = setInterval(() => precarregarSom(somCfg), SOM_REFRESH_MS);
+    return () => clearInterval(id);
   }, [somCfg?.audio_path]);
 
   useEffect(() => {
@@ -49,9 +53,12 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
       return;
     }
     if (currentKey !== lastSeenKeyRef.current) {
+      // Espera a config carregar antes de tocar — caso contrário cairíamos no
+      // DEFAULT_SOM (sem audio_path) e o entregador ouviria apenas o beep.
+      if (!somCfg) return;
       lastSeenKeyRef.current = currentKey;
       setPopupOpen(true);
-      tocarNotificacao(somCfg ?? DEFAULT_SOM);
+      tocarNotificacao(somCfg);
     }
   }, [currentKey, somCfg]);
 

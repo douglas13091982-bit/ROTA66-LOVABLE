@@ -48,12 +48,20 @@ export function usePedidosRealtime(lojaId: string | undefined) {
   useEffect(() => {
     instalarDesbloqueioAutomatico();
     let cancelled = false;
+    let interval: ReturnType<typeof setInterval> | null = null;
     fetchConfigSom("loja").then((cfg) => {
       if (cancelled) return;
       somCfgRef.current = cfg;
-      if (cfg.audio_path) precarregarSom(cfg);
+      if (cfg.audio_path) {
+        precarregarSom(cfg);
+        // URL assinada do Storage expira em 1h — renovamos a cada 30 min.
+        interval = setInterval(() => precarregarSom(cfg), 30 * 60_000);
+      }
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
