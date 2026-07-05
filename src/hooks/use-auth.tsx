@@ -58,7 +58,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    return () => subscription.unsubscribe();
+    // Quando o usuário volta ao app depois de um tempo (tela bloqueada,
+    // troca de aba, PWA em segundo plano), o token pode ter vencido e o
+    // autoRefresh interno do supabase-js pode ter pausado. Forçamos um
+    // refresh sempre que a aba volta a ficar visível — se falhar, o
+    // onAuthStateChange abaixo cuida do SIGNED_OUT.
+    const refrescar = () => {
+      if (typeof document === "undefined") return;
+      if (document.visibilityState !== "visible") return;
+      supabase.auth.getSession().then(({ data }) => {
+        if (!data.session) supabase.auth.refreshSession();
+      });
+    };
+    document.addEventListener("visibilitychange", refrescar);
+    window.addEventListener("focus", refrescar);
+    window.addEventListener("pageshow", refrescar);
+
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", refrescar);
+      window.removeEventListener("focus", refrescar);
+      window.removeEventListener("pageshow", refrescar);
+    };
   }, []);
 
   const signOut = async () => {
