@@ -24,7 +24,12 @@ export function FinanceiroResumoDashboard() {
 
   const valor = proxMens ? Number(proxMens.valor) : mensalidadeValor;
   const planoMensalAtivo = Boolean((loja as any).plano_mensal_ativo);
-  const taxaPorPedido = Number((loja as any).taxa_por_pedido ?? 0);
+  // Fonte de verdade: taxa do plano vinculado; cai para a coluna legada
+  // apenas quando a loja ainda não tem plano.
+  const plano = (loja as any).plano ?? null;
+  const taxaPorPedido = Number(
+    plano?.taxa_por_pedido ?? (loja as any).taxa_por_pedido ?? 0,
+  );
 
   return (
     <div className="space-y-4 mb-6">
