@@ -25,7 +25,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 const POOL_REFETCH_MS = 5_000;
 const ROTA_ATIVA_REFETCH_MS = 15_000;
-const GANHO_REFETCH_MS = 30_000;
+const GANHO_REFETCH_MS = 10_000;
 type TipoVeiculo = Database["public"]["Enums"]["tipo_veiculo"];
 
 export type UsePedidosDisponiveisResult = {
