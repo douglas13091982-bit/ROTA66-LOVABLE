@@ -3,12 +3,17 @@ import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 
 function mapPedido(p: any): PedidoAtivo {
+  const snapshot = p.taxa_por_pedido_aplicada;
   return {
     ...p,
     loja_plano_mensal_ativo: !!p.lojas?.plano_mensal_ativo,
-    loja_taxa_por_pedido: Number(p.lojas?.taxa_por_pedido ?? 0),
+    loja_taxa_por_pedido:
+      snapshot != null
+        ? Number(snapshot)
+        : Number(p.lojas?.taxa_por_pedido ?? 0),
   };
 }
+
 
 export function usePedidosAtivos(userId: string | undefined) {
   return useQuery({
