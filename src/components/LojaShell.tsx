@@ -194,6 +194,27 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
+        {modoSuporte && (
+          <div className="sticky top-0 z-30 flex items-center gap-3 px-5 md:px-8 py-2.5 bg-amber-500/15 border-b border-amber-500/40 text-amber-100 text-xs">
+            <ShieldCheck className="h-4 w-4 shrink-0 text-amber-300" />
+            <div className="flex-1 min-w-0">
+              <span className="font-semibold">Modo suporte:</span>{" "}
+              <span className="opacity-90">
+                você está acessando <strong className="text-white">{loja?.nome ?? "loja"}</strong> como administrador. Alterações em financeiro/saques não são permitidas.
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={sairModoSuporte}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-50 font-semibold uppercase tracking-wider text-[10px] transition"
+            >
+              Sair do modo suporte
+            </button>
+          </div>
+        )}
+
+
+
         <header
           className={`h-16 sticky top-0 z-20 flex items-center px-5 md:px-8 gap-3 transition-all duration-300 border-b ${
             scrolled
