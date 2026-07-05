@@ -39,11 +39,24 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
 
   // Pré-carrega o MP3 assim que a config chega, para o play() ser instantâneo.
   // Reprecarrega periodicamente porque a URL assinada do Storage expira em 1h.
+  const [somPronto, setSomPronto] = useState(false);
   useEffect(() => {
-    if (!somCfg?.audio_path) return;
-    precarregarSom(somCfg);
-    const id = setInterval(() => precarregarSom(somCfg), SOM_REFRESH_MS);
-    return () => clearInterval(id);
+    if (!somCfg?.audio_path) {
+      setSomPronto(false);
+      return;
+    }
+    let cancel = false;
+    setSomPronto(false);
+    precarregarSom(somCfg).then((ok) => {
+      if (!cancel) setSomPronto(ok);
+    });
+    const id = setInterval(() => {
+      precarregarSom(somCfg);
+    }, SOM_REFRESH_MS);
+    return () => {
+      cancel = true;
+      clearInterval(id);
+    };
   }, [somCfg?.audio_path]);
 
   useEffect(() => {
@@ -53,14 +66,16 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
       return;
     }
     if (currentKey !== lastSeenKeyRef.current) {
-      // Espera a config carregar antes de tocar — caso contrário cairíamos no
-      // DEFAULT_SOM (sem audio_path) e o entregador ouviria apenas o beep.
+      // Espera a config E o pré-carregamento do MP3 antes de tocar. Sem isso,
+      // o <audio> ainda não tem src quando play() é chamado e caímos no
+      // beep sintético.
       if (!somCfg) return;
+      if (somCfg.audio_path && !somPronto) return;
       lastSeenKeyRef.current = currentKey;
       setPopupOpen(true);
       tocarNotificacao(somCfg);
     }
-  }, [currentKey, somCfg]);
+  }, [currentKey, somCfg, somPronto]);
 
   useEffect(() => () => pararNotificacao(), []);
 

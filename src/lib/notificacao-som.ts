@@ -65,11 +65,13 @@ export async function getAudioUrl(audioPath: string | null): Promise<string | nu
 /**
  * Pré-carrega o arquivo MP3 no elemento <audio> reutilizável.
  * Deve ser chamado assim que a config estiver disponível, ANTES do pedido chegar.
+ * Retorna `true` quando a URL foi obtida e atribuída ao <audio> — o caller
+ * pode usar isso para saber se pode tocar o MP3 real ou se deve cair no beep.
  */
-export async function precarregarSom(cfg: ConfigNotificacaoSom): Promise<void> {
-  if (!cfg?.audio_path) return;
+export async function precarregarSom(cfg: ConfigNotificacaoSom): Promise<boolean> {
+  if (!cfg?.audio_path) return false;
   const url = await getAudioUrl(cfg.audio_path);
-  if (!url) return;
+  if (!url) return false;
   if (!unlockedAudioEl) {
     unlockedAudioEl = new Audio();
     unlockedAudioEl.preload = "auto";
@@ -79,6 +81,7 @@ export async function precarregarSom(cfg: ConfigNotificacaoSom): Promise<void> {
     unlockedAudioUrl = url;
     try { unlockedAudioEl.load(); } catch {}
   }
+  return true;
 }
 
 /**
