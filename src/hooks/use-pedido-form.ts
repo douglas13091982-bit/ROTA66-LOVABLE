@@ -227,9 +227,13 @@ export function usePedidoForm({
       // para que apareça instantaneamente ao navegar para /loja/pedidos.
       const pedidoCache = {
         ...(data as any),
-        loja_taxa_por_pedido: Number((data as any)?.lojas?.taxa_por_pedido ?? 0),
+        loja_taxa_por_pedido:
+          (data as any)?.taxa_por_pedido_aplicada != null
+            ? Number((data as any).taxa_por_pedido_aplicada)
+            : Number((data as any)?.lojas?.taxa_por_pedido ?? 0),
         loja_plano_mensal_ativo: Boolean((data as any)?.lojas?.plano_mensal_ativo),
       };
+
       qc.setQueryData(["pedidos", lojaId], (old: any[] | undefined) => {
         const lista = Array.isArray(old) ? old : [];
         if (lista.some((p) => p.id === pedidoCache.id)) return lista;
