@@ -195,7 +195,7 @@ export function usePedidosDisponiveis(
         .from("tarifas_globais")
         .select("*")
         .eq("ativa", true)
-        .eq("tipo_veiculo", tipoVeiculo);
+        .eq("tipo_veiculo", tipoVeiculo as never);
       if (error) throw error;
       if ((data ?? []).length > 0 || tipoVeiculo === "moto") {
         return (data ?? []) as unknown as TarifaFaixa[];
