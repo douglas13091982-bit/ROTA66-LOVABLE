@@ -126,6 +126,12 @@ export function ImportarIfoodDialog({
   const [categorias, setCategorias] = useState<string[]>([]);
   const [erro, setErro] = useState<string | null>(null);
   const [importando, setImportando] = useState(false);
+  const [testando, setTestando] = useState(false);
+  const [testResult, setTestResult] = useState<
+    | { ok: true; status: number; categorias: number; itens: number; amostra: string[]; ms: number }
+    | { ok: false; status: number | null; erro: string; ms: number }
+    | null
+  >(null);
   const importar = useServerFn(importarCatalogoIfood);
   const extrairPorUrl = useServerFn(extrairCatalogoIfoodPorUrl);
 
@@ -137,7 +143,10 @@ export function ImportarIfoodDialog({
     setErro(null);
     setImportando(false);
     setBuscando(false);
+    setTestando(false);
+    setTestResult(null);
   }
+
 
   async function handleArquivo(file: File) {
     setArquivo(file.name);
@@ -182,6 +191,39 @@ export function ImportarIfoodDialog({
       setBuscando(false);
     }
   }
+
+  async function handleTestar() {
+    const u = url.trim();
+    if (!u) {
+      setTestResult({ ok: false, status: null, erro: "Informe a URL primeiro.", ms: 0 });
+      return;
+    }
+    setTestResult(null);
+    setTestando(true);
+    const t0 = performance.now();
+    try {
+      const json = await extrairPorUrl({ data: { loja_id: lojaId, url: u } });
+      const ms = Math.round(performance.now() - t0);
+      const { produtos: lista, categorias: cats } = extrairCatalogo(json);
+      setTestResult({
+        ok: true,
+        status: 200,
+        categorias: cats.length,
+        itens: lista.length,
+        amostra: lista.slice(0, 3).map((p) => `${p.nome} — R$ ${Number(p.preco).toFixed(2)}`),
+        ms,
+      });
+    } catch (e: any) {
+      const ms = Math.round(performance.now() - t0);
+      const msg = String(e?.message ?? "desconhecido");
+      const m = msg.match(/GeckoAPI\s+(\d{3})/i);
+      setTestResult({ ok: false, status: m ? Number(m[1]) : null, erro: msg, ms });
+    } finally {
+      setTestando(false);
+    }
+  }
+
+
 
 
   async function confirmar() {
@@ -256,18 +298,67 @@ export function ImportarIfoodDialog({
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://www.ifood.com.br/delivery/..."
                   className="flex-1 px-3 py-2 text-xs bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-primary"
-                  disabled={buscando}
+                  disabled={buscando || testando}
                 />
                 <button
+                  onClick={handleTestar}
+                  disabled={buscando || testando || !url.trim()}
+                  title="Testar extração sem importar"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-card border border-border hover:bg-background disabled:opacity-50"
+                >
+                  {testando ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                  {testando ? "Testando..." : "Testar"}
+                </button>
+                <button
                   onClick={handleUrl}
-                  disabled={buscando || !url.trim()}
+                  disabled={buscando || testando || !url.trim()}
                   className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-gradient-red shadow-red text-primary-foreground disabled:opacity-50"
                 >
                   {buscando ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Link2 className="h-3.5 w-3.5" />}
                   {buscando ? "Buscando..." : "Buscar"}
                 </button>
               </div>
+
+              {testResult && (
+                <div className={`mt-3 rounded-md border p-2.5 text-[11px] ${testResult.ok ? "border-green-600/30 bg-green-600/10" : "border-red-600/30 bg-red-600/10"}`}>
+                  <div className="flex items-center gap-2 font-bold uppercase tracking-wider">
+                    {testResult.ok ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                    ) : (
+                      <AlertCircle className="h-3.5 w-3.5 text-red-400" />
+                    )}
+                    <span className={testResult.ok ? "text-green-500" : "text-red-400"}>
+                      HTTP {testResult.status ?? "—"}
+                    </span>
+                    <span className="text-muted-foreground font-normal normal-case tracking-normal">
+                      {testResult.ms} ms
+                    </span>
+                  </div>
+                  {testResult.ok ? (
+                    <div className="mt-1.5 space-y-0.5 text-foreground/90">
+                      <div>
+                        <b>{testResult.categorias}</b> categorias · <b>{testResult.itens}</b> itens
+                      </div>
+                      {testResult.amostra.length > 0 && (
+                        <ul className="mt-1 list-disc list-inside text-muted-foreground">
+                          {testResult.amostra.map((s, i) => (
+                            <li key={i} className="truncate">{s}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {testResult.itens === 0 && (
+                        <div className="text-amber-400 mt-1">
+                          A API respondeu, mas nenhum item foi encontrado (restaurante fechado ou URL sem cardápio).
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-1.5 text-red-300 break-words">{testResult.erro}</div>
+                  )}
+                </div>
+              )}
             </div>
+
           ) : (
             <div className="bg-background/50 border border-border rounded-md p-3">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
