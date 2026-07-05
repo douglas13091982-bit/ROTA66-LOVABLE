@@ -16,8 +16,15 @@ export const Route = createFileRoute("/_authenticated/loja")({
 
     if (list.includes("loja_admin")) return;
 
+    // Admins podem acessar o painel da loja em "modo suporte".
+    const ehAdmin = list.includes("super_admin") || list.includes("admin");
+    const suporteAtivo =
+      typeof window !== "undefined" &&
+      !!window.sessionStorage.getItem("admin:loja_suporte_id");
+    if (ehAdmin && suporteAtivo) return;
+
     // Não é loja: manda para a área compatível com o papel real.
-    if (list.includes("super_admin") || list.includes("admin")) throw redirect({ to: "/admin" });
+    if (ehAdmin) throw redirect({ to: "/admin" });
     if (list.includes("entregador")) throw redirect({ to: "/entregador" });
     if (list.includes("cliente")) throw redirect({ to: "/clientes" });
     throw redirect({ to: "/" });
