@@ -255,13 +255,26 @@ export function usePedidosDisponiveis(
         (payload) => {
           if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
-          const novo = payload.new as { status?: string; entregador_id?: string | null } | null;
+          const novo = payload.new as {
+            status?: string;
+            entregador_id?: string | null;
+          } | null;
+          const anterior = payload.old as {
+            status?: string;
+            entregador_id?: string | null;
+          } | null;
           const ficouPronto =
             (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
             novo?.status === "pronto" &&
             !novo?.entregador_id;
           if (ficouPronto) {
             toast.success("🚨 Novo pedido pronto para retirar!");
+          }
+          // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
+          const pedidoMeu =
+            novo?.entregador_id === userId || anterior?.entregador_id === userId;
+          if (pedidoMeu) {
+            qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
           }
         },
 
@@ -271,6 +284,7 @@ export function usePedidosDisponiveis(
       supabase.removeChannel(channel);
     };
   }, [userId, qc]);
+
 
   const pedidos = useMemo(
     () => mesclarPedidosDisponiveis(pedidosVinculados, pedidosExternos),
