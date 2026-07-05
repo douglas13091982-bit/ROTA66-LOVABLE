@@ -24,9 +24,16 @@ export function LojaCard({
 }: Props) {
   const st = statusOf(l.status);
   const planoAtivo = !!l.plano_mensal_ativo;
+  const navigate = useNavigate();
+
+  const acessarLoja = () => {
+    setLojaSuporteId(l.id);
+    navigate({ to: "/loja/dashboard" });
+  };
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-card flex flex-col">
+
       <div className="flex items-center gap-3 mb-3">
         <div className="h-11 w-11 rounded-md bg-gradient-red shadow-red flex items-center justify-center shrink-0">
           <Store className="h-5 w-5 text-primary-foreground" />
