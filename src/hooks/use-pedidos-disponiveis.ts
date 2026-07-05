@@ -305,13 +305,12 @@ function criarCalculadorTaxaExibida(
   return (p: PedidoDisponivel): number => {
     const forma = (p.forma_pagamento ?? "").toLowerCase();
     const ehCartao = forma === "cartao" || forma === "cartao_credito" || forma === "cartao_debito";
-    if (!p._externo) return Number(p.taxa_entrega) || 0;
 
     const taxaPlano = p.loja_plano_mensal_ativo
       ? 0
       : Number(p.loja_taxa_por_pedido ?? 0) || 0;
     const tarifaClienteAPartirDoFrete = (freteEntregador: number) => {
-      const frete = ehCartao ? freteEntregador * 2 : freteEntregador;
+      const frete = ehCartao && p._externo ? freteEntregador * 2 : freteEntregador;
       return Number((frete + taxaPlano).toFixed(2));
     };
     const freteSnapshot = liquidoEntregador(
@@ -319,6 +318,7 @@ function criarCalculadorTaxaExibida(
       taxaPlano,
       p.loja_plano_mensal_ativo,
     );
+    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []);
 
     if (
       p.endereco_coleta_lat == null ||
@@ -326,7 +326,7 @@ function criarCalculadorTaxaExibida(
       p.endereco_entrega_lat == null ||
       p.endereco_entrega_lng == null
     ) {
-      return tarifaClienteAPartirDoFrete(freteSnapshot);
+      return tarifaClienteAPartirDoFrete(freteGlobalMinimo ?? freteSnapshot);
     }
     const km = haversineKm(
       Number(p.endereco_coleta_lat),
@@ -335,7 +335,7 @@ function criarCalculadorTaxaExibida(
       Number(p.endereco_entrega_lng),
     );
     const t = calcularTarifaPorFaixa(km, tarifasGlobais ?? []);
-    return tarifaClienteAPartirDoFrete(t != null ? t : freteSnapshot);
+    return tarifaClienteAPartirDoFrete(t ?? freteGlobalMinimo ?? freteSnapshot);
   };
 }
 
