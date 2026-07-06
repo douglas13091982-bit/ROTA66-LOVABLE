@@ -1319,6 +1319,61 @@ export type Database = {
           },
         ]
       }
+      loja_funcionarios: {
+        Row: {
+          created_at: string
+          criado_por: string | null
+          email: string
+          id: string
+          loja_id: string
+          nome: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por?: string | null
+          email: string
+          id?: string
+          loja_id: string
+          nome: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: string | null
+          email?: string
+          id?: string
+          loja_id?: string
+          nome?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loja_funcionarios_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_funcionarios_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loja_funcionarios_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lojas: {
         Row: {
           ativa: boolean
@@ -2241,6 +2296,7 @@ export type Database = {
           destaque: boolean
           dia_vencimento: number
           id: string
+          max_funcionarios: number
           mensalidade_valor: number
           nome: string
           ordem: number
@@ -2254,6 +2310,7 @@ export type Database = {
           destaque?: boolean
           dia_vencimento?: number
           id?: string
+          max_funcionarios?: number
           mensalidade_valor?: number
           nome: string
           ordem?: number
@@ -2267,6 +2324,7 @@ export type Database = {
           destaque?: boolean
           dia_vencimento?: number
           id?: string
+          max_funcionarios?: number
           mensalidade_valor?: number
           nome?: string
           ordem?: number
@@ -3368,6 +3426,10 @@ export type Database = {
       }
       is_entregador_aprovado: { Args: { _user_id: string }; Returns: boolean }
       is_franquia_owner: { Args: { _uid: string }; Returns: boolean }
+      is_loja_funcionario: {
+        Args: { _loja_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_loja_owner: {
         Args: { _loja_id: string; _user_id: string }
         Returns: boolean
