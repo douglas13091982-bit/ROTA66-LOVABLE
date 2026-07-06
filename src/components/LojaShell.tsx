@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
-import { useMinhaLoja } from "@/hooks/use-loja";
+import { useMinhaLoja, useIsLojaOwner } from "@/hooks/use-loja";
 import { useLojaSuporteId, clearLojaSuporteId } from "@/hooks/use-loja-suporte";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
@@ -15,18 +15,18 @@ import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { usePedidosRealtime } from "@/features/loja-pedidos/hooks/use-pedidos-loja";
 
 
-const NAV = [
-  { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/loja/pedidos", label: "Pedidos", icon: ClipboardList },
-  { to: "/loja/historico", label: "Histórico", icon: History },
-  { to: "/loja/novo-pedido", label: "Novo pedido", icon: PlusCircle },
-  { to: "/loja/agendamentos", label: "Agendamentos", icon: CalendarClock },
-  { to: "/loja/produtos", label: "Catálogo", icon: Package },
-  { to: "/loja/entregadores", label: "Entregadores", icon: Users },
-  { to: "/loja/financeiro", label: "Financeiro", icon: Wallet },
-  
-  { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy },
-  { to: "/loja/configuracoes", label: "Configurações", icon: Settings },
+const NAV_ALL = [
+  { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard, ownerOnly: false },
+  { to: "/loja/pedidos", label: "Pedidos", icon: ClipboardList, ownerOnly: false },
+  { to: "/loja/historico", label: "Histórico", icon: History, ownerOnly: false },
+  { to: "/loja/novo-pedido", label: "Novo pedido", icon: PlusCircle, ownerOnly: false },
+  { to: "/loja/agendamentos", label: "Agendamentos", icon: CalendarClock, ownerOnly: false },
+  { to: "/loja/produtos", label: "Catálogo", icon: Package, ownerOnly: false },
+  { to: "/loja/entregadores", label: "Entregadores", icon: Users, ownerOnly: false },
+  { to: "/loja/financeiro", label: "Financeiro", icon: Wallet, ownerOnly: true },
+  { to: "/loja/funcionarios", label: "Funcionários", icon: Users, ownerOnly: true },
+  { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy, ownerOnly: false },
+  { to: "/loja/configuracoes", label: "Configurações", icon: Settings, ownerOnly: false },
 ] as const;
 
 export function LojaShell({ children, title }: { children: ReactNode; title: string }) {
