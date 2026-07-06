@@ -27,7 +27,7 @@ export function FuncionariosPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["loja-funcionarios"],
     enabled: !!loja && isOwner,
-    queryFn: () => listFn({}),
+    queryFn: () => listFn(),
   });
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["loja-funcionarios"] });
