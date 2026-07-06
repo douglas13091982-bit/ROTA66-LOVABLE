@@ -22,6 +22,7 @@ export function PlanoForm({ editing, onCancel, onSubmit }: Props) {
         destaque: !!editing.destaque,
         ordem: String(editing.ordem ?? 0),
         ativo: !!editing.ativo,
+        max_funcionarios: String(editing.max_funcionarios ?? 0),
       });
     } else {
       setForm(INITIAL_PLANO_FORM);
@@ -113,6 +114,21 @@ export function PlanoForm({ editing, onCancel, onSubmit }: Props) {
             onChange={(e) => set("dia_vencimento", e.target.value)}
             className="input"
           />
+        </Field>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        <Field label="Máx. funcionários">
+          <input
+            type="number"
+            min={0}
+            value={form.max_funcionarios}
+            onChange={(e) => set("max_funcionarios", e.target.value)}
+            className="input"
+          />
+          <span className="text-[11px] text-muted-foreground mt-1 block">
+            Quantidade de usuários que a loja pode cadastrar (0 = não permite)
+          </span>
         </Field>
       </div>
 
