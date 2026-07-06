@@ -28,7 +28,7 @@ const TABS = [
 
 type Tab = (typeof TABS)[number]["key"];
 
-export function AdminSaquesLojasPage() {
+export function AdminSaquesLojasContent() {
   const qc = useQueryClient();
   const [tab, setTab] = useState<Tab>("solicitado");
   const [copied, setCopied] = useState<string | null>(null);
