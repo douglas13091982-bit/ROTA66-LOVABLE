@@ -29,7 +29,7 @@ const TABS = [
 
 type Tab = (typeof TABS)[number]["key"];
 
-export function AdminSaquesRevendedoresPage() {
+export function AdminSaquesRevendedoresContent() {
   const qc = useQueryClient();
   const [tab, setTab] = useState<Tab>("pendente");
   const [copied, setCopied] = useState<string | null>(null);
@@ -96,90 +96,96 @@ export function AdminSaquesRevendedoresPage() {
   };
 
   return (
-    <AdminShell title="Saques dos revendedores">
-      <div className="max-w-5xl space-y-6">
-        <div className="flex flex-wrap gap-2 border-b border-border pb-2">
-          {TABS.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => setTab(key)}
-              className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
-                tab === key
-                  ? "bg-gradient-red shadow-red text-primary-foreground"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
-              }`}
-            >
-              {label}
-            </button>
+    <div className="max-w-5xl space-y-6">
+      <div className="flex flex-wrap gap-2 border-b border-border pb-2">
+        {TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
+              tab === key
+                ? "bg-gradient-red shadow-red text-primary-foreground"
+                : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {isLoading ? (
+        <div className="text-muted-foreground text-sm">Carregando…</div>
+      ) : !data || data.length === 0 ? (
+        <div className="text-muted-foreground text-sm">Nenhum saque nesta aba.</div>
+      ) : (
+        <div className="space-y-2">
+          {data.map((s) => (
+            <div key={s.id} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="font-semibold text-foreground">
+                    {s.revendedor_nome ?? "Revendedor"}{" "}
+                    <span className="text-muted-foreground font-normal text-xs">({s.revendedor_email})</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Solicitado em {new Date(s.created_at).toLocaleString("pt-BR")}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2 flex-wrap text-sm">
+                    <span className="text-muted-foreground">PIX:</span>
+                    <code className="px-2 py-0.5 rounded bg-background border border-border text-foreground">{s.pix_chave}</code>
+                    <button
+                      onClick={() => copiar(s.pix_chave, s.id)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      {copied === s.id ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  {s.motivo_rejeicao && (
+                    <div className="text-xs text-red-500 mt-1">Motivo: {s.motivo_rejeicao}</div>
+                  )}
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-foreground">R$ {Number(s.valor).toFixed(2)}</div>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${
+                    s.status === "pago" ? "bg-green-600/20 text-green-500" :
+                    s.status === "rejeitado" ? "bg-red-600/20 text-red-500" :
+                    "bg-yellow-600/20 text-yellow-500"
+                  }`}>
+                    {s.status}
+                  </span>
+                </div>
+              </div>
+              {s.status === "pendente" && (
+                <div className="flex gap-2 mt-3 justify-end">
+                  <button
+                    onClick={() => {
+                      const motivo = prompt("Motivo da rejeição?");
+                      if (motivo) rejeitar.mutate({ id: s.id, motivo });
+                    }}
+                    className="px-3 py-1.5 rounded-md text-xs font-semibold border border-border text-muted-foreground hover:text-foreground"
+                  >
+                    Rejeitar
+                  </button>
+                  <button
+                    onClick={() => marcarPago.mutate(s.id)}
+                    className="px-3 py-1.5 rounded-md text-xs font-semibold bg-green-600 text-white hover:bg-green-700"
+                  >
+                    Marcar como pago
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
 
-        {isLoading ? (
-          <div className="text-muted-foreground text-sm">Carregando…</div>
-        ) : !data || data.length === 0 ? (
-          <div className="text-muted-foreground text-sm">Nenhum saque nesta aba.</div>
-        ) : (
-          <div className="space-y-2">
-            {data.map((s) => (
-              <div key={s.id} className="bg-card border border-border rounded-xl p-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="font-semibold text-foreground">
-                      {s.revendedor_nome ?? "Revendedor"}{" "}
-                      <span className="text-muted-foreground font-normal text-xs">({s.revendedor_email})</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Solicitado em {new Date(s.created_at).toLocaleString("pt-BR")}
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 flex-wrap text-sm">
-                      <span className="text-muted-foreground">PIX:</span>
-                      <code className="px-2 py-0.5 rounded bg-background border border-border text-foreground">{s.pix_chave}</code>
-                      <button
-                        onClick={() => copiar(s.pix_chave, s.id)}
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        {copied === s.id ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                      </button>
-                    </div>
-                    {s.motivo_rejeicao && (
-                      <div className="text-xs text-red-500 mt-1">Motivo: {s.motivo_rejeicao}</div>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-foreground">R$ {Number(s.valor).toFixed(2)}</div>
-                    <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded ${
-                      s.status === "pago" ? "bg-green-600/20 text-green-500" :
-                      s.status === "rejeitado" ? "bg-red-600/20 text-red-500" :
-                      "bg-yellow-600/20 text-yellow-500"
-                    }`}>
-                      {s.status}
-                    </span>
-                  </div>
-                </div>
-                {s.status === "pendente" && (
-                  <div className="flex gap-2 mt-3 justify-end">
-                    <button
-                      onClick={() => {
-                        const motivo = prompt("Motivo da rejeição?");
-                        if (motivo) rejeitar.mutate({ id: s.id, motivo });
-                      }}
-                      className="px-3 py-1.5 rounded-md text-xs font-semibold border border-border text-muted-foreground hover:text-foreground"
-                    >
-                      Rejeitar
-                    </button>
-                    <button
-                      onClick={() => marcarPago.mutate(s.id)}
-                      className="px-3 py-1.5 rounded-md text-xs font-semibold bg-green-600 text-white hover:bg-green-700"
-                    >
-                      Marcar como pago
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+export function AdminSaquesRevendedoresPage() {
+  return (
+    <AdminShell title="Saques dos revendedores">
+      <AdminSaquesRevendedoresContent />
     </AdminShell>
   );
 }

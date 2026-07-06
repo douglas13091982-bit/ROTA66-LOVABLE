@@ -21,11 +21,9 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
   { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
   { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
-  { to: "/admin/saques-entregadores", label: "Saques entreg.", icon: Wallet, area: null, ownerOnly: true },
-  { to: "/admin/saques-lojas", label: "Saques lojas", icon: Wallet, area: null, ownerOnly: true },
-  { to: "/admin/saques-revendedores", label: "Saques revend.", icon: Wallet, area: null, ownerOnly: true },
+  { to: "/admin/carteiras", label: "Carteiras & Saques", icon: Wallet, area: null, ownerOnly: true },
 
-  { to: "/admin/creditos-entregador", label: "Créditos entreg.", icon: Wallet, area: "creditos", ownerOnly: true },
+
   { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
   { to: "/admin/notificacao-som", label: "Som alerta (Entreg.)", icon: Bell, area: "notificacao_som", ownerOnly: true },
   { to: "/admin/notificacao-som-loja", label: "Som alerta (Loja)", icon: Bell, area: "notificacao_som", ownerOnly: true },
