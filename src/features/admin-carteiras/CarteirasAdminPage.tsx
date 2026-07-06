@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Bike, Store, Handshake, Coins, Wallet } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
-import { SaquesEntregadoresPage } from "@/features/admin-saques-entregadores/SaquesEntregadoresPage";
-import { AdminSaquesLojasPage } from "@/features/admin-saques-lojas/AdminSaquesLojasPage";
-import { AdminSaquesRevendedoresPage } from "@/features/admin-saques-revendedores/AdminSaquesRevendedoresPage";
-import { CreditosEntregadorPage } from "@/features/admin-creditos-entregador/CreditosEntregadorPage";
+import { SaquesEntregadoresContent } from "@/features/admin-saques-entregadores/SaquesEntregadoresPage";
+import { AdminSaquesLojasContent } from "@/features/admin-saques-lojas/AdminSaquesLojasPage";
+import { AdminSaquesRevendedoresContent } from "@/features/admin-saques-revendedores/AdminSaquesRevendedoresPage";
+import { CreditosEntregadorContent } from "@/features/admin-creditos-entregador/CreditosEntregadorPage";
 
 type TabKey = "saques-entregadores" | "saques-lojas" | "saques-revendedores" | "creditos-entregador";
 
@@ -14,14 +14,6 @@ const TABS: { key: TabKey; label: string; Icon: typeof Wallet }[] = [
   { key: "saques-revendedores", label: "Saques revendedores", Icon: Handshake },
   { key: "creditos-entregador", label: "Créditos entregador", Icon: Coins },
 ];
-
-/**
- * Renderiza o conteúdo da página sem o AdminShell externo,
- * para embutir dentro das abas de "Carteiras".
- */
-function Bare({ children }: { children: React.ReactNode }) {
-  return <div className="[&_.panel-premium]:contents [&_aside]:hidden [&_header]:hidden [&_main]:!p-0">{children}</div>;
-}
 
 export function CarteirasAdminPage() {
   const [tab, setTab] = useState<TabKey>("saques-entregadores");
@@ -49,12 +41,12 @@ export function CarteirasAdminPage() {
           })}
         </div>
 
-        <Bare>
-          {tab === "saques-entregadores" && <SaquesEntregadoresPage />}
-          {tab === "saques-lojas" && <AdminSaquesLojasPage />}
-          {tab === "saques-revendedores" && <AdminSaquesRevendedoresPage />}
-          {tab === "creditos-entregador" && <CreditosEntregadorPage />}
-        </Bare>
+        <div>
+          {tab === "saques-entregadores" && <SaquesEntregadoresContent />}
+          {tab === "saques-lojas" && <AdminSaquesLojasContent />}
+          {tab === "saques-revendedores" && <AdminSaquesRevendedoresContent />}
+          {tab === "creditos-entregador" && <CreditosEntregadorContent />}
+        </div>
       </div>
     </AdminShell>
   );
