@@ -15,6 +15,7 @@ function parseForm(form: PlanoFormState) {
     destaque: !!form.destaque,
     ordem: Number(form.ordem) || 0,
     ativo: !!form.ativo,
+    max_funcionarios: Math.max(0, Number(form.max_funcionarios) || 0),
   };
 }
 

@@ -1,57 +1,66 @@
+# Funcionários da loja
 
-## Objetivo
+Permitir que o dono da loja cadastre funcionários (e-mail + senha) que entram no painel da loja com **acesso total exceto Financeiro e Saques**. Quantidade máxima definida pelo plano contratado.
 
-Todos os pedidos feitos pelo catálogo público (PIX/Cartão online) passam a ser cobrados **na conta Mercado Pago da plataforma** (a mesma já usada para mensalidades). O valor de cada pedido pago entra como **saldo na carteira da loja**. A loja pode solicitar **1 saque por semana** ao admin, que aprova/paga manualmente (mesmo fluxo já existente para saques de entregador/revendedor).
+## O que o usuário vai ver
 
-## Mudanças
+**Nova aba em `Configurações → Funcionários`** dentro do painel da loja:
+- Contador `3 / 5 funcionários usados` (do plano atual).
+- Botão **Adicionar funcionário** → dialog com Nome, E-mail, Senha. Ao salvar, a conta é criada já ativa; o dono entrega o acesso ao funcionário.
+- Lista com nome, e-mail, data de criação, botão **Remover acesso** e **Redefinir senha**.
+- Se atingiu o limite do plano, o botão fica desabilitado com aviso `Seu plano permite N funcionários. Faça upgrade para adicionar mais.`
 
-### 1. Checkout do catálogo usa a conta da plataforma
-- `PagamentoMercadoPago.tsx` e `mercadopago.functions.ts` (`criarPagamentoPedido`) hoje buscam `lojas_pagamento_mp` da loja. Vou trocar para usar `getPlataformaMp()` (de `plataforma-mp.server.ts`).
-- Public key exposta ao Brick de cartão passa a ser `mp_platform_public_key`.
-- `notification_url` aponta para o webhook único `/api/public/mp-webhook` (que roteia para o dispatcher da plataforma quando o `external_reference` for de pedido).
-- Remover UI de configuração de MP por loja em `MercadoPagoConfig.tsx` (some do painel da loja), mantendo a tabela `lojas_pagamento_mp` intacta por compat.
+**Login do funcionário:** entra normalmente em `/login` com e-mail e senha. Cai no painel da loja do patrão, com o menu lateral **sem** os itens `Financeiro` (e sem acesso a saques dentro de outras telas).
 
-### 2. Crédito automático na carteira ao pagar
-- No dispatcher do webhook da plataforma (`mp-webhook-dispatcher.server.ts`), quando o pagamento aprovado for de um pedido do catálogo (external_reference `pedido:<id>`), chamar uma nova função SQL `creditar_carteira_loja_por_pedido(_pedido_id, _mp_payment_id)`:
-  - marca `pedidos.mp_payment_status='approved'` (idempotente)
-  - insere movimento `credito_venda` em `lojas_saldo_movimentos`
-  - atualiza `lojas_saldo.saldo`
-  - valor creditado = `valor_produtos` (taxa_entrega continua indo para entregador/plataforma como já é hoje)
+**Dono da loja:** continua vendo tudo, inclusive Financeiro e a nova aba de Funcionários.
 
-### 3. Saques da loja (1 por semana)
-Novas tabelas + RPCs espelhando o modelo de `entregador_saques` / `revendedor_saques`:
+## Regras de permissão
 
-```text
-lojas_saques
-├─ id, loja_id, valor, pix_chave
-├─ status (solicitado|pago|rejeitado)
-├─ solicitado_em, pago_em, rejeitado_em
-├─ motivo_rejeicao, observacoes_admin
-```
+Funcionário pode:
+- Ver e operar Pedidos, Histórico, Novo pedido, Agendamentos, Catálogo, Entregadores, Suporte, Dashboard, Configurações (menos aba Funcionários e menos dados bancários/PIX de saque).
 
-RPCs:
-- `loja_saldo_saque_resumo()` → saldo, pode_sacar_hoje (1x/semana), tem_saque_pendente
-- `loja_solicitar_saque(_valor, _pix_chave)` → valida saldo, valida janela semanal, debita saldo (movimento `saque_solicitado`), cria saque
-
-RLS: dono da loja lê/insere os próprios; admin lê/atualiza tudo.
-
-### 4. Telas
-- **Loja › Financeiro › aba Carteira**: saldo atual, botão "Solicitar saque", histórico de saques e movimentos. Reutiliza componentes do padrão `entregador-carteira`.
-- **Admin › Saques das lojas** (nova rota `/admin/saques-lojas`, item de menu ao lado de "Saques dos entregadores/revendedores"): mesma UI de `AdminSaquesRevendedoresPage` adaptada.
-
-### 5. Migração de dados
-- Não migra pagamentos antigos.
-- Configurações MP por loja permanecem no banco mas ficam sem uso (podem ser removidas depois).
+Funcionário **não pode**:
+- Acessar Financeiro (saldo, saques, cobranças, mensalidade, Mercado Pago).
+- Criar/remover outros funcionários.
+- Alterar plano, CNPJ, dados bancários, aceitar contrato.
+- Excluir a loja.
 
 ## Detalhes técnicos
 
-- Todas as alterações de schema (tabelas, funções, RLS, GRANTs) em uma migração única.
-- Webhook: dispatcher precisa reconhecer `external_reference` iniciado por `pedido:` e chamar o novo RPC via `supabaseAdmin`.
-- Idempotência garantida por `mp_payment_id` único no movimento (`descricao` contém o id; adicionar índice único parcial em `lojas_saldo_movimentos(pedido_id) where tipo='credito_venda'`).
-- Janela de "1 saque por semana": bloqueia se existir saque `solicitado` OU se algum saque foi criado nos últimos 7 dias com status ≠ `rejeitado`.
-- Nada muda em pagamento de entrega ao entregador nem em mensalidades.
+### Banco
 
-## Fora de escopo
+1. **Tabela `loja_funcionarios`**
+   - `loja_id` (FK lojas), `user_id` (FK auth.users, único), `nome`, `criado_por`, timestamps.
+   - GRANTs + RLS: `SELECT/INSERT/DELETE` só para o `owner_id` da loja; funcionário vê a própria linha.
 
-- Split automático de pagamento (MP Marketplace) — usaríamos conta única + carteira interna, conforme pedido.
-- Saque automático via PIX API — continua manual pelo admin.
+2. **Coluna `max_funcionarios` em `planos_loja`** (int, default 0). Admin edita pelo painel de planos existente.
+
+3. **Função `public.loja_do_usuario(uid uuid)` SECURITY DEFINER** que retorna o `loja_id` — seja porque é `owner_id` da loja, seja porque tem linha em `loja_funcionarios`. Usada nas policies existentes.
+
+4. **Ajustar policies das tabelas da loja** (`pedidos`, `produtos`, `loja_categorias`, `agendamentos`, `loja_entregadores`, `lojas_enderecos_coleta`, `clientes_loja`, `pedido_mensagens`, etc.): substituir `owner_id = auth.uid()` por `loja_id = public.loja_do_usuario(auth.uid())`. Tabelas financeiras (`lojas_saldo`, `lojas_saques`, `lojas_saldo_movimentos`, `cobrancas_loja`, `mensalidades_loja`, `lojas_pagamento_mp`, `lojas_recargas_mp`) continuam restritas ao `owner_id`.
+
+### Servidor
+
+5. **`src/lib/loja-funcionarios.functions.ts`** com três server functions autenticadas (`requireSupabaseAuth`):
+   - `listarFuncionarios()` — lista funcionários da loja do usuário.
+   - `criarFuncionario({ nome, email, senha })` — verifica se caller é owner, checa `count < plano.max_funcionarios`, chama `supabaseAdmin.auth.admin.createUser({ email, password, email_confirm: true })`, insere em `loja_funcionarios`.
+   - `removerFuncionario({ user_id })` — owner remove, apaga da tabela e chama `supabaseAdmin.auth.admin.deleteUser`.
+   - `redefinirSenha({ user_id, senha })` — owner redefine via `supabaseAdmin.auth.admin.updateUserById`.
+   - `supabaseAdmin` importado dinamicamente dentro do handler.
+
+### Frontend
+
+6. **`src/hooks/use-loja.tsx`**: além de buscar por `owner_id`, se não achar, buscar via `loja_funcionarios.user_id = auth.uid()` e retornar a loja vinculada. Expor `isOwner: boolean` no retorno.
+
+7. **`src/components/LojaShell.tsx`**: esconder item `Financeiro` do `NAV` quando `!isOwner`. Esconder toggle "Loja aberta" só se quiser (mantemos visível).
+
+8. **Nova página `src/features/loja-funcionarios/FuncionariosPage.tsx`** — lista + dialog de criação + confirmação de remoção + redefinir senha. Renderizada como aba nova em `ConfigPage` (só aparece para owner).
+
+9. **Guardas nas telas financeiras**: `FinanceiroPage` (e sub-rotas) redireciona para `/loja/dashboard` com toast se `!isOwner`. Assim URL direta também é bloqueada.
+
+10. **Admin de planos**: adicionar input `Máximo de funcionários` no formulário de planos existente.
+
+### Não incluído
+
+- Papéis granulares por menu (só "acesso total menos financeiro"). Se quiser mais tarde, dá para adicionar `permissoes jsonb` em `loja_funcionarios`.
+- Convite por e-mail — a loja mesma define a senha e passa ao funcionário.

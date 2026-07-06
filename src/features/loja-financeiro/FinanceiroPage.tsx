@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LojaShell } from "@/components/LojaShell";
-import { useMinhaLoja } from "@/hooks/use-loja";
+import { useMinhaLoja, useIsLojaOwner } from "@/hooks/use-loja";
 import { useAuth } from "@/hooks/use-auth";
 import { PixPagamentoDialog } from "@/components/PixPagamentoDialog";
 import { PagamentoMpMensalidadeDialog } from "./components/PagamentoMpMensalidadeDialog";
@@ -37,10 +37,22 @@ export function FinanceiroPage() {
   const [mpCobId, setMpCobId] = useState<string | null>(null);
   const [mpFaturaOpen, setMpFaturaOpen] = useState(false);
 
+  const isOwner = useIsLojaOwner(loja);
+
   if (!loja) {
     return (
       <LojaShell title="Financeiro">
         <p className="text-muted-foreground">Crie sua loja primeiro.</p>
+      </LojaShell>
+    );
+  }
+
+  if (!isOwner) {
+    return (
+      <LojaShell title="Financeiro">
+        <p className="text-sm text-white/70 max-w-lg">
+          Apenas o dono da loja tem acesso ao Financeiro. Fale com o responsável pela conta.
+        </p>
       </LojaShell>
     );
   }

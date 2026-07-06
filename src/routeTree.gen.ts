@@ -47,6 +47,7 @@ import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authent
 import { Route as AuthenticatedLojaPedidosRouteImport } from './routes/_authenticated/loja/pedidos'
 import { Route as AuthenticatedLojaNovoPedidoRouteImport } from './routes/_authenticated/loja/novo-pedido'
 import { Route as AuthenticatedLojaHistoricoRouteImport } from './routes/_authenticated/loja/historico'
+import { Route as AuthenticatedLojaFuncionariosRouteImport } from './routes/_authenticated/loja/funcionarios'
 import { Route as AuthenticatedLojaFinanceiroRouteImport } from './routes/_authenticated/loja/financeiro'
 import { Route as AuthenticatedLojaEntregadoresRouteImport } from './routes/_authenticated/loja/entregadores'
 import { Route as AuthenticatedLojaDashboardRouteImport } from './routes/_authenticated/loja/dashboard'
@@ -295,6 +296,12 @@ const AuthenticatedLojaHistoricoRoute =
   AuthenticatedLojaHistoricoRouteImport.update({
     id: '/historico',
     path: '/historico',
+    getParentRoute: () => AuthenticatedLojaRouteRoute,
+  } as any)
+const AuthenticatedLojaFuncionariosRoute =
+  AuthenticatedLojaFuncionariosRouteImport.update({
+    id: '/funcionarios',
+    path: '/funcionarios',
     getParentRoute: () => AuthenticatedLojaRouteRoute,
   } as any)
 const AuthenticatedLojaFinanceiroRoute =
@@ -608,6 +615,7 @@ export interface FileRoutesByFullPath {
   '/loja/dashboard': typeof AuthenticatedLojaDashboardRoute
   '/loja/entregadores': typeof AuthenticatedLojaEntregadoresRoute
   '/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
+  '/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/loja/historico': typeof AuthenticatedLojaHistoricoRoute
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
@@ -685,6 +693,7 @@ export interface FileRoutesByTo {
   '/loja/dashboard': typeof AuthenticatedLojaDashboardRoute
   '/loja/entregadores': typeof AuthenticatedLojaEntregadoresRoute
   '/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
+  '/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/loja/historico': typeof AuthenticatedLojaHistoricoRoute
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
@@ -768,6 +777,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/dashboard': typeof AuthenticatedLojaDashboardRoute
   '/_authenticated/loja/entregadores': typeof AuthenticatedLojaEntregadoresRoute
   '/_authenticated/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
+  '/_authenticated/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/_authenticated/loja/historico': typeof AuthenticatedLojaHistoricoRoute
   '/_authenticated/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/_authenticated/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
@@ -851,6 +861,7 @@ export interface FileRouteTypes {
     | '/loja/dashboard'
     | '/loja/entregadores'
     | '/loja/financeiro'
+    | '/loja/funcionarios'
     | '/loja/historico'
     | '/loja/novo-pedido'
     | '/loja/pedidos'
@@ -928,6 +939,7 @@ export interface FileRouteTypes {
     | '/loja/dashboard'
     | '/loja/entregadores'
     | '/loja/financeiro'
+    | '/loja/funcionarios'
     | '/loja/historico'
     | '/loja/novo-pedido'
     | '/loja/pedidos'
@@ -1010,6 +1022,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/dashboard'
     | '/_authenticated/loja/entregadores'
     | '/_authenticated/loja/financeiro'
+    | '/_authenticated/loja/funcionarios'
     | '/_authenticated/loja/historico'
     | '/_authenticated/loja/novo-pedido'
     | '/_authenticated/loja/pedidos'
@@ -1325,6 +1338,13 @@ declare module '@tanstack/react-router' {
       path: '/historico'
       fullPath: '/loja/historico'
       preLoaderRoute: typeof AuthenticatedLojaHistoricoRouteImport
+      parentRoute: typeof AuthenticatedLojaRouteRoute
+    }
+    '/_authenticated/loja/funcionarios': {
+      id: '/_authenticated/loja/funcionarios'
+      path: '/funcionarios'
+      fullPath: '/loja/funcionarios'
+      preLoaderRoute: typeof AuthenticatedLojaFuncionariosRouteImport
       parentRoute: typeof AuthenticatedLojaRouteRoute
     }
     '/_authenticated/loja/financeiro': {
@@ -1732,6 +1752,7 @@ interface AuthenticatedLojaRouteRouteChildren {
   AuthenticatedLojaDashboardRoute: typeof AuthenticatedLojaDashboardRoute
   AuthenticatedLojaEntregadoresRoute: typeof AuthenticatedLojaEntregadoresRoute
   AuthenticatedLojaFinanceiroRoute: typeof AuthenticatedLojaFinanceiroRoute
+  AuthenticatedLojaFuncionariosRoute: typeof AuthenticatedLojaFuncionariosRoute
   AuthenticatedLojaHistoricoRoute: typeof AuthenticatedLojaHistoricoRoute
   AuthenticatedLojaNovoPedidoRoute: typeof AuthenticatedLojaNovoPedidoRoute
   AuthenticatedLojaPedidosRoute: typeof AuthenticatedLojaPedidosRoute
@@ -1747,6 +1768,7 @@ const AuthenticatedLojaRouteRouteChildren: AuthenticatedLojaRouteRouteChildren =
     AuthenticatedLojaDashboardRoute: AuthenticatedLojaDashboardRoute,
     AuthenticatedLojaEntregadoresRoute: AuthenticatedLojaEntregadoresRoute,
     AuthenticatedLojaFinanceiroRoute: AuthenticatedLojaFinanceiroRoute,
+    AuthenticatedLojaFuncionariosRoute: AuthenticatedLojaFuncionariosRoute,
     AuthenticatedLojaHistoricoRoute: AuthenticatedLojaHistoricoRoute,
     AuthenticatedLojaNovoPedidoRoute: AuthenticatedLojaNovoPedidoRoute,
     AuthenticatedLojaPedidosRoute: AuthenticatedLojaPedidosRoute,
