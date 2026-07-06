@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
-import { NotificacaoSomLojaPage } from "@/features/admin-notificacao-som/NotificacaoSomLojaPage";
+import { SomAlertaAdminPage } from "@/features/admin-notificacao-som/SomAlertaAdminPage";
 
-export const Route = createFileRoute("/_authenticated/admin/notificacao-som-loja")({
-  component: NotificacaoSomLojaPage,
+export const Route = createFileRoute("/_authenticated/admin/sons-alerta")({
+  component: SomAlertaAdminPage,
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
   notFoundComponent: () => <GlobalErrorBoundary statusCode={404} />,
 });
