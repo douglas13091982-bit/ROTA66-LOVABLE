@@ -10,6 +10,7 @@ import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
 import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
 import { SaldosLojasSection } from "./components/SaldosLojasSection";
+import { useFranquia } from "@/hooks/use-franquia";
 
 type TabKey =
   | "pendentes"
@@ -21,7 +22,7 @@ type TabKey =
   | "mensalidades"
   | "cobrancas";
 
-const TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
+const ALL_TABS: { key: TabKey; label: string; Icon: typeof Settings }[] = [
   { key: "pendentes", label: "Pendentes", Icon: Bell },
   { key: "visao-geral", label: "Visão geral", Icon: LayoutDashboard },
   { key: "saldos-lojas", label: "Saldos das lojas", Icon: Wallet },
@@ -53,6 +54,11 @@ export function FinanceiroAdminPage() {
   const cobAguardando = cobrancas.filter((c) => !c.pago && !!c.pago_solicitado_em);
   const mensAguardando = mensalidades.filter((m) => !m.pago && !!m.pago_solicitado_em);
   const totalPendentes = cobAguardando.length + mensAguardando.length;
+
+  const { isFranqueado } = useFranquia();
+  const TABS = ALL_TABS.filter((t) =>
+    isFranqueado ? t.key !== "mercado-pago" && t.key !== "pix" : true,
+  );
 
   const [tab, setTab] = useState<TabKey>("visao-geral");
 
@@ -113,9 +119,9 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && <MercadoPagoPlataformaSection />}
+        {tab === "mercado-pago" && !isFranqueado && <MercadoPagoPlataformaSection />}
 
-        {tab === "pix" && (
+        {tab === "pix" && !isFranqueado && (
           <PixSection
             config={config}
             setConfig={setConfig}
