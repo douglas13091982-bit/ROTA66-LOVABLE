@@ -3,6 +3,15 @@ import { getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 
+function normalizeMpHost(host: string): string {
+  const h = host.trim().toLowerCase();
+  const m1 = h.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.lovableproject\.com$/);
+  if (m1) return `project--${m1[1]}-dev.lovable.app`;
+  const m2 = h.match(/^id-preview--([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.lovable\.app$/);
+  if (m2) return `project--${m2[1]}-dev.lovable.app`;
+  return h;
+}
+
 function buildWebhookUrl(): string {
   const envHost = process.env.PUBLIC_HOST?.trim();
   let host = envHost && envHost.length > 0 ? envHost : "";
@@ -15,7 +24,7 @@ function buildWebhookUrl(): string {
   }
   if (!host) throw new Error("Host público não configurado");
   // Endpoint único da plataforma — cobre mensalidades de loja e recargas de entregador.
-  return `https://${host}/api/public/mp-webhook`;
+  return `https://${normalizeMpHost(host)}/api/public/mp-webhook`;
 }
 
 function buildBackUrl(): string {
