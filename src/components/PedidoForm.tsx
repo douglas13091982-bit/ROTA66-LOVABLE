@@ -355,7 +355,7 @@ function ItensSection({
               type="number"
               min={0}
               step="0.01"
-              placeholder="Preço un."
+              placeholder="Total R$"
               value={it.preco || ""}
               onChange={(e) => onUpdate(idx, { preco: Number(e.target.value) })}
             />
