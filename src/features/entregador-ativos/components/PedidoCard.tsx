@@ -175,32 +175,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               Cheguei na coleta
             </button>
-          ) : codigoColeta == null ? (
-            <button
-              onClick={async () => {
-                setCodigoInput("__avulsa__");
-                const { supabase } = await import("@/integrations/supabase/client");
-                const { error } = await supabase.rpc("confirmar_coleta", {
-                  _pedido_id: p.id,
-                  _codigo: "",
-                });
-                if (error) {
-                  const { toast } = await import("sonner");
-                  toast.error(error.message);
-                  setCodigoInput("");
-                  return;
-                }
-                refresh();
-              }}
-              disabled={codigoInput === "__avulsa__"}
-              className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-[0.98] transition-all duration-300 ease-premium flex items-center justify-center gap-2 disabled:opacity-60"
-            >
-              {codigoInput === "__avulsa__" ? (
-                <><Loader2 className="h-4 w-4 animate-spin" /> Confirmando…</>
-              ) : (
-                "Confirmar coleta"
-              )}
-            </button>
           ) : (
             <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 text-center shadow-soft">
               <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-2 font-bold">
@@ -220,26 +194,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-[0.98] transition-all duration-300 ease-premium flex items-center justify-center gap-2"
           >
             Cheguei na entrega
-          </button>
-        ) : p.codigo_entrega == null ? (
-          <button
-            onClick={async () => {
-              const ok = await confirmar("");
-              if (ok) {
-                if (isCartao && p.endereco_coleta) {
-                  abrirRetornoLoja(p.endereco_coleta, p.id, p.numero);
-                }
-                refresh();
-              }
-            }}
-            disabled={loading}
-            className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-[0.98] transition-all duration-300 ease-premium flex items-center justify-center gap-2 disabled:opacity-60"
-          >
-            {loading ? (
-              <><Loader2 className="h-4 w-4 animate-spin" /> Confirmando…</>
-            ) : (
-              "Confirmar entrega"
-            )}
           </button>
         ) : (
           <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 space-y-3 shadow-soft">

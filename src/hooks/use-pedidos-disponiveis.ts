@@ -319,13 +319,6 @@ function criarCalculadorTaxaExibida(
   tarifasGlobais: TarifaFaixa[] | undefined,
 ) {
   return (p: PedidoDisponivel): number => {
-    if (p.loja_avulsa_plataforma) {
-      const taxaAvulsa = Number(p.taxa_entrega);
-      return Number.isFinite(taxaAvulsa) && taxaAvulsa > 0
-        ? Number(taxaAvulsa.toFixed(2))
-        : 0;
-    }
-
     const forma = (p.forma_pagamento ?? "").toLowerCase();
     const ehCartao = forma === "cartao" || forma === "cartao_credito" || forma === "cartao_debito";
 

@@ -1,53 +1,66 @@
-## Objetivo
+# Funcionários da loja
 
-Transformar a página `/calcular-frete` num ponto de partida real: depois de calcular, o cliente clica em **"Solicitar entregador agora"**, informa nome, telefone e o que vai ser entregue, paga o frete via PIX (Mercado Pago da plataforma) e o pedido cai automaticamente na fila dos entregadores.
+Permitir que o dono da loja cadastre funcionários (e-mail + senha) que entram no painel da loja com **acesso total exceto Financeiro e Saques**. Quantidade máxima definida pelo plano contratado.
 
-## Modelo escolhido
+## O que o usuário vai ver
 
-- **Loja avulsa da plataforma** — 1 loja institucional (`"Entregas Avulsas ROTA 66"`) recebe todos esses pedidos, reaproveitando 100% do fluxo atual (oferta, aceite, rastreio, código de entrega, chat, saque do entregador).
-- **PIX obrigatório antes** — mesmo motor do checkout de catálogo: cria `pedidos_pendentes_pagamento` → gera PIX MP → webhook confirma → `materializar_pedido_pendente` cria o pedido de verdade em `em_preparo`/`pronto`.
-- **Entregadores** veem o pedido pelo pool externo já existente (`pedidos_pool_externo` respeita o escopo configurado no admin — se estiver em `somente_vinculados`, admin precisará mudar para `vinculados_e_externos`).
+**Nova aba em `Configurações → Funcionários`** dentro do painel da loja:
+- Contador `3 / 5 funcionários usados` (do plano atual).
+- Botão **Adicionar funcionário** → dialog com Nome, E-mail, Senha. Ao salvar, a conta é criada já ativa; o dono entrega o acesso ao funcionário.
+- Lista com nome, e-mail, data de criação, botão **Remover acesso** e **Redefinir senha**.
+- Se atingiu o limite do plano, o botão fica desabilitado com aviso `Seu plano permite N funcionários. Faça upgrade para adicionar mais.`
 
-## O que muda
+**Login do funcionário:** entra normalmente em `/login` com e-mail e senha. Cai no painel da loja do patrão, com o menu lateral **sem** os itens `Financeiro` (e sem acesso a saques dentro de outras telas).
 
-### 1. Banco (uma migration só)
+**Dono da loja:** continua vendo tudo, inclusive Financeiro e a nova aba de Funcionários.
 
-- Adicionar coluna `lojas.avulsa_plataforma boolean not null default false`.
-- Adicionar `private_config.loja_avulsa_id uuid` (ou reaproveitar `config_financeiro`) apontando para a loja avulsa oficial.
-- Criar a loja avulsa (owner = admin do sistema, status `aprovado`, `ativa=true`, `catalogo_ativo=false`, endereço genérico da cidade principal, `plano_mensal_ativo=true` para não cobrar taxa por pedido).
-- **Não** mexe em RLS de `pedidos` — a loja avulsa se comporta como qualquer outra loja.
+## Regras de permissão
 
-### 2. Server function nova: `criarPedidoAvulso` (`src/lib/frete.functions.ts`)
+Funcionário pode:
+- Ver e operar Pedidos, Histórico, Novo pedido, Agendamentos, Catálogo, Entregadores, Suporte, Dashboard, Configurações (menos aba Funcionários e menos dados bancários/PIX de saque).
 
-Espelha `criarPedidoCatalogo`, mas sem produtos:
-- Input Zod: nome, telefone, descrição do item (obrigatória, 3–200 chars), endereços com lat/lng (obrigatórios), taxa_entrega já calculada no cliente (revalidada no server via `calcularTarifaPorFaixa` + `calcularDistanciaDirigindo` para evitar fraude de valor).
-- Cria `pedidos_pendentes_pagamento` com `loja_id = loja_avulsa_id`, `forma_pagamento="pix_online"`, `valor_produtos=0`, `itens=[{ nome: descrição, qtd:1, preco:0 }]`.
-- Retorna `{ pendente_id, valor_total }` — o cliente reutiliza `criarPagamentoPix` já existente.
-
-### 3. UI em `/calcular-frete`
-
-Depois que o resultado do frete aparece, mostra botão **"Solicitar entregador — R$ X,XX"**. Ao clicar, abre um modal em 2 passos:
-
-1. **Dados do pedido** (nome, WhatsApp, "o que vai ser entregue?", CPF do pagador para o MP, e-mail).
-2. **PIX** — reutiliza `<PixPagamentoDialog>` existente (QR + copia-e-cola + polling via `consultarStatusPagamento`).
-
-Ao confirmar pagamento → toast de sucesso + link do rastreio (`/rastreio/{pedidoId}`) + botão "Copiar link para o WhatsApp".
-
-### 4. Preflight
-
-Se a loja avulsa não estiver configurada, o botão fica desabilitado com aviso "Solicitação de entregador temporariamente indisponível".
-
-## Fora do escopo (não vou mexer agora)
-
-- Regra de comissão específica pra pedido avulso (por ora o valor total do frete vai pro saldo da loja avulsa; admin transfere manualmente).
-- Cobrar taxa da plataforma sobre o pedido avulso (fica no plano mensal padrão).
-- Cadastro de múltiplas lojas avulsas por cidade.
+Funcionário **não pode**:
+- Acessar Financeiro (saldo, saques, cobranças, mensalidade, Mercado Pago).
+- Criar/remover outros funcionários.
+- Alterar plano, CNPJ, dados bancários, aceitar contrato.
+- Excluir a loja.
 
 ## Detalhes técnicos
 
-- Arquivos novos: nenhum (adiciona `criarPedidoAvulso` em `src/lib/frete.functions.ts` e um componente `SolicitarEntregadorDialog.tsx` em `src/features/calcular-frete/`).
-- Reuso: `PixPagamentoDialog`, `criarPagamentoPix`, `consultarStatusPagamento`, `mp-webhook`, `materializar_pedido_pendente`.
-- Migration cria a loja avulsa via `INSERT ... ON CONFLICT DO NOTHING` usando um UUID fixo para idempotência.
-- Depois da migration eu confirmo o `loja_avulsa_id` e sigo com o código.
+### Banco
 
-Confirma que posso ir por esse caminho?
+1. **Tabela `loja_funcionarios`**
+   - `loja_id` (FK lojas), `user_id` (FK auth.users, único), `nome`, `criado_por`, timestamps.
+   - GRANTs + RLS: `SELECT/INSERT/DELETE` só para o `owner_id` da loja; funcionário vê a própria linha.
+
+2. **Coluna `max_funcionarios` em `planos_loja`** (int, default 0). Admin edita pelo painel de planos existente.
+
+3. **Função `public.loja_do_usuario(uid uuid)` SECURITY DEFINER** que retorna o `loja_id` — seja porque é `owner_id` da loja, seja porque tem linha em `loja_funcionarios`. Usada nas policies existentes.
+
+4. **Ajustar policies das tabelas da loja** (`pedidos`, `produtos`, `loja_categorias`, `agendamentos`, `loja_entregadores`, `lojas_enderecos_coleta`, `clientes_loja`, `pedido_mensagens`, etc.): substituir `owner_id = auth.uid()` por `loja_id = public.loja_do_usuario(auth.uid())`. Tabelas financeiras (`lojas_saldo`, `lojas_saques`, `lojas_saldo_movimentos`, `cobrancas_loja`, `mensalidades_loja`, `lojas_pagamento_mp`, `lojas_recargas_mp`) continuam restritas ao `owner_id`.
+
+### Servidor
+
+5. **`src/lib/loja-funcionarios.functions.ts`** com três server functions autenticadas (`requireSupabaseAuth`):
+   - `listarFuncionarios()` — lista funcionários da loja do usuário.
+   - `criarFuncionario({ nome, email, senha })` — verifica se caller é owner, checa `count < plano.max_funcionarios`, chama `supabaseAdmin.auth.admin.createUser({ email, password, email_confirm: true })`, insere em `loja_funcionarios`.
+   - `removerFuncionario({ user_id })` — owner remove, apaga da tabela e chama `supabaseAdmin.auth.admin.deleteUser`.
+   - `redefinirSenha({ user_id, senha })` — owner redefine via `supabaseAdmin.auth.admin.updateUserById`.
+   - `supabaseAdmin` importado dinamicamente dentro do handler.
+
+### Frontend
+
+6. **`src/hooks/use-loja.tsx`**: além de buscar por `owner_id`, se não achar, buscar via `loja_funcionarios.user_id = auth.uid()` e retornar a loja vinculada. Expor `isOwner: boolean` no retorno.
+
+7. **`src/components/LojaShell.tsx`**: esconder item `Financeiro` do `NAV` quando `!isOwner`. Esconder toggle "Loja aberta" só se quiser (mantemos visível).
+
+8. **Nova página `src/features/loja-funcionarios/FuncionariosPage.tsx`** — lista + dialog de criação + confirmação de remoção + redefinir senha. Renderizada como aba nova em `ConfigPage` (só aparece para owner).
+
+9. **Guardas nas telas financeiras**: `FinanceiroPage` (e sub-rotas) redireciona para `/loja/dashboard` com toast se `!isOwner`. Assim URL direta também é bloqueada.
+
+10. **Admin de planos**: adicionar input `Máximo de funcionários` no formulário de planos existente.
+
+### Não incluído
+
+- Papéis granulares por menu (só "acesso total menos financeiro"). Se quiser mais tarde, dá para adicionar `permissoes jsonb` em `loja_funcionarios`.
+- Convite por e-mail — a loja mesma define a senha e passa ao funcionário.

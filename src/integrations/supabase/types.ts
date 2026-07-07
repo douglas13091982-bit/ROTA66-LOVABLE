@@ -1377,7 +1377,6 @@ export type Database = {
       lojas: {
         Row: {
           ativa: boolean
-          avulsa_plataforma: boolean
           bairro: string | null
           catalogo_ativo: boolean
           catalogo_layout: string
@@ -1414,7 +1413,6 @@ export type Database = {
         }
         Insert: {
           ativa?: boolean
-          avulsa_plataforma?: boolean
           bairro?: string | null
           catalogo_ativo?: boolean
           catalogo_layout?: string
@@ -1451,7 +1449,6 @@ export type Database = {
         }
         Update: {
           ativa?: boolean
-          avulsa_plataforma?: boolean
           bairro?: string | null
           catalogo_ativo?: boolean
           catalogo_layout?: string
@@ -3604,7 +3601,6 @@ export type Database = {
           forma_pagamento: Database["public"]["Enums"]["forma_pagamento"]
           id: string
           itens: Json
-          loja_avulsa_plataforma: boolean
           loja_bairro: string
           loja_id: string
           loja_nome: string

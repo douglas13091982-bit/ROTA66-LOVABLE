@@ -37,9 +37,6 @@ export type PedidoDisponivel = {
   /** Taxa por pedido da loja (vem do plano vinculado). Cobrança da loja, não do entregador. */
   loja_taxa_por_pedido?: number | string | null;
 
-  /** Pedido criado pela página pública de frete avulso da plataforma. */
-  loja_avulsa_plataforma?: boolean | null;
-
   /** Definido pela RPC `pedidos_pool_externo` em pedidos externos. */
   oferta_expira_em?: string | null;
   /** Flag local: pedido vindo do pool externo (não dos vínculos). */
