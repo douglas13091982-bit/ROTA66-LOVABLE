@@ -8,7 +8,9 @@ import type { EntregadorRow, StatusEntregador } from "../logic/types";
 
 export function useAdminEntregadores() {
   const { user } = useAuth();
+  const { config: franqueadoConfig } = useFranquia();
   const qc = useQueryClient();
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-entregadores", user?.id],
