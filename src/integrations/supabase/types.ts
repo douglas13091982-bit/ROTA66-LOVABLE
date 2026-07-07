@@ -3604,6 +3604,7 @@ export type Database = {
           forma_pagamento: Database["public"]["Enums"]["forma_pagamento"]
           id: string
           itens: Json
+          loja_avulsa_plataforma: boolean
           loja_bairro: string
           loja_id: string
           loja_nome: string
