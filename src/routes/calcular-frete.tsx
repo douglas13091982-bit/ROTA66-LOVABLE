@@ -10,7 +10,6 @@ import { calcularDistanciaDirigindo, reverseGeocode } from "@/lib/frete.function
 import { toast } from "sonner";
 import type { TarifaFaixa } from "@/types/pedido";
 
-const ADICIONAL_BASICO = 3;
 const NAVY = "#0F2341";
 const RED = "#D8232A";
 const CREAM = "#F5EFE6";
