@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranding } from "@/hooks/use-branding";
@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AddressAutocomplete, type PlaceSelection } from "@/components/AddressAutocomplete";
 import { haversineKm } from "@/lib/geo";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
 import type { TarifaFaixa } from "@/types/pedido";
 
 const ADICIONAL_BASICO = 3;
@@ -44,24 +45,36 @@ function CalcularFretePage() {
     },
   });
 
-  const resultado = useMemo(() => {
-    if (
-      !coletaCoords?.lat ||
-      !coletaCoords?.lng ||
-      !entregaCoords?.lat ||
-      !entregaCoords?.lng ||
-      tarifas.length === 0
-    )
-      return null;
-    const km = haversineKm(
-      { lat: coletaCoords.lat, lng: coletaCoords.lng },
-      { lat: entregaCoords.lat, lng: entregaCoords.lng },
-    );
-    const base = calcularTarifaPorFaixa(km, tarifas);
-    if (base == null) return null;
-    const total = Number((base + ADICIONAL_BASICO).toFixed(2));
-    return { km, base, total };
-  }, [coletaCoords, entregaCoords, tarifas]);
+  const podeCalcular =
+    !!coletaCoords?.lat &&
+    !!coletaCoords?.lng &&
+    !!entregaCoords?.lat &&
+    !!entregaCoords?.lng &&
+    tarifas.length > 0;
+
+  const { data: resultado, isFetching: calculando } = useQuery({
+    queryKey: [
+      "calc-frete-publico",
+      coletaCoords?.lat,
+      coletaCoords?.lng,
+      entregaCoords?.lat,
+      entregaCoords?.lng,
+      tarifas.length,
+    ],
+    enabled: podeCalcular,
+    queryFn: async () => {
+      const origem = { lat: coletaCoords!.lat!, lng: coletaCoords!.lng! };
+      const destino = { lat: entregaCoords!.lat!, lng: entregaCoords!.lng! };
+      // Distância real de direção via Google Routes API (com fallback)
+      const resp = await calcularDistanciaDirigindo({ data: { origem, destino } });
+      const km = resp.km ?? haversineKm(origem, destino);
+      const base = calcularTarifaPorFaixa(km, tarifas);
+      if (base == null) return null;
+      const total = Number((base + ADICIONAL_BASICO).toFixed(2));
+      return { km, base, total };
+    },
+  });
+
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: CREAM }}>
