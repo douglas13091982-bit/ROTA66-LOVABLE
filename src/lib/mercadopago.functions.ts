@@ -1,30 +1,82 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHost } from "@tanstack/react-start/server";
+import { getRequestHeader, getRequestHost } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { z } from "zod";
 
+const PREVIEW_PUBLIC_HOST = "id-preview--94fe485e-cde1-4611-9db7-d8635e0448a7.lovable.app";
+
+function hostFromCandidate(value?: string | null): string {
+  const raw = value?.trim();
+  if (!raw) return "";
+  const first = raw.split(",")[0]?.trim() ?? "";
+  try {
+    const url = /^[a-z][a-z\d+\-.]*:\/\//i.test(first) ? first : `https://${first}`;
+    return new URL(url).host;
+  } catch {
+    return first.replace(/^https?:\/\//i, "").split("/")[0] ?? "";
+  }
+}
+
+function isLocalHost(host: string): boolean {
+  const h = hostFromCandidate(host).split(":")[0]?.toLowerCase();
+  return h === "localhost" || h === "127.0.0.1" || h === "0.0.0.0" || h === "::1";
+}
+
 function normalizeMpHost(host: string): string {
-  const h = host.trim().toLowerCase();
+  const h = hostFromCandidate(host).toLowerCase();
+  if (!h || isLocalHost(h)) return PREVIEW_PUBLIC_HOST;
   const m1 = h.match(/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.lovableproject\.com$/);
-  if (m1) return `project--${m1[1]}-dev.lovable.app`;
+  if (m1) return `id-preview--${m1[1]}.lovable.app`;
   const m2 = h.match(/^id-preview--([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.lovable\.app$/);
-  if (m2) return `project--${m2[1]}-dev.lovable.app`;
+  if (m2) return `id-preview--${m2[1]}.lovable.app`;
+  const m3 = h.match(/^project--([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})-dev\.lovable\.app$/);
+  if (m3) return `id-preview--${m3[1]}.lovable.app`;
   return h;
 }
 
-function buildWebhookUrl(): string {
-  const envHost = process.env.PUBLIC_HOST?.trim();
-  let host = envHost && envHost.length > 0 ? envHost : "";
-  if (!host) {
-    try {
-      host = getRequestHost();
-    } catch {
-      host = "";
-    }
+function safeHeader(name: string): string {
+  try {
+    return getRequestHeader(name as any) ?? "";
+  } catch {
+    return "";
   }
+}
+
+function getPublicHost(): string {
+  const envHost = normalizeMpHost(process.env.PUBLIC_HOST ?? "");
+  if (envHost && !isLocalHost(envHost)) return envHost;
+
+  const candidates = [
+    safeHeader("origin"),
+    safeHeader("referer"),
+    safeHeader("x-forwarded-host"),
+    safeHeader("host"),
+  ];
+
+  try {
+    candidates.push(getRequestHost({ xForwardedHost: true }));
+  } catch {
+    // ignore
+  }
+  try {
+    candidates.push(getRequestHost());
+  } catch {
+    // ignore
+  }
+
+  for (const candidate of candidates) {
+    const normalized = normalizeMpHost(candidate);
+    if (normalized && !isLocalHost(normalized)) return normalized;
+  }
+
+  return PREVIEW_PUBLIC_HOST;
+}
+
+function buildWebhookUrl(): string {
+  const host = getPublicHost();
   if (!host) throw new Error("Host público não configurado para o webhook do Mercado Pago");
-  return `https://${normalizeMpHost(host)}/api/public/mp-webhook`;
+  return `https://${host}/api/public/mp-webhook`;
 }
 
 // ---------- Config (compat, mantida) ----------
