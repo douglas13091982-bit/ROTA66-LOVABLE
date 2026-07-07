@@ -106,10 +106,8 @@ export function usePedidoForm({
   const ehCartaoEntrega = false;
   const taxaFinal = taxaAtual;
   const bonusValor = Number(bonus) || 0;
-  // O campo "preco" representa o SUBTOTAL da linha (valor total do item),
-  // não o preço unitário. Isso é mais intuitivo para pedidos manuais.
   const valorProdutos = itens.reduce(
-    (s, i) => s + (Number(i.preco) || 0),
+    (s, i) => s + (Number(i.qtd) || 0) * (Number(i.preco) || 0),
     0,
   );
   const valorTotal = valorProdutos + taxaFinal + bonusValor;
