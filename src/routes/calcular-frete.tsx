@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones, LocateFixed, Loader2 } from "lucide-react";
+import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones, LocateFixed, Loader2, Bike } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranding } from "@/hooks/use-branding";
 import { useQuery } from "@tanstack/react-query";
 import { AddressAutocomplete, type PlaceSelection } from "@/components/AddressAutocomplete";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
-import { calcularDistanciaDirigindo, reverseGeocode } from "@/lib/frete.functions";
+import { calcularDistanciaDirigindo, reverseGeocode, checarLojaAvulsaDisponivel } from "@/lib/frete.functions";
 import { toast } from "sonner";
 import type { TarifaFaixa } from "@/types/pedido";
+import { SolicitarEntregadorDialog } from "@/features/calcular-frete/SolicitarEntregadorDialog";
 
 const ADICIONAL_BASICO = 3;
 const NAVY = "#0F2341";
@@ -32,6 +33,14 @@ function CalcularFretePage() {
   const [coletaCoords, setColetaCoords] = useState<PlaceSelection | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<PlaceSelection | null>(null);
   const [localizando, setLocalizando] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: avulsa } = useQuery({
+    queryKey: ["loja-avulsa-disponivel"],
+    queryFn: () => checarLojaAvulsaDisponivel(),
+    staleTime: 60_000,
+  });
+  const podeSolicitar = Boolean(avulsa?.disponivel);
 
   const usarMinhaLocalizacao = () => {
     if (!("geolocation" in navigator)) {
@@ -212,8 +221,8 @@ function CalcularFretePage() {
               className="w-full flex items-center justify-center gap-3 rounded-2xl py-4 text-white font-bold tracking-wide shadow-lg disabled:opacity-90"
               style={{ backgroundColor: RED }}
             >
-              <Calculator className="w-5 h-5" />
-              CALCULAR FRETE
+              {calculando ? <Loader2 className="w-5 h-5 animate-spin" /> : <Calculator className="w-5 h-5" />}
+              {calculando ? "CALCULANDO..." : "CALCULAR FRETE"}
             </button>
           )}
           {!resultado && (
@@ -221,7 +230,51 @@ function CalcularFretePage() {
               Selecione origem e destino nas sugestões para calcular.
             </p>
           )}
+
+          {resultado && (
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => setDialogOpen(true)}
+                disabled={!podeSolicitar}
+                className="w-full flex items-center justify-center gap-3 rounded-2xl py-4 text-white font-bold tracking-wide shadow-lg disabled:opacity-50"
+                style={{ backgroundColor: NAVY }}
+              >
+                <Bike className="w-5 h-5" />
+                SOLICITAR ENTREGADOR — R$ {resultado.total.toFixed(2)}
+              </button>
+              {!podeSolicitar && (
+                <p className="text-center text-[11px] text-slate-500 mt-2">
+                  Solicitação de entregador temporariamente indisponível.
+                </p>
+              )}
+              {podeSolicitar && (
+                <p className="text-center text-[11px] text-slate-500 mt-2">
+                  Pagamento via PIX. O entregador é chamado após a confirmação.
+                </p>
+              )}
+            </div>
+          )}
         </div>
+
+        {resultado && coletaCoords?.lat != null && coletaCoords?.lng != null &&
+         entregaCoords?.lat != null && entregaCoords?.lng != null && (
+          <SolicitarEntregadorDialog
+            open={dialogOpen}
+            onClose={() => setDialogOpen(false)}
+            taxaEstimada={resultado.total}
+            coleta={{
+              address: coleta || coletaCoords.address || "",
+              lat: coletaCoords.lat,
+              lng: coletaCoords.lng,
+            }}
+            entrega={{
+              address: entrega || entregaCoords.address || "",
+              lat: entregaCoords.lat,
+              lng: entregaCoords.lng,
+            }}
+          />
+        )}
 
         {/* Por que usar */}
         <section className="mt-8 rounded-2xl bg-white/60 border border-slate-200/70 px-4 py-5">

@@ -1377,6 +1377,7 @@ export type Database = {
       lojas: {
         Row: {
           ativa: boolean
+          avulsa_plataforma: boolean
           bairro: string | null
           catalogo_ativo: boolean
           catalogo_layout: string
@@ -1413,6 +1414,7 @@ export type Database = {
         }
         Insert: {
           ativa?: boolean
+          avulsa_plataforma?: boolean
           bairro?: string | null
           catalogo_ativo?: boolean
           catalogo_layout?: string
@@ -1449,6 +1451,7 @@ export type Database = {
         }
         Update: {
           ativa?: boolean
+          avulsa_plataforma?: boolean
           bairro?: string | null
           catalogo_ativo?: boolean
           catalogo_layout?: string
