@@ -36,7 +36,7 @@ function buildBackUrl(): string {
       host = "";
     }
   }
-  return host ? `https://${host}/loja/financeiro` : "";
+  return host ? `https://${normalizeMpHost(host)}/loja/financeiro` : "";
 }
 
 const PagarSchema = z.object({
