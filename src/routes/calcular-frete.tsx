@@ -118,7 +118,7 @@ function CalcularFretePage() {
       const km = resp.km;
       const base = calcularTarifaPorFaixa(km, tarifas);
       if (base == null) return null;
-      const total = Number((base + ADICIONAL_BASICO).toFixed(2));
+      const total = Number(base.toFixed(2));
       return { km, base, total };
     },
   });
@@ -201,13 +201,9 @@ function CalcularFretePage() {
                 <span className="text-xs uppercase tracking-wider opacity-90">Distância</span>
                 <span className="text-base font-semibold">{resultado.km.toFixed(2)} km</span>
               </div>
-              <div className="flex items-baseline justify-between mb-2 text-sm opacity-90">
+              <div className="flex items-baseline justify-between mb-3 text-sm opacity-90">
                 <span>Tarifa base</span>
                 <span>R$ {resultado.base.toFixed(2)}</span>
-              </div>
-              <div className="flex items-baseline justify-between mb-3 text-sm opacity-90">
-                <span>Adicional plano Básico</span>
-                <span>R$ {ADICIONAL_BASICO.toFixed(2)}</span>
               </div>
               <div className="border-t border-white/30 pt-3 flex items-baseline justify-between">
                 <span className="text-sm font-semibold">Total do frete</span>

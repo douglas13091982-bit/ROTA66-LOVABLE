@@ -225,7 +225,7 @@ export const criarPedidoAvulso = createServerFn({ method: "POST" })
       throw new Error("Não há tarifa configurada para essa distância");
     }
     // Mesma regra da página pública: adicional do plano Básico (R$ 3).
-    const taxa_entrega = Number((base + 3).toFixed(2));
+    const taxa_entrega = Number(base.toFixed(2));
     const valor_total = taxa_entrega;
 
     const snapshot = {
