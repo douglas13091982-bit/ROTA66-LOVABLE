@@ -33,6 +33,14 @@ function CalcularFretePage() {
   const [coletaCoords, setColetaCoords] = useState<PlaceSelection | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<PlaceSelection | null>(null);
   const [localizando, setLocalizando] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: avulsa } = useQuery({
+    queryKey: ["loja-avulsa-disponivel"],
+    queryFn: () => checarLojaAvulsaDisponivel(),
+    staleTime: 60_000,
+  });
+  const podeSolicitar = Boolean(avulsa?.disponivel);
 
   const usarMinhaLocalizacao = () => {
     if (!("geolocation" in navigator)) {
