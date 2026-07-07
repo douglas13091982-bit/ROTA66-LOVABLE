@@ -1,6 +1,7 @@
 import { Bike, Car, Zap } from "lucide-react";
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits } from "@/lib/sanitize";
+import { useCidades } from "@/hooks/use-cidades";
 import { progressiveFormatCpf } from "../logic/format-progressivo";
 
 type TipoVeiculo = "moto" | "carro" | "bike_eletrica";
@@ -16,6 +17,8 @@ type Props = {
   setCpf: (v: string) => void;
   tipoVeiculo: TipoVeiculo;
   setTipoVeiculo: (v: TipoVeiculo) => void;
+  cityId: string;
+  setCityId: (v: string) => void;
   avatarFile: File | null;
   avatarPreview: string | null;
   onAvatarChange: (file: File | null) => void;
@@ -26,10 +29,13 @@ export function EntregadorFields({
   setCpf,
   tipoVeiculo,
   setTipoVeiculo,
+  cityId,
+  setCityId,
   avatarFile,
   avatarPreview,
   onAvatarChange,
 }: Props) {
+  const { cidades, isLoading: loadingCidades } = useCidades();
   return (
     <>
       <AuthInput
@@ -43,6 +49,28 @@ export function EntregadorFields({
         placeholder="000.000.000-00"
         maxLength={14}
       />
+      <div className="mb-4">
+        <span className="block text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-2.5">
+          Cidade onde vai atuar <span className="text-destructive">*</span>
+        </span>
+        <select
+          required
+          value={cityId}
+          onChange={(e) => setCityId(e.target.value)}
+          disabled={loadingCidades}
+          className="w-full bg-background/60 border border-border/60 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/25 transition-all"
+        >
+          <option value="">{loadingCidades ? "Carregando..." : "Selecione sua cidade"}</option>
+          {cidades.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.nome} — {c.uf}
+            </option>
+          ))}
+        </select>
+        <p className="text-[11px] text-muted-foreground mt-2">
+          Sua cidade define qual franqueado vai analisar e aprovar seu cadastro.
+        </p>
+      </div>
       <div className="mb-4">
         <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
           Tipo de veículo <span className="text-destructive">*</span>

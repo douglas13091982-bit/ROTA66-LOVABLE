@@ -146,6 +146,8 @@ export function CadastroPage({
                   setCpf={(v) => update("cpf", v)}
                   tipoVeiculo={form.tipoVeiculo}
                   setTipoVeiculo={(v) => update("tipoVeiculo", v)}
+                  cityId={form.cityId}
+                  setCityId={(v) => update("cityId", v)}
                   avatarFile={form.avatarFile}
                   avatarPreview={form.avatarPreview}
                   onAvatarChange={handleAvatarChange}

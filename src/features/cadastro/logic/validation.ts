@@ -35,6 +35,7 @@ export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx)
   if (role === "entregador") {
     if (!cpfDigits) return fail("CPF é obrigatório para entregadores");
     if (!isValidCpf(cpfDigits)) return fail("CPF inválido");
+    if (!form.cityId) return fail("Selecione a cidade em que você vai atuar");
     if (!form.avatarFile) return fail("A foto de perfil é obrigatória para entregadores");
     return true;
   }
@@ -83,6 +84,7 @@ export function buildSignupMetadata(role: Role, form: SignupForm) {
     role,
     cpf: cpfDigits || undefined,
     tipo_veiculo: role === "entregador" ? form.tipoVeiculo : undefined,
+    city_id: role === "entregador" ? form.cityId || undefined : undefined,
     endereco: role === "cliente" ? form.endereco.trim() : undefined,
     cidade: role === "cliente" ? form.cidade.trim() : undefined,
     estado: role === "cliente" ? form.estado.trim().toUpperCase() : undefined,

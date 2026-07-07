@@ -16,6 +16,7 @@ export type SignupForm = {
   email: string;
   password: string;
   tipoVeiculo: "moto" | "carro" | "bike_eletrica";
+  cityId: string;
   aceiteContrato: boolean;
   avatarFile: File | null;
   avatarPreview: string | null;
@@ -34,6 +35,7 @@ export const INITIAL_FORM: SignupForm = {
   email: "",
   password: "",
   tipoVeiculo: "moto",
+  cityId: "",
   aceiteContrato: false,
   avatarFile: null,
   avatarPreview: null,
