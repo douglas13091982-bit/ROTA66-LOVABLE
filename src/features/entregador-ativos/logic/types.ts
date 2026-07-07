@@ -11,6 +11,7 @@ export type PedidoAtivo = {
   endereco_entrega: string | null;
   complemento?: string | null;
   codigo_coleta: string | null;
+  codigo_entrega?: string | null;
   taxa_entrega: number;
   forma_pagamento?: string | null;
   troco_para?: number | null;
