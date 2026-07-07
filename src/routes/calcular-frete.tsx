@@ -31,6 +31,42 @@ function CalcularFretePage() {
   const [entrega, setEntrega] = useState("");
   const [coletaCoords, setColetaCoords] = useState<PlaceSelection | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<PlaceSelection | null>(null);
+  const [localizando, setLocalizando] = useState(false);
+
+  const usarMinhaLocalizacao = () => {
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocalização não suportada neste navegador");
+      return;
+    }
+    setLocalizando(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        try {
+          const resp = await reverseGeocode({ data: { lat, lng } });
+          const address = resp.address ?? `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+          setColeta(address);
+          setColetaCoords({ description: address, lat, lng });
+          toast.success("Localização definida como origem");
+        } catch {
+          setColeta(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+          setColetaCoords({ description: "", lat, lng });
+        } finally {
+          setLocalizando(false);
+        }
+      },
+      (err) => {
+        setLocalizando(false);
+        toast.error(
+          err.code === err.PERMISSION_DENIED
+            ? "Permissão de localização negada"
+            : "Não foi possível obter sua localização",
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  };
 
   const { data: tarifas = [] } = useQuery({
     queryKey: ["tarifas-globais-publico"],
