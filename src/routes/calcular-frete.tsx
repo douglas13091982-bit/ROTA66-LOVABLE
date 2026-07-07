@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranding } from "@/hooks/use-branding";
@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AddressAutocomplete, type PlaceSelection } from "@/components/AddressAutocomplete";
 import { haversineKm } from "@/lib/geo";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
 import type { TarifaFaixa } from "@/types/pedido";
 
 const ADICIONAL_BASICO = 3;
