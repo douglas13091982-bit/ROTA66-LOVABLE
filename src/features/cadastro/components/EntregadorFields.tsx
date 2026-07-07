@@ -17,6 +17,8 @@ type Props = {
   setCpf: (v: string) => void;
   tipoVeiculo: TipoVeiculo;
   setTipoVeiculo: (v: TipoVeiculo) => void;
+  cityId: string;
+  setCityId: (v: string) => void;
   avatarFile: File | null;
   avatarPreview: string | null;
   onAvatarChange: (file: File | null) => void;
@@ -27,10 +29,13 @@ export function EntregadorFields({
   setCpf,
   tipoVeiculo,
   setTipoVeiculo,
+  cityId,
+  setCityId,
   avatarFile,
   avatarPreview,
   onAvatarChange,
 }: Props) {
+  const { cidades, isLoading: loadingCidades } = useCidades();
   return (
     <>
       <AuthInput
