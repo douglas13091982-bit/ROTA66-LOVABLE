@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 
 const CoordSchema = z.object({
   lat: z.number(),
