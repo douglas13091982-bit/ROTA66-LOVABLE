@@ -64,12 +64,13 @@ export function useAdminEntregadores() {
     if (status === "aprovado" && (franqueadoConfig as any)?.city_id) {
       const alvo = (data ?? []).find((e) => e.id === entregador_id);
       if (alvo && !(alvo as any).city_id) {
-        await supabase
-          .from("profiles")
-          .update({ city_id: (franqueadoConfig as any).city_id })
-          .eq("id", entregador_id);
+        await (supabase as any).rpc("atribuir_cidade_entregador", {
+          _entregador_id: entregador_id,
+          _city_id: (franqueadoConfig as any).city_id,
+        });
       }
     }
+
 
     toast.success(status === "aprovado" ? "Entregador aprovado" : "Entregador bloqueado");
     invalidate();
