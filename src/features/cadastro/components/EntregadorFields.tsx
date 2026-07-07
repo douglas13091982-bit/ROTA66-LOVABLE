@@ -1,6 +1,7 @@
 import { Bike, Car, Zap } from "lucide-react";
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits } from "@/lib/sanitize";
+import { useCidades } from "@/hooks/use-cidades";
 import { progressiveFormatCpf } from "../logic/format-progressivo";
 
 type TipoVeiculo = "moto" | "carro" | "bike_eletrica";
