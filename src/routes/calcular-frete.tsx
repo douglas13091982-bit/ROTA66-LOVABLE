@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones } from "lucide-react";
+import { MapPin, Calculator, Clock, ShieldCheck, DollarSign, Headphones, LocateFixed, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useBranding } from "@/hooks/use-branding";
 import { useQuery } from "@tanstack/react-query";
 import { AddressAutocomplete, type PlaceSelection } from "@/components/AddressAutocomplete";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
-import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
+import { calcularDistanciaDirigindo, reverseGeocode } from "@/lib/frete.functions";
+import { toast } from "sonner";
 import type { TarifaFaixa } from "@/types/pedido";
 
 const ADICIONAL_BASICO = 3;
@@ -30,6 +31,42 @@ function CalcularFretePage() {
   const [entrega, setEntrega] = useState("");
   const [coletaCoords, setColetaCoords] = useState<PlaceSelection | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<PlaceSelection | null>(null);
+  const [localizando, setLocalizando] = useState(false);
+
+  const usarMinhaLocalizacao = () => {
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocalização não suportada neste navegador");
+      return;
+    }
+    setLocalizando(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        try {
+          const resp = await reverseGeocode({ data: { lat, lng } });
+          const address = resp.address ?? `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+          setColeta(address);
+          setColetaCoords({ address, lat, lng });
+          toast.success("Localização definida como origem");
+        } catch {
+          setColeta(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+          setColetaCoords({ address: "", lat, lng });
+        } finally {
+          setLocalizando(false);
+        }
+      },
+      (err) => {
+        setLocalizando(false);
+        toast.error(
+          err.code === err.PERMISSION_DENIED
+            ? "Permissão de localização negada"
+            : "Não foi possível obter sua localização",
+        );
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  };
 
   const { data: tarifas = [] } = useQuery({
     queryKey: ["tarifas-globais-publico"],
@@ -107,14 +144,31 @@ function CalcularFretePage() {
         {/* Campos */}
         <div className="space-y-3">
           <FieldCard iconBg={NAVY} icon={<MapPin className="w-5 h-5 text-white" />} label="ORIGEM">
-            <AddressAutocomplete
-              value={coleta}
-              onChange={setColeta}
-              onSelectPlace={(p) => setColetaCoords(p)}
-              placeholder="Digite a cidade ou endereço"
-              className="w-full bg-transparent border-0 p-0 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-0"
-            />
+            <div className="flex items-center gap-2">
+              <AddressAutocomplete
+                value={coleta}
+                onChange={setColeta}
+                onSelectPlace={(p) => setColetaCoords(p)}
+                placeholder="Digite a cidade ou endereço"
+                className="w-full bg-transparent border-0 p-0 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+              />
+              <button
+                type="button"
+                onClick={usarMinhaLocalizacao}
+                disabled={localizando}
+                title="Usar minha localização"
+                className="shrink-0 p-1.5 rounded-full hover:bg-slate-100 transition disabled:opacity-50"
+                style={{ color: NAVY }}
+              >
+                {localizando ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <LocateFixed className="w-4 h-4" />
+                )}
+              </button>
+            </div>
           </FieldCard>
+
 
           <FieldCard iconBg={RED} icon={<MapPin className="w-5 h-5 text-white" />} label="DESTINO">
             <AddressAutocomplete
