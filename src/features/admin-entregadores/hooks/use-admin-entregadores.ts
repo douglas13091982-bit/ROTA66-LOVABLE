@@ -58,8 +58,22 @@ export function useAdminEntregadores() {
       .from("entregador_status_conta")
       .upsert({ entregador_id, status }, { onConflict: "entregador_id" });
     if (error) return toast.error(error.message);
+
+    // Ao aprovar: se o entregador ainda não tem cidade atribuída e quem aprova
+    // é um franqueado (tem city_id), atribuímos automaticamente a cidade dele.
+    if (status === "aprovado" && (franqueadoConfig as any)?.city_id) {
+      const alvo = (data ?? []).find((e) => e.id === entregador_id);
+      if (alvo && !(alvo as any).city_id) {
+        await supabase
+          .from("profiles")
+          .update({ city_id: (franqueadoConfig as any).city_id })
+          .eq("id", entregador_id);
+      }
+    }
+
     toast.success(status === "aprovado" ? "Entregador aprovado" : "Entregador bloqueado");
     invalidate();
+
   };
 
   const remove = async (entregador_id: string, nome: string) => {
