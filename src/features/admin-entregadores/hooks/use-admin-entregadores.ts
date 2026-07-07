@@ -2,7 +2,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useFranquia } from "@/hooks/use-franquia";
 import type { EntregadorRow, StatusEntregador } from "../logic/types";
+
 
 export function useAdminEntregadores() {
   const { user } = useAuth();
