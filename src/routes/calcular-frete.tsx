@@ -47,11 +47,11 @@ function CalcularFretePage() {
           const resp = await reverseGeocode({ data: { lat, lng } });
           const address = resp.address ?? `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
           setColeta(address);
-          setColetaCoords({ description: address, lat, lng });
+          setColetaCoords({ address, lat, lng });
           toast.success("Localização definida como origem");
         } catch {
           setColeta(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
-          setColetaCoords({ description: "", lat, lng });
+          setColetaCoords({ address: "", lat, lng });
         } finally {
           setLocalizando(false);
         }
