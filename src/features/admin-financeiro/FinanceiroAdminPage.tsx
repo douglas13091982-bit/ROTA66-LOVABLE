@@ -119,9 +119,9 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && <MercadoPagoPlataformaSection />}
+        {tab === "mercado-pago" && !isFranqueado && <MercadoPagoPlataformaSection />}
 
-        {tab === "pix" && (
+        {tab === "pix" && !isFranqueado && (
           <PixSection
             config={config}
             setConfig={setConfig}
