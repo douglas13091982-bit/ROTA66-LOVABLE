@@ -84,6 +84,7 @@ export function buildSignupMetadata(role: Role, form: SignupForm) {
     role,
     cpf: cpfDigits || undefined,
     tipo_veiculo: role === "entregador" ? form.tipoVeiculo : undefined,
+    city_id: role === "entregador" ? form.cityId || undefined : undefined,
     endereco: role === "cliente" ? form.endereco.trim() : undefined,
     cidade: role === "cliente" ? form.cidade.trim() : undefined,
     estado: role === "cliente" ? form.estado.trim().toUpperCase() : undefined,
