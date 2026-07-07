@@ -79,3 +79,44 @@ export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
       return { km: null as number | null };
     }
   });
+
+const ReverseSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+});
+
+/**
+ * Reverse geocode: recebe lat/lng e retorna o endereço formatado.
+ */
+export const reverseGeocode = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => ReverseSchema.parse(data))
+  .handler(async ({ data }) => {
+    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
+    const apiKey = process.env.LOVABLE_API_KEY;
+    const connKey =
+      process.env.GOOGLE_MAPS_API_KEY ??
+      process.env.GOOGLE_MAPS_API_KEY_1 ??
+      process.env.GOOGLE_MAPS_API_KEY_2;
+    if (!apiKey || !connKey) {
+      return { address: null as string | null };
+    }
+    try {
+      const resp = await fetch(
+        `${gatewayUrl}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=pt-BR`,
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "X-Connection-Api-Key": connKey,
+          },
+        },
+      );
+      if (!resp.ok) return { address: null as string | null };
+      const json = (await resp.json()) as {
+        results?: Array<{ formatted_address?: string }>;
+      };
+      const address = json.results?.[0]?.formatted_address ?? null;
+      return { address };
+    } catch {
+      return { address: null as string | null };
+    }
+  });
