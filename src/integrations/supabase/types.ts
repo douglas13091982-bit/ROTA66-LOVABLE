@@ -3172,6 +3172,10 @@ export type Database = {
         Returns: number
       }
       aprovar_reset_senha: { Args: { _request_id: string }; Returns: Json }
+      atribuir_cidade_entregador: {
+        Args: { _city_id: string; _entregador_id: string }
+        Returns: undefined
+      }
       buscar_entregador: {
         Args: { termo: string }
         Returns: {

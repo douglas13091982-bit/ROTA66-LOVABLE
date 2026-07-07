@@ -2,11 +2,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useFranquia } from "@/hooks/use-franquia";
 import type { EntregadorRow, StatusEntregador } from "../logic/types";
+
 
 export function useAdminEntregadores() {
   const { user } = useAuth();
+  const { config: franqueadoConfig } = useFranquia();
   const qc = useQueryClient();
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-entregadores", user?.id],
@@ -54,8 +58,23 @@ export function useAdminEntregadores() {
       .from("entregador_status_conta")
       .upsert({ entregador_id, status }, { onConflict: "entregador_id" });
     if (error) return toast.error(error.message);
+
+    // Ao aprovar: se o entregador ainda não tem cidade atribuída e quem aprova
+    // é um franqueado (tem city_id), atribuímos automaticamente a cidade dele.
+    if (status === "aprovado" && (franqueadoConfig as any)?.city_id) {
+      const alvo = (data ?? []).find((e) => e.id === entregador_id);
+      if (alvo && !(alvo as any).city_id) {
+        await (supabase as any).rpc("atribuir_cidade_entregador", {
+          _entregador_id: entregador_id,
+          _city_id: (franqueadoConfig as any).city_id,
+        });
+      }
+    }
+
+
     toast.success(status === "aprovado" ? "Entregador aprovado" : "Entregador bloqueado");
     invalidate();
+
   };
 
   const remove = async (entregador_id: string, nome: string) => {
