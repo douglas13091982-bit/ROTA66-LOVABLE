@@ -45,24 +45,36 @@ function CalcularFretePage() {
     },
   });
 
-  const resultado = useMemo(() => {
-    if (
-      !coletaCoords?.lat ||
-      !coletaCoords?.lng ||
-      !entregaCoords?.lat ||
-      !entregaCoords?.lng ||
-      tarifas.length === 0
-    )
-      return null;
-    const km = haversineKm(
-      { lat: coletaCoords.lat, lng: coletaCoords.lng },
-      { lat: entregaCoords.lat, lng: entregaCoords.lng },
-    );
-    const base = calcularTarifaPorFaixa(km, tarifas);
-    if (base == null) return null;
-    const total = Number((base + ADICIONAL_BASICO).toFixed(2));
-    return { km, base, total };
-  }, [coletaCoords, entregaCoords, tarifas]);
+  const podeCalcular =
+    !!coletaCoords?.lat &&
+    !!coletaCoords?.lng &&
+    !!entregaCoords?.lat &&
+    !!entregaCoords?.lng &&
+    tarifas.length > 0;
+
+  const { data: resultado, isFetching: calculando } = useQuery({
+    queryKey: [
+      "calc-frete-publico",
+      coletaCoords?.lat,
+      coletaCoords?.lng,
+      entregaCoords?.lat,
+      entregaCoords?.lng,
+      tarifas.length,
+    ],
+    enabled: podeCalcular,
+    queryFn: async () => {
+      const origem = { lat: coletaCoords!.lat!, lng: coletaCoords!.lng! };
+      const destino = { lat: entregaCoords!.lat!, lng: entregaCoords!.lng! };
+      // Distância real de direção via Google Routes API (com fallback)
+      const resp = await calcularDistanciaDirigindo({ data: { origem, destino } });
+      const km = resp.km ?? haversineKm(origem, destino);
+      const base = calcularTarifaPorFaixa(km, tarifas);
+      if (base == null) return null;
+      const total = Number((base + ADICIONAL_BASICO).toFixed(2));
+      return { km, base, total };
+    },
+  });
+
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: CREAM }}>
