@@ -55,6 +55,11 @@ export function FinanceiroAdminPage() {
   const mensAguardando = mensalidades.filter((m) => !m.pago && !!m.pago_solicitado_em);
   const totalPendentes = cobAguardando.length + mensAguardando.length;
 
+  const { isFranqueado } = useFranquia();
+  const TABS = ALL_TABS.filter((t) =>
+    isFranqueado ? t.key !== "mercado-pago" && t.key !== "pix" : true,
+  );
+
   const [tab, setTab] = useState<TabKey>("visao-geral");
 
   return (
