@@ -118,7 +118,7 @@ function CalcularFretePage() {
       const km = resp.km;
       const base = calcularTarifaPorFaixa(km, tarifas);
       if (base == null) return null;
-      const total = Number((base + ADICIONAL_BASICO).toFixed(2));
+      const total = Number(base.toFixed(2));
       return { km, base, total };
     },
   });
