@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useBranding } from "@/hooks/use-branding";
 import { useQuery } from "@tanstack/react-query";
 import { AddressAutocomplete, type PlaceSelection } from "@/components/AddressAutocomplete";
-import { haversineKm } from "@/lib/geo";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
 import type { TarifaFaixa } from "@/types/pedido";
@@ -55,6 +54,7 @@ function CalcularFretePage() {
   const { data: resultado, isFetching: calculando } = useQuery({
     queryKey: [
       "calc-frete-publico",
+      "google-routes-v2",
       coletaCoords?.lat,
       coletaCoords?.lng,
       entregaCoords?.lat,
@@ -65,9 +65,11 @@ function CalcularFretePage() {
     queryFn: async () => {
       const origem = { lat: coletaCoords!.lat!, lng: coletaCoords!.lng! };
       const destino = { lat: entregaCoords!.lat!, lng: entregaCoords!.lng! };
-      // Distância real de direção via Google Routes API (com fallback)
+      // Distância real de direção via Google Routes API.
+      // Não usamos fallback em linha reta aqui para evitar mostrar frete menor/incorreto.
       const resp = await calcularDistanciaDirigindo({ data: { origem, destino } });
-      const km = resp.km ?? haversineKm(origem, destino);
+      if (resp.km == null) return null;
+      const km = resp.km;
       const base = calcularTarifaPorFaixa(km, tarifas);
       if (base == null) return null;
       const total = Number((base + ADICIONAL_BASICO).toFixed(2));

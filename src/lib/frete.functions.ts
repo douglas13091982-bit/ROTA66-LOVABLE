@@ -1,8 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_maps";
-
 const CoordSchema = z.object({
   lat: z.number(),
   lng: z.number(),
@@ -21,8 +19,12 @@ const InputSchema = z.object({
 export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
+    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
     const apiKey = process.env.LOVABLE_API_KEY;
-    const connKey = process.env.GOOGLE_MAPS_API_KEY;
+    const connKey =
+      process.env.GOOGLE_MAPS_API_KEY ??
+      process.env.GOOGLE_MAPS_API_KEY_1 ??
+      process.env.GOOGLE_MAPS_API_KEY_2;
     if (!apiKey || !connKey) {
       console.error("[frete] Missing Google Maps connector credentials");
       return { km: null as number | null };
@@ -30,7 +32,7 @@ export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
 
     try {
       const resp = await fetch(
-        `${GATEWAY_URL}/routes/directions/v2:computeRoutes`,
+        `${gatewayUrl}/routes/directions/v2:computeRoutes`,
         {
           method: "POST",
           headers: {
