@@ -144,14 +144,31 @@ function CalcularFretePage() {
         {/* Campos */}
         <div className="space-y-3">
           <FieldCard iconBg={NAVY} icon={<MapPin className="w-5 h-5 text-white" />} label="ORIGEM">
-            <AddressAutocomplete
-              value={coleta}
-              onChange={setColeta}
-              onSelectPlace={(p) => setColetaCoords(p)}
-              placeholder="Digite a cidade ou endereço"
-              className="w-full bg-transparent border-0 p-0 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-0"
-            />
+            <div className="flex items-center gap-2">
+              <AddressAutocomplete
+                value={coleta}
+                onChange={setColeta}
+                onSelectPlace={(p) => setColetaCoords(p)}
+                placeholder="Digite a cidade ou endereço"
+                className="w-full bg-transparent border-0 p-0 text-sm text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+              />
+              <button
+                type="button"
+                onClick={usarMinhaLocalizacao}
+                disabled={localizando}
+                title="Usar minha localização"
+                className="shrink-0 p-1.5 rounded-full hover:bg-slate-100 transition disabled:opacity-50"
+                style={{ color: NAVY }}
+              >
+                {localizando ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <LocateFixed className="w-4 h-4" />
+                )}
+              </button>
+            </div>
           </FieldCard>
+
 
           <FieldCard iconBg={RED} icon={<MapPin className="w-5 h-5 text-white" />} label="DESTINO">
             <AddressAutocomplete
