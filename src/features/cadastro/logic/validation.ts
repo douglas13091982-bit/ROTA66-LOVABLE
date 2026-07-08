@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { onlyDigits } from "@/lib/format/document";
+import { normalizeBrPhone, onlyDigits } from "@/lib/format/document";
 import { isValidCnpj, isValidCpf } from "@/lib/validation/br-documents";
 import type { SignupForm } from "./use-signup-form";
 import type { Role } from "./roles";
@@ -19,10 +19,10 @@ export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx)
   if (fullName.length < 3) return fail("Informe seu nome completo (mínimo 3 caracteres)");
   if (fullName.length > 120) return fail("Nome muito longo (máximo 120 caracteres)");
 
-  const phoneDigits = onlyDigits(form.phone);
+  const phoneDigits = normalizeBrPhone(form.phone);
   if (!phoneDigits) return fail("Telefone é obrigatório");
-  if (phoneDigits.length < 10 || phoneDigits.length > 13) {
-    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999)");
+  if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999), sem o 55.");
   }
 
   if (!passwordMeetsRequirements(form.password)) {
@@ -72,7 +72,7 @@ function fail(msg: string) {
 export function buildSignupMetadata(role: Role, form: SignupForm) {
   const cpfDigits = onlyDigits(form.cpf);
   const fullName = form.fullName.trim();
-  const phone = form.phone.trim();
+  const phone = normalizeBrPhone(form.phone);
   // Garantia: nunca enviar string vazia — o trigger create_profile_from_signup
   // confia nesses campos para popular o profile.
   if (!fullName || !phone) {
