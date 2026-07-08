@@ -13,8 +13,8 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   return (
     <div className="group flex items-start justify-between gap-3 px-4 py-3 border-b border-border/30 last:border-b-0 transition-colors duration-200 hover:bg-white/[0.02]">
       <div className="min-w-0 flex-1">
-        <div className="font-bold !text-black truncate">
-          {lojaNome} <span className="!text-black">#{pedido.numero}</span>
+        <div className="font-bold text-black dark:text-white truncate">
+          {lojaNome} <span className="text-black dark:text-white">#{pedido.numero}</span>
         </div>
 
         <div className="flex items-center gap-2 mt-1">
