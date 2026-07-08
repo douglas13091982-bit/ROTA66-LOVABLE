@@ -1,8 +1,22 @@
-import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag } from "lucide-react";
+import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag, Trash2, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { ImportarProdutosDialog } from "@/components/loja/ImportarProdutosDialog";
 import { ImportarIfoodDialog } from "@/components/loja/ImportarIfoodDialog";
 import { ProdutoDialog } from "./ProdutoDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function CatalogoHeader({
   lojaId,
@@ -15,6 +29,24 @@ export function CatalogoHeader({
 }) {
   const qc = useQueryClient();
   const invalidate = () => qc.invalidateQueries({ queryKey: ["produtos", lojaId] });
+  const [excluindo, setExcluindo] = useState(false);
+
+  async function excluirTodos() {
+    setExcluindo(true);
+    try {
+      const { error, count } = await (supabase as any)
+        .from("produtos")
+        .delete({ count: "exact" })
+        .eq("loja_id", lojaId);
+      if (error) throw error;
+      toast.success(`${count ?? 0} produto(s) excluído(s)`);
+      invalidate();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao excluir produtos");
+    } finally {
+      setExcluindo(false);
+    }
+  }
 
   return (
     <div className="mb-6 flex flex-wrap gap-3 items-start justify-between">
@@ -56,6 +88,34 @@ export function CatalogoHeader({
             <FileSpreadsheet className="h-4 w-4" /> Importar planilha
           </button>
         </ImportarProdutosDialog>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              disabled={excluindo}
+              className="flex items-center gap-2 px-4 py-2 bg-card border border-destructive/40 text-destructive rounded-md font-bold uppercase text-xs tracking-wider hover:bg-destructive/10 disabled:opacity-60"
+            >
+              {excluindo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              Excluir todos
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Excluir todos os produtos?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta ação vai remover permanentemente todos os produtos do seu catálogo. Não é possível desfazer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={excluirTodos}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Excluir todos
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <ProdutoDialog lojaId={lojaId} onSaved={invalidate}>
           <button className="flex items-center gap-2 px-4 py-2 bg-gradient-red shadow-red text-primary-foreground rounded-md font-bold uppercase text-xs tracking-wider hover:opacity-90">
             <Plus className="h-4 w-4" /> Novo produto
