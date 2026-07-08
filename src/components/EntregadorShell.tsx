@@ -179,8 +179,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_rgba(15,35,65,0.35)]"
-        style={{ background: "#0F2341" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_rgba(15,35,65,0.15)]"
+        style={{ background: "#ffffff", borderColor: "rgba(15,35,65,0.08)" }}
       >
         <div className="grid grid-cols-4">
           {NAV.map((item) => {
@@ -193,22 +193,22 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 to={item.to}
                 data-nav-link
                 data-active={active ? "true" : "false"}
-                className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[#D8232A]" : "text-white hover:text-[#D8232A]"
+                className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 ${
+                  active ? "text-[#D8232A]" : "text-[#6b7890] hover:text-[#D8232A]"
                 }`}
               >
                 {active && (
                   <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#D8232A]"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] rounded-b-full bg-[#D8232A]"
                     style={{
-                      boxShadow: "0 4px 22px -2px rgba(216, 35, 42, 0.55)",
+                      boxShadow: "0 4px 22px -2px rgba(216, 35, 42, 0.35)",
                     }}
                   />
                 )}
                 <div className="relative">
                   <Icon
                     className={`h-5 w-5 transition-all duration-300 ${
-                      active ? "scale-110 text-[#D8232A]" : "text-white group-hover:text-[#D8232A]"
+                      active ? "scale-110 text-[#D8232A]" : "text-[#6b7890] group-hover:text-[#D8232A]"
                     }`}
                   />
                   {badge > 0 && (
