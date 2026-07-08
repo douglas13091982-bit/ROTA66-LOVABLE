@@ -29,6 +29,24 @@ export function CatalogoHeader({
 }) {
   const qc = useQueryClient();
   const invalidate = () => qc.invalidateQueries({ queryKey: ["produtos", lojaId] });
+  const [excluindo, setExcluindo] = useState(false);
+
+  async function excluirTodos() {
+    setExcluindo(true);
+    try {
+      const { error, count } = await (supabase as any)
+        .from("produtos")
+        .delete({ count: "exact" })
+        .eq("loja_id", lojaId);
+      if (error) throw error;
+      toast.success(`${count ?? 0} produto(s) excluído(s)`);
+      invalidate();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Erro ao excluir produtos");
+    } finally {
+      setExcluindo(false);
+    }
+  }
 
   return (
     <div className="mb-6 flex flex-wrap gap-3 items-start justify-between">
