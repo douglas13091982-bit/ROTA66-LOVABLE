@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { onlyDigits } from "@/lib/format/document";
+import { normalizeBrPhone, onlyDigits } from "@/lib/format/document";
 import { isValidCnpj, isValidCpf } from "@/lib/validation/br-documents";
 import type { SignupForm } from "./use-signup-form";
 import type { Role } from "./roles";
