@@ -120,7 +120,7 @@ export function CadastroPage({
                 inputMode="tel"
                 required
                 value={form.phone}
-                onChange={(e) => update("phone", sanitizePhone(e.target.value, 16))}
+                onChange={(e) => update("phone", normalizeBrPhone(sanitizePhone(e.target.value, 16)))}
                 placeholder="(11) 99999-9999"
                 maxLength={20}
                 autoComplete="tel"
