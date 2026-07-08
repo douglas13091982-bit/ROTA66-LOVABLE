@@ -164,8 +164,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)]"
-        style={{ background: "#0f304d" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_rgba(15,35,65,0.35)]"
+        style={{ background: "#0F2341" }}
       >
         <div className="grid grid-cols-4">
           {NAV.map((item) => {
@@ -179,30 +179,30 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 data-nav-link
                 data-active={active ? "true" : "false"}
                 className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[#da161a]" : "text-white hover:text-[#da161a]"
+                  active ? "text-[#D8232A]" : "text-white hover:text-[#D8232A]"
                 }`}
               >
                 {active && (
                   <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#da161a]"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#D8232A]"
                     style={{
-                      boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.55)",
+                      boxShadow: "0 4px 22px -2px rgba(216, 35, 42, 0.55)",
                     }}
                   />
                 )}
                 <div className="relative">
                   <Icon
                     className={`h-5 w-5 transition-all duration-300 ${
-                      active ? "scale-110 text-[#da161a]" : "text-white group-hover:text-[#da161a]"
+                      active ? "scale-110 text-[#D8232A]" : "text-white group-hover:text-[#D8232A]"
                     }`}
                   />
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f304d]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0F2341]"
                       style={{
-                        background: "linear-gradient(135deg, #da161a, #8a0d10)",
-                        boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
+                        background: "linear-gradient(135deg, #D8232A, #8a0d10)",
+                        boxShadow: "0 0 10px -1px rgba(216, 35, 42, 0.9)",
                       }}
                       aria-label={`${badge} oportunidades`}
                     >
@@ -216,6 +216,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           })}
         </div>
       </nav>
+
     </div>
   );
 }
