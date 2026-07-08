@@ -57,12 +57,15 @@ export function PedidoDrawer({
   );
   const taxa = Number(detalhe.taxa_entrega ?? 0);
   // Prefere o snapshot da taxa do plano aplicada no momento do pedido.
-  // Fallback (pedidos legados sem snapshot): taxa atual da loja, limitada
-  // pela taxa de entrega para nunca deixar o frete negativo.
+  // Se o snapshot vier zero/nulo (pedidos antigos ou criados antes da correção),
+  // usa a taxa por pedido atual da loja como fallback, limitada pela taxa de
+  // entrega para nunca deixar o frete negativo.
+  const snapshotAplicada = Number(detalhe.taxa_por_pedido_aplicada ?? 0);
+  const taxaLojaAtual = Number(detalhe.loja_taxa_por_pedido ?? 0);
   const taxaPorPedido =
-    detalhe.taxa_por_pedido_aplicada != null
-      ? Number(detalhe.taxa_por_pedido_aplicada)
-      : Math.min(Number(detalhe.loja_taxa_por_pedido ?? 0), taxa);
+    snapshotAplicada > 0
+      ? Math.min(snapshotAplicada, taxa)
+      : Math.min(taxaLojaAtual, taxa);
   const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
 
 
