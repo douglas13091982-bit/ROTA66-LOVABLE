@@ -1,8 +1,22 @@
-import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag } from "lucide-react";
+import { ExternalLink, FileSpreadsheet, Plus, ShoppingBag, Trash2, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { ImportarProdutosDialog } from "@/components/loja/ImportarProdutosDialog";
 import { ImportarIfoodDialog } from "@/components/loja/ImportarIfoodDialog";
 import { ProdutoDialog } from "./ProdutoDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function CatalogoHeader({
   lojaId,
