@@ -88,6 +88,34 @@ export function CatalogoHeader({
             <FileSpreadsheet className="h-4 w-4" /> Importar planilha
           </button>
         </ImportarProdutosDialog>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              disabled={excluindo}
+              className="flex items-center gap-2 px-4 py-2 bg-card border border-destructive/40 text-destructive rounded-md font-bold uppercase text-xs tracking-wider hover:bg-destructive/10 disabled:opacity-60"
+            >
+              {excluindo ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              Excluir todos
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Excluir todos os produtos?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta ação vai remover permanentemente todos os produtos do seu catálogo. Não é possível desfazer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={excluirTodos}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Excluir todos
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <ProdutoDialog lojaId={lojaId} onSaved={invalidate}>
           <button className="flex items-center gap-2 px-4 py-2 bg-gradient-red shadow-red text-primary-foreground rounded-md font-bold uppercase text-xs tracking-wider hover:opacity-90">
             <Plus className="h-4 w-4" /> Novo produto
