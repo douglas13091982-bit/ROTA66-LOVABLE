@@ -85,31 +85,46 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
-    <div className="flex flex-col items-center gap-3">
-      <button
-        onClick={toggle}
-        data-status-toggle
-        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300"
-        style={{ background: "#e5e7eb" }}
-        aria-label={online ? "Ficar offline" : "Ficar online"}
+    <button
+      onClick={toggle}
+      data-status-toggle
+      className="w-full flex items-center justify-between rounded-2xl bg-white px-4 py-3 border transition-all"
+      style={{
+        borderColor: "rgba(15,35,65,0.08)",
+        boxShadow:
+          "0 1px 2px rgba(15,35,65,0.04), 0 8px 22px -18px rgba(15,35,65,0.25)",
+      }}
+      aria-label={online ? "Ficar offline" : "Ficar online"}
+    >
+      <div className="flex items-center gap-3">
+        <span
+          className="relative inline-flex h-2.5 w-2.5 rounded-full"
+          style={{
+            background: online ? "#22c55e" : "#94a3b8",
+            boxShadow: online ? "0 0 0 4px rgba(34,197,94,0.18)" : "none",
+          }}
+        />
+        <div className="flex flex-col items-start leading-tight">
+          <span className="text-[11px] text-[#6b7890]">Você está</span>
+          <span
+            className="text-[13px] font-extrabold tracking-[0.16em]"
+            style={{ color: online ? "#16a34a" : "#6b7890" }}
+          >
+            {online ? "ONLINE" : "OFFLINE"}
+          </span>
+        </div>
+      </div>
+
+      <span
+        className="relative inline-flex h-7 w-12 rounded-full transition-colors duration-300"
+        style={{ background: online ? "#22c55e" : "#e5e7eb" }}
       >
         <span
-          className={`grid place-items-center h-9 w-14 rounded-full transition-all duration-300 ${
-            !online ? "bg-white shadow text-[#374151]" : "text-[#374151]/60"
-          }`}
-        >
-          <Power className="h-4 w-4" />
-        </span>
-        <span
-          className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-[#374151]/70"
-          }`}
-          style={online ? { background: "#22c55e", boxShadow: "0 6px 18px -6px rgba(34,197,94,0.55)" } : undefined}
-        >
-          ON
-        </span>
-      </button>
-    </div>
+          className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all duration-300"
+          style={{ left: online ? "22px" : "2px" }}
+        />
+      </span>
+    </button>
   );
 
 
