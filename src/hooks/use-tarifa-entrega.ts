@@ -93,7 +93,7 @@ export function useTarifaEntrega(
         return;
       }
 
-      const taxaPlano = plano.planoMensalAtivo ? 0 : plano.taxa;
+      const taxaPlano = plano.taxa;
       const total = Number((valorGlobal + taxaPlano).toFixed(2));
       const faixa = encontrarFaixa(km, tarifas);
       setTaxa(total);

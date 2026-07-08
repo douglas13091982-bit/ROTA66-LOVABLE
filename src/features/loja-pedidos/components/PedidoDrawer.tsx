@@ -62,9 +62,7 @@ export function PedidoDrawer({
   const taxaPorPedido =
     detalhe.taxa_por_pedido_aplicada != null
       ? Number(detalhe.taxa_por_pedido_aplicada)
-      : detalhe.loja_plano_mensal_ativo
-        ? 0
-        : Math.min(Number(detalhe.loja_taxa_por_pedido ?? 0), taxa);
+      : Math.min(Number(detalhe.loja_taxa_por_pedido ?? 0), taxa);
   const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
 
 

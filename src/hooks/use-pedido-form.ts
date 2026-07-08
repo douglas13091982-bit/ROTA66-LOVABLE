@@ -187,8 +187,7 @@ export function usePedidoForm({
         .eq("id", lojaId)
         .maybeSingle();
       const taxaPlanoLoja = Number((lojaSnap as any)?.taxa_por_pedido ?? 0) || 0;
-      const planoMensalAtivo = Boolean((lojaSnap as any)?.plano_mensal_ativo);
-      const taxaPorPedidoAplicada = planoMensalAtivo ? 0 : taxaPlanoLoja;
+      const taxaPorPedidoAplicada = taxaPlanoLoja;
 
       const payload = {
         loja_id: lojaId,

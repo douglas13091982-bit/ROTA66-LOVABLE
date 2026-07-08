@@ -47,7 +47,7 @@ export function useLojaPlano(loja: any, onChanged: () => void) {
     setPlanoAtivo(novo);
     toast.success(
       novo
-        ? "Plano mensal ativado — taxa por pedido isenta"
+        ? "Plano mensal ativado"
         : "Plano mensal desativado",
     );
     onChanged();

@@ -101,8 +101,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
     }
-    const planoAtivo = Boolean((loja as any).plano_mensal_ativo);
-    const taxaPlano = planoAtivo ? 0 : Number((loja as any).taxa_por_pedido ?? 0) || 0;
+    const taxaPlano = Number((loja as any).taxa_por_pedido ?? 0) || 0;
     if (taxaPlano > 0) {
       taxa_entrega = Number((taxa_entrega + taxaPlano).toFixed(2));
     }
@@ -177,6 +176,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         itens: itensSnapshot as any,
         valor_produtos,
         taxa_entrega,
+        taxa_por_pedido_aplicada: taxaPlano,
         valor_total,
         status: "em_preparo",
       })
