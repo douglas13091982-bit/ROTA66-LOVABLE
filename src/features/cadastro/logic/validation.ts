@@ -19,10 +19,10 @@ export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx)
   if (fullName.length < 3) return fail("Informe seu nome completo (mínimo 3 caracteres)");
   if (fullName.length > 120) return fail("Nome muito longo (máximo 120 caracteres)");
 
-  const phoneDigits = onlyDigits(form.phone);
+  const phoneDigits = normalizeBrPhone(form.phone);
   if (!phoneDigits) return fail("Telefone é obrigatório");
-  if (phoneDigits.length < 10 || phoneDigits.length > 13) {
-    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999)");
+  if (phoneDigits.length < 10 || phoneDigits.length > 11) {
+    return fail("Telefone inválido. Use DDD + número (ex.: 11999999999), sem o 55.");
   }
 
   if (!passwordMeetsRequirements(form.password)) {
