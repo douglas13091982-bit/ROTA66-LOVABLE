@@ -176,6 +176,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         itens: itensSnapshot as any,
         valor_produtos,
         taxa_entrega,
+        taxa_por_pedido_aplicada: taxaPlano,
         valor_total,
         status: "em_preparo",
       })
