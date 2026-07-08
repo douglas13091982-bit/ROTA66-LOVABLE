@@ -2,7 +2,7 @@ import { type ReactNode, useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone } from "lucide-react";
+import { Package, History, User, CalendarClock, Smartphone } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
