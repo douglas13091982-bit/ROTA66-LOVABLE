@@ -64,7 +64,7 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
         nome: form.nomeLoja.trim(),
         slug,
         cnpj: cnpjDigits,
-        telefone: form.phone,
+        telefone: normalizeBrPhone(form.phone),
         categoria: form.categoria || null,
         indicado_por_entregador_id: indicadorTipo === "entregador" ? indicadorId || null : null,
         revendedor_id: indicadorTipo === "revendedor" ? indicadorId || null : null,
