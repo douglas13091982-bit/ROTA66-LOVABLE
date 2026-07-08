@@ -115,15 +115,15 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
   if (!isMobile) {
     return (
-      <div className="panel-premium min-h-screen flex items-center justify-center p-6">
+      <div className="panel-premium entregador-frete min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
           <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
-            style={{ background: "linear-gradient(135deg, oklch(0.62 0.22 27), oklch(0.42 0.20 27))" }}
+            style={{ background: "#0F2341" }}
           >
             <Smartphone className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-3">Acesse pelo celular</h1>
-          <p className="text-white/55 text-sm leading-relaxed">
+          <h1 className="text-2xl font-bold tracking-tight mb-3" style={{ color: "#0F2341" }}>Acesse pelo celular</h1>
+          <p className="text-sm leading-relaxed" style={{ color: "#3a4a63" }}>
             O app do entregador foi projetado exclusivamente para dispositivos móveis.
             Abra esta página no seu smartphone para continuar.
           </p>
@@ -134,7 +134,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
 
   return (
-    <div className="panel-premium flex flex-col min-h-screen">
+    <div className="panel-premium entregador-frete flex flex-col min-h-screen">
+
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
