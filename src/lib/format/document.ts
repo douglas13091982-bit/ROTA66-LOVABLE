@@ -16,6 +16,19 @@ export function formatCnpj(input: string | null | undefined): string {
   return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
 }
 
+/**
+ * Remove o código de país 55 do início do telefone brasileiro.
+ * Ex.: "5547999999999" -> "47999999999"; "+55 47 99999-9999" -> "47999999999".
+ * Mantém como está se não começar com 55 ou se o tamanho final ficaria inválido.
+ */
+export function normalizeBrPhone(input: string | null | undefined): string {
+  const d = onlyDigits(input);
+  if ((d.length === 12 || d.length === 13) && d.startsWith("55")) {
+    return d.slice(2);
+  }
+  return d;
+}
+
 /** Formata CEP: "01001000" -> "01001-000". */
 export function formatCep(input: string | null | undefined): string {
   const d = onlyDigits(input).slice(0, 8);
