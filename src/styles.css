@@ -493,6 +493,107 @@
 }
 
 
+/* ===========================================================
+   ENTREGADOR — Tema "Calcular Frete" (creme + navy + vermelho)
+   Aplicado como modificador em cima de .panel-premium
+   =========================================================== */
+.panel-premium.entregador-frete {
+  --rota-navy: #0F2341;
+  --rota-navy-light: #16324f;
+  --rota-navy-deep: #0a1a30;
+  --rota-red: #D8232A;
+  --rota-red-dark: #a81a20;
+
+  --panel-bg: #F5EFE6;
+  --panel-bg-elev: #ffffff;
+  --panel-surface: #ffffff;
+  --panel-surface-hi: #ffffff;
+  --panel-border: rgba(15, 35, 65, 0.12);
+  --panel-border-strong: rgba(15, 35, 65, 0.22);
+  --panel-text: #0F2341;
+  --panel-text-dim: #3a4a63;
+  --panel-text-muted: #6b7890;
+  --panel-accent: #D8232A;
+
+  --panel-gradient-bg: #F5EFE6;
+  --panel-gradient-rail: linear-gradient(180deg, #D8232A 0%, #0F2341 100%);
+
+  --panel-shadow-card:
+    0 1px 2px rgba(15, 35, 65, 0.06),
+    0 8px 24px -16px rgba(15, 35, 65, 0.18);
+  --panel-shadow-hover:
+    0 2px 6px rgba(15, 35, 65, 0.08),
+    0 24px 60px -28px rgba(216, 35, 42, 0.25);
+
+  --background: #F5EFE6;
+  --foreground: #0F2341;
+  --card: #ffffff;
+  --card-foreground: #0F2341;
+  --popover: #ffffff;
+  --popover-foreground: #0F2341;
+  --primary: #D8232A;
+  --primary-foreground: #ffffff;
+  --secondary: #ece5d8;
+  --secondary-foreground: #0F2341;
+  --muted: #ece5d8;
+  --muted-foreground: #6b7890;
+  --accent: #D8232A;
+  --accent-foreground: #ffffff;
+  --border: rgba(15, 35, 65, 0.12);
+  --input: rgba(15, 35, 65, 0.14);
+  --ring: #D8232A;
+
+  background: #F5EFE6;
+  color: #0F2341;
+}
+
+.panel-premium.entregador-frete .pp-grid-overlay {
+  background-image:
+    linear-gradient(rgba(15, 35, 65, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 35, 65, 0.05) 1px, transparent 1px);
+}
+
+.panel-premium.entregador-frete .pp-card,
+.panel-premium.entregador-frete .pp-glass,
+.panel-premium.entregador-frete .pp-glass-strong {
+  background: #ffffff;
+  border: 1px solid rgba(15, 35, 65, 0.10);
+  color: #0F2341;
+  box-shadow: 0 1px 2px rgba(15, 35, 65, 0.04), 0 8px 24px -18px rgba(15, 35, 65, 0.2);
+  backdrop-filter: none;
+}
+
+.panel-premium.entregador-frete .pp-disc {
+  background: #F5EFE6;
+  border: 1px solid rgba(15, 35, 65, 0.12);
+  color: #0F2341;
+}
+.panel-premium.entregador-frete .pp-disc-accent {
+  background: #D8232A;
+  border-color: #D8232A;
+  color: #ffffff;
+  box-shadow: 0 8px 24px -10px rgba(216, 35, 42, 0.5);
+}
+
+.panel-premium.entregador-frete .pp-cta {
+  background: #D8232A;
+  color: #ffffff;
+  box-shadow: 0 8px 22px -8px rgba(216, 35, 42, 0.55);
+}
+.panel-premium.entregador-frete .pp-cta:hover { filter: brightness(1.06); }
+
+.panel-premium.entregador-frete .pp-eyebrow { color: #6b7890; }
+.panel-premium.entregador-frete .pp-num,
+.panel-premium.entregador-frete .pp-title-page { color: #0F2341; }
+
+.panel-premium.entregador-frete ::-webkit-scrollbar-thumb {
+  background: rgba(15, 35, 65, 0.25);
+  background-clip: padding-box;
+}
+.panel-premium.entregador-frete ::selection { background: rgba(216, 35, 42, 0.25); color: #0F2341; }
+
+
+
 .dark {
   --background: var(--rota-navy);
   --foreground: oklch(0.97 0 0);
