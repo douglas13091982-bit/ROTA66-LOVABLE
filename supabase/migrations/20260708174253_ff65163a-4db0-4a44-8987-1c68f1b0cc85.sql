@@ -1,0 +1,1 @@
+ALTER TABLE public.lojas ALTER COLUMN catalogo_ativo SET DEFAULT true;
