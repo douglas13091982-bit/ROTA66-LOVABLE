@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { AuthCard, AuthInput, AuthPasswordInput, PrimaryButton } from "@/components/AuthCard";
 import { sanitizeEmail, sanitizeName, sanitizePhone } from "@/lib/sanitize";
+import { normalizeBrPhone } from "@/lib/format/document";
 import { useContratoAtivo } from "@/components/ContratoView";
 import { ContratoDialog } from "@/components/ContratoDialog";
 import { ClienteFields } from "./components/ClienteFields";
