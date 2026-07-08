@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { onlyDigits } from "@/lib/format/document";
+import { normalizeBrPhone, onlyDigits } from "@/lib/format/document";
 import type { Role } from "./roles";
 import type { SignupForm } from "./use-signup-form";
 import {
