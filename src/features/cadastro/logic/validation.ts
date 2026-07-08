@@ -72,7 +72,7 @@ function fail(msg: string) {
 export function buildSignupMetadata(role: Role, form: SignupForm) {
   const cpfDigits = onlyDigits(form.cpf);
   const fullName = form.fullName.trim();
-  const phone = form.phone.trim();
+  const phone = normalizeBrPhone(form.phone);
   // Garantia: nunca enviar string vazia — o trigger create_profile_from_signup
   // confia nesses campos para popular o profile.
   if (!fullName || !phone) {
