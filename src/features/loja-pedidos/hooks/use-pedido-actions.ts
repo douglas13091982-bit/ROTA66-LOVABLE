@@ -117,7 +117,7 @@ export function usePedidoActions(lojaId: string | undefined) {
     window.open(`https://wa.me/${numeroWa}?text=${encodeURIComponent(mensagem)}`, "_blank");
   };
 
-  return { updateStatus, marcarLoteComoPronto, toggleArquivado, cancelarPedido, abrirWhatsAppRastreio };
+  return { updateStatus, marcarLoteComoPronto, toggleArquivado, cancelarPedido, reenviarParaEntregadores, abrirWhatsAppRastreio };
 }
 
 export type PedidoActions = ReturnType<typeof usePedidoActions>;
