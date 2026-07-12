@@ -239,7 +239,7 @@ export function PedidoDrawer({
                       status: "pronto",
                       entregador_id: null,
                       arquivado: false,
-                      aceito_em: null,
+                      
                       coleta_confirmada_em: null,
                     });
                   }
