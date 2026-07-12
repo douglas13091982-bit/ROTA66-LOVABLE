@@ -52,6 +52,7 @@ export const COLUMNS: ColumnDef[] = [
   { key: "pronto", title: "Pronto", statuses: ["pronto"], accent: "border-t-[oklch(0.55_0.26_25)]" },
   { key: "coletado", title: "Coletado", statuses: ["em_rota", "coletado"], accent: "border-t-[oklch(0.35_0.06_265)]" },
   { key: "entregue", title: "Entregue", statuses: ["entregue"], accent: "border-t-[oklch(0.38_0.06_165)]" },
+  { key: "cancelado", title: "Cancelados", statuses: ["cancelado"], accent: "border-t-zinc-600" },
 ];
 
 export const LOJA_CONTROLA_STATUSES = new Set(["novo", "aceito", "em_preparo"]);
