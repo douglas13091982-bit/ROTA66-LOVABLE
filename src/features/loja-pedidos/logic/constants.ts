@@ -51,8 +51,8 @@ export const COLUMNS: ColumnDef[] = [
   { key: "preparacao", title: "Preparação", statuses: ["novo", "aceito", "em_preparo"], accent: "border-t-[oklch(0.55_0.16_75)]" },
   { key: "pronto", title: "Pronto", statuses: ["pronto"], accent: "border-t-[oklch(0.55_0.26_25)]" },
   { key: "coletado", title: "Coletado", statuses: ["em_rota", "coletado"], accent: "border-t-[oklch(0.35_0.06_265)]" },
-  { key: "entregue", title: "Entregue", statuses: ["entregue"], accent: "border-t-[oklch(0.38_0.06_165)]" },
-  { key: "cancelado", title: "Cancelados", statuses: ["cancelado"], accent: "border-t-zinc-600" },
+  // Cancelados ficam junto com "Entregue" (arquivados) — o badge de status "Cancelado" diferencia visualmente.
+  { key: "entregue", title: "Entregue", statuses: ["entregue", "cancelado"], accent: "border-t-[oklch(0.38_0.06_165)]" },
 ];
 
 export const LOJA_CONTROLA_STATUSES = new Set(["novo", "aceito", "em_preparo"]);
