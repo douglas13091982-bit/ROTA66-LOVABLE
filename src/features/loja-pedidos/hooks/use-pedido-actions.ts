@@ -57,16 +57,47 @@ export function usePedidoActions(lojaId: string | undefined) {
   };
 
   const cancelarPedido = async (id: string) => {
+    // Ao cancelar, arquivamos automaticamente — o pedido fica disponível
+    // na aba "Mostrar arquivados" para consulta ou reenvio.
     const { error } = await supabase
       .from("pedidos")
-      .update({ status: "cancelado" })
+      .update({ status: "cancelado", arquivado: true })
       .eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
     }
     invalidate();
-    toast.success("Pedido cancelado.");
+    toast.success("Pedido cancelado e movido para arquivados.");
+  };
+
+  /**
+   * Reenvia um pedido cancelado (ou já entregue) de volta para o pool de
+   * entregadores: limpa entregador/rota/aceite e volta o status para "pronto",
+   * desarquivando e regenerando o código de coleta.
+   */
+  const reenviarParaEntregadores = async (id: string) => {
+    const novoCodigoColeta = String(Math.floor(1000 + Math.random() * 9000));
+    const { error } = await supabase
+      .from("pedidos")
+      .update({
+        status: "pronto" as any,
+        entregador_id: null,
+        rota_id: null,
+        rota_ordem: null,
+        aceito_em: null,
+        coleta_confirmada_em: null,
+        entrega_confirmada_em: null,
+        codigo_coleta: novoCodigoColeta,
+        arquivado: false,
+      } as any)
+      .eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    invalidate();
+    toast.success("Pedido reenviado aos entregadores.");
   };
 
   const abrirWhatsAppRastreio = (pedido: PedidoMin) => {
