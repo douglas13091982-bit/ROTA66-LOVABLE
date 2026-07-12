@@ -85,7 +85,7 @@ export function usePedidoActions(lojaId: string | undefined) {
         entregador_id: null,
         rota_id: null,
         rota_ordem: null,
-        aceito_em: null,
+        
         coleta_confirmada_em: null,
         entrega_confirmada_em: null,
         codigo_coleta: novoCodigoColeta,
