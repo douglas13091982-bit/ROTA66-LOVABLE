@@ -219,14 +219,34 @@ export function PedidoDrawer({
             {detalhe.status !== "entregue" && detalhe.status !== "cancelado" && (
               <button
                 onClick={() => {
-                  if (window.confirm(`Cancelar pedido #${detalhe.numero}?`)) {
+                  if (window.confirm(`Cancelar pedido #${detalhe.numero}? Ele será movido para os arquivados e poderá ser reenviado aos entregadores depois.`)) {
                     actions.cancelarPedido(detalhe.id);
-                    onUpdateDetalhe({ ...detalhe, status: "cancelado" });
+                    onUpdateDetalhe({ ...detalhe, status: "cancelado", arquivado: true });
                   }
                 }}
                 className="inline-flex items-center gap-1.5 px-3 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold uppercase text-xs tracking-wider rounded-md"
               >
                 <X className="h-3.5 w-3.5" /> Cancelar pedido
+              </button>
+            )}
+            {detalhe.status === "cancelado" && (
+              <button
+                onClick={() => {
+                  if (window.confirm(`Reenviar pedido #${detalhe.numero} aos entregadores? Ele voltará para o status "Pronto" e será oferecido novamente.`)) {
+                    actions.reenviarParaEntregadores(detalhe.id);
+                    onUpdateDetalhe({
+                      ...detalhe,
+                      status: "pronto",
+                      entregador_id: null,
+                      arquivado: false,
+                      aceito_em: null,
+                      coleta_confirmada_em: null,
+                    });
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-[oklch(0.50_0.24_25)] hover:bg-[oklch(0.55_0.24_25)] text-white font-bold uppercase text-xs tracking-wider rounded-md"
+              >
+                <Send className="h-3.5 w-3.5" /> Reenviar aos entregadores
               </button>
             )}
             {detalhe.status === "entregue" && (
