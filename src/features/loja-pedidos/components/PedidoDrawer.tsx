@@ -17,6 +17,7 @@ import {
   Archive,
   ArchiveRestore,
   MessageCircle,
+  Send,
 } from "lucide-react";
 import { EntregadorPixCard } from "@/components/EntregadorPixCard";
 
