@@ -51,7 +51,8 @@ export function useLojasProblema() {
         const saldo = saldos.get(loja.id) ?? 0;
         const mensAtrasada = atrasadas.get(loja.id) ?? 0;
         const inativa =
-          loja.ativa === false || (loja.status && loja.status !== "ativa");
+          loja.ativa === false || loja.status === "bloqueado";
+
 
         const problemas: string[] = [];
         if (saldo < 0) problemas.push(`Saldo negativo (R$ ${saldo.toFixed(2)})`);
