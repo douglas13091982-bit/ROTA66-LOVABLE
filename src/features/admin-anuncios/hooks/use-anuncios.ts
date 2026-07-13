@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 import { ANUNCIO_MAX_BYTES, type AnuncioRow } from "../logic/types";
 
 export function useAnuncios() {
