@@ -1,6 +1,7 @@
-import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Pencil, Sparkles, Trash2 } from "lucide-react";
 import { useProdutoActions } from "../hooks/use-produto-actions";
 import type { Produto } from "../logic/types";
+import { AdicionaisDialog } from "./AdicionaisDialog";
 import { ProdutoDialog } from "./ProdutoDialog";
 
 export function ProdutoLinha({
@@ -53,6 +54,14 @@ export function ProdutoLinha({
             <Pencil className="h-3.5 w-3.5" />
           </button>
         </ProdutoDialog>
+        <AdicionaisDialog produto={p}>
+          <button
+            className="flex items-center justify-center px-2 py-1.5 text-[10px] rounded-md bg-primary/10 text-primary hover:bg-primary/20"
+            title="Adicionais"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+          </button>
+        </AdicionaisDialog>
         <button
           onClick={toggleAtivo}
           className="flex items-center justify-center px-2 py-1.5 rounded-md bg-card border border-border hover:bg-background"
