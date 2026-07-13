@@ -84,7 +84,7 @@ export function SaquesTable({
                     {formatDate(s.solicitado_em)}
                   </td>
                   <td className="px-3 py-2">
-                    {s.status === "pendente" && (
+                    {(s.status === "pendente" || s.status === "solicitado") && (
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => onMarcarPago(s.id)}
