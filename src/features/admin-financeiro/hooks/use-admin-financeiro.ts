@@ -11,7 +11,11 @@ export function useAdminFinanceiro() {
     pixChave: "",
     pixTitular: "",
     pixCidade: "",
+    saqueModo: "dia_semana",
+    saqueValorMinimo: 50,
+    saqueDiaSemana: 5,
   });
+
   const [configId, setConfigId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [gerando, setGerando] = useState(false);
