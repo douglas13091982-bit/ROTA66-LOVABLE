@@ -17,7 +17,7 @@ export function useSaquesEntregadores() {
         .order("solicitado_em", { ascending: false });
 
       if (filter === "pendentes") {
-        query = query.eq("status", "pendente");
+        query = query.in("status", ["solicitado", "pendente"]);
       } else if (filter === "pagos") {
         query = query.eq("status", "pago");
       } else if (filter === "rejeitados") {

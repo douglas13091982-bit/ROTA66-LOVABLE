@@ -11,7 +11,7 @@ export function useSaquesPendentesCount() {
       const { count, error } = await (supabase as any)
         .from("entregador_saques")
         .select("*", { count: "exact", head: true })
-        .eq("status", "pendente");
+        .in("status", ["solicitado", "pendente"]);
       if (error) throw error;
       return count ?? 0;
     },

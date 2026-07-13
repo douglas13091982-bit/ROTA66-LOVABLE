@@ -31,7 +31,7 @@ export function SaquesPendentesCard() {
       const { data: saques, error } = await (supabase as any)
         .from("entregador_saques")
         .select("id, entregador_id, valor, pix_chave, solicitado_em")
-        .eq("status", "pendente")
+        .in("status", ["solicitado", "pendente"])
         .order("solicitado_em", { ascending: false })
         .limit(5);
       if (error) throw error;
