@@ -30,12 +30,15 @@ export function useAnuncios() {
     qc.invalidateQueries({ queryKey: ["anuncios-entregador"] });
   };
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     if (!file.type.startsWith("image/")) return toast.error("Selecione uma imagem");
     if (file.size > ANUNCIO_MAX_BYTES) return toast.error("Imagem muito grande (máx 800KB)");
-    const reader = new FileReader();
-    reader.onload = () => setImageDataUrl(reader.result as string);
-    reader.readAsDataURL(file);
+    try {
+      const dataUrl = await convertImageToWebpDataUrl(file);
+      setImageDataUrl(dataUrl);
+    } catch {
+      toast.error("Falha ao processar imagem");
+    }
   };
 
   const handleCreate = async () => {
