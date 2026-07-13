@@ -8,9 +8,11 @@ export type SaqueResumo = {
   total_sacado: number;
   valor_minimo: number;
   dia_semana_permitido: number;
+  modo: "dia_semana" | "valor";
   pode_sacar_hoje: boolean;
   tem_saque_pendente: boolean;
 };
+
 
 export type SaqueRow = {
   id: string;
