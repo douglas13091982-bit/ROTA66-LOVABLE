@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown, GraduationCap } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
@@ -33,6 +33,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk", ownerOnly: true },
   { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },
   { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
+  { to: "/admin/treinamento", label: "Treinamento", icon: GraduationCap, area: null, ownerOnly: true },
   { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, ownerOnly: true },
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
   { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, ownerOnly: true },
