@@ -11,9 +11,9 @@ type Props = {
   busca: string;
   isHorizontal: boolean;
   layout: "cards" | "lista";
-  cart: Record<string, number>;
-  addItem: (id: string) => void;
-  removeItem: (id: string) => void;
+  qtdByProduto: Record<string, number>;
+  onAdd: (p: Produto) => void;
+  onDec: (p: Produto) => void;
 };
 
 export function CatalogoListagem({
@@ -23,9 +23,9 @@ export function CatalogoListagem({
   busca,
   isHorizontal,
   layout,
-  cart,
-  addItem,
-  removeItem,
+  qtdByProduto,
+  onAdd,
+  onDec,
 }: Props) {
   const groups = useMemo(() => {
     const cats = categorias.length > 0 ? [...categorias, "Outros"] : ["Produtos"];
@@ -55,7 +55,15 @@ export function CatalogoListagem({
   }
 
   if (busca) {
-    return <ProdutoGrid items={produtosFiltrados} cart={cart} addItem={addItem} removeItem={removeItem} layout={layout} />;
+    return (
+      <ProdutoGrid
+        items={produtosFiltrados}
+        qtdByProduto={qtdByProduto}
+        onAdd={onAdd}
+        onDec={onDec}
+        layout={layout}
+      />
+    );
   }
 
   return (
@@ -70,9 +78,9 @@ export function CatalogoListagem({
             </span>
           </div>
           {isHorizontal ? (
-            <CategoriaCarrossel items={items} cart={cart} addItem={addItem} removeItem={removeItem} />
+            <CategoriaCarrossel items={items} qtdByProduto={qtdByProduto} onAdd={onAdd} onDec={onDec} />
           ) : (
-            <ProdutoGrid items={items} cart={cart} addItem={addItem} removeItem={removeItem} layout={layout} />
+            <ProdutoGrid items={items} qtdByProduto={qtdByProduto} onAdd={onAdd} onDec={onDec} layout={layout} />
           )}
         </section>
       ))}

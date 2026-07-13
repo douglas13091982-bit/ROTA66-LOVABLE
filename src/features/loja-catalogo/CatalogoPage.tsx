@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
-import { pageWrapper } from "@/routes/-catalogo-types";
+import { pageWrapper, type Produto } from "@/routes/-catalogo-types";
 import { lojaAbertaAgora } from "@/lib/horario-funcionamento";
 import { useCart } from "./hooks/use-cart";
 import { useCatalogoConfig, useLojaPublica, useProdutosCatalogo } from "./hooks/use-catalogo";
@@ -11,12 +11,18 @@ import { CatalogoListagem } from "./components/CatalogoListagem";
 import { CheckoutDialog } from "./components/CheckoutDialog";
 import { PedidoSucesso } from "./components/PedidoSucesso";
 import { StickyCartBar } from "./components/StickyCartBar";
+import { ProdutoPersonalizarDialog } from "./components/ProdutoPersonalizarDialog";
+
+function hasAdicionais(p: Produto) {
+  return (p.adicionais_grupos ?? []).some((g) => g.opcoes.length > 0);
+}
 
 export function CatalogoPage({ slug }: { slug: string }) {
   const [showCheckout, setShowCheckout] = useState(false);
   const [sucesso, setSucesso] = useState<{ id: string; numero: number } | null>(null);
   const [busca, setBusca] = useState("");
   const [catAtiva, setCatAtiva] = useState("");
+  const [personalizar, setPersonalizar] = useState<Produto | null>(null);
 
   const { data: loja, isLoading: loadingLoja } = useLojaPublica(slug);
   const catalogoAtivo = !!loja && (loja as any).catalogo_ativo === true;
@@ -30,17 +36,38 @@ export function CatalogoPage({ slug }: { slug: string }) {
   const { data: produtos } = useProdutosCatalogo(loja?.id, catalogoAtivo);
   const { data: catalogoConfig } = useCatalogoConfig();
 
-  const { cart, clear, addItem, removeItem, cartItems, subtotal, totalItens } = useCart(produtos);
+  const {
+    clear,
+    addLine,
+    removeItem,
+    changeQty,
+    removeLine,
+    cartItems,
+    subtotal,
+    totalItens,
+    qtdByProduto,
+  } = useCart(produtos);
 
-  const addItemGuarded = useCallback(
-    (id: string) => {
+  const onAdd = useCallback(
+    (p: Produto) => {
       if (lojaFechada) {
         toast.error("Loja fechada — não é possível adicionar itens no momento.");
         return;
       }
-      addItem(id);
+      if (hasAdicionais(p)) {
+        setPersonalizar(p);
+        return;
+      }
+      addLine(p.id, []);
     },
-    [addItem, lojaFechada],
+    [addLine, lojaFechada],
+  );
+
+  const onDec = useCallback(
+    (p: Produto) => {
+      removeItem(p.id);
+    },
+    [removeItem],
   );
 
   const categorias = useMemo(() => {
@@ -88,7 +115,6 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
   const taxaBase = Number(loja.taxa_entrega_base) || 0;
   const layout = ((loja as any).catalogo_layout ?? "cards") as "cards" | "lista";
-  
 
   return (
     <div className={pageWrapper}>
@@ -112,11 +138,22 @@ export function CatalogoPage({ slug }: { slug: string }) {
           busca={busca}
           isHorizontal={isHorizontal}
           layout={layout}
-          cart={cart}
-          addItem={addItemGuarded}
-          removeItem={removeItem}
+          qtdByProduto={qtdByProduto}
+          onAdd={onAdd}
+          onDec={onDec}
         />
       </main>
+
+      {personalizar && (
+        <ProdutoPersonalizarDialog
+          produto={personalizar}
+          onClose={() => setPersonalizar(null)}
+          onConfirm={(adicionais, qtd) => {
+            addLine(personalizar.id, adicionais, qtd);
+            setPersonalizar(null);
+          }}
+        />
+      )}
 
       {!lojaFechada && !showCheckout && (
         <StickyCartBar totalItens={totalItens} subtotal={subtotal} onOpen={() => setShowCheckout(true)} />
@@ -135,8 +172,9 @@ export function CatalogoPage({ slug }: { slug: string }) {
             setShowCheckout(false);
             setSucesso(r);
           }}
-          addItem={addItemGuarded}
-          removeItem={removeItem}
+          onInc={(lineId) => changeQty(lineId, 1)}
+          onDec={(lineId) => changeQty(lineId, -1)}
+          onRemove={(lineId) => removeLine(lineId)}
         />
       )}
     </div>

@@ -1,66 +1,80 @@
-# Funcionários da loja
+## Objetivo
 
-Permitir que o dono da loja cadastre funcionários (e-mail + senha) que entram no painel da loja com **acesso total exceto Financeiro e Saques**. Quantidade máxima definida pelo plano contratado.
+Permitir que a loja cadastre **adicionais/complementos** por produto (ex.: borda recheada, extras, molhos, tamanhos) com preço próprio, e que o cliente escolha esses adicionais no catálogo antes de adicionar ao carrinho. Os adicionais somam ao preço do item e ficam registrados no pedido.
 
-## O que o usuário vai ver
+## Modelo de dados
 
-**Nova aba em `Configurações → Funcionários`** dentro do painel da loja:
-- Contador `3 / 5 funcionários usados` (do plano atual).
-- Botão **Adicionar funcionário** → dialog com Nome, E-mail, Senha. Ao salvar, a conta é criada já ativa; o dono entrega o acesso ao funcionário.
-- Lista com nome, e-mail, data de criação, botão **Remover acesso** e **Redefinir senha**.
-- Se atingiu o limite do plano, o botão fica desabilitado com aviso `Seu plano permite N funcionários. Faça upgrade para adicionar mais.`
+Duas novas tabelas no schema `public`:
 
-**Login do funcionário:** entra normalmente em `/login` com e-mail e senha. Cai no painel da loja do patrão, com o menu lateral **sem** os itens `Financeiro` (e sem acesso a saques dentro de outras telas).
+**`produto_adicional_grupos`** — um grupo de opções vinculado a um produto (ex.: "Escolha a borda", "Extras", "Tamanho").
+- `produto_id` (FK produtos)
+- `nome`, `min_escolhas` (int, default 0), `max_escolhas` (int, default 1), `obrigatorio` (bool), `ordem` (int)
 
-**Dono da loja:** continua vendo tudo, inclusive Financeiro e a nova aba de Funcionários.
+**`produto_adicional_opcoes`** — cada opção dentro do grupo (ex.: "Borda catupiry — R$ 8").
+- `grupo_id` (FK)
+- `nome`, `preco` (numeric, default 0), `ativo` (bool), `ordem` (int)
 
-## Regras de permissão
+Ambas com RLS: loja dona pode gerenciar (via `loja_id` derivado), leitura pública para catálogo aberto. GRANTs padrão + `anon` SELECT.
 
-Funcionário pode:
-- Ver e operar Pedidos, Histórico, Novo pedido, Agendamentos, Catálogo, Entregadores, Suporte, Dashboard, Configurações (menos aba Funcionários e menos dados bancários/PIX de saque).
+Nos pedidos, o snapshot de item em `pedidos.itens` (JSON) ganha o campo `adicionais: [{ grupo, nome, preco, qtd }]` e o `subtotal` já reflete a soma.
 
-Funcionário **não pode**:
-- Acessar Financeiro (saldo, saques, cobranças, mensalidade, Mercado Pago).
-- Criar/remover outros funcionários.
-- Alterar plano, CNPJ, dados bancários, aceitar contrato.
-- Excluir a loja.
+## Cadastro na loja
 
-## Detalhes técnicos
+Em `ProdutoDialog.tsx`, após criar/editar um produto, adicionar seção **"Adicionais"**:
+- Lista de grupos com botão "Novo grupo".
+- Para cada grupo: nome, obrigatório/opcional, min/max escolhas, e lista de opções (nome + preço + ativo).
+- Reordenar por drag simples (ou botões up/down) — v1 usa campo `ordem` manual para simplicidade.
 
-### Banco
+Novo hook `use-produto-adicionais.ts` para CRUD dos grupos/opções.
 
-1. **Tabela `loja_funcionarios`**
-   - `loja_id` (FK lojas), `user_id` (FK auth.users, único), `nome`, `criado_por`, timestamps.
-   - GRANTs + RLS: `SELECT/INSERT/DELETE` só para o `owner_id` da loja; funcionário vê a própria linha.
+## Experiência do cliente no catálogo
 
-2. **Coluna `max_funcionarios` em `planos_loja`** (int, default 0). Admin edita pelo painel de planos existente.
+Quando o cliente clica em **Adicionar** num produto que tenha grupos de adicionais, em vez de somar direto, abre um **modal de personalização**:
+- Mostra foto, nome, descrição do produto.
+- Renderiza cada grupo (radio para `max=1`, checkbox para `max>1`).
+- Valida `min_escolhas` e `max_escolhas`.
+- Rodapé mostra preço total (base + adicionais × qtd) e stepper de quantidade.
+- Botão "Adicionar ao carrinho — R$ X,XX".
 
-3. **Função `public.loja_do_usuario(uid uuid)` SECURITY DEFINER** que retorna o `loja_id` — seja porque é `owner_id` da loja, seja porque tem linha em `loja_funcionarios`. Usada nas policies existentes.
+Produtos sem grupos continuam com o comportamento atual (add direto pelo stepper).
 
-4. **Ajustar policies das tabelas da loja** (`pedidos`, `produtos`, `loja_categorias`, `agendamentos`, `loja_entregadores`, `lojas_enderecos_coleta`, `clientes_loja`, `pedido_mensagens`, etc.): substituir `owner_id = auth.uid()` por `loja_id = public.loja_do_usuario(auth.uid())`. Tabelas financeiras (`lojas_saldo`, `lojas_saques`, `lojas_saldo_movimentos`, `cobrancas_loja`, `mensalidades_loja`, `lojas_pagamento_mp`, `lojas_recargas_mp`) continuam restritas ao `owner_id`.
+O carrinho passa a chavear itens por `produto_id + hash(adicionais)` em vez de só `produto_id`, para que duas pizzas com bordas diferentes sejam linhas separadas. `use-cart.ts` é refatorado para trabalhar com uma lista de "linhas" `{ lineId, produto, adicionais, qtd, precoUnit }`.
 
-### Servidor
+O checkout (`CheckoutCarrinho`) mostra os adicionais abaixo do nome do item, e o `subtotal` continua correto.
 
-5. **`src/lib/loja-funcionarios.functions.ts`** com três server functions autenticadas (`requireSupabaseAuth`):
-   - `listarFuncionarios()` — lista funcionários da loja do usuário.
-   - `criarFuncionario({ nome, email, senha })` — verifica se caller é owner, checa `count < plano.max_funcionarios`, chama `supabaseAdmin.auth.admin.createUser({ email, password, email_confirm: true })`, insere em `loja_funcionarios`.
-   - `removerFuncionario({ user_id })` — owner remove, apaga da tabela e chama `supabaseAdmin.auth.admin.deleteUser`.
-   - `redefinirSenha({ user_id, senha })` — owner redefine via `supabaseAdmin.auth.admin.updateUserById`.
-   - `supabaseAdmin` importado dinamicamente dentro do handler.
+## Servidor
 
-### Frontend
+`src/lib/catalogo.functions.ts` (`criarPedidoCatalogo`) valida cada item:
+- Busca as opções de adicional pelo id.
+- Confere que pertencem ao produto e estão ativas.
+- Recalcula `preco_unit = produto.preco + soma(opcoes.preco)` no servidor (nunca confia no cliente).
+- Persiste `adicionais` dentro do snapshot do item.
 
-6. **`src/hooks/use-loja.tsx`**: além de buscar por `owner_id`, se não achar, buscar via `loja_funcionarios.user_id = auth.uid()` e retornar a loja vinculada. Expor `isOwner: boolean` no retorno.
+Também aplica as regras de `min/max/obrigatorio` no servidor.
 
-7. **`src/components/LojaShell.tsx`**: esconder item `Financeiro` do `NAV` quando `!isOwner`. Esconder toggle "Loja aberta" só se quiser (mantemos visível).
+## Arquivos afetados (resumo técnico)
 
-8. **Nova página `src/features/loja-funcionarios/FuncionariosPage.tsx`** — lista + dialog de criação + confirmação de remoção + redefinir senha. Renderizada como aba nova em `ConfigPage` (só aparece para owner).
+Novos:
+- Migration criando as duas tabelas + RLS + GRANTs.
+- `src/features/loja-produtos/hooks/use-produto-adicionais.ts`
+- `src/features/loja-produtos/components/AdicionaisEditor.tsx`
+- `src/features/loja-catalogo/components/ProdutoPersonalizarDialog.tsx`
+- `src/features/loja-catalogo/logic/cart-line.ts` (helpers de linha e hash)
 
-9. **Guardas nas telas financeiras**: `FinanceiroPage` (e sub-rotas) redireciona para `/loja/dashboard` com toast se `!isOwner`. Assim URL direta também é bloqueada.
+Editados:
+- `src/features/loja-produtos/components/ProdutoDialog.tsx` — inclui `<AdicionaisEditor />` após salvar produto.
+- `src/features/loja-catalogo/hooks/use-catalogo.ts` — carrega grupos+opções junto com produtos ativos.
+- `src/features/loja-catalogo/hooks/use-cart.ts` — passa a operar por lineId.
+- `src/features/loja-catalogo/components/CategoriaCarrossel.tsx` e `ProdutoGrid.tsx` — quando produto tem grupos, o botão "+" abre o modal em vez de somar direto.
+- `src/features/loja-catalogo/components/CheckoutCarrinho.tsx` — mostra adicionais por linha.
+- `src/lib/catalogo.functions.ts` — validação e cálculo dos adicionais no servidor; schema Zod atualizado.
+- `src/routes/-catalogo-types.ts` — tipo `Produto` ganha `adicionais_grupos?`.
 
-10. **Admin de planos**: adicionar input `Máximo de funcionários` no formulário de planos existente.
+## Fora do escopo desta entrega
 
-### Não incluído
+- Reordenação por drag-and-drop (usa campo `ordem` manual).
+- Adicionais globais reutilizáveis entre produtos (cada produto tem os seus).
+- Importação de adicionais via iFood/planilha.
+- Edição de adicionais depois que o pedido já foi criado.
 
-- Papéis granulares por menu (só "acesso total menos financeiro"). Se quiser mais tarde, dá para adicionar `permissoes jsonb` em `loja_funcionarios`.
-- Convite por e-mail — a loja mesma define a senha e passa ao funcionário.
+Posso seguir?

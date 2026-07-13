@@ -2363,6 +2363,91 @@ export type Database = {
         }
         Relationships: []
       }
+      produto_adicional_grupos: {
+        Row: {
+          created_at: string
+          id: string
+          max_escolhas: number
+          min_escolhas: number
+          nome: string
+          obrigatorio: boolean
+          ordem: number
+          produto_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          max_escolhas?: number
+          min_escolhas?: number
+          nome: string
+          obrigatorio?: boolean
+          ordem?: number
+          produto_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          max_escolhas?: number
+          min_escolhas?: number
+          nome?: string
+          obrigatorio?: boolean
+          ordem?: number
+          produto_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "produto_adicional_grupos_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      produto_adicional_opcoes: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          grupo_id: string
+          id: string
+          nome: string
+          ordem: number
+          preco: number
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          grupo_id: string
+          id?: string
+          nome: string
+          ordem?: number
+          preco?: number
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          grupo_id?: string
+          id?: string
+          nome?: string
+          ordem?: number
+          preco?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "produto_adicional_opcoes_grupo_id_fkey"
+            columns: ["grupo_id"]
+            isOneToOne: false
+            referencedRelation: "produto_adicional_grupos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       produtos: {
         Row: {
           ativo: boolean

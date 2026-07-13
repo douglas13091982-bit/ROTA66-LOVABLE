@@ -37,14 +37,27 @@ export function useProdutosCatalogo(lojaId: string | undefined, catalogoAtivo: b
     queryKey: ["catalogo-produtos", lojaId],
     enabled: !!lojaId && catalogoAtivo,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("produtos" as any)
-        .select("id, nome, descricao, preco, imagem_url, categoria")
+      const { data, error } = await (supabase as any)
+        .from("produtos")
+        .select(
+          "id, nome, descricao, preco, imagem_url, categoria, adicionais_grupos:produto_adicional_grupos(id, nome, obrigatorio, min_escolhas, max_escolhas, ordem, opcoes:produto_adicional_opcoes(id, nome, preco, ativo, ordem))",
+        )
         .eq("loja_id", lojaId!)
         .eq("ativo", true)
         .order("ordem", { ascending: true });
       if (error) throw error;
-      return await withSignedProdutoImages(data as unknown as Produto[]);
+      const produtos = (data as any[]).map((p) => ({
+        ...p,
+        adicionais_grupos: ((p.adicionais_grupos ?? []) as any[])
+          .map((g) => ({
+            ...g,
+            opcoes: ((g.opcoes ?? []) as any[])
+              .filter((o) => o.ativo)
+              .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0)),
+          }))
+          .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0)),
+      })) as Produto[];
+      return await withSignedProdutoImages(produtos);
     },
   });
 }
