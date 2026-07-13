@@ -90,6 +90,9 @@ export function EntregadoresTabela({
                       {st.label}
                     </span>
                   </td>
+                  <td className="px-3 py-2 text-muted-foreground whitespace-nowrap text-[11px]">
+                    {p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—"}
+                  </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
                       <button
