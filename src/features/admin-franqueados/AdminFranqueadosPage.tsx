@@ -62,6 +62,12 @@ export function AdminFranqueadosPage() {
     },
   });
 
+  const { data: emails } = useQuery({
+    queryKey: ["admin-franqueados-emails", franqueados?.map((f) => f.user_id).join(",")],
+    enabled: isOwner && !!franqueados?.length,
+    queryFn: async () => await buscarEmails({ data: { user_ids: franqueados!.map((f) => f.user_id) } }),
+  });
+
   const { data: faturas } = useQuery({
     queryKey: ["admin-franqueados-faturas"],
     enabled: isOwner,
