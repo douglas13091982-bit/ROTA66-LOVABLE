@@ -30,4 +30,8 @@ export type ConfigFinanceiro = {
   pixChave: string;
   pixTitular: string;
   pixCidade: string;
+  saqueModo: "dia_semana" | "valor";
+  saqueValorMinimo: number;
+  saqueDiaSemana: number;
 };
+
