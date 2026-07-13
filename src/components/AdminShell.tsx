@@ -7,6 +7,7 @@ import { useBranding } from "@/hooks/use-branding";
 import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
+import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
 import { useFranquia } from "@/hooks/use-franquia";
 
 
@@ -58,6 +59,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { logoUrl, nomeSistema } = useBranding();
   const suporteBadge = useSuporteBadge("admin");
   const { data: alertasCount = 0 } = useSystemAlertsCount();
+  const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
 
   
   const [open, setOpen] = useState(false);
@@ -105,7 +107,8 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
             const Icon = item.icon;
             const badge =
               item.to === "/admin/suporte" ? suporteBadge :
-              item.to === "/admin/alertas" ? alertasCount : 0;
+              item.to === "/admin/alertas" ? alertasCount :
+              item.to === "/admin/carteiras" ? saquesPendentes : 0;
 
             return (
               <Link
