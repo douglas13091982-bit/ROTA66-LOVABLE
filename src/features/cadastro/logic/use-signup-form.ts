@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import type { LojaCategoria } from "@/lib/loja-categorias";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 import type { Role } from "./roles";
 
 export type SignupForm = {
