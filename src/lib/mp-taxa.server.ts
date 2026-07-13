@@ -17,13 +17,6 @@ interface MpPaymentLike {
   fee_details?: Array<{ type?: string; amount?: number; fee_payer?: string }>;
 }
 
-const TAXAS_PADRAO: Record<string, number> = {
-  pix: 0.0099,
-  bank_transfer: 0.0099, // pix aparece às vezes como bank_transfer
-  debit_card: 0.0199,
-  credit_card: 0.0499,
-};
-
 function metodoLegivel(p: MpPaymentLike): string {
   const t = p.payment_type_id ?? "";
   if (t === "credit_card") return "cartão de crédito";
@@ -32,7 +25,15 @@ function metodoLegivel(p: MpPaymentLike): string {
   return t || p.payment_method_id || "mp";
 }
 
-export function calcularTaxaMp(payment: MpPaymentLike): { taxa: number; metodo: string } {
+function tipoKey(p: MpPaymentLike): "pix" | "debit_card" | "credit_card" | null {
+  const t = p.payment_type_id ?? "";
+  if (t === "credit_card") return "credit_card";
+  if (t === "debit_card") return "debit_card";
+  if (t === "bank_transfer" || p.payment_method_id === "pix") return "pix";
+  return null;
+}
+
+export async function calcularTaxaMp(payment: MpPaymentLike): Promise<{ taxa: number; metodo: string }> {
   const metodo = metodoLegivel(payment);
 
   // 1) Preferir taxa real (fee_details) — soma taxas cujo fee_payer é o
@@ -44,14 +45,19 @@ export function calcularTaxaMp(payment: MpPaymentLike): { taxa: number; metodo: 
   }, 0);
   if (soma > 0) return { taxa: Math.round(soma * 100) / 100, metodo };
 
-  // 2) Fallback: aplicar percentual padrão sobre o valor da transação.
-  const tipo = payment.payment_type_id ?? (payment.payment_method_id === "pix" ? "pix" : "");
-  const pct = TAXAS_PADRAO[tipo] ?? 0;
+  // 2) Fallback: aplicar percentual configurado pelo super admin.
+  const tipo = tipoKey(payment);
+  if (!tipo) return { taxa: 0, metodo };
   const valor = Number(payment.transaction_amount ?? 0);
-  if (pct <= 0 || valor <= 0) return { taxa: 0, metodo };
+  if (valor <= 0) return { taxa: 0, metodo };
+  const { getMpTaxas } = await import("@/lib/plataforma-mp.server");
+  const cfg = await getMpTaxas();
+  const pct = cfg[tipo] / 100;
+  if (pct <= 0) return { taxa: 0, metodo };
   const taxa = Math.round(valor * pct * 100) / 100;
   return { taxa, metodo };
 }
+
 
 export async function aplicarTaxaMpAoPedido(
   pedidoId: string | null | undefined,
