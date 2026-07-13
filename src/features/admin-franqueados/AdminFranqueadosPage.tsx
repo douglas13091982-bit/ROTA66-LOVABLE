@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Plus, Trash2, MapPin, Play } from "lucide-react";
-import { criarFranqueado, excluirFranqueado, gerarFaturasFranquiaAgora } from "@/lib/franqueados.functions";
+import { criarFranqueado, excluirFranqueado, gerarFaturasFranquiaAgora, listarEmailsFranqueados } from "@/lib/franqueados.functions";
 import { useFranquia } from "@/hooks/use-franquia";
 import { formatCurrency } from "@/lib/format";
 
