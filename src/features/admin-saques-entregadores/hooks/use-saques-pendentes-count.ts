@@ -7,7 +7,7 @@ export function useSaquesPendentesCount() {
   const qc = useQueryClient();
   const uid = useId();
   const { roles } = useAuth();
-  const enabled = roles.includes("super_admin") || roles.includes("admin");
+  const enabled = roles.includes("super_admin");
 
   const query = useQuery({
     queryKey: ["admin-saques-entregadores-pendentes-count"],
