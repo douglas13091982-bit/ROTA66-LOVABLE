@@ -58,11 +58,13 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             const aprovado = payment.status === "approved";
             const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
             if (aprovado) {
-              await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+              const { data: pedidoId } = await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
                 _pendente_id: p.id,
                 _mp_payment_id: paymentId,
                 _mp_status: payment.status,
               } as any);
+              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
               aprovados++;
             } else if (cancelado) {
               await supabaseAdmin
