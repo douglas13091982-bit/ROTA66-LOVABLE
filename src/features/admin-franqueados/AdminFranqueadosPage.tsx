@@ -263,7 +263,9 @@ export function AdminFranqueadosPage() {
                           )}
                         </div>
                         <div className="text-xs text-white/60">{perfil?.fone ?? ""}</div>
-                      </div>
+                        {emails?.[r.user_id] && (
+                          <div className="text-xs text-white/50 mt-0.5 break-all">{emails[r.user_id]}</div>
+                        )}
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateMut.mutate({ user_id: r.user_id, ativo: !r.ativo })}
