@@ -8,6 +8,7 @@ import {
   type HorarioFuncionamento,
 } from "@/lib/horario-funcionamento";
 import type { LojaCategoria } from "@/lib/loja-categorias";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 import { DEFAULT_FORM, LOGO_MAX_BYTES, type ConfigForm } from "../logic/types";
 
 export function useConfigLoja(loja: any | undefined) {
@@ -39,7 +40,7 @@ export function useConfigLoja(loja: any | undefined) {
     setCoords({ lat: loja.endereco_lat ?? null, lng: loja.endereco_lng ?? null });
   }, [loja]);
 
-  function handleLogoFile(file: File) {
+  async function handleLogoFile(file: File) {
     if (!file.type.startsWith("image/")) {
       toast.error("Selecione uma imagem");
       return;
@@ -48,9 +49,12 @@ export function useConfigLoja(loja: any | undefined) {
       toast.error("Imagem muito grande (máx 500KB)");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => setLogoUrl(reader.result as string);
-    reader.readAsDataURL(file);
+    try {
+      const dataUrl = await convertImageToWebpDataUrl(file);
+      setLogoUrl(dataUrl);
+    } catch {
+      toast.error("Falha ao processar imagem");
+    }
   }
 
   async function handleSave(e: React.FormEvent) {

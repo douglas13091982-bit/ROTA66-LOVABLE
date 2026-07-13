@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 
 type AvatarEvent = "upload_ok" | "upload_fail" | "rls_denied" | "validation_failed";
 
@@ -61,13 +62,14 @@ export function useAvatarUpload(opts: {
       return;
     }
     setUploading(true);
-    const ext = extFromName || "jpg";
+    const converted = await convertImageToWebp(file);
+    const ext = (converted.name.split(".").pop() || "webp").toLowerCase();
     const path = `${opts.userId}/avatar-${Date.now()}.${ext}`;
-    const contentType = file.type || `image/${ext === "jpg" ? "jpeg" : ext}`;
+    const contentType = converted.type || `image/${ext === "jpg" ? "jpeg" : ext}`;
     try {
       const { error: upErr } = await supabase.storage
         .from("avatars")
-        .upload(path, file, { upsert: true, contentType });
+        .upload(path, converted, { upsert: true, contentType });
       if (upErr) throw upErr;
       const { error: updErr } = await supabase
         .from("profiles")

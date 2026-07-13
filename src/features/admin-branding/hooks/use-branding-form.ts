@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { writeBrandingCache } from "@/hooks/use-branding";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 import { BRANDING_MAX_BYTES, type BrandingRow } from "../logic/types";
 
 export function useBrandingForm() {
@@ -38,7 +39,7 @@ export function useBrandingForm() {
     }
   }, [data, dirty]);
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast.error("Selecione uma imagem");
       return;
@@ -47,12 +48,13 @@ export function useBrandingForm() {
       toast.error("Imagem muito grande (máx 500KB)");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLogo(reader.result as string);
+    try {
+      const dataUrl = await convertImageToWebpDataUrl(file);
+      setLogo(dataUrl);
       setDirty(true);
-    };
-    reader.readAsDataURL(file);
+    } catch {
+      toast.error("Falha ao processar imagem");
+    }
   };
 
   const handleSave = async () => {

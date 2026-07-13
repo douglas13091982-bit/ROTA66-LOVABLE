@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 
 type Props = {
   value: string | null;
@@ -25,12 +26,7 @@ export function CategoriaIconUploader({ value, onChange }: Props) {
     }
     setLoading(true);
     try {
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const r = new FileReader();
-        r.onload = () => resolve(String(r.result));
-        r.onerror = () => reject(r.error);
-        r.readAsDataURL(file);
-      });
+      const dataUrl = await convertImageToWebpDataUrl(file);
       onChange(dataUrl);
     } catch (e: any) {
       toast.error(e?.message ?? "Falha ao ler arquivo");

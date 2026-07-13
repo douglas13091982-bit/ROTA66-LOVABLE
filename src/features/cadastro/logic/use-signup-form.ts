@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import type { LojaCategoria } from "@/lib/loja-categorias";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 import type { Role } from "./roles";
 
 export type SignupForm = {
@@ -46,7 +47,7 @@ export function useSignupForm() {
   const update = <K extends keyof SignupForm>(key: K, value: SignupForm[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleAvatarChange = (file: File | null) => {
+  const handleAvatarChange = async (file: File | null) => {
     if (!file) {
       update("avatarFile", null);
       update("avatarPreview", null);
@@ -60,10 +61,11 @@ export function useSignupForm() {
       toast.error("Imagem muito grande (máx 3MB)");
       return;
     }
-    update("avatarFile", file);
+    const converted = await convertImageToWebp(file);
+    update("avatarFile", converted);
     const reader = new FileReader();
     reader.onload = () => update("avatarPreview", reader.result as string);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(converted);
   };
 
   return { form, update, handleAvatarChange };

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 import type { Produto } from "../logic/types";
 
 export function useProdutoForm(
@@ -21,13 +22,14 @@ export function useProdutoForm(
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  async function handleUpload(file: File) {
+  async function handleUpload(fileRaw: File) {
     setUploading(true);
-    const ext = file.name.split(".").pop() || "jpg";
+    const file = await convertImageToWebp(fileRaw);
+    const ext = (file.name.split(".").pop() || "webp").toLowerCase();
     const path = `${lojaId}/${crypto.randomUUID()}.${ext}`;
     const { error: upErr } = await supabase.storage
       .from("produtos")
-      .upload(path, file, { upsert: false });
+      .upload(path, file, { upsert: false, contentType: file.type || undefined });
     if (upErr) {
       setUploading(false);
       return toast.error(upErr.message);
