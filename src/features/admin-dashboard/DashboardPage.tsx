@@ -5,6 +5,7 @@ import { StatsGrid } from "./components/StatsGrid";
 import { EntregadoresListaAdmin } from "./components/EntregadoresListaAdmin";
 import { SaquesPendentesCard } from "./components/SaquesPendentesCard";
 import { SaquesLojasPendentesCard } from "./components/SaquesLojasPendentesCard";
+import { LojasProblemaCard } from "./components/LojasProblemaCard";
 import { ExternalLink } from "lucide-react";
 
 function GeckoApiCard() {
@@ -35,7 +36,11 @@ export function DashboardPage() {
       {isOwner && <SaquesPendentesCard />}
       {isOwner && <SaquesLojasPendentesCard />}
       <StatsGrid stats={data} />
+      <div className="mb-8">
+        <LojasProblemaCard />
+      </div>
       <EntregadoresListaAdmin />
     </AdminShell>
   );
 }
+
