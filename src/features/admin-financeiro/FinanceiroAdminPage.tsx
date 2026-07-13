@@ -8,6 +8,7 @@ import { PixSection } from "./components/PixSection";
 import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
+import { TaxasMpSection } from "./components/TaxasMpSection";
 import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
 import { SaldosLojasSection } from "./components/SaldosLojasSection";
 import { useFranquia } from "@/hooks/use-franquia";
