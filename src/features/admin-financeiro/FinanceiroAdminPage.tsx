@@ -120,7 +120,12 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && !isFranqueado && <MercadoPagoPlataformaSection />}
+        {tab === "mercado-pago" && !isFranqueado && (
+          <div className="space-y-6">
+            <MercadoPagoPlataformaSection />
+            <TaxasMpSection />
+          </div>
+        )}
 
         {tab === "pix" && !isFranqueado && (
           <PixSection
