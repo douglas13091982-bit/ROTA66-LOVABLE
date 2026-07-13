@@ -2079,6 +2079,7 @@ export type Database = {
           id: string
           itens: Json
           loja_id: string
+          mp_metodo: string | null
           mp_payment_id: string | null
           mp_payment_status: string | null
           mp_pix_expira_em: string | null
@@ -2089,6 +2090,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           troco_para: number | null
           updated_at: string
@@ -2125,6 +2127,7 @@ export type Database = {
           id?: string
           itens?: Json
           loja_id: string
+          mp_metodo?: string | null
           mp_payment_id?: string | null
           mp_payment_status?: string | null
           mp_pix_expira_em?: string | null
@@ -2135,6 +2138,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
           updated_at?: string
@@ -2171,6 +2175,7 @@ export type Database = {
           id?: string
           itens?: Json
           loja_id?: string
+          mp_metodo?: string | null
           mp_payment_id?: string | null
           mp_payment_status?: string | null
           mp_pix_expira_em?: string | null
@@ -2181,6 +2186,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
           updated_at?: string
@@ -3058,6 +3064,7 @@ export type Database = {
           id: string
           itens: Json
           loja_id: string
+          mp_metodo: string | null
           mp_payment_id: string | null
           mp_payment_status: string | null
           mp_pix_expira_em: string | null
@@ -3068,6 +3075,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           troco_para: number | null
           updated_at: string
@@ -3258,6 +3266,10 @@ export type Database = {
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
+      debitar_taxa_mp_pedido: {
+        Args: { _metodo: string; _pedido_id: string; _taxa: number }
+        Returns: undefined
+      }
       desmarcar_turno_entregador: {
         Args: { _agendamento_id: string }
         Returns: undefined
