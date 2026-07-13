@@ -45,6 +45,7 @@ export function SaqueCard() {
   const saldo = resumo?.saldo ?? 0;
   const minimo = resumo?.valor_minimo ?? 0;
   const diaPermitido = resumo?.dia_semana_permitido ?? 5;
+  const modo = resumo?.modo ?? "dia_semana";
   const podeSacar = !!resumo?.pode_sacar_hoje;
   const temPendente = !!resumo?.tem_saque_pendente;
 
@@ -74,7 +75,7 @@ export function SaqueCard() {
           <h3 className="font-semibold text-white">Saque das corridas</h3>
         </div>
         <Badge variant="outline" className="border-emerald-500/30 text-emerald-300 bg-emerald-500/10">
-          {DIAS_SEMANA[diaPermitido]}
+          {modo === "valor" ? `A partir de ${brl(minimo)}` : DIAS_SEMANA[diaPermitido]}
         </Badge>
       </div>
 
@@ -95,7 +96,11 @@ export function SaqueCard() {
 
       <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3 text-xs text-white/70 space-y-1">
         <div>• Valor mínimo de saque: <span className="text-white font-medium">{brl(minimo)}</span></div>
-        <div>• Saques liberados apenas às <span className="text-white font-medium">{DIAS_SEMANA[diaPermitido]}s</span></div>
+        {modo === "dia_semana" ? (
+          <div>• Saques liberados apenas às <span className="text-white font-medium">{DIAS_SEMANA[diaPermitido]}s</span></div>
+        ) : (
+          <div>• Saque liberado <span className="text-white font-medium">a qualquer dia</span> quando o saldo atinge o mínimo</div>
+        )}
         <div>• Pagamento via PIX após aprovação</div>
       </div>
 
@@ -114,9 +119,12 @@ export function SaqueCard() {
         {!podeSacar && !temPendente
           ? saldo < minimo
             ? `Saldo abaixo de ${brl(minimo)}`
-            : `Disponível apenas às ${DIAS_SEMANA[diaPermitido]}s`
+            : modo === "valor"
+              ? "Solicitar saque"
+              : `Disponível apenas às ${DIAS_SEMANA[diaPermitido]}s`
           : "Solicitar saque"}
       </Button>
+
 
       {/* Histórico */}
       <div className="space-y-2">
