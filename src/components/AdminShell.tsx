@@ -8,6 +8,7 @@ import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
 import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
+import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
 import { useFranquia } from "@/hooks/use-franquia";
 
 
@@ -60,6 +61,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const suporteBadge = useSuporteBadge("admin");
   const { data: alertasCount = 0 } = useSystemAlertsCount();
   const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
+  const { data: saquesLojasPendentes = 0 } = useSaquesLojasPendentesCount();
 
   
   const [open, setOpen] = useState(false);
@@ -108,7 +110,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
             const badge =
               item.to === "/admin/suporte" ? suporteBadge :
               item.to === "/admin/alertas" ? alertasCount :
-              item.to === "/admin/carteiras" ? saquesPendentes : 0;
+              item.to === "/admin/carteiras" ? saquesPendentes + saquesLojasPendentes : 0;
 
             return (
               <Link
