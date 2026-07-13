@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAdminStats } from "./hooks/use-admin-stats";
 import { StatsGrid } from "./components/StatsGrid";
 import { EntregadoresListaAdmin } from "./components/EntregadoresListaAdmin";
+import { SaquesPendentesCard } from "./components/SaquesPendentesCard";
 import { ExternalLink } from "lucide-react";
 
 function GeckoApiCard() {
@@ -31,6 +32,7 @@ export function DashboardPage() {
   return (
     <AdminShell title="Dashboard global">
       {isSuper && <GeckoApiCard />}
+      {isSuper && <SaquesPendentesCard />}
       <StatsGrid stats={data} />
       <EntregadoresListaAdmin />
     </AdminShell>
