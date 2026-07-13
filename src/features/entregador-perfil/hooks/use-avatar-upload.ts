@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 
 type AvatarEvent = "upload_ok" | "upload_fail" | "rls_denied" | "validation_failed";
 
