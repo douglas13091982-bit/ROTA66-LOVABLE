@@ -83,11 +83,13 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
           if (ref.startsWith("cat_pendente:")) {
             const pendenteId = ref.slice("cat_pendente:".length);
             if (aprovado) {
-              await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+              const { data: pedidoId } = await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
                 _pendente_id: pendenteId,
                 _mp_payment_id: paymentId,
                 _mp_status: payment.status,
               } as any);
+              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
             } else {
               const upd: Record<string, unknown> = { mp_payment_status: payment.status };
               if (cancelado) upd.status = "cancelado";
