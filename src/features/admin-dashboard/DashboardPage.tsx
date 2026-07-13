@@ -1,5 +1,5 @@
 import { AdminShell } from "@/components/AdminShell";
-import { useAuth } from "@/hooks/use-auth";
+import { useFranquia } from "@/hooks/use-franquia";
 import { useAdminStats } from "./hooks/use-admin-stats";
 import { StatsGrid } from "./components/StatsGrid";
 import { EntregadoresListaAdmin } from "./components/EntregadoresListaAdmin";
@@ -28,13 +28,12 @@ function GeckoApiCard() {
 
 export function DashboardPage() {
   const { data } = useAdminStats();
-  const { roles } = useAuth();
-  const isSuper = roles.includes("super_admin");
+  const { isOwner } = useFranquia();
   return (
     <AdminShell title="Dashboard global">
-      {isSuper && <GeckoApiCard />}
-      {isSuper && <SaquesPendentesCard />}
-      {isSuper && <SaquesLojasPendentesCard />}
+      {isOwner && <GeckoApiCard />}
+      {isOwner && <SaquesPendentesCard />}
+      {isOwner && <SaquesLojasPendentesCard />}
       <StatsGrid stats={data} />
       <EntregadoresListaAdmin />
     </AdminShell>

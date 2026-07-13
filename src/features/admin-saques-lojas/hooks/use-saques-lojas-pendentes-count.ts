@@ -1,13 +1,13 @@
 import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/use-auth";
+import { useFranquia } from "@/hooks/use-franquia";
 
 export function useSaquesLojasPendentesCount() {
   const qc = useQueryClient();
   const uid = useId();
-  const { roles } = useAuth();
-  const enabled = roles.includes("super_admin") || roles.includes("admin");
+  const { isOwner } = useFranquia();
+  const enabled = isOwner;
 
   const query = useQuery({
     queryKey: ["admin-saques-lojas-pendentes-count"],
