@@ -39,7 +39,11 @@ export function useAdminFinanceiro() {
         pixChave: (cfg as any).pix_chave_sistema ?? "",
         pixTitular: (cfg as any).pix_titular_sistema ?? "",
         pixCidade: (cfg as any).pix_cidade_sistema ?? "",
+        saqueModo: ((cfg as any).saque_modo ?? "dia_semana") as "dia_semana" | "valor",
+        saqueValorMinimo: Number((cfg as any).saque_valor_minimo ?? 50),
+        saqueDiaSemana: Number((cfg as any).saque_dia_semana ?? 5),
       });
+
     }
     const [{ data: cob }, { data: mens }] = await Promise.all([
       supabase.from("cobrancas_loja").select("*").order("created_at", { ascending: false }).limit(200),
