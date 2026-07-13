@@ -11,7 +11,11 @@ export function useAdminFinanceiro() {
     pixChave: "",
     pixTitular: "",
     pixCidade: "",
+    saqueModo: "dia_semana",
+    saqueValorMinimo: 50,
+    saqueDiaSemana: 5,
   });
+
   const [configId, setConfigId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [gerando, setGerando] = useState(false);
@@ -35,7 +39,11 @@ export function useAdminFinanceiro() {
         pixChave: (cfg as any).pix_chave_sistema ?? "",
         pixTitular: (cfg as any).pix_titular_sistema ?? "",
         pixCidade: (cfg as any).pix_cidade_sistema ?? "",
+        saqueModo: ((cfg as any).saque_modo ?? "dia_semana") as "dia_semana" | "valor",
+        saqueValorMinimo: Number((cfg as any).saque_valor_minimo ?? 50),
+        saqueDiaSemana: Number((cfg as any).saque_dia_semana ?? 5),
       });
+
     }
     const [{ data: cob }, { data: mens }] = await Promise.all([
       supabase.from("cobrancas_loja").select("*").order("created_at", { ascending: false }).limit(200),
@@ -108,8 +116,12 @@ export function useAdminFinanceiro() {
       pix_chave_sistema: config.pixChave.trim() || null,
       pix_titular_sistema: config.pixTitular.trim() || null,
       pix_cidade_sistema: config.pixCidade.trim() || null,
+      saque_modo: config.saqueModo,
+      saque_valor_minimo: Math.max(Number(config.saqueValorMinimo) || 0, 0),
+      saque_dia_semana: Math.min(Math.max(Number(config.saqueDiaSemana) || 0, 0), 6),
       singleton: true,
     };
+
     const q = configId
       ? supabase.from("config_financeiro").update(payload).eq("id", configId)
       : supabase.from("config_financeiro").insert(payload);

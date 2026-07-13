@@ -74,6 +74,71 @@ export function ConfiguracoesSection({
           <span className="text-[10px] text-muted-foreground">Entre 1 e 28</span>
         </label>
       </div>
+
+      <div className="mt-6 pt-6 border-t border-border">
+        <h3 className="font-display text-lg mb-1">Saque do entregador</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Escolha se o saque é liberado em um dia fixo da semana ou sempre que o saldo atingir um valor mínimo.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Modo de liberação
+            </span>
+            <select
+              value={config.saqueModo}
+              onChange={(e) => upd({ saqueModo: e.target.value as "dia_semana" | "valor" })}
+              className="mt-1 w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
+            >
+              <option value="dia_semana">Dia da semana fixo</option>
+              <option value="valor">Por valor mínimo (qualquer dia)</option>
+            </select>
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Valor mínimo de saque (R$)
+            </span>
+            <input
+              type="number"
+              min={0}
+              step="0.01"
+              value={config.saqueValorMinimo}
+              onChange={(e) => upd({ saqueValorMinimo: Number(e.target.value) })}
+              className="mt-1 w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
+            />
+            <span className="text-[10px] text-muted-foreground">
+              Aplicado nos dois modos
+            </span>
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Dia da semana
+            </span>
+            <select
+              value={config.saqueDiaSemana}
+              onChange={(e) => upd({ saqueDiaSemana: Number(e.target.value) })}
+              disabled={config.saqueModo !== "dia_semana"}
+              className="mt-1 w-full px-3 py-2 bg-background border border-border rounded-md text-sm disabled:opacity-50"
+            >
+              <option value={0}>Domingo</option>
+              <option value={1}>Segunda-feira</option>
+              <option value={2}>Terça-feira</option>
+              <option value={3}>Quarta-feira</option>
+              <option value={4}>Quinta-feira</option>
+              <option value={5}>Sexta-feira</option>
+              <option value={6}>Sábado</option>
+            </select>
+            <span className="text-[10px] text-muted-foreground">
+              Usado apenas no modo "dia da semana"
+            </span>
+          </label>
+        </div>
+      </div>
+
+
+
       <div className="flex flex-wrap gap-3 mt-4">
         <button
           onClick={onSalvar}

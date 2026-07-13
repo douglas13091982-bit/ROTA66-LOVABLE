@@ -583,6 +583,7 @@ export type Database = {
           pix_titular_sistema: string | null
           prazo_pagamento_dias: number
           saque_dia_semana: number
+          saque_modo: string
           saque_valor_minimo: number
           singleton: boolean
           taxa_por_pedido: number
@@ -598,6 +599,7 @@ export type Database = {
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
           saque_dia_semana?: number
+          saque_modo?: string
           saque_valor_minimo?: number
           singleton?: boolean
           taxa_por_pedido?: number
@@ -613,6 +615,7 @@ export type Database = {
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
           saque_dia_semana?: number
+          saque_modo?: string
           saque_valor_minimo?: number
           singleton?: boolean
           taxa_por_pedido?: number
@@ -3303,6 +3306,7 @@ export type Database = {
         Args: never
         Returns: {
           dia_semana_permitido: number
+          modo: string
           pode_sacar_hoje: boolean
           saldo: number
           tem_saque_pendente: boolean
