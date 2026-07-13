@@ -1,5 +1,5 @@
 import { AdminShell } from "@/components/AdminShell";
-import { useAuth } from "@/hooks/use-auth";
+import { useFranquia } from "@/hooks/use-franquia";
 import { useAdminStats } from "./hooks/use-admin-stats";
 import { StatsGrid } from "./components/StatsGrid";
 import { EntregadoresListaAdmin } from "./components/EntregadoresListaAdmin";
