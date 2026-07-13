@@ -1,26 +1,37 @@
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 export function useSaquesPendentesCount() {
   const qc = useQueryClient();
+  const uid = useId();
+  const { roles } = useAuth();
+  const enabled = roles.includes("super_admin") || roles.includes("admin");
 
   const query = useQuery({
     queryKey: ["admin-saques-entregadores-pendentes-count"],
+    enabled,
     queryFn: async (): Promise<number> => {
       const { count, error } = await (supabase as any)
         .from("entregador_saques")
         .select("*", { count: "exact", head: true })
         .in("status", ["solicitado", "pendente"]);
-      if (error) throw error;
+      if (error) {
+        // RLS/permissão indisponível: não derruba o painel.
+        console.warn("[useSaquesPendentesCount]", error.message ?? error);
+        return 0;
+      }
       return count ?? 0;
     },
     refetchInterval: 30_000,
   });
 
   useEffect(() => {
+    if (!enabled) return;
+    const channelName = `admin-entregador-saques-rt-${uid}-${Math.random().toString(36).slice(2, 8)}`;
     const channel = supabase
-      .channel("admin-entregador-saques-realtime")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "entregador_saques" },
@@ -35,7 +46,7 @@ export function useSaquesPendentesCount() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [qc]);
+  }, [qc, uid, enabled]);
 
   return query;
 }
