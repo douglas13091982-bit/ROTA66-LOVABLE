@@ -62,10 +62,14 @@ export function useAvatarUpload(opts: {
       return;
     }
     setUploading(true);
-    const ext = extFromName || "jpg";
+    const converted = await convertImageToWebp(file);
+    const ext = (converted.name.split(".").pop() || "webp").toLowerCase();
     const path = `${opts.userId}/avatar-${Date.now()}.${ext}`;
-    const contentType = file.type || `image/${ext === "jpg" ? "jpeg" : ext}`;
+    const contentType = converted.type || `image/${ext === "jpg" ? "jpeg" : ext}`;
     try {
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, converted, { upsert: true, contentType });
       const { error: upErr } = await supabase.storage
         .from("avatars")
         .upload(path, file, { upsert: true, contentType });
