@@ -9,6 +9,7 @@ export type EntregadorRow = {
   avatar_url: string | null;
   tipo_veiculo: string | null;
   status: StatusEntregador;
+  created_at: string | null;
   [key: string]: any;
 };
 
