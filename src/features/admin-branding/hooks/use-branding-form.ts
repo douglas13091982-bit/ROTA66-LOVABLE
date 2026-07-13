@@ -39,7 +39,7 @@ export function useBrandingForm() {
     }
   }, [data, dirty]);
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast.error("Selecione uma imagem");
       return;
@@ -48,12 +48,13 @@ export function useBrandingForm() {
       toast.error("Imagem muito grande (máx 500KB)");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLogo(reader.result as string);
+    try {
+      const dataUrl = await convertImageToWebpDataUrl(file);
+      setLogo(dataUrl);
       setDirty(true);
-    };
-    reader.readAsDataURL(file);
+    } catch {
+      toast.error("Falha ao processar imagem");
+    }
   };
 
   const handleSave = async () => {
