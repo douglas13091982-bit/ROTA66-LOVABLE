@@ -44,6 +44,10 @@ interface MpPaymentResponse {
   status: string;
   status_detail: string;
   external_reference?: string;
+  payment_type_id?: string;
+  payment_method_id?: string;
+  transaction_amount?: number;
+  fee_details?: Array<{ type?: string; amount?: number; fee_payer?: string }>;
   point_of_interaction?: {
     transaction_data?: {
       qr_code?: string;
