@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 
 type Props = {
   value: string | null;
