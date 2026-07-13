@@ -76,11 +76,15 @@ export async function clearPlataformaMpToken(): Promise<void> {
   await supabaseAdmin.from("private_config" as any).delete().eq("key", "mp_platform_access_token");
 }
 
-interface MpPayment {
+export interface MpPayment {
   id: number;
   status: string;
   status_detail: string;
   external_reference?: string;
+  payment_type_id?: string; // "credit_card" | "debit_card" | "account_money" | "bank_transfer" | ...
+  payment_method_id?: string; // "pix" | "master" | "visa" | "debvisa" | ...
+  transaction_amount?: number;
+  fee_details?: Array<{ type?: string; amount?: number; fee_payer?: string }>;
   point_of_interaction?: { transaction_data?: { qr_code?: string; qr_code_base64?: string; ticket_url?: string } };
 }
 
