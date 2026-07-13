@@ -8,6 +8,7 @@ import {
   type HorarioFuncionamento,
 } from "@/lib/horario-funcionamento";
 import type { LojaCategoria } from "@/lib/loja-categorias";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 import { DEFAULT_FORM, LOGO_MAX_BYTES, type ConfigForm } from "../logic/types";
 
 export function useConfigLoja(loja: any | undefined) {
