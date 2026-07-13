@@ -64,7 +64,7 @@ export async function aplicarTaxaMpAoPedido(
   payment: MpPaymentLike,
 ): Promise<void> {
   if (!pedidoId) return;
-  const { taxa, metodo } = calcularTaxaMp(payment);
+  const { taxa, metodo } = await calcularTaxaMp(payment);
   if (taxa <= 0) return;
   try {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
