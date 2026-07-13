@@ -202,6 +202,8 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
       );
       if (matErr) throw new Error(matErr.message);
       pedido_id = (novoId as unknown as string) ?? null;
+      const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+      await aplicarTaxaMpAoPedido(pedido_id, payment);
       if (pedido_id) {
         const { data: novo } = await supabaseAdmin
           .from("pedidos")
@@ -274,6 +276,8 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
               } as any,
             );
             const pedido_id = (novoId as unknown as string) ?? null;
+            const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+            await aplicarTaxaMpAoPedido(pedido_id, payment);
             let numero: number | null = null;
             if (pedido_id) {
               const { data: ped } = await supabaseAdmin

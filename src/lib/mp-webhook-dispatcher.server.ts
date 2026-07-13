@@ -249,7 +249,14 @@ async function processRecargaLoja(
 
 async function processCatalogoPedidoPendente(
   paymentId: string,
-  payment: { status: string; external_reference?: string },
+  payment: {
+    status: string;
+    external_reference?: string;
+    payment_type_id?: string;
+    payment_method_id?: string;
+    transaction_amount?: number;
+    fee_details?: Array<{ type?: string; amount?: number; fee_payer?: string }>;
+  },
 ): Promise<Response> {
   const ref = String(payment.external_reference ?? "");
   const pendenteId = ref.slice("cat_pendente:".length);
@@ -264,11 +271,14 @@ async function processCatalogoPedidoPendente(
 
   if (payment.status === "approved") {
     // materializa (idempotente) — a função também credita a carteira da loja
-    await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
+    const { data: pedidoId } = await supabaseAdmin.rpc("materializar_pedido_pendente" as any, {
       _pendente_id: pendenteId,
       _mp_payment_id: paymentId,
       _mp_status: payment.status,
     } as any);
+    // Desconta a taxa do Mercado Pago do saldo da loja
+    const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+    await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
   } else if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
     await supabaseAdmin
       .from("pedidos_pendentes_pagamento" as any)
