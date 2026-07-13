@@ -118,6 +118,35 @@ export const removerTokenPlataforma = createServerFn({ method: "POST" })
   });
 
 // ============================================================
+// SUPER ADMIN: taxas cobradas pelo Mercado Pago (percentuais)
+// ============================================================
+
+export const obterTaxasMp = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { getMpTaxas, MP_TAXAS_PADRAO } = await import("@/lib/plataforma-mp.server");
+    const atual = await getMpTaxas();
+    return { atual, padrao: MP_TAXAS_PADRAO };
+  });
+
+const SalvarTaxasSchema = z.object({
+  pix: z.number().min(0).max(100),
+  debit_card: z.number().min(0).max(100),
+  credit_card: z.number().min(0).max(100),
+});
+
+export const salvarTaxasMp = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SalvarTaxasSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { setMpTaxas } = await import("@/lib/plataforma-mp.server");
+    await setMpTaxas(data);
+    return { ok: true };
+  });
+
+// ============================================================
 // LOJA: consolidar e pagar mensalidade
 // ============================================================
 
