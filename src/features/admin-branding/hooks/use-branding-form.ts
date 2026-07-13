@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { writeBrandingCache } from "@/hooks/use-branding";
+import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
 import { BRANDING_MAX_BYTES, type BrandingRow } from "../logic/types";
 
 export function useBrandingForm() {
