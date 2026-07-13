@@ -76,6 +76,51 @@ export async function clearPlataformaMpToken(): Promise<void> {
   await supabaseAdmin.from("private_config" as any).delete().eq("key", "mp_platform_access_token");
 }
 
+// ============================================================
+// Taxas cobradas pelo Mercado Pago (percentuais editáveis pelo super admin)
+// Valores armazenados como percentual, ex.: "0.99" para 0,99%.
+// ============================================================
+
+export interface MpTaxasCfg {
+  pix: number;         // %
+  debit_card: number;  // %
+  credit_card: number; // %
+}
+
+export const MP_TAXAS_PADRAO: MpTaxasCfg = {
+  pix: 0.99,
+  debit_card: 1.99,
+  credit_card: 4.99,
+};
+
+function parsePct(v: string | null, fallback: number): number {
+  if (!v) return fallback;
+  const n = Number(String(v).replace(",", "."));
+  return Number.isFinite(n) && n >= 0 ? n : fallback;
+}
+
+export async function getMpTaxas(): Promise<MpTaxasCfg> {
+  const [pix, deb, cred] = await Promise.all([
+    getPrivateConfig("mp_taxa_pix"),
+    getPrivateConfig("mp_taxa_debit_card"),
+    getPrivateConfig("mp_taxa_credit_card"),
+  ]);
+  return {
+    pix: parsePct(pix, MP_TAXAS_PADRAO.pix),
+    debit_card: parsePct(deb, MP_TAXAS_PADRAO.debit_card),
+    credit_card: parsePct(cred, MP_TAXAS_PADRAO.credit_card),
+  };
+}
+
+export async function setMpTaxas(cfg: MpTaxasCfg): Promise<void> {
+  await Promise.all([
+    setPrivateConfig("mp_taxa_pix", String(cfg.pix)),
+    setPrivateConfig("mp_taxa_debit_card", String(cfg.debit_card)),
+    setPrivateConfig("mp_taxa_credit_card", String(cfg.credit_card)),
+  ]);
+}
+
+
 export interface MpPayment {
   id: number;
   status: string;
