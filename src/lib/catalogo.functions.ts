@@ -72,18 +72,64 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     if (prodErr) throw new Error(prodErr.message);
 
     const map = new Map((produtos ?? []).map((p) => [p.id, p]));
+    // 2b. Buscar opções de adicionais referenciadas (para validar e precificar)
+    const opcaoIds = Array.from(
+      new Set(
+        data.itens.flatMap((it) => (it.adicionais ?? []).map((a) => a.opcao_id)),
+      ),
+    );
+    const opcoesMap = new Map<string, { id: string; nome: string; preco: number; grupo_id: string; grupo_nome: string; produto_id: string }>();
+    if (opcaoIds.length > 0) {
+      const { data: opcoes, error: opErr } = await (supabaseAdmin as any)
+        .from("produto_adicional_opcoes")
+        .select("id, nome, preco, ativo, grupo:produto_adicional_grupos!inner(id, nome, produto_id)")
+        .in("id", opcaoIds);
+      if (opErr) throw new Error(opErr.message);
+      for (const o of (opcoes ?? []) as any[]) {
+        if (!o.ativo) throw new Error("Adicional indisponível");
+        opcoesMap.set(o.id, {
+          id: o.id,
+          nome: o.nome,
+          preco: Number(o.preco) || 0,
+          grupo_id: o.grupo.id,
+          grupo_nome: o.grupo.nome,
+          produto_id: o.grupo.produto_id,
+        });
+      }
+    }
+
     let valor_produtos = 0;
-    const itensSnapshot: Array<{ produto_id: string; nome: string; preco: number; qtd: number; subtotal: number }> = [];
+    const itensSnapshot: Array<{
+      produto_id: string;
+      nome: string;
+      preco: number;
+      qtd: number;
+      subtotal: number;
+      adicionais?: Array<{ opcao_id: string; nome: string; preco: number; grupo_id: string; grupo_nome: string }>;
+    }> = [];
 
     for (const it of data.itens) {
       const p = map.get(it.produto_id) as any;
       if (!p || !p.ativo || p.loja_id !== loja.id) {
         throw new Error("Produto inválido ou indisponível");
       }
-      const preco = Number(p.preco);
-      const subtotal = preco * it.qtd;
+      const adicionaisItem = (it.adicionais ?? []).map((a) => {
+        const o = opcoesMap.get(a.opcao_id);
+        if (!o) throw new Error("Adicional inválido");
+        if (o.produto_id !== p.id) throw new Error("Adicional não pertence ao produto");
+        return { opcao_id: o.id, nome: o.nome, preco: o.preco, grupo_id: o.grupo_id, grupo_nome: o.grupo_nome };
+      });
+      const precoUnit = Number(p.preco) + adicionaisItem.reduce((s, a) => s + a.preco, 0);
+      const subtotal = precoUnit * it.qtd;
       valor_produtos += subtotal;
-      itensSnapshot.push({ produto_id: p.id, nome: p.nome, preco, qtd: it.qtd, subtotal });
+      itensSnapshot.push({
+        produto_id: p.id,
+        nome: p.nome,
+        preco: precoUnit,
+        qtd: it.qtd,
+        subtotal,
+        adicionais: adicionaisItem.length > 0 ? adicionaisItem : undefined,
+      });
     }
 
     // 3. Calcular taxa de entrega
