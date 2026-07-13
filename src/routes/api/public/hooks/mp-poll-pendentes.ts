@@ -125,8 +125,11 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
                 continue;
               }
             }
-            if (aprovado) aprovados++;
-            else if (cancelado) cancelados++;
+            if (aprovado) {
+              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              await aplicarTaxaMpAoPedido(p.id as string, payment);
+              aprovados++;
+            } else if (cancelado) cancelados++;
             else inalterados++;
           } catch (e: any) {
             erros++;
