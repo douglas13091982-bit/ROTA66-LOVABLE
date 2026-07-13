@@ -28,13 +28,12 @@ function GeckoApiCard() {
 
 export function DashboardPage() {
   const { data } = useAdminStats();
-  const { roles } = useAuth();
-  const isSuper = roles.includes("super_admin");
+  const { isOwner } = useFranquia();
   return (
     <AdminShell title="Dashboard global">
-      {isSuper && <GeckoApiCard />}
-      {isSuper && <SaquesPendentesCard />}
-      {isSuper && <SaquesLojasPendentesCard />}
+      {isOwner && <GeckoApiCard />}
+      {isOwner && <SaquesPendentesCard />}
+      {isOwner && <SaquesLojasPendentesCard />}
       <StatsGrid stats={data} />
       <EntregadoresListaAdmin />
     </AdminShell>
