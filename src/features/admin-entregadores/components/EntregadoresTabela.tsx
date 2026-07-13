@@ -125,7 +125,7 @@ export function EntregadoresTabela({
             })}
             {list.length === 0 && !isLoading && (
               <tr>
-                <td colSpan={5} className="text-center text-muted-foreground py-8">
+                <td colSpan={6} className="text-center text-muted-foreground py-8">
                   Nenhum entregador no filtro.
                 </td>
               </tr>
