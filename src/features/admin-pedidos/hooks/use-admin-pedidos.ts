@@ -8,7 +8,8 @@ export function useAdminPedidos() {
     queryFn: async (): Promise<PedidoRow[]> => {
       const { data, error } = await supabase
         .from("pedidos")
-        .select("*, lojas(nome, slug)")
+        .select("*, lojas!inner(nome, slug, is_teste)")
+        .eq("lojas.is_teste", false)
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;

@@ -10,16 +10,21 @@ export function useAdminStats() {
     queryKey: ["admin-stats", user?.id],
     enabled: !!user,
     queryFn: async (): Promise<AdminStats> => {
-      const [lojas, rolesEntregadores, pedidos, gmv, franqueados] = await Promise.all([
-        supabase.from("lojas").select("*", { count: "exact", head: true }),
+      const [lojas, rolesEntregadores, lojasTeste, franqueados] = await Promise.all([
+        supabase.from("lojas").select("*", { count: "exact", head: true }).eq("is_teste", false),
         supabase
           .from("user_roles")
           .select("user_id")
           .eq("role", "entregador"),
-        supabase.from("pedidos").select("*", { count: "exact", head: true }),
-        supabase.from("pedidos").select("valor_total").eq("status", "entregue"),
+        supabase.from("lojas").select("id").eq("is_teste", true),
         supabase.from("franqueados_config").select("*", { count: "exact", head: true }),
       ]);
+      const testeIds = (lojasTeste.data ?? []).map((l: any) => l.id);
+      const pedidosQ = supabase.from("pedidos").select("*", { count: "exact", head: true });
+      if (testeIds.length) pedidosQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      const gmvQ = supabase.from("pedidos").select("valor_total").eq("status", "entregue");
+      if (testeIds.length) gmvQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      const [pedidos, gmv] = await Promise.all([pedidosQ, gmvQ]);
       const entregadorIds = (rolesEntregadores.data ?? []).map((r) => r.user_id);
       let entregadoresVisiveis = 0;
       if (entregadorIds.length > 0) {
