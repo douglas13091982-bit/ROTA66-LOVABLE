@@ -135,6 +135,9 @@ export function ConfiguracoesSection({
             </span>
           </label>
         </div>
+      </div>
+
+
 
       <div className="flex flex-wrap gap-3 mt-4">
         <button
