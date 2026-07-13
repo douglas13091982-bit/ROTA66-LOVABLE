@@ -70,10 +70,10 @@ export function useSaquesEntregadores() {
 
   const marcarPago = useCallback(
     async (id: string) => {
-      const { error } = await (supabase as any)
-        .from("entregador_saques")
-        .update({ status: "pago", pago_em: new Date().toISOString() })
-        .eq("id", id);
+      const { error } = await (supabase as any).rpc(
+        "super_admin_marcar_saque_pago",
+        { _saque_id: id, _comprovante_url: null }
+      );
       if (error) return toast.error(error.message);
       toast.success("Saque marcado como pago");
       invalidate();
