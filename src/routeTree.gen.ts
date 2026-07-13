@@ -42,6 +42,7 @@ import { Route as AuthenticatedRevendedorPerfilRouteImport } from './routes/_aut
 import { Route as AuthenticatedRevendedorLojasRouteImport } from './routes/_authenticated/revendedor/lojas'
 import { Route as AuthenticatedRevendedorGanhosRouteImport } from './routes/_authenticated/revendedor/ganhos'
 import { Route as AuthenticatedRevendedorCobrancasRouteImport } from './routes/_authenticated/revendedor/cobrancas'
+import { Route as AuthenticatedLojaTreinamentoRouteImport } from './routes/_authenticated/loja/treinamento'
 import { Route as AuthenticatedLojaSuporteRouteImport } from './routes/_authenticated/loja/suporte'
 import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authenticated/loja/produtos'
 import { Route as AuthenticatedLojaPedidosRouteImport } from './routes/_authenticated/loja/pedidos'
@@ -60,6 +61,7 @@ import { Route as AuthenticatedEntregadorHistoricoRouteImport } from './routes/_
 import { Route as AuthenticatedEntregadorDisponiveisRouteImport } from './routes/_authenticated/entregador/disponiveis'
 import { Route as AuthenticatedEntregadorCarteiraRouteImport } from './routes/_authenticated/entregador/carteira'
 import { Route as AuthenticatedEntregadorAtivosRouteImport } from './routes/_authenticated/entregador/ativos'
+import { Route as AuthenticatedAdminTreinamentoRouteImport } from './routes/_authenticated/admin/treinamento'
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authenticated/admin/suporte'
 import { Route as AuthenticatedAdminSonsAlertaRouteImport } from './routes/_authenticated/admin/sons-alerta'
@@ -268,6 +270,12 @@ const AuthenticatedRevendedorCobrancasRoute =
     path: '/cobrancas',
     getParentRoute: () => AuthenticatedRevendedorRouteRoute,
   } as any)
+const AuthenticatedLojaTreinamentoRoute =
+  AuthenticatedLojaTreinamentoRouteImport.update({
+    id: '/treinamento',
+    path: '/treinamento',
+    getParentRoute: () => AuthenticatedLojaRouteRoute,
+  } as any)
 const AuthenticatedLojaSuporteRoute =
   AuthenticatedLojaSuporteRouteImport.update({
     id: '/suporte',
@@ -375,6 +383,12 @@ const AuthenticatedEntregadorAtivosRoute =
     id: '/ativos',
     path: '/ativos',
     getParentRoute: () => AuthenticatedEntregadorRouteRoute,
+  } as any)
+const AuthenticatedAdminTreinamentoRoute =
+  AuthenticatedAdminTreinamentoRouteImport.update({
+    id: '/treinamento',
+    path: '/treinamento',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminTarifasRoute =
   AuthenticatedAdminTarifasRouteImport.update({
@@ -603,6 +617,7 @@ export interface FileRoutesByFullPath {
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
+  '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
   '/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
@@ -621,6 +636,7 @@ export interface FileRoutesByFullPath {
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
+  '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
   '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
@@ -681,6 +697,7 @@ export interface FileRoutesByTo {
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
+  '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
   '/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
@@ -699,6 +716,7 @@ export interface FileRoutesByTo {
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
+  '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
   '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
@@ -765,6 +783,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/_authenticated/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
+  '/_authenticated/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/_authenticated/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/_authenticated/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
   '/_authenticated/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
@@ -783,6 +802,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/_authenticated/loja/produtos': typeof AuthenticatedLojaProdutosRoute
   '/_authenticated/loja/suporte': typeof AuthenticatedLojaSuporteRoute
+  '/_authenticated/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/_authenticated/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
   '/_authenticated/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
   '/_authenticated/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
@@ -849,6 +869,7 @@ export interface FileRouteTypes {
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
+    | '/admin/treinamento'
     | '/entregador/ativos'
     | '/entregador/carteira'
     | '/entregador/disponiveis'
@@ -867,6 +888,7 @@ export interface FileRouteTypes {
     | '/loja/pedidos'
     | '/loja/produtos'
     | '/loja/suporte'
+    | '/loja/treinamento'
     | '/revendedor/cobrancas'
     | '/revendedor/ganhos'
     | '/revendedor/lojas'
@@ -927,6 +949,7 @@ export interface FileRouteTypes {
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
+    | '/admin/treinamento'
     | '/entregador/ativos'
     | '/entregador/carteira'
     | '/entregador/disponiveis'
@@ -945,6 +968,7 @@ export interface FileRouteTypes {
     | '/loja/pedidos'
     | '/loja/produtos'
     | '/loja/suporte'
+    | '/loja/treinamento'
     | '/revendedor/cobrancas'
     | '/revendedor/ganhos'
     | '/revendedor/lojas'
@@ -1010,6 +1034,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sons-alerta'
     | '/_authenticated/admin/suporte'
     | '/_authenticated/admin/tarifas'
+    | '/_authenticated/admin/treinamento'
     | '/_authenticated/entregador/ativos'
     | '/_authenticated/entregador/carteira'
     | '/_authenticated/entregador/disponiveis'
@@ -1028,6 +1053,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/pedidos'
     | '/_authenticated/loja/produtos'
     | '/_authenticated/loja/suporte'
+    | '/_authenticated/loja/treinamento'
     | '/_authenticated/revendedor/cobrancas'
     | '/_authenticated/revendedor/ganhos'
     | '/_authenticated/revendedor/lojas'
@@ -1305,6 +1331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRevendedorCobrancasRouteImport
       parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
+    '/_authenticated/loja/treinamento': {
+      id: '/_authenticated/loja/treinamento'
+      path: '/treinamento'
+      fullPath: '/loja/treinamento'
+      preLoaderRoute: typeof AuthenticatedLojaTreinamentoRouteImport
+      parentRoute: typeof AuthenticatedLojaRouteRoute
+    }
     '/_authenticated/loja/suporte': {
       id: '/_authenticated/loja/suporte'
       path: '/suporte'
@@ -1430,6 +1463,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/entregador/ativos'
       preLoaderRoute: typeof AuthenticatedEntregadorAtivosRouteImport
       parentRoute: typeof AuthenticatedEntregadorRouteRoute
+    }
+    '/_authenticated/admin/treinamento': {
+      id: '/_authenticated/admin/treinamento'
+      path: '/treinamento'
+      fullPath: '/admin/treinamento'
+      preLoaderRoute: typeof AuthenticatedAdminTreinamentoRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/tarifas': {
       id: '/_authenticated/admin/tarifas'
@@ -1672,6 +1712,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSonsAlertaRoute: typeof AuthenticatedAdminSonsAlertaRoute
   AuthenticatedAdminSuporteRoute: typeof AuthenticatedAdminSuporteRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
+  AuthenticatedAdminTreinamentoRoute: typeof AuthenticatedAdminTreinamentoRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -1707,6 +1748,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminSonsAlertaRoute: AuthenticatedAdminSonsAlertaRoute,
     AuthenticatedAdminSuporteRoute: AuthenticatedAdminSuporteRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,
+    AuthenticatedAdminTreinamentoRoute: AuthenticatedAdminTreinamentoRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
@@ -1758,6 +1800,7 @@ interface AuthenticatedLojaRouteRouteChildren {
   AuthenticatedLojaPedidosRoute: typeof AuthenticatedLojaPedidosRoute
   AuthenticatedLojaProdutosRoute: typeof AuthenticatedLojaProdutosRoute
   AuthenticatedLojaSuporteRoute: typeof AuthenticatedLojaSuporteRoute
+  AuthenticatedLojaTreinamentoRoute: typeof AuthenticatedLojaTreinamentoRoute
   AuthenticatedLojaIndexRoute: typeof AuthenticatedLojaIndexRoute
 }
 
@@ -1774,6 +1817,7 @@ const AuthenticatedLojaRouteRouteChildren: AuthenticatedLojaRouteRouteChildren =
     AuthenticatedLojaPedidosRoute: AuthenticatedLojaPedidosRoute,
     AuthenticatedLojaProdutosRoute: AuthenticatedLojaProdutosRoute,
     AuthenticatedLojaSuporteRoute: AuthenticatedLojaSuporteRoute,
+    AuthenticatedLojaTreinamentoRoute: AuthenticatedLojaTreinamentoRoute,
     AuthenticatedLojaIndexRoute: AuthenticatedLojaIndexRoute,
   }
 
