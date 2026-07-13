@@ -8,6 +8,7 @@ import { PixSection } from "./components/PixSection";
 import { MensalidadesSection } from "./components/MensalidadesSection";
 import { CobrancasSection } from "./components/CobrancasSection";
 import { MercadoPagoPlataformaSection } from "./components/MercadoPagoPlataformaSection";
+import { TaxasMpSection } from "./components/TaxasMpSection";
 import { CobrancasUnificadasSection } from "./components/CobrancasUnificadasSection";
 import { SaldosLojasSection } from "./components/SaldosLojasSection";
 import { useFranquia } from "@/hooks/use-franquia";
@@ -119,7 +120,12 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && !isFranqueado && <MercadoPagoPlataformaSection />}
+        {tab === "mercado-pago" && !isFranqueado && (
+          <div className="space-y-6">
+            <MercadoPagoPlataformaSection />
+            <TaxasMpSection />
+          </div>
+        )}
 
         {tab === "pix" && !isFranqueado && (
           <PixSection
