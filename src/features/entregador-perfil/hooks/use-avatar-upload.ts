@@ -70,9 +70,6 @@ export function useAvatarUpload(opts: {
       const { error: upErr } = await supabase.storage
         .from("avatars")
         .upload(path, converted, { upsert: true, contentType });
-      const { error: upErr } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true, contentType });
       if (upErr) throw upErr;
       const { error: updErr } = await supabase
         .from("profiles")
