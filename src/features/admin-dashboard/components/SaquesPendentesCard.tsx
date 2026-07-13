@@ -34,7 +34,10 @@ export function SaquesPendentesCard() {
         .in("status", ["solicitado", "pendente"])
         .order("solicitado_em", { ascending: false })
         .limit(5);
-      if (error) throw error;
+      if (error) {
+        console.warn("[SaquesPendentesCard]", error.message ?? error);
+        return [];
+      }
       const ids = (saques ?? []).map((s: any) => s.entregador_id);
       let names: Record<string, string | null> = {};
       if (ids.length) {
