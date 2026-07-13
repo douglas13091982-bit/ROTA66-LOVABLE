@@ -1399,6 +1399,7 @@ export type Database = {
           horario_funcionamento: Json
           id: string
           indicado_por_entregador_id: string | null
+          is_teste: boolean
           logo_url: string | null
           mensalidade_valor: number | null
           nome: string
@@ -1436,6 +1437,7 @@ export type Database = {
           horario_funcionamento?: Json
           id?: string
           indicado_por_entregador_id?: string | null
+          is_teste?: boolean
           logo_url?: string | null
           mensalidade_valor?: number | null
           nome: string
@@ -1473,6 +1475,7 @@ export type Database = {
           horario_funcionamento?: Json
           id?: string
           indicado_por_entregador_id?: string | null
+          is_teste?: boolean
           logo_url?: string | null
           mensalidade_valor?: number | null
           nome?: string
