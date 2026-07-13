@@ -8,7 +8,7 @@ type Props = { stats: AdminStats | undefined };
 export function StatsGrid({ stats }: Props) {
   const { isOwner } = useFranquia();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8 pp-stagger">
+    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${isOwner ? "xl:grid-cols-5" : "xl:grid-cols-4"} gap-4 mb-8 pp-stagger`}>
       <StatCard
         icon={Store}
         label="Lojas"
