@@ -35,6 +35,7 @@ export function AdminFranqueadosPage() {
   const criar = useServerFn(criarFranqueado);
   const excluir = useServerFn(excluirFranqueado);
   const gerarAgora = useServerFn(gerarFaturasFranquiaAgora);
+  const buscarEmails = useServerFn(listarEmailsFranqueados);
 
   const { data: franqueados, isLoading } = useQuery({
     queryKey: ["admin-franqueados"],
