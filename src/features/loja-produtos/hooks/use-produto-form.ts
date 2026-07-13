@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 import type { Produto } from "../logic/types";
 
 export function useProdutoForm(
