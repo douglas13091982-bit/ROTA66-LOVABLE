@@ -116,8 +116,12 @@ export function useAdminFinanceiro() {
       pix_chave_sistema: config.pixChave.trim() || null,
       pix_titular_sistema: config.pixTitular.trim() || null,
       pix_cidade_sistema: config.pixCidade.trim() || null,
+      saque_modo: config.saqueModo,
+      saque_valor_minimo: Math.max(Number(config.saqueValorMinimo) || 0, 0),
+      saque_dia_semana: Math.min(Math.max(Number(config.saqueDiaSemana) || 0, 0), 6),
       singleton: true,
     };
+
     const q = configId
       ? supabase.from("config_financeiro").update(payload).eq("id", configId)
       : supabase.from("config_financeiro").insert(payload);
