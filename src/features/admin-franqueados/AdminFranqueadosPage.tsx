@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Plus, Trash2, MapPin, Play } from "lucide-react";
-import { criarFranqueado, excluirFranqueado, gerarFaturasFranquiaAgora } from "@/lib/franqueados.functions";
+import { criarFranqueado, excluirFranqueado, gerarFaturasFranquiaAgora, listarEmailsFranqueados } from "@/lib/franqueados.functions";
 import { useFranquia } from "@/hooks/use-franquia";
 import { formatCurrency } from "@/lib/format";
 
@@ -35,6 +35,7 @@ export function AdminFranqueadosPage() {
   const criar = useServerFn(criarFranqueado);
   const excluir = useServerFn(excluirFranqueado);
   const gerarAgora = useServerFn(gerarFaturasFranquiaAgora);
+  const buscarEmails = useServerFn(listarEmailsFranqueados);
 
   const { data: franqueados, isLoading } = useQuery({
     queryKey: ["admin-franqueados"],
@@ -59,6 +60,12 @@ export function AdminFranqueadosPage() {
       for (const p of (data ?? []) as any[]) map[p.id] = { nome: p.full_name ?? "—", fone: p.phone };
       return map;
     },
+  });
+
+  const { data: emails } = useQuery({
+    queryKey: ["admin-franqueados-emails", franqueados?.map((f) => f.user_id).join(",")],
+    enabled: isOwner && !!franqueados?.length,
+    queryFn: async () => await buscarEmails({ data: { user_ids: franqueados!.map((f) => f.user_id) } }),
   });
 
   const { data: faturas } = useQuery({
@@ -256,6 +263,9 @@ export function AdminFranqueadosPage() {
                           )}
                         </div>
                         <div className="text-xs text-white/60">{perfil?.fone ?? ""}</div>
+                        {emails?.[r.user_id] && (
+                          <div className="text-xs text-white/50 mt-0.5 break-all">{emails[r.user_id]}</div>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         <button

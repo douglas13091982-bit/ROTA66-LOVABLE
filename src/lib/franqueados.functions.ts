@@ -97,3 +97,19 @@ export const gerarFaturasFranquiaAgora = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { criadas: data };
   });
+
+export const listarEmailsFranqueados = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_ids: string[] }) => d)
+  .handler(async ({ data, context }) => {
+    await ensureOwner(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const map: Record<string, string> = {};
+    await Promise.all(
+      (data.user_ids ?? []).map(async (uid) => {
+        const { data: u } = await supabaseAdmin.auth.admin.getUserById(uid);
+        if (u?.user?.email) map[uid] = u.user.email;
+      }),
+    );
+    return map;
+  });
