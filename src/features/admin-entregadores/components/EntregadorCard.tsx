@@ -70,6 +70,11 @@ export function EntregadorCard({
           {p.tipo_veiculo === "carro" ? <Car className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
           {p.tipo_veiculo === "carro" ? "Carro" : "Moto"}
         </span>
+        {p.created_at && (
+          <span className="text-[10px] text-muted-foreground ml-auto">
+            Cadastro: {new Date(p.created_at).toLocaleDateString("pt-BR")}
+          </span>
+        )}
       </div>
       <div className="grid grid-cols-3 gap-2">
         <button
