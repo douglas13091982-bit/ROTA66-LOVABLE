@@ -2,9 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 
+const AdicionalSchema = z.object({ opcao_id: z.string().uuid() });
+
 const ItemSchema = z.object({
   produto_id: z.string().uuid(),
   qtd: z.number().int().min(1).max(99),
+  adicionais: z.array(AdicionalSchema).max(30).optional(),
 });
 
 const InputSchema = z.object({

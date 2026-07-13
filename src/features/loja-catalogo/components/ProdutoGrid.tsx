@@ -3,13 +3,36 @@ import { AddButton, QtyStepper } from "./QtyStepper";
 
 type Props = {
   items: Produto[];
-  cart: Record<string, number>;
-  addItem: (id: string) => void;
-  removeItem: (id: string) => void;
+  qtdByProduto: Record<string, number>;
+  onAdd: (p: Produto) => void;
+  onDec: (p: Produto) => void;
   layout: "cards" | "lista";
 };
 
-export function ProdutoGrid({ items, cart, addItem, removeItem, layout }: Props) {
+function hasAdicionais(p: Produto) {
+  return (p.adicionais_grupos ?? []).some((g) => g.opcoes.length > 0);
+}
+
+export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props) {
+  const renderControls = (p: Produto) => {
+    const qtd = qtdByProduto[p.id] ?? 0;
+    if (hasAdicionais(p)) {
+      return (
+        <div className="flex items-center gap-2">
+          {qtd > 0 && (
+            <span className="text-[11px] font-bold text-primary tabular-nums">{qtd}×</span>
+          )}
+          <AddButton onAdd={() => onAdd(p)} />
+        </div>
+      );
+    }
+    return qtd > 0 ? (
+      <QtyStepper qtd={qtd} onAdd={() => onAdd(p)} onRemove={() => onDec(p)} />
+    ) : (
+      <AddButton onAdd={() => onAdd(p)} />
+    );
+  };
+
   if (layout === "lista") {
     return (
       <div className="space-y-0 cc-card rounded-2xl px-3.5">
@@ -30,13 +53,7 @@ export function ProdutoGrid({ items, cart, addItem, removeItem, layout }: Props)
               {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-1 mt-0.5">{p.descricao}</p>}
               <span className="cc-price text-[16px] text-primary leading-none mt-1 inline-block">R$ {Number(p.preco).toFixed(2)}</span>
             </div>
-            <div className="shrink-0">
-              {cart[p.id] ? (
-                <QtyStepper qtd={cart[p.id]} onAdd={() => addItem(p.id)} onRemove={() => removeItem(p.id)} />
-              ) : (
-                <AddButton onAdd={() => addItem(p.id)} />
-              )}
-            </div>
+            <div className="shrink-0">{renderControls(p)}</div>
           </div>
         ))}
       </div>
@@ -59,11 +76,7 @@ export function ProdutoGrid({ items, cart, addItem, removeItem, layout }: Props)
             {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-2 mt-0.5 leading-snug">{p.descricao}</p>}
             <div className="mt-auto pt-2 flex items-center justify-between gap-2">
               <span className="cc-price text-[18px] text-primary leading-none">R$ {Number(p.preco).toFixed(2)}</span>
-              {cart[p.id] ? (
-                <QtyStepper qtd={cart[p.id]} onAdd={() => addItem(p.id)} onRemove={() => removeItem(p.id)} />
-              ) : (
-                <AddButton onAdd={() => addItem(p.id)} />
-              )}
+              {renderControls(p)}
             </div>
           </div>
         </article>

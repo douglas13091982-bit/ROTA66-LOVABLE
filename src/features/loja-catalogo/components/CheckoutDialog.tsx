@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, X } from "lucide-react";
 import { toast } from "sonner";
-import type { Produto } from "@/routes/-catalogo-types";
 import { criarPedidoCatalogo } from "@/lib/catalogo.functions";
 import { useTarifaEntrega } from "@/hooks/use-tarifa-entrega";
 import { PagamentoMercadoPago } from "@/components/catalogo/PagamentoMercadoPago";
 import { useMpPublicConfig } from "../hooks/use-catalogo";
 import { pagamentoOptions } from "../logic/pagamento";
+import type { CartItem } from "../hooks/use-cart";
 import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,12 +18,13 @@ type Props = {
   lojaId: string;
   lojaCoords: { lat: number | null; lng: number | null };
   taxaBase: number;
-  cartItems: { produto: Produto; qtd: number }[];
+  cartItems: CartItem[];
   subtotal: number;
   onClose: () => void;
   onSuccess: (r: { id: string; numero: number }) => void;
-  addItem: (id: string) => void;
-  removeItem: (id: string) => void;
+  onInc: (lineId: string) => void;
+  onDec: (lineId: string) => void;
+  onRemove: (lineId: string) => void;
 };
 
 type Step = "carrinho" | "dados" | "pagar";
@@ -48,8 +49,9 @@ export function CheckoutDialog({
   subtotal,
   onClose,
   onSuccess,
-  addItem,
-  removeItem,
+  onInc,
+  onDec,
+  onRemove,
 }: Props) {
   const enviar = useServerFn(criarPedidoCatalogo);
   const [step, setStep] = useState<Step>("carrinho");
@@ -158,7 +160,11 @@ export function CheckoutDialog({
           observacoes: form.observacoes || null,
           forma_pagamento: form.forma_pagamento,
           troco_para: form.forma_pagamento === "dinheiro" && form.troco_para ? Number(form.troco_para) : null,
-          itens: cartItems.map((i) => ({ produto_id: i.produto.id, qtd: i.qtd })),
+          itens: cartItems.map((i) => ({
+            produto_id: i.produto.id,
+            qtd: i.qtd,
+            adicionais: i.adicionais.map((a) => ({ opcao_id: a.opcao_id })),
+          })),
         },
       });
       if (res.aguardando_pagamento && res.pendente_id) {
@@ -209,8 +215,9 @@ export function CheckoutDialog({
               subtotal={subtotal}
               taxa={taxa}
               total={total}
-              addItem={addItem}
-              removeItem={removeItem}
+              onInc={onInc}
+              onDec={onDec}
+              onRemove={onRemove}
             />
           )}
 
