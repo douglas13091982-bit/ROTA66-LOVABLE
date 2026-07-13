@@ -34,7 +34,7 @@ export function useAdminEntregadores() {
       );
       // A lista final usa apenas profiles que o RLS liberou para este admin.
       // Para franqueado, isso remove entregadores sem city_id ou de outra cidade.
-      return (profiles ?? []).map((p: any) => {
+      const rows = (profiles ?? []).map((p: any) => {
         const id = p.id;
         return {
           id,
@@ -44,9 +44,16 @@ export function useAdminEntregadores() {
           avatar_url: p.avatar_url ?? null,
           tipo_veiculo: p.tipo_veiculo ?? null,
           ...p,
+          created_at: p.created_at ?? null,
           status: stMap.get(id)?.status ?? "pendente",
         };
       });
+      rows.sort((a: any, b: any) => {
+        const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return tb - ta;
+      });
+      return rows;
     },
   });
 

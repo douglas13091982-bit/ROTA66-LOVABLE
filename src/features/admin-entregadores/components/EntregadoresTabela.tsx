@@ -24,6 +24,7 @@ export function EntregadoresTabela({
               <th className="text-left px-3 py-2 font-bold">Telefone</th>
               <th className="text-left px-3 py-2 font-bold">Veículo</th>
               <th className="text-left px-3 py-2 font-bold">Status</th>
+              <th className="text-left px-3 py-2 font-bold">Cadastro</th>
               <th className="text-right px-3 py-2 font-bold">Ações</th>
             </tr>
           </thead>
@@ -89,6 +90,9 @@ export function EntregadoresTabela({
                       {st.label}
                     </span>
                   </td>
+                  <td className="px-3 py-2 text-muted-foreground whitespace-nowrap text-[11px]">
+                    {p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—"}
+                  </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
                       <button
@@ -121,7 +125,7 @@ export function EntregadoresTabela({
             })}
             {list.length === 0 && !isLoading && (
               <tr>
-                <td colSpan={5} className="text-center text-muted-foreground py-8">
+                <td colSpan={6} className="text-center text-muted-foreground py-8">
                   Nenhum entregador no filtro.
                 </td>
               </tr>
