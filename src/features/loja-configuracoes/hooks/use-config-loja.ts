@@ -45,12 +45,26 @@ export function useConfigLoja(loja: any | undefined) {
       toast.error("Selecione uma imagem");
       return;
     }
-    if (file.size > LOGO_MAX_BYTES) {
-      toast.error("Imagem muito grande (máx 500KB)");
+    // Limite generoso no arquivo original (10MB) — a conversão para WebP
+    // reduz drasticamente o peso antes de salvar.
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Imagem muito grande (máx 10MB)");
       return;
     }
     try {
-      const dataUrl = await convertImageToWebpDataUrl(file);
+      // Logo aparece pequena — 512px já é suficiente e garante que o
+      // data URL final caiba bem abaixo do limite antigo de 500KB.
+      let dataUrl = await convertImageToWebpDataUrl(file, {
+        maxDimension: 512,
+        quality: 0.85,
+      });
+      // Segurança extra: se ainda estourar, recomprime mais agressivo.
+      if (dataUrl.length > LOGO_MAX_BYTES * 1.4) {
+        dataUrl = await convertImageToWebpDataUrl(file, {
+          maxDimension: 384,
+          quality: 0.72,
+        });
+      }
       setLogoUrl(dataUrl);
     } catch {
       toast.error("Falha ao processar imagem");

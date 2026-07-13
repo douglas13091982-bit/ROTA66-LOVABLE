@@ -45,7 +45,7 @@ export function LogoUploader({
               </button>
             )}
           </div>
-          <p className="text-[11px] text-muted-foreground">PNG, JPG, SVG ou WebP — máx 500KB.</p>
+          <p className="text-[11px] text-muted-foreground">PNG, JPG, SVG ou WebP — pode enviar até 10MB, a imagem é otimizada automaticamente.</p>
         </div>
       </div>
     </div>
