@@ -24,6 +24,7 @@ export function EntregadoresTabela({
               <th className="text-left px-3 py-2 font-bold">Telefone</th>
               <th className="text-left px-3 py-2 font-bold">Veículo</th>
               <th className="text-left px-3 py-2 font-bold">Status</th>
+              <th className="text-left px-3 py-2 font-bold">Cadastro</th>
               <th className="text-right px-3 py-2 font-bold">Ações</th>
             </tr>
           </thead>
