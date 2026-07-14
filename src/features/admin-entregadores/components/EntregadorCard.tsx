@@ -1,6 +1,6 @@
-import { Ban, Bike, Car, Check, MessageCircle, Phone, Trash2 } from "lucide-react";
+import { Ban, Bike, Car, Check, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
-import { onlyDigits, waLink } from "../logic/filters";
+import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 
 export function EntregadorCard({
