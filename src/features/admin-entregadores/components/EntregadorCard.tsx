@@ -102,6 +102,17 @@ export function EntregadorCard({
           <Trash2 className="h-3.5 w-3.5" /> Excluir
         </button>
       </div>
+      {waAprovacao && (
+        <a
+          href={waAprovacao}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+        >
+          <PartyPopper className="h-4 w-4" />
+          Enviar parabéns pelo WhatsApp
+        </a>
+      )}
     </div>
   );
 }
