@@ -14,6 +14,10 @@ export function EntregadorCard({
 }) {
   const st = STATUS_LABEL[p.status] ?? STATUS_LABEL.pendente;
   const wa = p.phone ? waLink(p.phone) : null;
+  const waAprovacao =
+    p.phone && p.status === "aprovado"
+      ? waLink(p.phone, mensagemAprovacao(p.full_name))
+      : null;
 
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
