@@ -1,6 +1,6 @@
-import { Ban, Bike, Car, Check, MessageCircle, Phone, Trash2 } from "lucide-react";
+import { Ban, Bike, Car, Check, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
-import { onlyDigits, waLink } from "../logic/filters";
+import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 
 export function EntregadorCard({
@@ -14,6 +14,10 @@ export function EntregadorCard({
 }) {
   const st = STATUS_LABEL[p.status] ?? STATUS_LABEL.pendente;
   const wa = p.phone ? waLink(p.phone) : null;
+  const waAprovacao =
+    p.phone && p.status === "aprovado"
+      ? waLink(p.phone, mensagemAprovacao(p.full_name))
+      : null;
 
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
@@ -98,6 +102,17 @@ export function EntregadorCard({
           <Trash2 className="h-3.5 w-3.5" /> Excluir
         </button>
       </div>
+      {waAprovacao && (
+        <a
+          href={waAprovacao}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+        >
+          <PartyPopper className="h-4 w-4" />
+          Enviar parabéns pelo WhatsApp
+        </a>
+      )}
     </div>
   );
 }

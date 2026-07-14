@@ -4,11 +4,22 @@ export function onlyDigits(s: string) {
   return (s ?? "").replace(/\D/g, "");
 }
 
-export function waLink(phone: string) {
+export function waLink(phone: string, message?: string) {
   const d = onlyDigits(phone);
   if (!d) return null;
   const withCountry = d.startsWith("55") ? d : `55${d}`;
-  return `https://wa.me/${withCountry}`;
+  const base = `https://wa.me/${withCountry}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
+export function mensagemAprovacao(nome: string | null) {
+  const primeiro = (nome ?? "").trim().split(/\s+/)[0] || "Entregador";
+  return (
+    `🎉 Parabéns, ${primeiro}! ` +
+    `Seu cadastro na Rota 66 foi *APROVADO*! ✅\n\n` +
+    `Já pode abrir o app e começar a receber pedidos. ` +
+    `Qualquer dúvida é só chamar por aqui. Boas entregas! 🛵💨`
+  );
 }
 
 export function filtrarEntregadores(
