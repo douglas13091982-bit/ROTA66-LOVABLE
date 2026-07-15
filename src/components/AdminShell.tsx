@@ -13,7 +13,7 @@ import { useFranquia } from "@/hooks/use-franquia";
 
 
 // ownerOnly = só o dono da franquia (você). superOnly = qualquer super_admin (owner + franqueados de cidade).
-const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean; ownerOnly?: boolean; franqueadoOnly?: boolean }[] = [
+const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean; ownerOnly?: boolean; franqueadoOnly?: boolean; donoFranquiaOnly?: boolean }[] = [
   { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
 
   { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
@@ -39,7 +39,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
   { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, ownerOnly: true },
   { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
-  { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true },
+  { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true, donoFranquiaOnly: true },
   { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
   { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, ownerOnly: true },
   { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, ownerOnly: true },
@@ -51,8 +51,9 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { user } = useAuth();
   const { signOut: handleSignOut, loading: signingOut } = useLogout();
   const { isSuper, can } = useAdminPermissoes();
-  const { isOwner, isFranqueado, cidade, bloqueado } = useFranquia();
+  const { isOwner, isFranqueado, isColaborador, cidade, bloqueado } = useFranquia();
   const visibleNav = NAV.filter((n) => {
+    if (n.donoFranquiaOnly && isColaborador) return false;
     if (n.ownerOnly) return isOwner;
     if (n.franqueadoOnly) return isFranqueado;
     if (n.superOnly) return isSuper;
@@ -93,7 +94,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               </div>
               <div className="min-w-0">
                 <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
-                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isFranqueado ? `${(cidade ?? "").toUpperCase()} - SC` : isSuper ? "Super admin" : "Admin"}</div>
+                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isColaborador ? `Colaborador · ${(cidade ?? "").toUpperCase()}` : isFranqueado ? `${(cidade ?? "").toUpperCase()} - SC` : isSuper ? "Super admin" : "Admin"}</div>
               </div>
             </Link>
             <button onClick={() => setOpen(false)} className="md:hidden text-white/60 hover:text-white" aria-label="Fechar menu">
