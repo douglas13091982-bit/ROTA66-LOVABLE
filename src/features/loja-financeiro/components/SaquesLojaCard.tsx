@@ -93,9 +93,21 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
       </div>
 
       <div>
+        <div className="text-xs uppercase tracking-wider text-muted-foreground">Disponível para saque</div>
         <div className="text-3xl font-bold">{resumoQ.isLoading ? "…" : brl(saldo)}</div>
-        <p className="text-xs text-muted-foreground mt-1">
-          Cada pedido pago no catálogo entra automaticamente aqui. Solicite o saque via PIX ao admin.
+        {(resumo?.saldo_bruto ?? 0) > saldo && (
+          <div className="mt-2 grid gap-1 text-[11px] text-muted-foreground">
+            <div className="flex justify-between"><span>Saldo bruto</span><span className="font-mono">{brl(Number(resumo?.saldo_bruto ?? 0))}</span></div>
+            {Number(resumo?.reservado_mensalidade ?? 0) > 0 && (
+              <div className="flex justify-between text-yellow-600"><span>− Mensalidade em aberto</span><span className="font-mono">{brl(Number(resumo?.reservado_mensalidade ?? 0))}</span></div>
+            )}
+            {Number(resumo?.reservado_taxa_mp ?? 0) > 0 && (
+              <div className="flex justify-between text-yellow-600"><span>− Reserva taxa Mercado Pago (7d)</span><span className="font-mono">{brl(Number(resumo?.reservado_taxa_mp ?? 0))}</span></div>
+            )}
+          </div>
+        )}
+        <p className="text-xs text-muted-foreground mt-2">
+          Cada pedido pago no catálogo entra automaticamente aqui. Mensalidades em aberto e a taxa do Mercado Pago são descontadas antes de liberar o saque.
         </p>
       </div>
 
