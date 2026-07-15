@@ -10,6 +10,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
+import { useFranquia } from "@/hooks/use-franquia";
 import {
   useFaturamentoSistema,
   type PeriodoFat,
