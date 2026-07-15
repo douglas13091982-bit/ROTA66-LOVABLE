@@ -9,6 +9,7 @@ export type PlanoRow = {
   ordem: number;
   ativo: boolean;
   max_funcionarios: number;
+  max_pedidos_mes: number;
   created_at?: string;
   updated_at?: string;
 };
