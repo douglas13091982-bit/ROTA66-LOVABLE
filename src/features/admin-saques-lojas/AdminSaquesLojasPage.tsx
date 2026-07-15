@@ -81,6 +81,7 @@ export function AdminSaquesLojasContent() {
     onSuccess: () => {
       toast.success("Saque marcado como pago");
       qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
+      qc.invalidateQueries({ queryKey: ["admin-saques-lojas-counts"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
