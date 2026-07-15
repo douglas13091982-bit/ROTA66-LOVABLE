@@ -279,6 +279,7 @@ async function processCatalogoPedidoPendente(
     // Desconta a taxa do Mercado Pago do saldo da loja
     const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
     await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
+    await aplicarTaxaMarketplaceAoPedido(pedidoId as unknown as string | null, payment);
   } else if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
     await supabaseAdmin
       .from("pedidos_pendentes_pagamento" as any)

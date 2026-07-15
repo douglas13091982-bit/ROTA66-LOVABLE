@@ -65,6 +65,7 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
               } as any);
               const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
               await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
+              await aplicarTaxaMarketplaceAoPedido(pedidoId as unknown as string | null, payment);
               aprovados++;
             } else if (cancelado) {
               await supabaseAdmin
@@ -128,6 +129,7 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             if (aprovado) {
               const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
               await aplicarTaxaMpAoPedido(p.id as string, payment);
+              await aplicarTaxaMarketplaceAoPedido(p.id as string, payment);
               aprovados++;
             } else if (cancelado) cancelados++;
             else inalterados++;
