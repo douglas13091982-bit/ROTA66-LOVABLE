@@ -9,6 +9,7 @@ export type PlanoRow = {
   ordem: number;
   ativo: boolean;
   max_funcionarios: number;
+  max_pedidos_mes: number;
   created_at?: string;
   updated_at?: string;
 };
@@ -23,6 +24,7 @@ export type PlanoFormState = {
   ordem: string;
   ativo: boolean;
   max_funcionarios: string;
+  max_pedidos_mes: string;
 };
 
 export const INITIAL_PLANO_FORM: PlanoFormState = {
@@ -35,4 +37,5 @@ export const INITIAL_PLANO_FORM: PlanoFormState = {
   ordem: "0",
   ativo: true,
   max_funcionarios: "0",
+  max_pedidos_mes: "0",
 };

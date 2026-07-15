@@ -2339,6 +2339,7 @@ export type Database = {
           dia_vencimento: number
           id: string
           max_funcionarios: number
+          max_pedidos_mes: number
           mensalidade_valor: number
           nome: string
           ordem: number
@@ -2353,6 +2354,7 @@ export type Database = {
           dia_vencimento?: number
           id?: string
           max_funcionarios?: number
+          max_pedidos_mes?: number
           mensalidade_valor?: number
           nome: string
           ordem?: number
@@ -2367,6 +2369,7 @@ export type Database = {
           dia_vencimento?: number
           id?: string
           max_funcionarios?: number
+          max_pedidos_mes?: number
           mensalidade_valor?: number
           nome?: string
           ordem?: number

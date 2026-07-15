@@ -23,6 +23,7 @@ export function PlanoForm({ editing, onCancel, onSubmit }: Props) {
         ordem: String(editing.ordem ?? 0),
         ativo: !!editing.ativo,
         max_funcionarios: String(editing.max_funcionarios ?? 0),
+        max_pedidos_mes: String(editing.max_pedidos_mes ?? 0),
       });
     } else {
       setForm(INITIAL_PLANO_FORM);
@@ -130,7 +131,20 @@ export function PlanoForm({ editing, onCancel, onSubmit }: Props) {
             Quantidade de usuários que a loja pode cadastrar (0 = não permite)
           </span>
         </Field>
+        <Field label="Limite de pedidos/mês">
+          <input
+            type="number"
+            min={0}
+            value={form.max_pedidos_mes}
+            onChange={(e) => set("max_pedidos_mes", e.target.value)}
+            className="input"
+          />
+          <span className="text-[11px] text-muted-foreground mt-1 block">
+            Máximo de pedidos que a loja pode criar por mês (0 = ilimitado)
+          </span>
+        </Field>
       </div>
+
 
       <div className="flex flex-wrap items-center gap-4 pt-1">
         <label className="flex items-center gap-2 text-sm">
