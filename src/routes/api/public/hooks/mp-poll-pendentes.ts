@@ -63,7 +63,7 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
                 _mp_payment_id: paymentId,
                 _mp_status: payment.status,
               } as any);
-              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
               await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
               aprovados++;
             } else if (cancelado) {
@@ -126,7 +126,7 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
               }
             }
             if (aprovado) {
-              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
               await aplicarTaxaMpAoPedido(p.id as string, payment);
               aprovados++;
             } else if (cancelado) cancelados++;
