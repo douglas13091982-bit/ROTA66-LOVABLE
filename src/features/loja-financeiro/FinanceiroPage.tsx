@@ -59,6 +59,20 @@ export function FinanceiroPage() {
 
   const { cobAbertas, mensAbertas, cobAberto, mensAberto, totalAberto, totalPago, prox } =
     calcularResumo(cobrancas, mensalidades);
+  const diaVenc = Number((loja as any).dia_vencimento_mensalidade ?? 0);
+  const proxFallback = (() => {
+    if (prox) return prox;
+    if (!diaVenc || diaVenc < 1 || diaVenc > 31) return undefined;
+    const hoje = new Date();
+    const y = hoje.getFullYear();
+    const m = hoje.getMonth();
+    const diaHoje = hoje.getDate();
+    const alvo = new Date(y, diaHoje <= diaVenc ? m : m + 1, diaVenc);
+    const yyyy = alvo.getFullYear();
+    const mm = String(alvo.getMonth() + 1).padStart(2, "0");
+    const dd = String(alvo.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  })();
   const pixHabilitado = !!pixCfg.pix_chave_sistema;
 
   const handleDialog = (d: DialogState) => {
