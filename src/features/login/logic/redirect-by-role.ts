@@ -8,13 +8,19 @@ type NavigateFn = ReturnType<typeof useNavigate>;
  * Prioridade: super_admin/admin > entregador > loja_admin > cliente.
  */
 export async function redirectByRole(userId: string, navigate: NavigateFn) {
-  const [{ data: rolesData }, { data: profile }] = await Promise.all([
+  const [{ data: rolesData }, { data: profile }, { data: colab }] = await Promise.all([
     supabase.from("user_roles").select("role").eq("user_id", userId),
     supabase.from("profiles").select("cidade, estado").eq("id", userId).maybeSingle(),
+    (supabase as any)
+      .from("franqueado_colaboradores")
+      .select("id")
+      .eq("colaborador_user_id", userId)
+      .eq("ativo", true)
+      .maybeSingle(),
   ]);
 
   const roles = (rolesData ?? []).map((r) => r.role as string);
-  if (roles.includes("super_admin") || roles.includes("admin")) {
+  if (roles.includes("super_admin") || roles.includes("admin") || colab) {
     return navigate({ to: "/admin", replace: true });
   }
   if (roles.includes("revendedor")) return navigate({ to: "/revendedor", replace: true });
