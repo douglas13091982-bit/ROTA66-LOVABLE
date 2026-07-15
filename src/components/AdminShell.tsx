@@ -94,7 +94,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               </div>
               <div className="min-w-0">
                 <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
-                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isColaborador ? `Colaborador · ${(cidade ?? "").toUpperCase()}` : isFranqueado ? `${(cidade ?? "").toUpperCase()} - SC` : isSuper ? "Super admin" : "Admin"}</div>
+                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isColaborador ? `CCO · ${(cidade ?? "").toUpperCase()}` : isFranqueado ? `${(cidade ?? "").toUpperCase()} - SC` : isSuper ? "Super admin" : "Admin"}</div>
               </div>
             </Link>
             <button onClick={() => setOpen(false)} className="md:hidden text-white/60 hover:text-white" aria-label="Fechar menu">
