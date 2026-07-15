@@ -13,6 +13,7 @@ import { AceiteContratoGate } from "@/components/AceiteContratoGate";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { usePedidosRealtime } from "@/features/loja-pedidos/hooks/use-pedidos-loja";
+import { MensalidadeVencimentoBanner } from "@/components/MensalidadeVencimentoBanner";
 
 
 const NAV_ALL = [
