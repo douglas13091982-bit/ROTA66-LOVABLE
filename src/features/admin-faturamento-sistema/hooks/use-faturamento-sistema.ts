@@ -33,42 +33,74 @@ function inicioPeriodo(p: PeriodoFat): string | null {
   return d.toISOString();
 }
 
-export function useFaturamentoSistema(periodo: PeriodoFat) {
+export function useFaturamentoSistema(periodo: PeriodoFat, cidade?: string | null) {
   return useQuery({
-    queryKey: ["admin-faturamento-sistema", periodo],
+    queryKey: ["admin-faturamento-sistema", periodo, cidade ?? "__all__"],
     queryFn: async (): Promise<FaturamentoSistema> => {
       const desde = inicioPeriodo(periodo);
 
-      // 1) IDs de lojas de teste (para excluir)
-      const { data: teste } = await supabase
-        .from("lojas")
-        .select("id")
-        .eq("is_teste", true);
-      const testeIds = (teste ?? []).map((l: any) => l.id as string);
-      const excluir = (col: string) =>
-        testeIds.length ? `${col}=not.in.(${testeIds.join(",")})` : null;
+      // 1) IDs de lojas: excluir teste; se cidade filtrada, restringir a ela
+      let lojasQ = supabase.from("lojas").select("id, is_teste, cidade");
+      if (cidade) lojasQ = lojasQ.eq("cidade", cidade);
+      const { data: lojasAll } = await lojasQ;
+      const testeIds = (lojasAll ?? [])
+        .filter((l: any) => l.is_teste)
+        .map((l: any) => l.id as string);
+      const lojasIds = (lojasAll ?? [])
+        .filter((l: any) => !l.is_teste)
+        .map((l: any) => l.id as string);
 
-      // 2) Mensalidades pagas
+      // Helper para restringir por lojas quando houver filtro de cidade
+      const restringirLojas = <T extends { in: any; not: any }>(q: T): T => {
+        if (cidade) {
+          if (lojasIds.length === 0) return q.in("loja_id" as any, ["00000000-0000-0000-0000-000000000000"]) as T;
+          return q.in("loja_id" as any, lojasIds) as T;
+        }
+        if (testeIds.length) return q.not("loja_id" as any, "in", `(${testeIds.join(",")})`) as T;
+        return q;
+      };
+
+      // 2) Entregadores da cidade (para filtrar saques/saldo quando cidade)
+      let entregadorIds: string[] | null = null;
+      if (cidade) {
+        const { data: cidadeRow } = await supabase
+          .from("cidades")
+          .select("id")
+          .eq("nome", cidade)
+          .maybeSingle();
+        const cityId = (cidadeRow as any)?.id ?? null;
+        if (cityId) {
+          const { data: profs } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("city_id", cityId);
+          entregadorIds = (profs ?? []).map((p: any) => p.id as string);
+        } else {
+          entregadorIds = [];
+        }
+      }
+
+      // 3) Mensalidades pagas
       let mensQ = supabase
         .from("mensalidades_loja")
         .select("valor, pago_em, loja_id", { count: "exact" })
         .eq("pago", true);
       if (desde) mensQ = mensQ.gte("pago_em", desde);
-      if (testeIds.length) mensQ = mensQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      mensQ = restringirLojas(mensQ as any);
       const { data: mensRows, count: mensCount } = await mensQ;
       const mensalidadesPagas = (mensRows ?? []).reduce(
         (s: number, r: any) => s + Number(r.valor ?? 0),
         0,
       );
 
-      // 3) Pedidos entregues (taxa por pedido) e vendas MP
+      // 4) Pedidos entregues (taxa por pedido) e vendas MP
       let pedQ = supabase
         .from("pedidos")
         .select(
           "valor_total, taxa_por_pedido_aplicada, taxa_mp, mp_payment_status, status, created_at, loja_id",
         );
       if (desde) pedQ = pedQ.gte("created_at", desde);
-      if (testeIds.length) pedQ = pedQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      pedQ = restringirLojas(pedQ as any);
       const { data: pedRows } = await pedQ;
       const pedidos = pedRows ?? [];
 
@@ -94,51 +126,60 @@ export function useFaturamentoSistema(periodo: PeriodoFat) {
       );
       const vendasLiquidas = vendasBrutas - taxasMp;
 
-      // 4) Repasses aos entregadores (saques pagos)
+      // 5) Repasses aos entregadores (saques pagos)
       let saqQ = supabase
         .from("entregador_saques")
-        .select("valor, pago_em", { count: "exact" })
+        .select("valor, pago_em, entregador_id", { count: "exact" })
         .eq("status", "pago");
       if (desde) saqQ = saqQ.gte("pago_em", desde);
+      if (entregadorIds) {
+        if (entregadorIds.length === 0) saqQ = saqQ.eq("entregador_id", "00000000-0000-0000-0000-000000000000");
+        else saqQ = saqQ.in("entregador_id", entregadorIds);
+      }
       const { data: saqRows, count: saqCount } = await saqQ;
       const repassesEntregadores = (saqRows ?? []).reduce(
         (s: number, r: any) => s + Number(r.valor ?? 0),
         0,
       );
 
-      // 4b) Saques pendentes (solicitados) — o que ainda devo pagar
-      const { data: pendRows, count: pendCount } = await supabase
+      // 5b) Saques pendentes
+      let pendQ = supabase
         .from("entregador_saques")
-        .select("valor", { count: "exact" })
+        .select("valor, entregador_id", { count: "exact" })
         .eq("status", "solicitado");
+      if (entregadorIds) {
+        if (entregadorIds.length === 0) pendQ = pendQ.eq("entregador_id", "00000000-0000-0000-0000-000000000000");
+        else pendQ = pendQ.in("entregador_id", entregadorIds);
+      }
+      const { data: pendRows, count: pendCount } = await pendQ;
       const repassesPendentes = (pendRows ?? []).reduce(
         (s: number, r: any) => s + Number(r.valor ?? 0),
         0,
       );
 
-      // 4c) Saldo total devido aos entregadores (créditos acumulados)
-      const { data: saldoRows } = await supabase
-        .from("entregadores_saldo_saque")
-        .select("saldo");
+      // 5c) Saldo devido aos entregadores
+      let saldoEntQ = supabase.from("entregadores_saldo_saque").select("saldo, entregador_id");
+      if (entregadorIds) {
+        if (entregadorIds.length === 0) saldoEntQ = saldoEntQ.eq("entregador_id", "00000000-0000-0000-0000-000000000000");
+        else saldoEntQ = saldoEntQ.in("entregador_id", entregadorIds);
+      }
+      const { data: saldoRows } = await saldoEntQ;
       const saldoDevidoEntregadores = (saldoRows ?? []).reduce(
         (s: number, r: any) => s + Number(r.saldo ?? 0),
         0,
       );
 
-      // 5) Saldo atual consolidado de todas as lojas (real, já com todos descontos)
+      // 6) Saldo atual consolidado das lojas
       let saldoLojasQ = supabase.from("lojas_saldo").select("saldo, loja_id");
-      if (testeIds.length)
-        saldoLojasQ = saldoLojasQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      saldoLojasQ = restringirLojas(saldoLojasQ as any);
       const { data: saldoLojasRows } = await saldoLojasQ;
       const saldoAtualLojas = (saldoLojasRows ?? []).reduce(
         (s: number, r: any) => s + Number(r.saldo ?? 0),
         0,
       );
 
-      // Líquido do sistema = receita do sistema (mensalidades + taxa por pedido)
       const liquidoSistema = mensalidadesPagas + taxasPorPedido;
 
-      void excluir;
       return {
         mensalidadesPagas,
         mensalidadesQtd: mensCount ?? (mensRows?.length ?? 0),
