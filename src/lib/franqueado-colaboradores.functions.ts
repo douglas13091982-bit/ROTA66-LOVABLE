@@ -85,7 +85,7 @@ export const adicionarColaborador = createServerFn({ method: "POST" })
       .select("franqueado_user_id, ativo")
       .eq("colaborador_user_id", found.id)
       .maybeSingle();
-    if (jaColab?.ativo && jaColab.franqueado_user_id !== franqueadoId) {
+    const jc: any = jaColab; if (jc?.ativo && jc.franqueado_user_id !== franqueadoId) {
       throw new Error("Este usuário já é colaborador de outro franqueado");
     }
 
