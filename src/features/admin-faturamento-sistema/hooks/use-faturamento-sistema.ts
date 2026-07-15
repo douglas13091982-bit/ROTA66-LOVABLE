@@ -125,6 +125,16 @@ export function useFaturamentoSistema(periodo: PeriodoFat) {
         0,
       );
 
+      // 5) Saldo atual consolidado de todas as lojas (real, já com todos descontos)
+      let saldoLojasQ = supabase.from("lojas_saldo").select("saldo, loja_id");
+      if (testeIds.length)
+        saldoLojasQ = saldoLojasQ.not("loja_id", "in", `(${testeIds.join(",")})`);
+      const { data: saldoLojasRows } = await saldoLojasQ;
+      const saldoAtualLojas = (saldoLojasRows ?? []).reduce(
+        (s: number, r: any) => s + Number(r.saldo ?? 0),
+        0,
+      );
+
       // Líquido do sistema = receita do sistema (mensalidades + taxa por pedido)
       const liquidoSistema = mensalidadesPagas + taxasPorPedido;
 
@@ -143,6 +153,7 @@ export function useFaturamentoSistema(periodo: PeriodoFat) {
         repassesPendentes,
         repassesPendentesQtd: pendCount ?? (pendRows?.length ?? 0),
         saldoDevidoEntregadores,
+        saldoAtualLojas,
         liquidoSistema,
       };
     },
