@@ -78,3 +78,31 @@ export async function aplicarTaxaMpAoPedido(
     console.error("[mp-taxa] erro inesperado", e?.message ?? e);
   }
 }
+
+// ============================================================
+// Taxa marketplace (%) — cobrada da loja em toda venda paga online
+// via catálogo público. Debitada do saldo imediatamente na confirmação.
+// ============================================================
+export async function aplicarTaxaMarketplaceAoPedido(
+  pedidoId: string | null | undefined,
+  payment: MpPaymentLike,
+): Promise<void> {
+  if (!pedidoId) return;
+  const valor = Number(payment.transaction_amount ?? 0);
+  if (valor <= 0) return;
+  const { getTaxaMarketplacePct } = await import("@/lib/plataforma-mp.server");
+  const pct = await getTaxaMarketplacePct();
+  if (pct <= 0) return;
+  const taxa = Math.round(valor * (pct / 100) * 100) / 100;
+  if (taxa <= 0) return;
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.rpc("debitar_taxa_marketplace_pedido" as any, {
+      _pedido_id: pedidoId,
+      _taxa: taxa,
+    } as any);
+    if (error) console.error("[mp-taxa] debitar_taxa_marketplace_pedido", error.message);
+  } catch (e: any) {
+    console.error("[mp-taxa] taxa marketplace erro", e?.message ?? e);
+  }
+}
