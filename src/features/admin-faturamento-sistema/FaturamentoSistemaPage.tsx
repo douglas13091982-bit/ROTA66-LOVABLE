@@ -91,6 +91,11 @@ export function FaturamentoSistemaPage() {
   return (
     <AdminShell title="Faturamento do sistema">
       <div className="max-w-6xl space-y-6">
+        {cidadeFiltro && (
+          <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-xs text-primary">
+            Exibindo apenas dados da cidade: <strong>{cidadeFiltro}</strong>
+          </div>
+        )}
         <div className="flex flex-wrap gap-2 border-b border-border pb-2">
           {PERIODOS.map((p) => {
             const active = periodo === p.key;
