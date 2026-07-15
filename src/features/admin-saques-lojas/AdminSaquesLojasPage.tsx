@@ -106,6 +106,7 @@ export function AdminSaquesLojasContent() {
     onSuccess: () => {
       toast.success("Saque rejeitado e saldo devolvido");
       qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
+      qc.invalidateQueries({ queryKey: ["admin-saques-lojas-counts"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
