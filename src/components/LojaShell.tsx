@@ -216,6 +216,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
             </button>
           </div>
         )}
+        <MensalidadeVencimentoBanner />
 
 
 
