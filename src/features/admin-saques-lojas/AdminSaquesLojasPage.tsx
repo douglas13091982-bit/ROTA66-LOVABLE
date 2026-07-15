@@ -120,19 +120,29 @@ export function AdminSaquesLojasContent() {
   return (
     <div className="max-w-5xl space-y-6">
       <div className="flex flex-wrap gap-2 border-b border-border pb-2">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
-              tab === key
-                ? "bg-gradient-red shadow-red text-primary-foreground"
-                : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        {TABS.map(({ key, label }) => {
+          const n = counts?.[key];
+          return (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
+                tab === key
+                  ? "bg-gradient-red shadow-red text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
+              }`}
+            >
+              {label}
+              {typeof n === "number" && (
+                <span className={`ml-2 inline-flex items-center justify-center min-w-[20px] px-1.5 h-5 rounded-full text-[10px] ${
+                  tab === key ? "bg-black/25 text-white" : "bg-background text-foreground border border-border"
+                }`}>
+                  {n}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {isLoading ? (
