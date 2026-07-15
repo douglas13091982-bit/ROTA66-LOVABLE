@@ -17,6 +17,7 @@ export type FaturamentoSistema = {
   repassesPendentes: number;
   repassesPendentesQtd: number;
   saldoDevidoEntregadores: number;
+  saldoAtualLojas: number;
   liquidoSistema: number;
 };
 
