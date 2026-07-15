@@ -6,6 +6,8 @@ import {
   TrendingUp,
   Bike,
   Info,
+  AlertCircle,
+  Wallet,
 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import {
@@ -182,10 +184,25 @@ export function FaturamentoSistemaPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card
-              title="Total pago em saques"
+              title="Saques pendentes (a pagar agora)"
+              value={brl(data?.repassesPendentes ?? 0)}
+              hint={`${data?.repassesPendentesQtd ?? 0} solicitação(ões) aguardando pagamento`}
+              icon={AlertCircle}
+              tone="warn"
+            />
+            <Card
+              title="Saldo total devido aos entregadores"
+              value={brl(data?.saldoDevidoEntregadores ?? 0)}
+              hint="Créditos acumulados nas carteiras dos entregadores (ainda não sacados)"
+              icon={Wallet}
+              tone="primary"
+            />
+            <Card
+              title="Total pago em saques (período)"
               value={brl(rep)}
               hint={`${data?.repassesQtd ?? 0} saque(s) liquidados`}
               icon={Bike}
+              tone="success"
             />
             <Card
               title="Como funciona"
@@ -194,7 +211,16 @@ export function FaturamentoSistemaPage() {
               icon={Info}
             />
           </div>
+          <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 px-3 py-2 text-xs flex items-start gap-2">
+            <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+            <span>
+              O card "Saques pendentes" mostra o valor total das solicitações
+              em aberto — é o que você precisa pagar via PIX aos entregadores.
+              Acesse <strong>Carteiras &amp; Saques</strong> para liquidar.
+            </span>
+          </div>
         </section>
+
 
         {/* SEÇÃO 4: RESUMO FINAL */}
         <section className="rounded-lg border border-primary/40 bg-primary/5 p-6">

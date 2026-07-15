@@ -14,6 +14,9 @@ export type FaturamentoSistema = {
   vendasQtd: number;
   repassesEntregadores: number;
   repassesQtd: number;
+  repassesPendentes: number;
+  repassesPendentesQtd: number;
+  saldoDevidoEntregadores: number;
   liquidoSistema: number;
 };
 
@@ -102,6 +105,25 @@ export function useFaturamentoSistema(periodo: PeriodoFat) {
         0,
       );
 
+      // 4b) Saques pendentes (solicitados) — o que ainda devo pagar
+      const { data: pendRows, count: pendCount } = await supabase
+        .from("entregador_saques")
+        .select("valor", { count: "exact" })
+        .eq("status", "solicitado");
+      const repassesPendentes = (pendRows ?? []).reduce(
+        (s: number, r: any) => s + Number(r.valor ?? 0),
+        0,
+      );
+
+      // 4c) Saldo total devido aos entregadores (créditos acumulados)
+      const { data: saldoRows } = await supabase
+        .from("entregadores_saldo_saque")
+        .select("saldo");
+      const saldoDevidoEntregadores = (saldoRows ?? []).reduce(
+        (s: number, r: any) => s + Number(r.saldo ?? 0),
+        0,
+      );
+
       // Líquido do sistema = receita do sistema (mensalidades + taxa por pedido)
       const liquidoSistema = mensalidadesPagas + taxasPorPedido;
 
@@ -117,6 +139,9 @@ export function useFaturamentoSistema(periodo: PeriodoFat) {
         vendasQtd: vendasMp.length,
         repassesEntregadores,
         repassesQtd: saqCount ?? (saqRows?.length ?? 0),
+        repassesPendentes,
+        repassesPendentesQtd: pendCount ?? (pendRows?.length ?? 0),
+        saldoDevidoEntregadores,
         liquidoSistema,
       };
     },
