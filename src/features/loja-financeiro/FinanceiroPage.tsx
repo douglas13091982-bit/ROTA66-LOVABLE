@@ -95,7 +95,7 @@ export function FinanceiroPage() {
           totalAberto={totalAberto}
           totalPago={totalPago}
           mensalidadeValor={mensalidadeValor}
-          prox={prox}
+          prox={proxFallback}
         />
         <InfoPrazo prazo={prazo} />
         <MensalidadesTabela
