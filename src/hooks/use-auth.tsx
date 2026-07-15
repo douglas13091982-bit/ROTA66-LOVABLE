@@ -22,19 +22,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const loadRoles = async (uid: string) => {
+      const [{ data: r }, { data: c }] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", uid),
+        (supabase as any)
+          .from("franqueado_colaboradores")
+          .select("id")
+          .eq("colaborador_user_id", uid)
+          .eq("ativo", true)
+          .maybeSingle(),
+      ]);
+      const list = (r ?? []).map((x) => x.role as AppRole);
+      if (c && !list.includes("super_admin")) list.push("super_admin");
+      return list;
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
       if (newSession?.user) {
         // Defer role fetch to avoid deadlocks inside the auth callback
         setTimeout(() => {
-          supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", newSession.user.id)
-            .then(({ data }) => {
-              setRoles((data ?? []).map((r) => r.role as AppRole));
-            });
+          loadRoles(newSession.user.id).then(setRoles);
         }, 0);
       } else {
         setRoles([]);
@@ -45,18 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", s.user.id)
-          .then(({ data }) => {
-            setRoles((data ?? []).map((r) => r.role as AppRole));
-            setLoading(false);
-          });
+        loadRoles(s.user.id).then((list) => {
+          setRoles(list);
+          setLoading(false);
+        });
       } else {
         setLoading(false);
       }
     });
+
 
     // Quando o usuário volta ao app depois de um tempo (tela bloqueada,
     // troca de aba, PWA em segundo plano), o token pode ter vencido e o
