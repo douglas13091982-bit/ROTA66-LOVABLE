@@ -52,6 +52,24 @@ export function AdminSaquesLojasContent() {
     },
   });
 
+  const { data: counts } = useQuery({
+    queryKey: ["admin-saques-lojas-counts"],
+    queryFn: async () => {
+      const statuses: Array<Tab> = ["solicitado", "pago", "rejeitado"];
+      const result: Record<string, number> = { todos: 0 };
+      for (const s of statuses) {
+        const { count } = await (supabase as any)
+          .from("lojas_saques")
+          .select("*", { count: "exact", head: true })
+          .eq("status", s);
+        result[s] = count ?? 0;
+        result.todos += count ?? 0;
+      }
+      return result;
+    },
+    refetchInterval: 30_000,
+  });
+
   const marcarPago = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await (supabase as any)
@@ -63,6 +81,7 @@ export function AdminSaquesLojasContent() {
     onSuccess: () => {
       toast.success("Saque marcado como pago");
       qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
+      qc.invalidateQueries({ queryKey: ["admin-saques-lojas-counts"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -87,6 +106,7 @@ export function AdminSaquesLojasContent() {
     onSuccess: () => {
       toast.success("Saque rejeitado e saldo devolvido");
       qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
+      qc.invalidateQueries({ queryKey: ["admin-saques-lojas-counts"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -100,19 +120,29 @@ export function AdminSaquesLojasContent() {
   return (
     <div className="max-w-5xl space-y-6">
       <div className="flex flex-wrap gap-2 border-b border-border pb-2">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
-              tab === key
-                ? "bg-gradient-red shadow-red text-primary-foreground"
-                : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        {TABS.map(({ key, label }) => {
+          const n = counts?.[key];
+          return (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition ${
+                tab === key
+                  ? "bg-gradient-red shadow-red text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-background"
+              }`}
+            >
+              {label}
+              {typeof n === "number" && (
+                <span className={`ml-2 inline-flex items-center justify-center min-w-[20px] px-1.5 h-5 rounded-full text-[10px] ${
+                  tab === key ? "bg-black/25 text-white" : "bg-background text-foreground border border-border"
+                }`}>
+                  {n}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {isLoading ? (
