@@ -8,6 +8,9 @@ export type ResumoSaqueLoja = {
   pode_sacar_hoje: boolean;
   tem_saque_pendente: boolean;
   ultimo_saque_em: string | null;
+  saldo_bruto?: number;
+  reservado_mensalidade?: number;
+  reservado_taxa_mp?: number;
 };
 
 export type SaqueLojaRow = {

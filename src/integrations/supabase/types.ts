@@ -3390,6 +3390,10 @@ export type Database = {
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
+      debitar_mensalidade_do_saldo: {
+        Args: { _mensalidade_id: string }
+        Returns: boolean
+      }
       debitar_taxa_mp_pedido: {
         Args: { _metodo: string; _pedido_id: string; _taxa: number }
         Returns: undefined
@@ -3663,6 +3667,19 @@ export type Database = {
         }
         Returns: boolean
       }
+      loja_faturamento_resumo: {
+        Args: { _dias?: number; _loja_id: string }
+        Returns: {
+          mensalidade_aberta: number
+          mensalidade_paga: number
+          periodo_dias: number
+          saldo_atual: number
+          saques_pagos: number
+          taxa_pedido_total: number
+          vendas_mp_bruto: number
+          vendas_mp_taxa: number
+        }[]
+      }
       loja_precisa_aceitar_contrato: {
         Args: { _loja_id: string }
         Returns: boolean
@@ -3675,7 +3692,10 @@ export type Database = {
         Args: { _loja_id: string }
         Returns: {
           pode_sacar_hoje: boolean
+          reservado_mensalidade: number
+          reservado_taxa_mp: number
           saldo: number
+          saldo_bruto: number
           tem_saque_pendente: boolean
           ultimo_saque_em: string
           valor_minimo: number
@@ -3763,6 +3783,13 @@ export type Database = {
       pode_acessar_chat_pedido: {
         Args: { _pedido_id: string; _user_id: string }
         Returns: boolean
+      }
+      processar_mensalidades_vencidas: {
+        Args: never
+        Returns: {
+          pagas: number
+          processadas: number
+        }[]
       }
       processar_ofertas_externas: { Args: never; Returns: number }
       publicar_turno: { Args: { _agendamento_id: string }; Returns: number }
