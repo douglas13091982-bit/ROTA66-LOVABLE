@@ -52,6 +52,13 @@ export function PlanosTable({ planos, onEdit, onToggleAtivo, onRemove }: Props) 
             <div className="text-xs text-muted-foreground">
               Vence dia {p.dia_vencimento} · ordem {p.ordem}
             </div>
+            <div className="text-xs text-muted-foreground">
+              Limite pedidos/mês:{" "}
+              <span className="font-semibold text-foreground">
+                {p.max_pedidos_mes && p.max_pedidos_mes > 0 ? p.max_pedidos_mes : "Ilimitado"}
+              </span>
+            </div>
+
           </div>
 
           <div className="flex items-center gap-2 pt-2 border-t border-border">
