@@ -52,6 +52,24 @@ export function AdminSaquesLojasContent() {
     },
   });
 
+  const { data: counts } = useQuery({
+    queryKey: ["admin-saques-lojas-counts"],
+    queryFn: async () => {
+      const statuses: Array<Tab> = ["solicitado", "pago", "rejeitado"];
+      const result: Record<string, number> = { todos: 0 };
+      for (const s of statuses) {
+        const { count } = await (supabase as any)
+          .from("lojas_saques")
+          .select("*", { count: "exact", head: true })
+          .eq("status", s);
+        result[s] = count ?? 0;
+        result.todos += count ?? 0;
+      }
+      return result;
+    },
+    refetchInterval: 30_000,
+  });
+
   const marcarPago = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await (supabase as any)
