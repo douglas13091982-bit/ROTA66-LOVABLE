@@ -1027,6 +1027,33 @@ export type Database = {
           },
         ]
       }
+      franqueado_colaboradores: {
+        Row: {
+          ativo: boolean
+          colaborador_user_id: string
+          created_at: string
+          franqueado_user_id: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          colaborador_user_id: string
+          created_at?: string
+          franqueado_user_id: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          colaborador_user_id?: string
+          created_at?: string
+          franqueado_user_id?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       franqueados_config: {
         Row: {
           ativo: boolean
@@ -3470,6 +3497,7 @@ export type Database = {
         Args: { _ticket_id: string }
         Returns: undefined
       }
+      franqueado_do_colaborador: { Args: { _uid: string }; Returns: string }
       gerar_cobrancas_revendedores_mensal: { Args: never; Returns: undefined }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
