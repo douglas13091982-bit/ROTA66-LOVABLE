@@ -50,11 +50,12 @@ export const listarColaboradores = createServerFn({ method: "GET" })
 
 export const adicionarColaborador = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { email: string }) => d)
+  .inputValidator((d: { email: string; senha?: string }) => d)
   .handler(async ({ data, context }) => {
     const franqueadoId = await ensureFranqueadoDono(context);
     const email = data.email.trim().toLowerCase();
     if (!email) throw new Error("Informe um e-mail");
+    const senha = (data.senha ?? "").trim();
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -67,7 +68,20 @@ export const adicionarColaborador = createServerFn({ method: "POST" })
       if (hit) found = { id: hit.id };
       if (users.length < 200) break;
     }
-    if (!found) throw new Error("Nenhum usuário encontrado com este e-mail. Peça para ele se cadastrar primeiro.");
+
+    // Se não existir, cria a conta com a senha informada
+    if (!found) {
+      if (senha.length < 6) {
+        throw new Error("Este e-mail ainda não tem conta. Informe uma senha (mín. 6 caracteres) para criar.");
+      }
+      const { data: created, error: errCreate } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password: senha,
+        email_confirm: true,
+      });
+      if (errCreate || !created?.user) throw new Error(errCreate?.message ?? "Falha ao criar usuário");
+      found = { id: created.user.id };
+    }
 
     if (found.id === franqueadoId) throw new Error("Você não pode se adicionar como colaborador");
 

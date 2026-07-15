@@ -16,6 +16,7 @@ export function ColaboradoresSection() {
   const adicionar = useServerFn(adicionarColaborador);
   const remover = useServerFn(removerColaborador);
   const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
 
   const { data, isLoading } = useQuery({
     queryKey: ["franq-colaboradores"],
@@ -23,10 +24,11 @@ export function ColaboradoresSection() {
   });
 
   const addM = useMutation({
-    mutationFn: (email: string) => adicionar({ data: { email } }),
+    mutationFn: (v: { email: string; senha: string }) => adicionar({ data: v }),
     onSuccess: () => {
       toast.success("Colaborador adicionado");
       setEmail("");
+      setSenha("");
       qc.invalidateQueries({ queryKey: ["franq-colaboradores"] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Falha ao adicionar"),
@@ -50,16 +52,16 @@ export function ColaboradoresSection() {
         <h2 className="text-lg font-semibold text-white">Colaboradores</h2>
       </div>
       <p className="text-xs text-white/60 mb-4">
-        Adicione outras pessoas para acessar seu painel. Elas verão as mesmas informações da sua cidade,
-        exceto o menu <strong>Minha franquia</strong> (dados e faturas da sua franquia). O usuário precisa já
-        ter uma conta no sistema.
+        Adicione outras pessoas para acessar seu painel (mesmas informações da sua cidade, exceto
+        <strong> Minha franquia</strong>). Se o e-mail ainda não tiver conta, informe uma senha e a conta será
+        criada automaticamente.
       </p>
 
       <form
-        className="flex gap-2 mb-4"
+        className="grid gap-2 sm:grid-cols-[1fr_180px_auto] mb-4"
         onSubmit={(e) => {
           e.preventDefault();
-          if (email.trim()) addM.mutate(email.trim());
+          if (email.trim()) addM.mutate({ email: email.trim(), senha });
         }}
       >
         <input
@@ -68,12 +70,19 @@ export function ColaboradoresSection() {
           placeholder="email@colaborador.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="flex-1 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
+          className="px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
+        />
+        <input
+          type="text"
+          placeholder="senha (se novo)"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          className="px-3 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25"
         />
         <button
           type="submit"
           disabled={addM.isPending}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg font-semibold text-black text-sm disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-semibold text-black text-sm disabled:opacity-60"
           style={{ background: "var(--rota-gold)" }}
         >
           <Plus className="h-4 w-4" /> {addM.isPending ? "Adicionando…" : "Adicionar"}
