@@ -122,7 +122,7 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && !isFranqueado && (
+        {tab === "mercado-pago" && !escopoFranqueado && (
           <div className="space-y-6">
             <MercadoPagoPlataformaSection />
             <TaxaMarketplaceSection />
@@ -130,7 +130,7 @@ export function FinanceiroAdminPage() {
           </div>
         )}
 
-        {tab === "pix" && !isFranqueado && (
+        {tab === "pix" && !escopoFranqueado && (
           <PixSection
             config={config}
             setConfig={setConfig}
