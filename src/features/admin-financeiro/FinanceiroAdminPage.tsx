@@ -57,9 +57,10 @@ export function FinanceiroAdminPage() {
   const mensAguardando = mensalidades.filter((m) => !m.pago && !!m.pago_solicitado_em);
   const totalPendentes = cobAguardando.length + mensAguardando.length;
 
-  const { isFranqueado } = useFranquia();
+  const { isFranqueado, isColaborador } = useFranquia();
+  const escopoFranqueado = isFranqueado || isColaborador;
   const TABS = ALL_TABS.filter((t) =>
-    isFranqueado ? t.key !== "mercado-pago" && t.key !== "pix" : true,
+    escopoFranqueado ? t.key !== "mercado-pago" && t.key !== "pix" : true,
   );
 
   const [tab, setTab] = useState<TabKey>("visao-geral");
@@ -121,7 +122,7 @@ export function FinanceiroAdminPage() {
           />
         )}
 
-        {tab === "mercado-pago" && !isFranqueado && (
+        {tab === "mercado-pago" && !escopoFranqueado && (
           <div className="space-y-6">
             <MercadoPagoPlataformaSection />
             <TaxaMarketplaceSection />
@@ -129,7 +130,7 @@ export function FinanceiroAdminPage() {
           </div>
         )}
 
-        {tab === "pix" && !isFranqueado && (
+        {tab === "pix" && !escopoFranqueado && (
           <PixSection
             config={config}
             setConfig={setConfig}
