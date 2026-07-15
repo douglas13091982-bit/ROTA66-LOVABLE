@@ -9,6 +9,7 @@ import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
 import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
 import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
+import { usePasswordResetPendentesCount } from "@/features/admin-password-reset/hooks/use-password-reset-pendentes-count";
 import { useFranquia } from "@/hooks/use-franquia";
 
 
