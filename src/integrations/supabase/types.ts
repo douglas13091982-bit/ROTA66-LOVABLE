@@ -2123,6 +2123,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_marketplace: number
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           troco_para: number | null
@@ -2171,6 +2172,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_marketplace?: number
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
@@ -2219,6 +2221,7 @@ export type Database = {
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega?: number
+          taxa_marketplace?: number
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           troco_para?: number | null
@@ -3229,6 +3232,7 @@ export type Database = {
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
           taxa_entrega: number
+          taxa_marketplace: number
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           troco_para: number | null
@@ -3423,6 +3427,10 @@ export type Database = {
       debitar_mensalidade_do_saldo: {
         Args: { _mensalidade_id: string }
         Returns: boolean
+      }
+      debitar_taxa_marketplace_pedido: {
+        Args: { _pedido_id: string; _taxa: number }
+        Returns: undefined
       }
       debitar_taxa_mp_pedido: {
         Args: { _metodo: string; _pedido_id: string; _taxa: number }

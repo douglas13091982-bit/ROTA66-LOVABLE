@@ -88,8 +88,9 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
                 _mp_payment_id: paymentId,
                 _mp_status: payment.status,
               } as any);
-              const { aplicarTaxaMpAoPedido } = await import("@/lib/mp-taxa.server");
+              const { aplicarTaxaMpAoPedido, aplicarTaxaMarketplaceAoPedido } = await import("@/lib/mp-taxa.server");
               await aplicarTaxaMpAoPedido(pedidoId as unknown as string | null, payment);
+              await aplicarTaxaMarketplaceAoPedido(pedidoId as unknown as string | null, payment);
             } else {
               const upd: Record<string, unknown> = { mp_payment_status: payment.status };
               if (cancelado) upd.status = "cancelado";

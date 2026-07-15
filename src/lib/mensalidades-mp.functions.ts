@@ -147,6 +147,30 @@ export const salvarTaxasMp = createServerFn({ method: "POST" })
   });
 
 // ============================================================
+// SUPER ADMIN: taxa marketplace (% sobre vendas online via catálogo)
+// ============================================================
+
+export const obterTaxaMarketplace = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { getTaxaMarketplacePct } = await import("@/lib/plataforma-mp.server");
+    return { pct: await getTaxaMarketplacePct() };
+  });
+
+const SalvarTaxaMktSchema = z.object({ pct: z.number().min(0).max(100) });
+
+export const salvarTaxaMarketplace = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SalvarTaxaMktSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context.supabase, context.userId);
+    const { setTaxaMarketplacePct } = await import("@/lib/plataforma-mp.server");
+    await setTaxaMarketplacePct(data.pct);
+    return { ok: true };
+  });
+
+// ============================================================
 // LOJA: consolidar e pagar mensalidade
 // ============================================================
 
