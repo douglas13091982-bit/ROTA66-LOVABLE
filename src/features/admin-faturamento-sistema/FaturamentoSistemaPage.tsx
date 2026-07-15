@@ -168,6 +168,13 @@ export function FaturamentoSistemaPage() {
               tone="success"
             />
           </div>
+          <Card
+            title="Saldo atual consolidado das lojas (real)"
+            value={brl(data?.saldoAtualLojas ?? 0)}
+            hint="Soma dos saldos de todas as carteiras agora, já líquido de: entregas pagas aos entregadores, taxa por pedido, taxa MP, mensalidades e saques."
+            icon={Wallet}
+            tone="primary"
+          />
           <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground flex items-start gap-2">
             <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
             <span>
@@ -176,6 +183,7 @@ export function FaturamentoSistemaPage() {
             </span>
           </div>
         </section>
+
 
         {/* SEÇÃO 3: REPASSES */}
         <section className="space-y-3">
