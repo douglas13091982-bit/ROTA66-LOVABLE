@@ -24,6 +24,7 @@ export type PlanoFormState = {
   ordem: string;
   ativo: boolean;
   max_funcionarios: string;
+  max_pedidos_mes: string;
 };
 
 export const INITIAL_PLANO_FORM: PlanoFormState = {
