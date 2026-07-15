@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useFranquia } from "@/hooks/use-franquia";
 import { formatCurrency } from "@/lib/format";
 import { MapPin, AlertTriangle } from "lucide-react";
+import { ColaboradoresSection } from "./components/ColaboradoresSection";
 
 type Fatura = {
   id: string;
@@ -101,6 +102,8 @@ export function MinhaFranquiaPage() {
             Fale com o owner para gerar o link de pagamento se ainda não estiver disponível.
           </div>
         </section>
+
+        <ColaboradoresSection />
       </div>
     </AdminShell>
   );
