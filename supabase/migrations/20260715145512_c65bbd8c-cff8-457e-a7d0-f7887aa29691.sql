@@ -1,0 +1,1 @@
+ALTER TABLE public.planos_loja ADD COLUMN IF NOT EXISTS max_pedidos_mes integer NOT NULL DEFAULT 0;
