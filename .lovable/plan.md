@@ -1,80 +1,63 @@
-## Objetivo
 
-Permitir que a loja cadastre **adicionais/complementos** por produto (ex.: borda recheada, extras, molhos, tamanhos) com preço próprio, e que o cliente escolha esses adicionais no catálogo antes de adicionar ao carrinho. Os adicionais somam ao preço do item e ficam registrados no pedido.
+# Colaboradores do Franqueado
 
-## Modelo de dados
+Permitir que cada franqueado dê acesso ao seu painel a outros usuários (colaboradores), que enxergam as mesmas telas que o franqueado — restritas à cidade dele — **exceto o menu "Minha franquia"** (faturas, mensalidade, dados da franquia).
 
-Duas novas tabelas no schema `public`:
+## Como vai funcionar
 
-**`produto_adicional_grupos`** — um grupo de opções vinculado a um produto (ex.: "Escolha a borda", "Extras", "Tamanho").
-- `produto_id` (FK produtos)
-- `nome`, `min_escolhas` (int, default 0), `max_escolhas` (int, default 1), `obrigatorio` (bool), `ordem` (int)
+**Para o franqueado**
+- Nova aba **"Colaboradores"** dentro de `/admin/minha-franquia`.
+- Campo para adicionar colaborador por e-mail (o usuário precisa já ter conta no sistema).
+- Lista dos colaboradores atuais com botão de remover.
+- Só o próprio franqueado enxerga essa aba.
 
-**`produto_adicional_opcoes`** — cada opção dentro do grupo (ex.: "Borda catupiry — R$ 8").
-- `grupo_id` (FK)
-- `nome`, `preco` (numeric, default 0), `ativo` (bool), `ordem` (int)
+**Para o colaborador**
+- Ao entrar no sistema, é direcionado ao painel admin igual ao franqueado.
+- Vê todos os menus do franqueado (Lojas, Entregadores, Financeiro, Pedidos, Suporte, Faturamento do sistema, etc.), sempre **filtrados pela cidade do franqueado que o convidou**.
+- **NÃO vê** o menu "Minha franquia" e não consegue acessar essa rota (bloqueio também no roteador).
+- Badge lateral mostra "Colaborador · <Cidade>" em vez de "Franqueado".
 
-Ambas com RLS: loja dona pode gerenciar (via `loja_id` derivado), leitura pública para catálogo aberto. GRANTs padrão + `anon` SELECT.
+**Regras de segurança**
+- Colaborador herda cidade e escopo do franqueado — nunca vê dados de outras cidades.
+- Se o franqueado estiver bloqueado por inadimplência, os colaboradores também ficam bloqueados (mesma tela de acesso bloqueado, sem link para "ver faturas").
+- Remover um colaborador tira o acesso imediatamente.
 
-Nos pedidos, o snapshot de item em `pedidos.itens` (JSON) ganha o campo `adicionais: [{ grupo, nome, preco, qtd }]` e o `subtotal` já reflete a soma.
+## Detalhes técnicos
 
-## Cadastro na loja
+**Banco de dados** (via migration)
+- Nova tabela `franqueado_colaboradores`:
+  - `franqueado_user_id` (FK → auth.users, cidade herdada de `franqueados_config`)
+  - `colaborador_user_id` (FK → auth.users, único)
+  - `ativo` (boolean)
+  - timestamps
+- GRANTs para `authenticated` e `service_role`; RLS habilitada.
+- Políticas:
+  - Franqueado lê/insere/remove apenas suas próprias linhas (`franqueado_user_id = auth.uid()`).
+  - Colaborador lê apenas a própria linha.
+- Função `public.franqueado_do_colaborador(uid uuid) returns uuid` (SECURITY DEFINER) para descobrir o franqueado ao qual o colaborador pertence.
+- Atualizar as políticas RLS existentes que hoje usam `franqueados_config.cidade = auth.uid()` para também aceitar colaboradores via `franqueado_do_colaborador(auth.uid())`. Tabelas afetadas: `lojas`, `mensalidades_loja`, `cobrancas_loja`, `pedidos`, `entregador_saques`, `lojas_saques`, `profiles`, `entregadores_saldo_saque`, `lojas_saldo`, `franqueados_faturas` (somente leitura pra colaborador — sem escrita).
 
-Em `ProdutoDialog.tsx`, após criar/editar um produto, adicionar seção **"Adicionais"**:
-- Lista de grupos com botão "Novo grupo".
-- Para cada grupo: nome, obrigatório/opcional, min/max escolhas, e lista de opções (nome + preço + ativo).
-- Reordenar por drag simples (ou botões up/down) — v1 usa campo `ordem` manual para simplicidade.
+**Hook `use-franquia.ts`**
+- Passa a resolver também colaboradores: se o usuário atual tem linha em `franqueado_colaboradores`, carrega o `franqueados_config` do franqueado dono e devolve `cidade`, `bloqueado`, etc.
+- Novos flags retornados:
+  - `isColaborador` (true quando é colaborador de algum franqueado)
+  - `isFranqueado` continua true para o franqueado dono
+  - `podeVerMinhaFranquia = isFranqueado && !isColaborador`
 
-Novo hook `use-produto-adicionais.ts` para CRUD dos grupos/opções.
+**`AdminShell.tsx`**
+- Adiciona regra na navegação: itens marcados como `franqueadoOnly` continuam visíveis para colaboradores (menus operacionais), mas `/admin/minha-franquia` recebe uma flag nova `donoFranquiaOnly` e é escondido para colaboradores.
+- Badge de papel: mostra "Colaborador · <Cidade>" quando `isColaborador`.
+- Guarda de rota: se colaborador tentar abrir `/admin/minha-franquia` diretamente, mostra a tela "Acesso restrito".
 
-## Experiência do cliente no catálogo
+**`MinhaFranquiaPage.tsx`**
+- Adiciona seção/aba **"Colaboradores"** visível apenas para o dono da franquia (`!isColaborador`).
+- Formulário para adicionar por e-mail + lista com remoção.
 
-Quando o cliente clica em **Adicionar** num produto que tenha grupos de adicionais, em vez de somar direto, abre um **modal de personalização**:
-- Mostra foto, nome, descrição do produto.
-- Renderiza cada grupo (radio para `max=1`, checkbox para `max>1`).
-- Valida `min_escolhas` e `max_escolhas`.
-- Rodapé mostra preço total (base + adicionais × qtd) e stepper de quantidade.
-- Botão "Adicionar ao carrinho — R$ X,XX".
+**Server functions** em `src/lib/franqueados-colaboradores.functions.ts` (protegidas com `requireSupabaseAuth`):
+- `listarColaboradores()` — lista os colaboradores do franqueado logado (com e-mail via Admin API).
+- `adicionarColaborador({ email })` — valida se o usuário logado é franqueado, busca `user_id` pelo e-mail (Admin API), insere na tabela.
+- `removerColaborador({ colaboradorUserId })` — remove a linha do franqueado logado.
 
-Produtos sem grupos continuam com o comportamento atual (add direto pelo stepper).
-
-O carrinho passa a chavear itens por `produto_id + hash(adicionais)` em vez de só `produto_id`, para que duas pizzas com bordas diferentes sejam linhas separadas. `use-cart.ts` é refatorado para trabalhar com uma lista de "linhas" `{ lineId, produto, adicionais, qtd, precoUnit }`.
-
-O checkout (`CheckoutCarrinho`) mostra os adicionais abaixo do nome do item, e o `subtotal` continua correto.
-
-## Servidor
-
-`src/lib/catalogo.functions.ts` (`criarPedidoCatalogo`) valida cada item:
-- Busca as opções de adicional pelo id.
-- Confere que pertencem ao produto e estão ativas.
-- Recalcula `preco_unit = produto.preco + soma(opcoes.preco)` no servidor (nunca confia no cliente).
-- Persiste `adicionais` dentro do snapshot do item.
-
-Também aplica as regras de `min/max/obrigatorio` no servidor.
-
-## Arquivos afetados (resumo técnico)
-
-Novos:
-- Migration criando as duas tabelas + RLS + GRANTs.
-- `src/features/loja-produtos/hooks/use-produto-adicionais.ts`
-- `src/features/loja-produtos/components/AdicionaisEditor.tsx`
-- `src/features/loja-catalogo/components/ProdutoPersonalizarDialog.tsx`
-- `src/features/loja-catalogo/logic/cart-line.ts` (helpers de linha e hash)
-
-Editados:
-- `src/features/loja-produtos/components/ProdutoDialog.tsx` — inclui `<AdicionaisEditor />` após salvar produto.
-- `src/features/loja-catalogo/hooks/use-catalogo.ts` — carrega grupos+opções junto com produtos ativos.
-- `src/features/loja-catalogo/hooks/use-cart.ts` — passa a operar por lineId.
-- `src/features/loja-catalogo/components/CategoriaCarrossel.tsx` e `ProdutoGrid.tsx` — quando produto tem grupos, o botão "+" abre o modal em vez de somar direto.
-- `src/features/loja-catalogo/components/CheckoutCarrinho.tsx` — mostra adicionais por linha.
-- `src/lib/catalogo.functions.ts` — validação e cálculo dos adicionais no servidor; schema Zod atualizado.
-- `src/routes/-catalogo-types.ts` — tipo `Produto` ganha `adicionais_grupos?`.
-
-## Fora do escopo desta entrega
-
-- Reordenação por drag-and-drop (usa campo `ordem` manual).
-- Adicionais globais reutilizáveis entre produtos (cada produto tem os seus).
-- Importação de adicionais via iFood/planilha.
-- Edição de adicionais depois que o pedido já foi criado.
-
-Posso seguir?
+## Fora do escopo (por enquanto)
+- Permissões granulares por área para colaboradores (ex.: colaborador só de "Suporte"). Se quiser depois, dá para plugar em cima do `admin_permissoes`.
+- Convite por e-mail para quem ainda não tem conta (nesta versão o colaborador precisa se cadastrar antes).
