@@ -66,6 +66,8 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { data: alertasCount = 0 } = useSystemAlertsCount();
   const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
   const { data: saquesLojasPendentes = 0 } = useSaquesLojasPendentesCount();
+  const { data: resetPendentes = 0 } = usePasswordResetPendentesCount();
+
 
   
   const [open, setOpen] = useState(false);
