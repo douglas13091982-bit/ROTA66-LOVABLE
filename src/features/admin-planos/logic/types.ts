@@ -37,4 +37,5 @@ export const INITIAL_PLANO_FORM: PlanoFormState = {
   ordem: "0",
   ativo: true,
   max_funcionarios: "0",
+  max_pedidos_mes: "0",
 };
