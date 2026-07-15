@@ -76,7 +76,9 @@ function Card({
 
 export function FaturamentoSistemaPage() {
   const [periodo, setPeriodo] = useState<PeriodoFat>("mes_atual");
-  const { data, isLoading } = useFaturamentoSistema(periodo);
+  const { isFranqueado, cidade } = useFranquia();
+  const cidadeFiltro = isFranqueado ? cidade ?? null : null;
+  const { data, isLoading } = useFaturamentoSistema(periodo, cidadeFiltro);
 
   const receita = data?.liquidoSistema ?? 0;
   const mens = data?.mensalidadesPagas ?? 0;
