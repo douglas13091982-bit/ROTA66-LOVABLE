@@ -124,6 +124,7 @@ export function FinanceiroAdminPage() {
         {tab === "mercado-pago" && !isFranqueado && (
           <div className="space-y-6">
             <MercadoPagoPlataformaSection />
+            <TaxaMarketplaceSection />
             <TaxasMpSection />
           </div>
         )}
