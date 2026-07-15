@@ -77,6 +77,7 @@ import { Route as AuthenticatedAdminMinhaFranquiaRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
 import { Route as AuthenticatedAdminFranqueadosRouteImport } from './routes/_authenticated/admin/franqueados'
 import { Route as AuthenticatedAdminFinanceiroRouteImport } from './routes/_authenticated/admin/financeiro'
+import { Route as AuthenticatedAdminFaturamentoSistemaRouteImport } from './routes/_authenticated/admin/faturamento-sistema'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin/entregadores'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCreditosEntregadorRouteImport } from './routes/_authenticated/admin/creditos-entregador'
@@ -479,6 +480,12 @@ const AuthenticatedAdminFinanceiroRoute =
     path: '/financeiro',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminFaturamentoSistemaRoute =
+  AuthenticatedAdminFaturamentoSistemaRouteImport.update({
+    id: '/faturamento-sistema',
+    path: '/faturamento-sistema',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminEntregadoresRoute =
   AuthenticatedAdminEntregadoresRouteImport.update({
     id: '/entregadores',
@@ -602,6 +609,7 @@ export interface FileRoutesByFullPath {
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
@@ -682,6 +690,7 @@ export interface FileRoutesByTo {
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
@@ -768,6 +777,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
+  '/_authenticated/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/_authenticated/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/_authenticated/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
@@ -854,6 +864,7 @@ export interface FileRouteTypes {
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
     | '/admin/entregadores'
+    | '/admin/faturamento-sistema'
     | '/admin/financeiro'
     | '/admin/franqueados'
     | '/admin/lojas'
@@ -934,6 +945,7 @@ export interface FileRouteTypes {
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
     | '/admin/entregadores'
+    | '/admin/faturamento-sistema'
     | '/admin/financeiro'
     | '/admin/franqueados'
     | '/admin/lojas'
@@ -1019,6 +1031,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/creditos-entregador'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/entregadores'
+    | '/_authenticated/admin/faturamento-sistema'
     | '/_authenticated/admin/financeiro'
     | '/_authenticated/admin/franqueados'
     | '/_authenticated/admin/lojas'
@@ -1576,6 +1589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminFinanceiroRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/faturamento-sistema': {
+      id: '/_authenticated/admin/faturamento-sistema'
+      path: '/faturamento-sistema'
+      fullPath: '/admin/faturamento-sistema'
+      preLoaderRoute: typeof AuthenticatedAdminFaturamentoSistemaRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/entregadores': {
       id: '/_authenticated/admin/entregadores'
       path: '/entregadores'
@@ -1697,6 +1717,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminCreditosEntregadorRoute: typeof AuthenticatedAdminCreditosEntregadorRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
+  AuthenticatedAdminFaturamentoSistemaRoute: typeof AuthenticatedAdminFaturamentoSistemaRoute
   AuthenticatedAdminFinanceiroRoute: typeof AuthenticatedAdminFinanceiroRoute
   AuthenticatedAdminFranqueadosRoute: typeof AuthenticatedAdminFranqueadosRoute
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
@@ -1731,6 +1752,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminCreditosEntregadorRoute,
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
     AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
+    AuthenticatedAdminFaturamentoSistemaRoute:
+      AuthenticatedAdminFaturamentoSistemaRoute,
     AuthenticatedAdminFinanceiroRoute: AuthenticatedAdminFinanceiroRoute,
     AuthenticatedAdminFranqueadosRoute: AuthenticatedAdminFranqueadosRoute,
     AuthenticatedAdminLojasRoute: AuthenticatedAdminLojasRoute,
