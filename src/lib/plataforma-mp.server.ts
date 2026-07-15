@@ -120,6 +120,24 @@ export async function setMpTaxas(cfg: MpTaxasCfg): Promise<void> {
   ]);
 }
 
+// ============================================================
+// Taxa marketplace: percentual cobrado da loja em toda venda paga
+// online (Mercado Pago) via catálogo público. 0 = desativado.
+// ============================================================
+
+export async function getTaxaMarketplacePct(): Promise<number> {
+  const v = await getPrivateConfig("taxa_marketplace_pct");
+  if (!v) return 0;
+  const n = Number(String(v).replace(",", "."));
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
+export async function setTaxaMarketplacePct(pct: number): Promise<void> {
+  const n = Number(pct);
+  if (!Number.isFinite(n) || n < 0) throw new Error("Percentual inválido");
+  await setPrivateConfig("taxa_marketplace_pct", String(n));
+}
+
 
 export interface MpPayment {
   id: number;
