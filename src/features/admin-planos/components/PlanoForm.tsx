@@ -23,6 +23,7 @@ export function PlanoForm({ editing, onCancel, onSubmit }: Props) {
         ordem: String(editing.ordem ?? 0),
         ativo: !!editing.ativo,
         max_funcionarios: String(editing.max_funcionarios ?? 0),
+        max_pedidos_mes: String(editing.max_pedidos_mes ?? 0),
       });
     } else {
       setForm(INITIAL_PLANO_FORM);
