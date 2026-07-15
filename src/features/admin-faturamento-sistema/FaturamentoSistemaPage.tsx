@@ -6,6 +6,8 @@ import {
   TrendingUp,
   Bike,
   Info,
+  AlertCircle,
+  Wallet,
 } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
 import {
