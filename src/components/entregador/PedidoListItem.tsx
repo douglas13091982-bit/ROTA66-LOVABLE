@@ -143,15 +143,26 @@ function PedidoListItemBase({
             )}
           </div>
           <div className="mt-0.5 leading-snug">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[13px] font-bold text-yellow-400">Entrega</span>
-              <span className="text-[11.5px] text-white/55">
-                {endereco}
-                {distEntrega && (
-                  <span className="text-white/75 font-semibold ml-1">· {distEntrega} km</span>
-                )}
-              </span>
-            </div>
+            {grupo.items.length > 1 ? (
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[13px] font-bold text-yellow-400">
+                  {grupo.items.length} entregas agrupadas
+                </span>
+                <span className="text-[11.5px] text-white/55">
+                  · detalhes liberados após aceitar
+                </span>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[13px] font-bold text-yellow-400">Entrega</span>
+                <span className="text-[11.5px] text-white/55">
+                  {endereco}
+                  {distEntrega && (
+                    <span className="text-white/75 font-semibold ml-1">· {distEntrega} km</span>
+                  )}
+                </span>
+              </div>
+            )}
           </div>
         </div>
         <BotaoAceitarPress onAceitar={handleAceitar} />
