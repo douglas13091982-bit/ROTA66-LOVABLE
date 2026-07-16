@@ -95,6 +95,9 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               {badgeLabel}
             </span>
+            {isColeta && p.deadline_coleta_at && (
+              <ColetaDeadlineBadge deadline={p.deadline_coleta_at} />
+            )}
             {p.entrega_paga && (
               <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full bg-emerald-500/90 text-white border border-emerald-300/40 shadow-[0_4px_16px_-4px_oklch(0.7_0.18_155_/_0.5)]">
                 Pago
