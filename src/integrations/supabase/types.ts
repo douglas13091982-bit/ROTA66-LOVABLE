@@ -681,6 +681,10 @@ export type Database = {
         Row: {
           catalogo_horizontal_min_categorias: number
           catalogo_horizontal_min_produtos: number
+          coleta_min_por_km: number
+          coleta_prazo_max_absoluto: number
+          coleta_prazo_min_absoluto: number
+          coleta_tempo_base_min: number
           created_at: string
           entregador_online_ttl_min: number
           id: string
@@ -697,6 +701,10 @@ export type Database = {
         Insert: {
           catalogo_horizontal_min_categorias?: number
           catalogo_horizontal_min_produtos?: number
+          coleta_min_por_km?: number
+          coleta_prazo_max_absoluto?: number
+          coleta_prazo_min_absoluto?: number
+          coleta_tempo_base_min?: number
           created_at?: string
           entregador_online_ttl_min?: number
           id?: string
@@ -713,6 +721,10 @@ export type Database = {
         Update: {
           catalogo_horizontal_min_categorias?: number
           catalogo_horizontal_min_produtos?: number
+          coleta_min_por_km?: number
+          coleta_prazo_max_absoluto?: number
+          coleta_prazo_min_absoluto?: number
+          coleta_tempo_base_min?: number
           created_at?: string
           entregador_online_ttl_min?: number
           id?: string
@@ -2095,6 +2107,7 @@ export type Database = {
           coleta_confirmada_em: string | null
           complemento: string | null
           created_at: string
+          deadline_coleta_at: string | null
           distancia_metros: number | null
           duracao_estimada_seg: number | null
           endereco_coleta: string | null
@@ -2144,6 +2157,7 @@ export type Database = {
           coleta_confirmada_em?: string | null
           complemento?: string | null
           created_at?: string
+          deadline_coleta_at?: string | null
           distancia_metros?: number | null
           duracao_estimada_seg?: number | null
           endereco_coleta?: string | null
@@ -2193,6 +2207,7 @@ export type Database = {
           coleta_confirmada_em?: string | null
           complemento?: string | null
           created_at?: string
+          deadline_coleta_at?: string | null
           distancia_metros?: number | null
           duracao_estimada_seg?: number | null
           endereco_coleta?: string | null
@@ -3204,6 +3219,7 @@ export type Database = {
           coleta_confirmada_em: string | null
           complemento: string | null
           created_at: string
+          deadline_coleta_at: string | null
           distancia_metros: number | null
           duracao_estimada_seg: number | null
           endereco_coleta: string | null
@@ -3367,6 +3383,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      calcular_prazo_coleta_min: { Args: { _dist_km: number }; Returns: number }
       calcular_tarifa_global: { Args: { _km: number }; Returns: number }
       calcular_taxa_publica: {
         Args: { _entrega_lat: number; _entrega_lng: number; _loja_id: string }
@@ -3504,6 +3521,7 @@ export type Database = {
           updated_at: string
         }[]
       }
+      expirar_coletas_atrasadas: { Args: never; Returns: number }
       fechar_ticket_suporte: {
         Args: { _ticket_id: string }
         Returns: undefined

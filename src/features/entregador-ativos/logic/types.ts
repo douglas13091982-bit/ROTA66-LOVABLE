@@ -25,4 +25,5 @@ export type PedidoAtivo = {
   bonus_entregador?: number | null;
   loja_plano_mensal_ativo?: boolean | null;
   loja_taxa_por_pedido?: number | string | null;
+  deadline_coleta_at?: string | null;
 };

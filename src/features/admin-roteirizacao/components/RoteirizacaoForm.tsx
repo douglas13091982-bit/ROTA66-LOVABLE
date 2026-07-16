@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route as Route2, Clock, MapPinned, Users, Save, LayoutGrid, Car, Radio } from "lucide-react";
+import { Route as Route2, Clock, MapPinned, Users, Save, LayoutGrid, Car, Radio, Timer } from "lucide-react";
 import { useRoteirizacao } from "../hooks/use-roteirizacao";
 import { fromRow, INITIAL_FORM, type RoteirizacaoForm, type PoolAbertoScope } from "../logic/form";
 import { Field, numberInputClass } from "./Field";
@@ -91,6 +91,43 @@ export function RoteirizacaoForm() {
         <input type="number" min="0" step="0.5" value={form.raio_maximo_coleta_km}
           onChange={set("raio_maximo_coleta_km")} className={numberInputClass} />
       </Field>
+
+      <div className="pt-4 mt-2 border-t border-border">
+        <h2 className="text-sm font-bold flex items-center gap-2 mb-1">
+          <Timer className="h-4 w-4 text-primary" />
+          Prazo de chegada na coleta
+        </h2>
+        <p className="text-xs text-muted-foreground mb-4">
+          Após aceitar o pedido, o entregador tem um tempo para chegar até a loja.
+          Fórmula: <strong>tempo base + (km × min/km)</strong>, limitado entre piso e teto.
+          Se estourar, o pedido volta automaticamente para todos os entregadores.
+        </p>
+      </div>
+
+      <Field icon={<Timer className="h-4 w-4 text-primary" />} label="Tempo base (min)"
+        hint="Minutos concedidos independente da distância.">
+        <input type="number" min="0" step="1" value={form.coleta_tempo_base_min}
+          onChange={set("coleta_tempo_base_min")} className={numberInputClass} />
+      </Field>
+
+      <Field icon={<Timer className="h-4 w-4 text-primary" />} label="Minutos por km"
+        hint="Minutos adicionais por km de distância até a coleta.">
+        <input type="number" min="0.1" step="0.1" value={form.coleta_min_por_km}
+          onChange={set("coleta_min_por_km")} className={numberInputClass} />
+      </Field>
+
+      <Field icon={<Timer className="h-4 w-4 text-primary" />} label="Prazo mínimo (min)"
+        hint="Piso de segurança: nunca menor que isso, mesmo se a loja for muito perto.">
+        <input type="number" min="1" step="1" value={form.coleta_prazo_min_absoluto}
+          onChange={set("coleta_prazo_min_absoluto")} className={numberInputClass} />
+      </Field>
+
+      <Field icon={<Timer className="h-4 w-4 text-primary" />} label="Prazo máximo (min)"
+        hint="Teto: nunca maior que isso, mesmo se a distância for muito grande.">
+        <input type="number" min="1" step="1" value={form.coleta_prazo_max_absoluto}
+          onChange={set("coleta_prazo_max_absoluto")} className={numberInputClass} />
+      </Field>
+
 
 
 

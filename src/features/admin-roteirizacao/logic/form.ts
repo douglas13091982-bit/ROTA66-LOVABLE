@@ -14,6 +14,10 @@ export type RoteirizacaoForm = {
   catalogo_horizontal_min_produtos: string;
   catalogo_horizontal_min_categorias: string;
   pool_aberto_scope: PoolAbertoScope;
+  coleta_tempo_base_min: string;
+  coleta_min_por_km: string;
+  coleta_prazo_min_absoluto: string;
+  coleta_prazo_max_absoluto: string;
 };
 
 export const INITIAL_FORM: RoteirizacaoForm = {
@@ -27,6 +31,10 @@ export const INITIAL_FORM: RoteirizacaoForm = {
   catalogo_horizontal_min_produtos: "50",
   catalogo_horizontal_min_categorias: "5",
   pool_aberto_scope: "vinculados_e_externos",
+  coleta_tempo_base_min: "0",
+  coleta_min_por_km: "1.6",
+  coleta_prazo_min_absoluto: "4",
+  coleta_prazo_max_absoluto: "30",
 };
 
 export function fromRow(data: any): RoteirizacaoForm {
@@ -41,6 +49,10 @@ export function fromRow(data: any): RoteirizacaoForm {
     catalogo_horizontal_min_produtos: String(data.catalogo_horizontal_min_produtos ?? 50),
     catalogo_horizontal_min_categorias: String(data.catalogo_horizontal_min_categorias ?? 5),
     pool_aberto_scope: (data.pool_aberto_scope ?? "vinculados_e_externos") as PoolAbertoScope,
+    coleta_tempo_base_min: String(data.coleta_tempo_base_min ?? 0),
+    coleta_min_por_km: String(data.coleta_min_por_km ?? 1.6),
+    coleta_prazo_min_absoluto: String(data.coleta_prazo_min_absoluto ?? 4),
+    coleta_prazo_max_absoluto: String(data.coleta_prazo_max_absoluto ?? 30),
   };
 }
 
@@ -80,6 +92,19 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
     return { ok: false, error: "Escopo do pool aberto inválido" };
   }
 
+  const cBase = Number(form.coleta_tempo_base_min);
+  const cPorKm = Number(form.coleta_min_por_km);
+  const cMin = Number(form.coleta_prazo_min_absoluto);
+  const cMax = Number(form.coleta_prazo_max_absoluto);
+  if (
+    !Number.isFinite(cBase) || cBase < 0 ||
+    !Number.isFinite(cPorKm) || cPorKm <= 0 ||
+    !Number.isFinite(cMin) || cMin < 1 ||
+    !Number.isFinite(cMax) || cMax < cMin
+  ) {
+    return { ok: false, error: "Prazo de coleta inválido (teto deve ser ≥ piso)" };
+  }
+
   return {
     ok: true,
     payload: {
@@ -93,6 +118,10 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
       catalogo_horizontal_min_produtos: Math.round(catMinProd),
       catalogo_horizontal_min_categorias: Math.round(catMinCat),
       pool_aberto_scope: form.pool_aberto_scope,
+      coleta_tempo_base_min: Math.round(cBase),
+      coleta_min_por_km: cPorKm,
+      coleta_prazo_min_absoluto: Math.round(cMin),
+      coleta_prazo_max_absoluto: Math.round(cMax),
     },
   };
 }

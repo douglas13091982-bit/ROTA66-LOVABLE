@@ -1,63 +1,58 @@
+## Objetivo
 
-# Colaboradores do Franqueado
+Quando o entregador aceita um pedido, o sistema calcula um prazo máximo para ele chegar até a coleta com base na distância. Se estourar, o pedido é retirado dele e volta para todos os entregadores.
 
-Permitir que cada franqueado dê acesso ao seu painel a outros usuários (colaboradores), que enxergam as mesmas telas que o franqueado — restritas à cidade dele — **exceto o menu "Minha franquia"** (faturas, mensalidade, dados da franquia).
+## Regra do tempo
 
-## Como vai funcionar
+Fórmula configurável em **Admin → Roteirização**:
 
-**Para o franqueado**
-- Nova aba **"Colaboradores"** dentro de `/admin/minha-franquia`.
-- Campo para adicionar colaborador por e-mail (o usuário precisa já ter conta no sistema).
-- Lista dos colaboradores atuais com botão de remover.
-- Só o próprio franqueado enxerga essa aba.
+```text
+prazo_min = tempo_base_min + (distancia_km × min_por_km)
+```
 
-**Para o colaborador**
-- Ao entrar no sistema, é direcionado ao painel admin igual ao franqueado.
-- Vê todos os menus do franqueado (Lojas, Entregadores, Financeiro, Pedidos, Suporte, Faturamento do sistema, etc.), sempre **filtrados pela cidade do franqueado que o convidou**.
-- **NÃO vê** o menu "Minha franquia" e não consegue acessar essa rota (bloqueio também no roteador).
-- Badge lateral mostra "Colaborador · <Cidade>" em vez de "Franqueado".
+Defaults sugeridos (baseado no exemplo "5 km → 8 min"):
+- `tempo_base_min = 0`
+- `min_por_km = 1.6`
+- `prazo_min_absoluto = 4` (piso, para coletas muito próximas)
+- `prazo_max_absoluto = 30` (teto de segurança)
 
-**Regras de segurança**
-- Colaborador herda cidade e escopo do franqueado — nunca vê dados de outras cidades.
-- Se o franqueado estiver bloqueado por inadimplência, os colaboradores também ficam bloqueados (mesma tela de acesso bloqueado, sem link para "ver faturas").
-- Remover um colaborador tira o acesso imediatamente.
+A distância usada é a linha reta (haversine) entre a posição do entregador no momento do aceite e o endereço de coleta. Se a posição não estiver disponível, cai para `tempo_base_min + 10 min` (fallback).
+
+## Fluxo
+
+1. Entregador aceita o pedido (`aceitar_pedido` RPC).
+2. Trigger calcula `deadline_coleta_at = now() + prazo_min` e grava em `pedidos`.
+3. UI do entregador em **Ativos** mostra um cronômetro "Chegar em MM:SS" no card do pedido enquanto o status for aceito/a caminho e antes da coleta (`confirmar_coleta`).
+4. Job `expirar_coletas_atrasadas()` roda a cada 1 min via pg_cron:
+   - Seleciona pedidos com `deadline_coleta_at < now()`, status ainda pré-coleta (não coletado) e `entregador_id NOT NULL`.
+   - Zera `entregador_id`, `rota_id`, `deadline_coleta_at`, `codigo_coleta`.
+   - Volta status para `disponivel`.
+   - Registra evento e notifica loja + entregador ("prazo estourado, pedido devolvido ao pool").
+5. Quando o entregador confirma coleta, `deadline_coleta_at` é limpo (não expira mais).
+
+## UI
+
+**Admin → Roteirização** ganha seção "Prazo de coleta":
+- Tempo base (min)
+- Minutos por km
+- Piso (min) / Teto (min)
+
+**App entregador → Ativos**: badge com cronômetro no card do pedido; fica âmbar nos últimos 3 min, vermelho quando estoura. Ao expirar, o card some com toast "Prazo excedido — pedido devolvido ao pool".
 
 ## Detalhes técnicos
 
-**Banco de dados** (via migration)
-- Nova tabela `franqueado_colaboradores`:
-  - `franqueado_user_id` (FK → auth.users, cidade herdada de `franqueados_config`)
-  - `colaborador_user_id` (FK → auth.users, único)
-  - `ativo` (boolean)
-  - timestamps
-- GRANTs para `authenticated` e `service_role`; RLS habilitada.
-- Políticas:
-  - Franqueado lê/insere/remove apenas suas próprias linhas (`franqueado_user_id = auth.uid()`).
-  - Colaborador lê apenas a própria linha.
-- Função `public.franqueado_do_colaborador(uid uuid) returns uuid` (SECURITY DEFINER) para descobrir o franqueado ao qual o colaborador pertence.
-- Atualizar as políticas RLS existentes que hoje usam `franqueados_config.cidade = auth.uid()` para também aceitar colaboradores via `franqueado_do_colaborador(auth.uid())`. Tabelas afetadas: `lojas`, `mensalidades_loja`, `cobrancas_loja`, `pedidos`, `entregador_saques`, `lojas_saques`, `profiles`, `entregadores_saldo_saque`, `lojas_saldo`, `franqueados_faturas` (somente leitura pra colaborador — sem escrita).
+- Migration:
+  - `config_roteirizacao`: `+ coleta_tempo_base_min int default 0`, `+ coleta_min_por_km numeric default 1.6`, `+ coleta_prazo_min_absoluto int default 4`, `+ coleta_prazo_max_absoluto int default 30`.
+  - `pedidos`: `+ deadline_coleta_at timestamptz`.
+  - Função `calcular_prazo_coleta_min(dist_km numeric) returns int`.
+  - Atualizar RPC `aceitar_pedido` (ou trigger `after update` em `pedidos` quando `entregador_id` passa a NOT NULL e status=`aceito`) para setar `deadline_coleta_at` usando distância entre `entregador_status.lat/lng` e `pedidos.endereco_coleta_lat/lng`.
+  - Função `expirar_coletas_atrasadas()` + cron a cada minuto (`pg_cron`).
+  - Limpar `deadline_coleta_at` no `confirmar_coleta`.
+- Realtime: já existe subscription em `pedidos`; ao devolver ao pool, o card do entregador atual some e reaparece para todos.
+- Hook novo `use-coleta-countdown.ts` para o timer no frontend.
+- Sem alterar taxas nem lógica de pagamento.
 
-**Hook `use-franquia.ts`**
-- Passa a resolver também colaboradores: se o usuário atual tem linha em `franqueado_colaboradores`, carrega o `franqueados_config` do franqueado dono e devolve `cidade`, `bloqueado`, etc.
-- Novos flags retornados:
-  - `isColaborador` (true quando é colaborador de algum franqueado)
-  - `isFranqueado` continua true para o franqueado dono
-  - `podeVerMinhaFranquia = isFranqueado && !isColaborador`
+## Fora de escopo
 
-**`AdminShell.tsx`**
-- Adiciona regra na navegação: itens marcados como `franqueadoOnly` continuam visíveis para colaboradores (menus operacionais), mas `/admin/minha-franquia` recebe uma flag nova `donoFranquiaOnly` e é escondido para colaboradores.
-- Badge de papel: mostra "Colaborador · <Cidade>" quando `isColaborador`.
-- Guarda de rota: se colaborador tentar abrir `/admin/minha-franquia` diretamente, mostra a tela "Acesso restrito".
-
-**`MinhaFranquiaPage.tsx`**
-- Adiciona seção/aba **"Colaboradores"** visível apenas para o dono da franquia (`!isColaborador`).
-- Formulário para adicionar por e-mail + lista com remoção.
-
-**Server functions** em `src/lib/franqueados-colaboradores.functions.ts` (protegidas com `requireSupabaseAuth`):
-- `listarColaboradores()` — lista os colaboradores do franqueado logado (com e-mail via Admin API).
-- `adicionarColaborador({ email })` — valida se o usuário logado é franqueado, busca `user_id` pelo e-mail (Admin API), insere na tabela.
-- `removerColaborador({ colaboradorUserId })` — remove a linha do franqueado logado.
-
-## Fora do escopo (por enquanto)
-- Permissões granulares por área para colaboradores (ex.: colaborador só de "Suporte"). Se quiser depois, dá para plugar em cima do `admin_permissoes`.
-- Convite por e-mail para quem ainda não tem conta (nesta versão o colaborador precisa se cadastrar antes).
+- Não muda tempo de entrega (só coleta).
+- Não penaliza o entregador (score/multa) — só devolve o pedido.
