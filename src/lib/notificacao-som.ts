@@ -35,13 +35,29 @@ export const DEFAULT_SOM: ConfigNotificacaoSom = {
 export const SOM_BUCKET = "notificacao-som";
 
 let currentAudioCtx: AudioContext | null = null;
-let currentAudioEl: HTMLAudioElement | null = null;
+let currentSource: AudioBufferSourceNode | null = null;
 
-// Elemento <audio> pré-criado e "destravado" por um gesto do usuário.
-let unlockedAudioEl: HTMLAudioElement | null = null;
-let unlockedAudioUrl: string | null = null;
+// AudioContext principal usado tanto para o beep sintético quanto para
+// tocar o MP3 pré-carregado via Web Audio API (contorna restrições de
+// autoplay do <audio> em Android/iOS).
+let mainAudioCtx: AudioContext | null = null;
 let audioUnlocked = false;
-let unlockedAudioCtx: AudioContext | null = null;
+
+// Buffer decodificado do MP3 configurado pelo admin.
+let unlockedAudioUrl: string | null = null;
+let unlockedAudioBuffer: AudioBuffer | null = null;
+
+function getOrCreateCtx(): AudioContext | null {
+  if (mainAudioCtx) return mainAudioCtx;
+  try {
+    const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return null;
+    mainAudioCtx = new AudioCtx();
+    return mainAudioCtx;
+  } catch {
+    return null;
+  }
+}
 
 export async function fetchConfigSom(scope: SomScope = "entregador"): Promise<ConfigNotificacaoSom> {
   const { data } = await supabase
@@ -63,76 +79,65 @@ export async function getAudioUrl(audioPath: string | null): Promise<string | nu
 }
 
 /**
- * Pré-carrega o arquivo MP3 no elemento <audio> reutilizável.
- * Deve ser chamado assim que a config estiver disponível, ANTES do pedido chegar.
- * Retorna `true` quando a URL foi obtida e atribuída ao <audio> — o caller
- * pode usar isso para saber se pode tocar o MP3 real ou se deve cair no beep.
+ * Pré-carrega o MP3 decodificando em AudioBuffer. Assim, na hora de tocar,
+ * basta chamar start() sobre um BufferSource — sem passar por <audio>,
+ * evitando o bloqueio de autoplay quando a "cadeia de gesto" não é respeitada.
  */
 export async function precarregarSom(cfg: ConfigNotificacaoSom): Promise<boolean> {
   if (!cfg?.audio_path) return false;
   const url = await getAudioUrl(cfg.audio_path);
   if (!url) return false;
-  if (!unlockedAudioEl) {
-    unlockedAudioEl = new Audio();
-    unlockedAudioEl.preload = "auto";
-  }
-  if (unlockedAudioUrl !== url) {
-    unlockedAudioEl.src = url;
+  if (unlockedAudioUrl === url && unlockedAudioBuffer) return true;
+  try {
+    const ctx = getOrCreateCtx();
+    if (!ctx) return false;
+    const resp = await fetch(url);
+    if (!resp.ok) return false;
+    const arr = await resp.arrayBuffer();
+    // decodeAudioData retorna Promise em navegadores modernos.
+    const buf = await new Promise<AudioBuffer>((resolve, reject) => {
+      try {
+        const p = ctx.decodeAudioData(arr, resolve, reject);
+        if (p && typeof (p as any).then === "function") (p as any).then(resolve, reject);
+      } catch (e) {
+        reject(e);
+      }
+    });
+    unlockedAudioBuffer = buf;
     unlockedAudioUrl = url;
-    try { unlockedAudioEl.load(); } catch {}
+    return true;
+  } catch {
+    return false;
   }
-  return true;
 }
 
-/**
- * Destrava reprodução de áudio. DEVE ser chamado dentro de um handler
- * de gesto do usuário (click/touchstart). Faz um play() mudo+pausa para
- * autorizar futuras chamadas .play() sem gesto.
- */
 export function isAudioDesbloqueado() {
   return audioUnlocked;
 }
 
-// WAV silencioso curto — usado para "primar" o <audio> quando o MP3 ainda
-// não foi carregado. Tocar QUALQUER áudio dentro do gesto satisfaz a
-// política de autoplay (Chrome Android) e libera futuras chamadas .play().
-const SILENT_WAV =
-  "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
-
+/**
+ * Destrava reprodução de áudio. DEVE ser chamado dentro de um handler
+ * de gesto do usuário (click/touchstart). Retoma o AudioContext, que é
+ * a única coisa que precisa de gesto — depois, qualquer BufferSource toca.
+ */
 export function desbloquearAudio() {
   if (audioUnlocked) return;
+  const ctx = getOrCreateCtx();
+  if (!ctx) return;
   try {
-    if (!unlockedAudioEl) {
-      unlockedAudioEl = new Audio();
-      unlockedAudioEl.preload = "auto";
+    if (ctx.state === "suspended") {
+      const p = ctx.resume();
+      if (p && typeof p.then === "function") {
+        p.then(() => { audioUnlocked = ctx.state === "running"; }).catch(() => {});
+      }
     }
-    const el = unlockedAudioEl;
-    const hadRealSrc = !!unlockedAudioUrl && el.src === unlockedAudioUrl;
-    if (!hadRealSrc) {
-      el.src = SILENT_WAV;
-    }
-    const prevVol = el.volume;
-    el.volume = 0; // inaudível, mas reprodução real (não muted)
-    const p = el.play();
-    const finish = () => {
-      try { el.pause(); } catch {}
-      try { el.currentTime = 0; } catch {}
-      el.volume = prevVol;
-      audioUnlocked = true;
-    };
-    if (p && typeof p.then === "function") {
-      p.then(finish).catch(() => { el.volume = prevVol; });
-    } else {
-      finish();
-    }
-  } catch {}
-  try {
-    const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
-    if (AudioCtx && !unlockedAudioCtx) {
-      const ctx: AudioContext = new AudioCtx();
-      unlockedAudioCtx = ctx;
-      if (ctx.state === "suspended") ctx.resume();
-    }
+    // Tocar um buffer silencioso curto dentro do gesto satisfaz iOS Safari.
+    const silent = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = silent;
+    src.connect(ctx.destination);
+    src.start(0);
+    if (ctx.state === "running") audioUnlocked = true;
   } catch {}
 }
 
@@ -158,27 +163,26 @@ export function instalarDesbloqueioAutomatico() {
 
 export function pararNotificacao() {
   try {
-    if (currentAudioEl) {
-      currentAudioEl.pause();
-      currentAudioEl.currentTime = 0;
-      currentAudioEl = null;
+    if (currentSource) {
+      try { currentSource.stop(); } catch {}
+      try { currentSource.disconnect(); } catch {}
+      currentSource = null;
     }
   } catch {}
   try {
-    if (currentAudioCtx) {
+    if (currentAudioCtx && currentAudioCtx !== mainAudioCtx) {
       currentAudioCtx.suspend();
       currentAudioCtx.close();
-      currentAudioCtx = null;
     }
+    currentAudioCtx = null;
   } catch {}
 }
 
 export function tocarBeepSintetico(cfg: ConfigNotificacaoSom) {
   try {
     pararNotificacao();
-    const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getOrCreateCtx();
+    if (!ctx) return;
     currentAudioCtx = ctx;
     const dur = Math.max(50, cfg.duracao_ms) / 1000;
     const gap = Math.max(0, cfg.intervalo_ms) / 1000;
@@ -204,33 +208,36 @@ export function tocarBeepSintetico(cfg: ConfigNotificacaoSom) {
       osc.start(start);
       osc.stop(start + dur);
     }
-    setTimeout(() => {
-      if (currentAudioCtx === ctx) currentAudioCtx = null;
-      try { ctx.close(); } catch {}
-    }, (rep * (dur + gap) + 0.1) * 1000);
   } catch {}
 }
 
 function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
-  if (!unlockedAudioEl || !unlockedAudioUrl) return false;
+  if (!unlockedAudioBuffer) return false;
+  const ctx = getOrCreateCtx();
+  if (!ctx) return false;
   try {
-    pararNotificacao();
-    const audio = unlockedAudioEl;
-    audio.volume = Math.max(0, Math.min(1, cfg.volume));
-    try { audio.currentTime = 0; } catch {}
-    currentAudioEl = audio;
-    const p = audio.play();
-    if (p && typeof p.then === "function") {
-      p.catch(() => {
-        currentAudioEl = null;
-        tocarBeepSintetico(cfg);
-      });
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
     }
+    pararNotificacao();
+    const src = ctx.createBufferSource();
+    src.buffer = unlockedAudioBuffer;
+    const gain = ctx.createGain();
+    gain.gain.value = Math.max(0, Math.min(1, cfg.volume));
+    src.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(0);
+    currentSource = src;
+    currentAudioCtx = ctx;
+    src.onended = () => {
+      if (currentSource === src) currentSource = null;
+    };
     return true;
   } catch {
     return false;
   }
 }
+
 
 const MUTE_KEY = "notificacao-som:mutado";
 
