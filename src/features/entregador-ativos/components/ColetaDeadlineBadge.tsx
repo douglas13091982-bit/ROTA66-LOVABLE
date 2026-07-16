@@ -29,10 +29,10 @@ export function ColetaDeadlineBadge({ deadline }: Props) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] rounded-full backdrop-blur-sm border shadow-soft ${cls}`}
+      className={`inline-flex items-center gap-2 px-4 py-2 text-base font-bold uppercase tracking-[0.14em] rounded-full backdrop-blur-sm border shadow-soft ${cls}`}
       title="Prazo para chegar na coleta"
     >
-      <Timer className="h-3 w-3" />
+      <Timer className="h-5 w-5" />
       {late ? "Atrasado" : fmt(diff)}
     </span>
   );
