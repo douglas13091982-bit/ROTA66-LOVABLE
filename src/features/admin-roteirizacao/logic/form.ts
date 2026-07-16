@@ -92,6 +92,19 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
     return { ok: false, error: "Escopo do pool aberto inválido" };
   }
 
+  const cBase = Number(form.coleta_tempo_base_min);
+  const cPorKm = Number(form.coleta_min_por_km);
+  const cMin = Number(form.coleta_prazo_min_absoluto);
+  const cMax = Number(form.coleta_prazo_max_absoluto);
+  if (
+    !Number.isFinite(cBase) || cBase < 0 ||
+    !Number.isFinite(cPorKm) || cPorKm <= 0 ||
+    !Number.isFinite(cMin) || cMin < 1 ||
+    !Number.isFinite(cMax) || cMax < cMin
+  ) {
+    return { ok: false, error: "Prazo de coleta inválido (teto deve ser ≥ piso)" };
+  }
+
   return {
     ok: true,
     payload: {
@@ -105,6 +118,10 @@ export function validateAndBuild(form: RoteirizacaoForm): ValidationResult {
       catalogo_horizontal_min_produtos: Math.round(catMinProd),
       catalogo_horizontal_min_categorias: Math.round(catMinCat),
       pool_aberto_scope: form.pool_aberto_scope,
+      coleta_tempo_base_min: Math.round(cBase),
+      coleta_min_por_km: cPorKm,
+      coleta_prazo_min_absoluto: Math.round(cMin),
+      coleta_prazo_max_absoluto: Math.round(cMax),
     },
   };
 }
