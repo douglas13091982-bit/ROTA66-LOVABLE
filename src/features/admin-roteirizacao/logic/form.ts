@@ -14,6 +14,10 @@ export type RoteirizacaoForm = {
   catalogo_horizontal_min_produtos: string;
   catalogo_horizontal_min_categorias: string;
   pool_aberto_scope: PoolAbertoScope;
+  coleta_tempo_base_min: string;
+  coleta_min_por_km: string;
+  coleta_prazo_min_absoluto: string;
+  coleta_prazo_max_absoluto: string;
 };
 
 export const INITIAL_FORM: RoteirizacaoForm = {
