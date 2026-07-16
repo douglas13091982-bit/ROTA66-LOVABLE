@@ -31,6 +31,10 @@ export const INITIAL_FORM: RoteirizacaoForm = {
   catalogo_horizontal_min_produtos: "50",
   catalogo_horizontal_min_categorias: "5",
   pool_aberto_scope: "vinculados_e_externos",
+  coleta_tempo_base_min: "0",
+  coleta_min_por_km: "1.6",
+  coleta_prazo_min_absoluto: "4",
+  coleta_prazo_max_absoluto: "30",
 };
 
 export function fromRow(data: any): RoteirizacaoForm {
