@@ -8,6 +8,7 @@ import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
 import { PagamentoBadge } from "./PagamentoBadge";
 import { abrirRetornoLoja } from "./RetornoLojaDialog";
+import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
 
 type Props = {
   pedido: PedidoAtivo;
