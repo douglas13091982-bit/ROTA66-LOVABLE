@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { KeyRound, MapPin, Navigation } from "lucide-react";
+import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
 import type { PedidoAtivo } from "../logic/types";
 
 type Props = {
@@ -12,9 +14,28 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
   const ref = pedidos[0];
   const codigo = ref.codigo_coleta;
   const endereco = ref.endereco_coleta;
+  const deadline = pedidos
+    .map((p) => p.deadline_coleta_at)
+    .filter((d): d is string => !!d)
+    .sort()[0];
   const mapsUrl = endereco
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`
     : null;
+
+  const total = useMemo(() => {
+    const bonus = pedidos.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0);
+    const liquido = pedidos.reduce(
+      (s, p) =>
+        s +
+        liquidoEntregador(
+          Number(p.taxa_entrega ?? 0),
+          Number(p.loja_taxa_por_pedido ?? 0),
+          p.loja_plano_mensal_ativo,
+        ),
+      0,
+    );
+    return { total: liquido + bonus, bonus };
+  }, [pedidos]);
 
   return (
     <div className="relative p-5 md:p-6">
@@ -29,7 +50,24 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
               Rota com {totalRota} paradas no total
             </div>
           </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
+            <span className="inline-flex flex-col items-center px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+              <span className="text-[9px] uppercase tracking-[0.18em] text-white/50 font-bold">
+                Você recebe
+              </span>
+              <span className="font-display text-2xl text-white leading-none mt-0.5">
+                R$ {total.total.toFixed(2).replace(".", ",")}
+              </span>
+              {total.bonus > 0 && (
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-amber-300 mt-1">
+                  + R$ {total.bonus.toFixed(2).replace(".", ",")} bônus
+                </span>
+              )}
+            </span>
+            {deadline && <ColetaDeadlineBadge deadline={deadline} />}
+          </div>
         </div>
+
 
         <div className="text-[10px] uppercase tracking-[0.22em] text-white/50 mt-2 mb-1.5">
           Endereço de coleta
