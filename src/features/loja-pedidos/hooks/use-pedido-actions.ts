@@ -30,15 +30,53 @@ export function usePedidoActions(lojaId: string | undefined) {
 
   const marcarLoteComoPronto = async (ids: string[]) => {
     if (ids.length === 0) return;
-    const { error } = await supabase
-      .from("pedidos")
-      .update({ status: "pronto" as any })
-      .in("id", ids)
-      .eq("status", "em_preparo");
-    if (error) {
-      toast.error(error.message);
-      return;
+
+    // Quando a loja agrupa 2+ pedidos, garantimos que eles compartilhem
+    // rota_id (e o mesmo codigo_coleta) — assim o entregador enxerga
+    // como UM ÚNICO card de rota agrupada e pode aceitar tudo de uma vez.
+    if (ids.length > 1) {
+      const { data: existentes } = await supabase
+        .from("pedidos")
+        .select("id, rota_id, codigo_coleta")
+        .in("id", ids);
+
+      const rotaCompartilhada =
+        (existentes ?? []).find((p: any) => p.rota_id)?.rota_id ??
+        (typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random()}`);
+      const codigoCompartilhado =
+        (existentes ?? []).find((p: any) => p.codigo_coleta)?.codigo_coleta ??
+        String(Math.floor(1000 + Math.random() * 9000));
+
+      for (let i = 0; i < ids.length; i++) {
+        const { error } = await supabase
+          .from("pedidos")
+          .update({
+            status: "pronto" as any,
+            rota_id: rotaCompartilhada,
+            rota_ordem: i + 1,
+            codigo_coleta: codigoCompartilhado,
+          } as any)
+          .eq("id", ids[i])
+          .eq("status", "em_preparo");
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+      }
+    } else {
+      const { error } = await supabase
+        .from("pedidos")
+        .update({ status: "pronto" as any })
+        .in("id", ids)
+        .eq("status", "em_preparo");
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
     }
+
     invalidate();
     toast.success(`${ids.length} pedidos marcados como prontos!`);
   };
