@@ -49,6 +49,10 @@ export function fromRow(data: any): RoteirizacaoForm {
     catalogo_horizontal_min_produtos: String(data.catalogo_horizontal_min_produtos ?? 50),
     catalogo_horizontal_min_categorias: String(data.catalogo_horizontal_min_categorias ?? 5),
     pool_aberto_scope: (data.pool_aberto_scope ?? "vinculados_e_externos") as PoolAbertoScope,
+    coleta_tempo_base_min: String(data.coleta_tempo_base_min ?? 0),
+    coleta_min_por_km: String(data.coleta_min_por_km ?? 1.6),
+    coleta_prazo_min_absoluto: String(data.coleta_prazo_min_absoluto ?? 4),
+    coleta_prazo_max_absoluto: String(data.coleta_prazo_max_absoluto ?? 30),
   };
 }
 
