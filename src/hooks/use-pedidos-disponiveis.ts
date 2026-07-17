@@ -322,9 +322,11 @@ function criarCalculadorTaxaExibida(
     const forma = (p.forma_pagamento ?? "").toLowerCase();
     const ehCartao = forma === "cartao" || forma === "cartao_credito" || forma === "cartao_debito";
 
-    const taxaPlano = p.loja_plano_mensal_ativo
-      ? 0
-      : Number(p.loja_taxa_por_pedido ?? 0) || 0;
+    // A taxa por pedido do plano é sempre somada à tarifa do cliente e
+    // depois descontada do líquido do entregador — o plano mensal pode
+    // cobrar mensalidade E taxa por pedido. Manter em paridade com
+    // liquidoEntregador() para não mostrar valor menor que o real.
+    const taxaPlano = Number(p.loja_taxa_por_pedido ?? 0) || 0;
     const tarifaClienteAPartirDoFrete = (freteEntregador: number) => {
       const frete = ehCartao && p._externo ? freteEntregador * 2 : freteEntregador;
       return Number((frete + taxaPlano).toFixed(2));
