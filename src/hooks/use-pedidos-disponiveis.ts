@@ -124,10 +124,12 @@ export function usePedidosDisponiveis(
 
 
 
-  const { data: rotaAtivaCount } = useQuery({
+  const { data: rotaAtivaCount, isFetched: rotaAtivaFetched } = useQuery({
     queryKey: ["entregador-rota-ativa", userId],
     enabled: !!userId,
     refetchInterval: ROTA_ATIVA_REFETCH_MS,
+    staleTime: ROTA_ATIVA_REFETCH_MS,
+    placeholderData: (prev) => prev,
     queryFn: async () => {
       const { count, error } = await supabase
         .from("pedidos")
@@ -139,6 +141,33 @@ export function usePedidosDisponiveis(
     },
   });
   const temRotaAtiva = (rotaAtivaCount ?? 0) > 0;
+  const rotaAtivaResolvida = rotaAtivaCount !== undefined || rotaAtivaFetched;
+
+  // Realtime: quando um pedido do entregador muda de status (ex: aceitou,
+  // coletou, entregou), invalida a contagem para o banner "rota ativa"
+  // aparecer/sumir instantaneamente sem esperar o refetch de 15s.
+  useEffect(() => {
+    if (!userId) return;
+    const ch = supabase
+      .channel(`rota-ativa-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "pedidos",
+          filter: `entregador_id=eq.${userId}`,
+        },
+        () => {
+          qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [userId, qc]);
+
 
   const { data: lojaIds } = useQuery({
     queryKey: ["minhas-lojas-vinculadas", userId],
