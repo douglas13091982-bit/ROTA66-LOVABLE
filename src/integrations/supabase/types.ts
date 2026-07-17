@@ -1424,7 +1424,7 @@ export type Database = {
           catalogo_ativo: boolean
           catalogo_layout: string
           catalogo_slug: string | null
-          categoria: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria: string | null
           cidade: string | null
           city_id: string | null
           cnpj: string | null
@@ -1462,7 +1462,7 @@ export type Database = {
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           city_id?: string | null
           cnpj?: string | null
@@ -1500,7 +1500,7 @@ export type Database = {
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           city_id?: string | null
           cnpj?: string | null
@@ -3113,7 +3113,7 @@ export type Database = {
     Views: {
       lojas_para_entregador: {
         Row: {
-          categoria: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria: string | null
           cidade: string | null
           endereco: string | null
           endereco_lat: number | null
@@ -3127,7 +3127,7 @@ export type Database = {
           status: Database["public"]["Enums"]["status_moderacao"] | null
         }
         Insert: {
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           endereco?: string | null
           endereco_lat?: number | null
@@ -3141,7 +3141,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["status_moderacao"] | null
         }
         Update: {
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           endereco?: string | null
           endereco_lat?: number | null
@@ -3162,7 +3162,7 @@ export type Database = {
           catalogo_ativo: boolean | null
           catalogo_layout: string | null
           catalogo_slug: string | null
-          categoria: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria: string | null
           cidade: string | null
           endereco: string | null
           endereco_lat: number | null
@@ -3185,7 +3185,7 @@ export type Database = {
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
           catalogo_slug?: string | null
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           endereco?: string | null
           endereco_lat?: number | null
@@ -3208,7 +3208,7 @@ export type Database = {
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
           catalogo_slug?: string | null
-          categoria?: Database["public"]["Enums"]["loja_categoria"] | null
+          categoria?: string | null
           cidade?: string | null
           endereco?: string | null
           endereco_lat?: number | null
