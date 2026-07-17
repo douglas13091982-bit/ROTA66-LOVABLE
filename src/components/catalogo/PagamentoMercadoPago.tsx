@@ -247,6 +247,7 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
   const mpRef = useRef<any>(null);
 
   useEffect(() => {
+    loadMpDeviceScript();
     loadMpSdk()
       .then(() => {
         if (window.MercadoPago) {
