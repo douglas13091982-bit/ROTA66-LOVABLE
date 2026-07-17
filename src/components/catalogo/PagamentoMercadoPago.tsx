@@ -426,8 +426,8 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       <label className="block">
         <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Parcelas</span>
         <select
-          value={form.installments}
-          onChange={(e) => setForm({ ...form, installments: Number(e.target.value) })}
+          value={installments}
+          onChange={(e) => setInstallments(Number(e.target.value))}
           className="w-full mt-1 px-3 py-3 bg-background border border-border rounded-xl text-[15px] focus:outline-none focus:border-primary"
         >
           {[1, 2, 3, 4, 5, 6].map((n) => (
