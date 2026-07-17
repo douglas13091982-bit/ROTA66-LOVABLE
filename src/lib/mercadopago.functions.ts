@@ -176,7 +176,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
           identification: { type: docType, number: docDigits },
         },
         external_reference: `cat_pendente:${p.id}`,
-        notification_url,
+        ...(notification_url ? { notification_url } : {}),
       },
       `catcard-${p.id}-${Date.now()}`,
     );
