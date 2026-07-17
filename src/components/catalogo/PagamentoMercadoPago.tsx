@@ -381,7 +381,20 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
           ))}
         </select>
       </label>
-      {erro && <div className="text-xs text-destructive bg-destructive/10 rounded p-2">{erro}</div>}
+      {erro && (
+        <div className="text-xs text-destructive bg-destructive/10 rounded p-2 space-y-2">
+          <div>{erro}</div>
+          {onTrocarParaPix && (
+            <button
+              type="button"
+              onClick={onTrocarParaPix}
+              className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 bg-destructive text-destructive-foreground rounded-md font-bold uppercase text-[11px] tracking-wider hover:opacity-90"
+            >
+              <QrCode className="h-3.5 w-3.5" /> Pagar com Pix
+            </button>
+          )}
+        </div>
+      )}
       <button
         type="submit"
         disabled={!ready || submitting}
