@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { KeyRound, MapPin, Navigation } from "lucide-react";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { supabase } from "@/integrations/supabase/client";
 import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
 import type { PedidoAtivo } from "../logic/types";
+
 
 type Props = {
   pedidos: PedidoAtivo[];
