@@ -34,6 +34,11 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
         let erros = 0;
         let varridos = 0;
 
+        // Pagamentos de catálogo (cat_pendente) são criados na conta MP DA PLATAFORMA,
+        // não da loja. Carrega essa config uma vez para usar em todos os pendentes.
+        const { getPlataformaMp, mpGetPaymentPlataforma } = await import("@/lib/plataforma-mp.server");
+        const plataformaCfg = await getPlataformaMp();
+
         // 1) Pendentes na nova tabela
         const { data: pendentes } = await supabaseAdmin
           .from("pedidos_pendentes_pagamento" as any)
@@ -45,16 +50,10 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
 
         varridos += pendentes?.length ?? 0;
         for (const p of (pendentes ?? []) as any[]) {
-          const lojaId = p.loja_id as string;
           const paymentId = String(p.mp_payment_id);
           try {
-            let cfg = lojaCache.get(lojaId);
-            if (cfg === undefined) {
-              cfg = await getMpConfigByLojaId(lojaId);
-              lojaCache.set(lojaId, cfg);
-            }
-            if (!cfg) { erros++; continue; }
-            const payment = await mpGetPayment(cfg.access_token, paymentId);
+            if (!plataformaCfg) { erros++; continue; }
+            const payment = await mpGetPaymentPlataforma(plataformaCfg, paymentId);
             const aprovado = payment.status === "approved";
             const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
             if (aprovado) {
@@ -87,6 +86,7 @@ export const Route = createFileRoute("/api/public/hooks/mp-poll-pendentes")({
             console.error("[mp-poll-pendentes] pendente", p.id, e?.message ?? e);
           }
         }
+
 
         // 2) Compat: pedidos legados ainda em aguardando_pagamento
         const { data: legados } = await supabaseAdmin
