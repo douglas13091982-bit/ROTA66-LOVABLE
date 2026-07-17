@@ -93,10 +93,21 @@ export function CheckoutDialog({
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Pré-carrega o script de fingerprint do Mercado Pago para popular
+    // window.MP_DEVICE_SESSION_ID cedo (reduz cc_rejected_high_risk).
+    if (mpAtivo && typeof document !== "undefined" && !document.getElementById("mp-security-script")) {
+      const s = document.createElement("script");
+      s.id = "mp-security-script";
+      s.src = "https://www.mercadopago.com/v2/security.js";
+      s.async = true;
+      s.setAttribute("view", "checkout");
+      s.setAttribute("output", "MP_DEVICE_SESSION_ID");
+      document.head.appendChild(s);
+    }
     return () => {
       document.body.style.overflow = prev;
     };
-  }, []);
+  }, [mpAtivo]);
 
   // Prefill cliente data (nome, telefone, endereço) a partir do perfil do marketplace.
   useEffect(() => {
