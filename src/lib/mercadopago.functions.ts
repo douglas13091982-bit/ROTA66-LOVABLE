@@ -228,6 +228,7 @@ const CartaoSchema = z.object({
   issuer_id: z.string().max(50).optional(),
   payer_email: z.string().email().max(120),
   payer_doc: z.string().trim().min(11).max(18),
+  device_id: z.string().trim().max(200).optional(),
 });
 
 export const criarPagamentoCartao = createServerFn({ method: "POST" })
