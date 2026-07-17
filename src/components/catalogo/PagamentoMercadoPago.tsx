@@ -47,7 +47,11 @@ function loadMpDeviceScript() {
 function getDeviceId(): string | undefined {
   if (typeof window === "undefined") return undefined;
   const v = window.MP_DEVICE_SESSION_ID;
-  return v && typeof v === "string" ? v : undefined;
+  if (!v || typeof v !== "string") return undefined;
+  const trimmed = v.trim();
+  if (!trimmed) return undefined;
+  // MP validator do backend limita a 200 chars — trunca defensivamente
+  return trimmed.length > 200 ? trimmed.slice(0, 200) : trimmed;
 }
 
 
