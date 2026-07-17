@@ -263,8 +263,9 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
         setAprovado(true);
         onAprovado({ id: res.pedido_id, numero: res.numero });
       } else {
-        setErro(`Pagamento não aprovado: ${res.status_detail ?? res.status}`);
+        setErro(traduzirStatusMp(res.status_detail ?? res.status ?? ""));
       }
+
     } catch (e: any) {
       const raw = String(e?.message ?? "");
       let msg = raw || "Falha no pagamento";
