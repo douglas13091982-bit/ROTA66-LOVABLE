@@ -49,8 +49,10 @@ export function PedidosPage() {
     const map: Record<string, Pedido[]> = {};
     for (const col of COLUMNS) map[col.key] = [];
     (pedidos ?? []).forEach((p) => {
-      // Arquivados (incluindo cancelados) ficam ocultos até ativar "Mostrar arquivados".
-      if (p.arquivado && !mostrarArquivados) return;
+      // Cancelados devem se comportar como arquivados mesmo quando registros antigos
+      // ainda estiverem com `arquivado = false` no banco.
+      const estaArquivadoOuCancelado = Boolean(p.arquivado) || p.status === "cancelado";
+      if (estaArquivadoOuCancelado && !mostrarArquivados) return;
       const col = COLUMNS.find((c) => c.statuses.includes(p.status));
       if (col) map[col.key].push(p);
     });
