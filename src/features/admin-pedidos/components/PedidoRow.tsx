@@ -12,7 +12,7 @@ export function PedidoRow({ pedido }: { pedido: PedidoRowType }) {
       <td className="p-4 text-primary font-bold">R$ {Number(pedido.valor_total).toFixed(2)}</td>
       <td className="p-4">
         {pedido.entregador_id ? (
-          <EntregadorNomeBadge pedidoId={pedido.id} />
+          <EntregadorNomeBadge pedidoId={pedido.id} entregadorId={pedido.entregador_id} />
         ) : (
           <span className="text-muted-foreground text-xs">—</span>
         )}

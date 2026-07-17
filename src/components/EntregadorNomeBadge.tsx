@@ -3,10 +3,12 @@ import { Bike } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AvatarImg } from "@/components/AvatarImg";
 
-export function EntregadorNomeBadge({ pedidoId }: { pedidoId: string }) {
+export function EntregadorNomeBadge({ pedidoId, entregadorId }: { pedidoId: string; entregadorId?: string | null }) {
   const { data } = useQuery({
-    queryKey: ["entregador-pedido", pedidoId],
-    enabled: !!pedidoId,
+    // Inclui entregadorId na chave para que, quando a loja reenvia o pedido
+    // ou outro entregador aceita, o badge refetche em vez de mostrar o antigo.
+    queryKey: ["entregador-pedido", pedidoId, entregadorId ?? null],
+    enabled: !!pedidoId && !!entregadorId,
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_entregador_pedido", { _pedido_id: pedidoId });
       if (error) throw error;
