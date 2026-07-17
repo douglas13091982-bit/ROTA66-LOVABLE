@@ -338,6 +338,7 @@ export function usePedidosDisponiveis(
     grupos,
     isLoading: loadingVinc || loadingExt,
     temRotaAtiva,
+    rotaAtivaResolvida,
     semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !aceitaPedidosExternos,
     ganhoHoje: ganhoHoje ?? 0,
     taxaParaExibir,
