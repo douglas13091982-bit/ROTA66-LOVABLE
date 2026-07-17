@@ -102,11 +102,17 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
 
         {!revealed ? (
           <button
-            onClick={() => setRevealed(true)}
+            onClick={() => {
+              setRevealed(true);
+              void supabase.rpc("entregador_chegou_coleta" as never, {
+                _pedido_id: ref.id,
+              } as never);
+            }}
             className="w-full px-5 py-4 bg-[#da161a] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
           >
             Cheguei na coleta
           </button>
+
         ) : (
           <div className="rounded-xl border border-white/10 bg-white/5 p-5 space-y-3">
             <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/50 mb-2 font-bold">
