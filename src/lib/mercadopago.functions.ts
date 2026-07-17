@@ -88,11 +88,13 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
 
     const docDigits = data.payer_doc.replace(/\D/g, "");
     const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
+    const amount = Math.round(Number(p.valor_total) * 100) / 100;
+    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Valor inválido para pagamento");
 
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
-        transaction_amount: Number(p.valor_total),
+        transaction_amount: amount,
         description: `Pedido catálogo`,
         payment_method_id: "pix",
         payer: {
