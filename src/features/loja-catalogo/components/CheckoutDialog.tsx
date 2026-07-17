@@ -245,6 +245,11 @@ export function CheckoutDialog({
               payerEmail={form.cliente_email}
               payerDoc={form.cliente_doc}
               onAprovado={(pedido) => onSuccess(pedido)}
+              onTrocarParaPix={
+                form.forma_pagamento === "cartao_online"
+                  ? () => setForm((f) => ({ ...f, forma_pagamento: "pix_online" }))
+                  : undefined
+              }
             />
           )}
         </div>
