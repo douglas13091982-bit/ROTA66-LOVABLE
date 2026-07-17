@@ -21,6 +21,81 @@ function buildWebhookUrl(): string {
   return `https://${host}/api/public/mp-webhook`;
 }
 
+// Split "João da Silva" em first/last respeitando limites do MP.
+function splitNome(nome: string | undefined | null): { first_name: string; last_name: string } {
+  const n = String(nome ?? "").trim().replace(/\s+/g, " ");
+  if (!n) return { first_name: "Cliente", last_name: "Catalogo" };
+  const parts = n.split(" ");
+  if (parts.length === 1) return { first_name: parts[0].slice(0, 40), last_name: parts[0].slice(0, 40) };
+  return { first_name: parts[0].slice(0, 40), last_name: parts.slice(1).join(" ").slice(0, 40) };
+}
+
+// Extrai DDD + número de um telefone brasileiro em formato livre.
+function parseTelefoneBr(tel: string | undefined | null): { area_code: string; number: string } | null {
+  const d = String(tel ?? "").replace(/\D/g, "");
+  if (d.length < 10) return null;
+  // remove DDI 55 se presente
+  const local = d.length > 11 && d.startsWith("55") ? d.slice(2) : d;
+  if (local.length < 10 || local.length > 11) return null;
+  return { area_code: local.slice(0, 2), number: local.slice(2) };
+}
+
+// Monta additional_info + payer enriquecido a partir do snapshot do pedido pendente.
+function buildAdditionalInfo(dados: any, lojaNome: string | null) {
+  const itens = Array.isArray(dados?.itens) ? dados.itens : [];
+  const items = itens.slice(0, 30).map((it: any, idx: number) => ({
+    id: String(it?.produto_id ?? `item-${idx}`).slice(0, 40),
+    title: String(it?.nome ?? "Item").slice(0, 80),
+    description: String(it?.nome ?? "Item").slice(0, 200),
+    category_id: "food",
+    quantity: Number(it?.qtd) > 0 ? Math.trunc(Number(it.qtd)) : 1,
+    unit_price: Math.round(Number(it?.preco ?? 0) * 100) / 100,
+  }));
+  const phone = parseTelefoneBr(dados?.cliente_telefone);
+  const nome = splitNome(dados?.cliente_nome);
+  const endereco = String(dados?.endereco_entrega ?? "").trim();
+  const cidade = String(dados?.cidade ?? "").trim();
+
+  const additional_info: any = {};
+  if (items.length > 0) additional_info.items = items;
+  additional_info.payer = {
+    first_name: nome.first_name,
+    last_name: nome.last_name,
+    ...(phone ? { phone: { area_code: phone.area_code, number: phone.number } } : {}),
+  };
+  if (endereco) {
+    additional_info.shipments = {
+      receiver_address: {
+        street_name: endereco.slice(0, 250),
+        ...(cidade ? { city_name: cidade.slice(0, 60) } : {}),
+      },
+    };
+  }
+  const base = (lojaNome ?? "ROTA66").toUpperCase().replace(/[^A-Z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+  const statement_descriptor = (base || "ROTA66").slice(0, 22);
+  return { additional_info, phone, nome, statement_descriptor };
+}
+
+async function loadPendenteContexto(pendente_id: string) {
+  const { data, error } = await supabaseAdmin
+    .from("pedidos_pendentes_pagamento" as any)
+    .select("id, loja_id, dados")
+    .eq("id", pendente_id)
+    .maybeSingle();
+  if (error) return { dados: null, lojaNome: null };
+  const loja_id = (data as any)?.loja_id;
+  let lojaNome: string | null = null;
+  if (loja_id) {
+    const { data: loja } = await supabaseAdmin
+      .from("lojas")
+      .select("nome")
+      .eq("id", loja_id)
+      .maybeSingle();
+    lojaNome = (loja as any)?.nome ?? null;
+  }
+  return { dados: (data as any)?.dados ?? null, lojaNome };
+}
+
 // ---------- Config (compat, mantida) ----------
 const TestarConexaoSchema = z.object({
   loja_id: z.string().uuid(),
@@ -91,17 +166,27 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
     const amount = Math.round(Number(p.valor_total) * 100) / 100;
     if (!Number.isFinite(amount) || amount <= 0) throw new Error("Valor inválido para pagamento");
 
+    const ctx = await loadPendenteContexto(p.id);
+    const extras = buildAdditionalInfo(ctx.dados, ctx.lojaNome);
+    const nomeMp = splitNome(data.payer_nome);
+
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
         transaction_amount: amount,
-        description: `Pedido catálogo`,
+        description: `Pedido ${ctx.lojaNome ?? "catálogo"}`,
         payment_method_id: "pix",
+        statement_descriptor: extras.statement_descriptor,
         payer: {
           email: data.payer_email,
-          first_name: data.payer_nome,
+          first_name: nomeMp.first_name,
+          last_name: nomeMp.last_name,
           identification: { type: docType, number: docDigits },
+          ...(extras.phone
+            ? { phone: { area_code: extras.phone.area_code, number: extras.phone.number } }
+            : {}),
         },
+        additional_info: extras.additional_info,
         external_reference: `cat_pendente:${p.id}`,
         ...(notification_url ? { notification_url } : {}),
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
@@ -166,19 +251,29 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
     const amount = Math.round(Number(p.valor_total) * 100) / 100;
     if (!Number.isFinite(amount) || amount <= 0) throw new Error("Valor inválido para pagamento");
 
+    const ctx = await loadPendenteContexto(p.id);
+    const extras = buildAdditionalInfo(ctx.dados, ctx.lojaNome);
+
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
         transaction_amount: amount,
-        description: `Pedido catálogo`,
+        description: `Pedido ${ctx.lojaNome ?? "catálogo"}`,
         token: data.card_token,
         installments: data.installments,
         payment_method_id: data.payment_method_id,
         issuer_id: data.issuer_id,
+        statement_descriptor: extras.statement_descriptor,
         payer: {
           email: data.payer_email,
+          first_name: extras.nome.first_name,
+          last_name: extras.nome.last_name,
           identification: { type: docType, number: docDigits },
+          ...(extras.phone
+            ? { phone: { area_code: extras.phone.area_code, number: extras.phone.number } }
+            : {}),
         },
+        additional_info: extras.additional_info,
         external_reference: `cat_pendente:${p.id}`,
         ...(notification_url ? { notification_url } : {}),
       },

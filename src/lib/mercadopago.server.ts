@@ -32,11 +32,15 @@ interface MpPaymentBody {
   payer: {
     email: string;
     first_name?: string;
+    last_name?: string;
     identification?: { type: string; number: string };
+    phone?: { area_code: string; number: string };
   };
   external_reference?: string;
   notification_url?: string;
   date_of_expiration?: string;
+  statement_descriptor?: string;
+  additional_info?: Record<string, unknown>;
 }
 
 interface MpPaymentResponse {
