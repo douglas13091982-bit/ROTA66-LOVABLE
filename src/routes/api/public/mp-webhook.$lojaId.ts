@@ -80,6 +80,13 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
           const aprovado = payment.status === "approved";
           const cancelado = ["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status);
 
+          // Idempotência: bloqueia reprocessamento do mesmo (payment,status) para esta loja.
+          const { claimWebhookEvent } = await import("@/lib/mp-webhook-idempotencia.server");
+          const { first } = await claimWebhookEvent(paymentId, payment.status, `loja:${lojaId}`, { ref });
+          if (!first) return new Response("duplicate", { status: 200 });
+
+
+
           // Nova arquitetura: pedido só nasce após o pagamento confirmar.
           if (ref.startsWith("cat_pendente:")) {
             const pendenteId = ref.slice("cat_pendente:".length);
