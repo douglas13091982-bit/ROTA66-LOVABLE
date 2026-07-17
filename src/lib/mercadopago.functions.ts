@@ -101,7 +101,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
           identification: { type: docType, number: docDigits },
         },
         external_reference: `cat_pendente:${p.id}`,
-        notification_url,
+        ...(notification_url ? { notification_url } : {}),
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
       },
       `catpix-${p.id}`,
