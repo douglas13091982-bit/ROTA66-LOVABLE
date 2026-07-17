@@ -335,6 +335,14 @@ export async function handleMpPlataformaWebhook(
     const payment = await mpGetPaymentPlataforma(cfg, paymentId);
     const ref = String(payment.external_reference ?? "");
 
+    // Idempotência: se já processamos este (payment,status) para a plataforma, ignora.
+    const { claimWebhookEvent } = await import("@/lib/mp-webhook-idempotencia.server");
+    const { first } = await claimWebhookEvent(paymentId, payment.status, "plataforma", {
+      ref,
+      tipo: v.tipo,
+    });
+    if (!first) return new Response("duplicate", { status: 200 });
+
     if (ref.startsWith("mensalidade:")) {
       return await processMensalidadeLoja(paymentId, payment);
     }
@@ -355,6 +363,7 @@ export async function handleMpPlataformaWebhook(
     }
 
     return new Response("unknown reference", { status: 200 });
+
   } catch (e: any) {
     console.error("[mp-webhook-dispatcher]", e?.message ?? e);
     return new Response("erro", { status: 500 });
