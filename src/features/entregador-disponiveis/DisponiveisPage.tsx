@@ -25,6 +25,7 @@ export function DisponiveisPage() {
     grupos,
     isLoading,
     temRotaAtiva,
+    rotaAtivaResolvida,
     semVinculoNemExterno,
     ganhoHoje,
     taxaParaExibir,
@@ -66,7 +67,7 @@ export function DisponiveisPage() {
     );
   }
 
-  const isListaVisivel = !temRotaAtiva && estouOnline;
+  const isListaVisivel = rotaAtivaResolvida && !temRotaAtiva && estouOnline;
 
   return (
     <EntregadorShell
@@ -83,7 +84,11 @@ export function DisponiveisPage() {
         </>
       }
     >
-      {temRotaAtiva ? (
+      {!rotaAtivaResolvida ? (
+        <div className="bg-card border border-border rounded-lg p-6 text-center">
+          <p className="text-sm text-muted-foreground">Carregando…</p>
+        </div>
+      ) : temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
         <div className="bg-card border border-border rounded-lg p-6 text-center">
@@ -103,6 +108,7 @@ export function DisponiveisPage() {
           onOrdenacaoChange={setOrdenacao}
         />
       )}
+
 
 
       <AnunciosEntregador />
