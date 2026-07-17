@@ -88,10 +88,10 @@ async function loadPendenteContexto(pendente_id: string) {
   if (loja_id) {
     const { data: loja } = await supabaseAdmin
       .from("lojas")
-      .select("nome_fantasia, nome")
+      .select("nome")
       .eq("id", loja_id)
       .maybeSingle();
-    lojaNome = (loja as any)?.nome_fantasia ?? (loja as any)?.nome ?? null;
+    lojaNome = (loja as any)?.nome ?? null;
   }
   return { dados: (data as any)?.dados ?? null, lojaNome };
 }
