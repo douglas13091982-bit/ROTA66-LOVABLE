@@ -319,6 +319,7 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       });
       if (!tokenRes?.id) throw new Error("Não foi possível validar o cartão");
 
+      const deviceId = getDeviceId();
       const res = await criar({
         data: {
           pendente_id: pendenteId,
@@ -328,6 +329,7 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
           issuer_id: issuerId,
           payer_email: payerEmail,
           payer_doc: payerDoc,
+          ...(deviceId ? { device_id: deviceId } : {}),
         },
       });
       if (res.aprovado && res.pedido_id && res.numero != null) {
