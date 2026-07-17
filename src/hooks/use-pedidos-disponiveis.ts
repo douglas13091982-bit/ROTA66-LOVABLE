@@ -32,11 +32,13 @@ export type UsePedidosDisponiveisResult = {
   grupos: ReturnType<typeof agruparPedidosPorRota>;
   isLoading: boolean;
   temRotaAtiva: boolean;
+  rotaAtivaResolvida: boolean;
   semVinculoNemExterno: boolean;
   ganhoHoje: number;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   estouOnline: boolean;
 };
+
 
 
 export function usePedidosDisponiveis(
