@@ -98,7 +98,7 @@ export function PedidoCard({
             ` · ${Math.max(1, Math.round(p.duracao_estimada_seg / 60))} min`}
         </div>
       )}
-      {p.entregador_id && <EntregadorNomeBadge pedidoId={p.id} />}
+      {p.entregador_id && <EntregadorNomeBadge pedidoId={p.id} entregadorId={p.entregador_id} />}
       <div className="mt-2 pt-2 border-t border-border/40 space-y-2">
         <div className="flex items-center justify-between gap-2">
           <span className="font-display text-base text-primary leading-none">
