@@ -118,12 +118,28 @@ function PagamentoPix({ pendenteId, valor, payerNome, payerEmail, payerDoc, onAp
   const iniciou = useRef(false);
 
   useEffect(() => {
+    loadMpDeviceScript();
+  }, []);
+
+  useEffect(() => {
     if (iniciou.current) return;
     iniciou.current = true;
     (async () => {
       try {
+        // Aguarda até ~1.2s para o script de fingerprint popular MP_DEVICE_SESSION_ID
+        let deviceId = getDeviceId();
+        for (let i = 0; !deviceId && i < 12; i++) {
+          await new Promise((r) => setTimeout(r, 100));
+          deviceId = getDeviceId();
+        }
         const res = await criar({
-          data: { pendente_id: pendenteId, payer_email: payerEmail, payer_doc: payerDoc, payer_nome: payerNome },
+          data: {
+            pendente_id: pendenteId,
+            payer_email: payerEmail,
+            payer_doc: payerDoc,
+            payer_nome: payerNome,
+            ...(deviceId ? { device_id: deviceId } : {}),
+          },
         });
         setQr({ code: res.qr_code, base64: res.qr_code_base64 });
       } catch (e: any) {
