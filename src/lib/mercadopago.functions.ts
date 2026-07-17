@@ -281,6 +281,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
         ...(notification_url ? { notification_url } : {}),
       },
       `catcard-${p.id}-${Date.now()}`,
+      data.device_id,
     );
 
     const aprovado = payment.status === "approved";
