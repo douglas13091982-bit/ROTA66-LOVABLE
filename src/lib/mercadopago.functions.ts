@@ -193,6 +193,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
       },
       `catpix-${p.id}`,
+      data.device_id,
     );
 
     const qrCode = payment.point_of_interaction?.transaction_data?.qr_code ?? "";
