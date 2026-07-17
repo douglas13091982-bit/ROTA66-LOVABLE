@@ -22,45 +22,46 @@ export const Route = createFileRoute("/api/public/mp-webhook/$lojaId")({
         const cfg = await getMpConfigByLojaId(lojaId);
         if (!cfg) return new Response("loja sem mp", { status: 404 });
 
-        // Validação obrigatória da assinatura do MP quando o segredo do webhook está configurado.
+        // Validação obrigatória da assinatura do MP. Sem webhook_secret configurado, recusa.
         const sigHeader = request.headers.get("x-signature");
         const reqId = request.headers.get("x-request-id");
         const url = new URL(request.url);
         const dataId = url.searchParams.get("data.id") ?? payload?.data?.id;
-        if (cfg.webhook_secret) {
-          if (!sigHeader || !reqId || !dataId) {
-            return new Response("missing signature", { status: 401 });
-          }
-          const parts = Object.fromEntries(
-            sigHeader.split(",").map((p) => {
-              const [k, v] = p.split("=");
-              return [k.trim(), (v ?? "").trim()];
-            }),
-          );
-          const ts = parts["ts"];
-          const v1 = parts["v1"];
-          if (!ts || !v1) {
-            return new Response("invalid signature", { status: 401 });
-          }
-          // Rejeita timestamps fora de uma janela de 5 minutos para evitar replays.
-          const tsNum = Number(ts);
-          if (!Number.isFinite(tsNum) || Math.abs(Date.now() - tsNum) > 5 * 60 * 1000) {
-            return new Response("stale signature", { status: 401 });
-          }
-          const manifest = `id:${dataId};request-id:${reqId};ts:${ts};`;
-          const expected = createHmac("sha256", cfg.webhook_secret).update(manifest).digest("hex");
-          let ok = false;
-          try {
-            const a = Buffer.from(v1, "hex");
-            const b = Buffer.from(expected, "hex");
-            ok = a.length === b.length && timingSafeEqual(a, b);
-          } catch {
-            ok = false;
-          }
-          if (!ok) {
-            return new Response("invalid signature", { status: 401 });
-          }
+        if (!cfg.webhook_secret) {
+          return new Response("webhook secret not configured", { status: 401 });
         }
+        if (!sigHeader || !reqId || !dataId) {
+          return new Response("missing signature", { status: 401 });
+        }
+        const parts = Object.fromEntries(
+          sigHeader.split(",").map((p) => {
+            const [k, v] = p.split("=");
+            return [k.trim(), (v ?? "").trim()];
+          }),
+        );
+        const ts = parts["ts"];
+        const v1 = parts["v1"];
+        if (!ts || !v1) {
+          return new Response("invalid signature", { status: 401 });
+        }
+        const tsNum = Number(ts);
+        if (!Number.isFinite(tsNum) || Math.abs(Date.now() - tsNum) > 5 * 60 * 1000) {
+          return new Response("stale signature", { status: 401 });
+        }
+        const manifest = `id:${dataId};request-id:${reqId};ts:${ts};`;
+        const expected = createHmac("sha256", cfg.webhook_secret).update(manifest).digest("hex");
+        let ok = false;
+        try {
+          const a = Buffer.from(v1, "hex");
+          const b = Buffer.from(expected, "hex");
+          ok = a.length === b.length && timingSafeEqual(a, b);
+        } catch {
+          ok = false;
+        }
+        if (!ok) {
+          return new Response("invalid signature", { status: 401 });
+        }
+
 
         const paymentId: string | undefined = String(dataId ?? payload?.data?.id ?? "").trim() || undefined;
         if (!paymentId) return new Response("no payment id", { status: 200 });
