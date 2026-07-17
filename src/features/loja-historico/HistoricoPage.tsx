@@ -21,10 +21,12 @@ function isoDiasAtras(dias: number): string {
 }
 
 function diasEntre(inicio: string, fim: string): { inicioIso: string; fimIso: string } {
-  const ini = new Date(inicio);
-  ini.setHours(0, 0, 0, 0);
-  const fi = new Date(fim);
-  fi.setHours(23, 59, 59, 999);
+  // Parse manual para respeitar o fuso local (evita que "YYYY-MM-DD"
+  // seja interpretado como UTC e cause janela deslocada de 3h).
+  const [yi, mi, di] = inicio.split("-").map(Number);
+  const [yf, mf, df] = fim.split("-").map(Number);
+  const ini = new Date(yi, mi - 1, di, 0, 0, 0, 0);
+  const fi = new Date(yf, mf - 1, df, 23, 59, 59, 999);
   return { inicioIso: ini.toISOString(), fimIso: fi.toISOString() };
 }
 
