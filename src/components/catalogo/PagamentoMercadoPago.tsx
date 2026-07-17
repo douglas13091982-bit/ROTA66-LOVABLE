@@ -190,7 +190,7 @@ function PagamentoPix({ pendenteId, valor, payerNome, payerEmail, payerDoc, onAp
   );
 }
 
-function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, onAprovado }: PagamentoMpProps) {
+function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, onAprovado, onTrocarParaPix }: PagamentoMpProps) {
   const criar = useServerFn(criarPagamentoCartao);
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
