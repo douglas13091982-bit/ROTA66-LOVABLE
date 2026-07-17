@@ -129,6 +129,7 @@ const PixSchema = z.object({
   payer_email: z.string().email().max(120),
   payer_doc: z.string().trim().min(11).max(18),
   payer_nome: z.string().trim().min(2).max(120),
+  device_id: z.string().trim().max(200).optional(),
 });
 
 export const criarPagamentoPix = createServerFn({ method: "POST" })
