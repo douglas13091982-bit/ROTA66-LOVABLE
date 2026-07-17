@@ -75,6 +75,8 @@ export interface PagamentoMpProps {
   payerEmail: string;
   payerDoc: string;
   onAprovado: (pedido: { id: string; numero: number }) => void;
+  onTrocarParaPix?: () => void;
+
 }
 
 export function PagamentoMercadoPago(props: PagamentoMpProps) {
