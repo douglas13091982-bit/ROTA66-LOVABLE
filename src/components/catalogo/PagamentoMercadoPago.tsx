@@ -7,6 +7,7 @@ import { criarPagamentoPix, criarPagamentoCartao, consultarStatusPagamento } fro
 declare global {
   interface Window {
     MercadoPago?: any;
+    MP_DEVICE_SESSION_ID?: string;
   }
 }
 
@@ -24,6 +25,29 @@ function loadMpSdk() {
     document.head.appendChild(s);
   });
   return sdkPromise;
+}
+
+// Injeta o script de fingerprint do Mercado Pago que popula window.MP_DEVICE_SESSION_ID.
+// Reduz drasticamente cc_rejected_high_risk pois envia device fingerprint na cobrança.
+let deviceScriptLoaded = false;
+function loadMpDeviceScript() {
+  if (typeof window === "undefined" || deviceScriptLoaded) return;
+  deviceScriptLoaded = true;
+  const existing = document.getElementById("mp-security-script");
+  if (existing) return;
+  const s = document.createElement("script");
+  s.id = "mp-security-script";
+  s.src = "https://www.mercadopago.com/v2/security.js";
+  s.async = true;
+  s.setAttribute("view", "checkout");
+  s.setAttribute("output", "MP_DEVICE_SESSION_ID");
+  document.head.appendChild(s);
+}
+
+function getDeviceId(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  const v = window.MP_DEVICE_SESSION_ID;
+  return v && typeof v === "string" ? v : undefined;
 }
 
 
