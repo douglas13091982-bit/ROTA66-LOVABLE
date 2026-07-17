@@ -1977,6 +1977,33 @@ export type Database = {
         }
         Relationships: []
       }
+      mp_webhook_eventos: {
+        Row: {
+          id: string
+          mp_payment_id: string
+          mp_status: string
+          origem: string
+          payload: Json | null
+          processed_at: string
+        }
+        Insert: {
+          id?: string
+          mp_payment_id: string
+          mp_status: string
+          origem: string
+          payload?: Json | null
+          processed_at?: string
+        }
+        Update: {
+          id?: string
+          mp_payment_id?: string
+          mp_status?: string
+          origem?: string
+          payload?: Json | null
+          processed_at?: string
+        }
+        Relationships: []
+      }
       password_reset_requests: {
         Row: {
           created_at: string
