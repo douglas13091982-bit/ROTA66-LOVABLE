@@ -25,6 +25,7 @@ export function DisponiveisPage() {
     grupos,
     isLoading,
     temRotaAtiva,
+    rotaAtivaResolvida,
     semVinculoNemExterno,
     ganhoHoje,
     taxaParaExibir,
