@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 
@@ -16,6 +17,34 @@ function mapPedido(p: any): PedidoAtivo {
 
 
 export function usePedidosAtivos(userId: string | undefined) {
+  const qc = useQueryClient();
+
+  // Realtime: qualquer mudança em pedidos do entregador (cancelamento pela
+  // loja, mudança de status, reatribuição) invalida a lista IMEDIATAMENTE
+  // — sem esperar o polling de 5s. Sem isso, o pedido cancelado continuava
+  // visível no app do entregador por vários segundos.
+  useEffect(() => {
+    if (!userId) return;
+    const ch = supabase
+      .channel(`pedidos-ativos-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "pedidos",
+          filter: `entregador_id=eq.${userId}`,
+        },
+        () => {
+          qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] });
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, [userId, qc]);
+
   return useQuery({
     queryKey: ["pedidos-ativos", userId],
     enabled: !!userId,
