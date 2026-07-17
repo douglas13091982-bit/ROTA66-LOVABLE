@@ -37,6 +37,34 @@ function detectBrand(num: string): string | null {
   if (/^(606282|3841)/.test(n)) return "hipercard";
   return null;
 }
+function traduzirStatusMp(code: string): string {
+  const c = String(code || "").toLowerCase();
+  const map: Record<string, string> = {
+    cc_rejected_high_risk:
+      "Pagamento recusado pela análise de risco do Mercado Pago. Tente outro cartão ou pague via Pix.",
+    cc_rejected_insufficient_amount: "Cartão sem limite disponível. Tente outro cartão ou pague via Pix.",
+    cc_rejected_bad_filled_security_code: "CVV incorreto. Confira o código de segurança e tente novamente.",
+    cc_rejected_bad_filled_date: "Data de validade incorreta. Confira e tente novamente.",
+    cc_rejected_bad_filled_card_number: "Número do cartão incorreto. Confira e tente novamente.",
+    cc_rejected_bad_filled_other: "Dados do cartão incorretos. Revise e tente novamente.",
+    cc_rejected_call_for_authorize:
+      "O banco exige autorização para esta compra. Ligue para o banco emissor do cartão ou tente outro cartão.",
+    cc_rejected_card_disabled: "Cartão desativado. Contate o banco emissor ou use outro cartão.",
+    cc_rejected_duplicated_payment:
+      "Pagamento duplicado detectado. Aguarde alguns minutos ou use outro meio de pagamento.",
+    cc_rejected_card_error: "Não foi possível processar este cartão. Tente outro cartão ou pague via Pix.",
+    cc_rejected_max_attempts:
+      "Muitas tentativas com este cartão. Tente outro cartão ou pague via Pix.",
+    cc_rejected_invalid_installments: "Número de parcelas não permitido para este cartão.",
+    cc_rejected_other_reason: "Pagamento recusado pelo emissor. Tente outro cartão ou pague via Pix.",
+    cc_rejected_blacklist: "Cartão não autorizado. Use outro cartão ou pague via Pix.",
+  };
+  if (map[c]) return map[c];
+  if (c.startsWith("cc_rejected"))
+    return "Pagamento recusado pelo Mercado Pago. Tente outro cartão ou pague via Pix.";
+  return `Pagamento não aprovado: ${code}`;
+}
+
 
 export interface PagamentoMpProps {
   pendenteId: string;
@@ -263,8 +291,9 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
         setAprovado(true);
         onAprovado({ id: res.pedido_id, numero: res.numero });
       } else {
-        setErro(`Pagamento não aprovado: ${res.status_detail ?? res.status}`);
+        setErro(traduzirStatusMp(res.status_detail ?? res.status ?? ""));
       }
+
     } catch (e: any) {
       const raw = String(e?.message ?? "");
       let msg = raw || "Falha no pagamento";
