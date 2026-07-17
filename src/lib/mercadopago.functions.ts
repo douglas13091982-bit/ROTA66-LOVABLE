@@ -280,7 +280,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
         external_reference: `cat_pendente:${p.id}`,
         ...(notification_url ? { notification_url } : {}),
       },
-      `catcard-${p.id}-${Date.now()}`,
+      `catcard-${p.id}-${data.card_token.slice(0, 32)}`,
       data.device_id,
     );
 
