@@ -8,8 +8,9 @@ type Props = {
   onChange: (dataUrl: string | null) => void;
 };
 
-const MAX_BYTES = 200 * 1024; // 200KB
+const MAX_BYTES = 10 * 1024 * 1024; // 10MB no arquivo original — convertemos p/ WebP
 const ALLOWED = ["image/svg+xml", "image/png", "image/webp", "image/jpeg"];
+const TARGET_MAX_BYTES = 200 * 1024; // alvo final ~200KB no data URL
 
 export function CategoriaIconUploader({ value, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -21,12 +22,30 @@ export function CategoriaIconUploader({ value, onChange }: Props) {
       return;
     }
     if (file.size > MAX_BYTES) {
-      toast.error("Imagem muito grande (máx 200KB)");
+      toast.error("Imagem muito grande (máx 10MB)");
       return;
     }
     setLoading(true);
     try {
-      const dataUrl = await convertImageToWebpDataUrl(file);
+      // SVG mantém vetorial — lê como data URL direto.
+      if (file.type === "image/svg+xml") {
+        const reader = new FileReader();
+        reader.onload = () => onChange(String(reader.result));
+        reader.onerror = () => toast.error("Falha ao ler arquivo");
+        reader.readAsDataURL(file);
+        return;
+      }
+      // Ícones aparecem pequenos — 256px é suficiente e mantém o data URL leve.
+      let dataUrl = await convertImageToWebpDataUrl(file, {
+        maxDimension: 256,
+        quality: 0.85,
+      });
+      if (dataUrl.length > TARGET_MAX_BYTES * 1.4) {
+        dataUrl = await convertImageToWebpDataUrl(file, {
+          maxDimension: 192,
+          quality: 0.72,
+        });
+      }
       onChange(dataUrl);
     } catch (e: any) {
       toast.error(e?.message ?? "Falha ao ler arquivo");
@@ -34,6 +53,7 @@ export function CategoriaIconUploader({ value, onChange }: Props) {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="flex items-center gap-3">
