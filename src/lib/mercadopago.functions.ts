@@ -14,7 +14,10 @@ function buildWebhookUrl(): string {
       host = "";
     }
   }
-  if (!host) throw new Error("Host público não configurado para o webhook do Mercado Pago");
+  if (!host) return "";
+  // MP rejeita URLs não públicas (localhost, IPs privados, host com porta)
+  if (/^(localhost|127\.|0\.0\.0\.0|192\.168\.|10\.|::1)/i.test(host)) return "";
+  if (host.includes(":")) return "";
   return `https://${host}/api/public/mp-webhook`;
 }
 
@@ -98,7 +101,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
           identification: { type: docType, number: docDigits },
         },
         external_reference: `cat_pendente:${p.id}`,
-        notification_url,
+        ...(notification_url ? { notification_url } : {}),
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
       },
       `catpix-${p.id}`,
@@ -173,7 +176,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
           identification: { type: docType, number: docDigits },
         },
         external_reference: `cat_pendente:${p.id}`,
-        notification_url,
+        ...(notification_url ? { notification_url } : {}),
       },
       `catcard-${p.id}-${Date.now()}`,
     );
