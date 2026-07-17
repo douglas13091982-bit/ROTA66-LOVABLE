@@ -3484,6 +3484,10 @@ export type Database = {
         Args: { _agendamento_id: string }
         Returns: undefined
       }
+      entregador_chegou_coleta: {
+        Args: { _pedido_id: string }
+        Returns: number
+      }
       entregador_pagar_mensalidade_com_saldo: {
         Args: { _valor: number }
         Returns: {
