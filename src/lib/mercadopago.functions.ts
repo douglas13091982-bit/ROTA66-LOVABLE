@@ -251,19 +251,29 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
     const amount = Math.round(Number(p.valor_total) * 100) / 100;
     if (!Number.isFinite(amount) || amount <= 0) throw new Error("Valor inválido para pagamento");
 
+    const ctx = await loadPendenteContexto(p.id);
+    const extras = buildAdditionalInfo(ctx.dados, ctx.lojaNome);
+
     const payment = await mpCreatePayment(
       cfg.access_token,
       {
         transaction_amount: amount,
-        description: `Pedido catálogo`,
+        description: `Pedido ${ctx.lojaNome ?? "catálogo"}`,
         token: data.card_token,
         installments: data.installments,
         payment_method_id: data.payment_method_id,
         issuer_id: data.issuer_id,
+        statement_descriptor: extras.statement_descriptor,
         payer: {
           email: data.payer_email,
+          first_name: extras.nome.first_name,
+          last_name: extras.nome.last_name,
           identification: { type: docType, number: docDigits },
+          ...(extras.phone
+            ? { phone: { area_code: extras.phone.area_code, number: extras.phone.number } }
+            : {}),
         },
+        additional_info: extras.additional_info,
         external_reference: `cat_pendente:${p.id}`,
         ...(notification_url ? { notification_url } : {}),
       },
