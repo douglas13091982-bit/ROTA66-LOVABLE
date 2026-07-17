@@ -129,6 +129,7 @@ const PixSchema = z.object({
   payer_email: z.string().email().max(120),
   payer_doc: z.string().trim().min(11).max(18),
   payer_nome: z.string().trim().min(2).max(120),
+  device_id: z.string().trim().max(200).optional(),
 });
 
 export const criarPagamentoPix = createServerFn({ method: "POST" })
@@ -192,6 +193,7 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
         date_of_expiration: expira.toISOString().replace("Z", "-00:00"),
       },
       `catpix-${p.id}`,
+      data.device_id,
     );
 
     const qrCode = payment.point_of_interaction?.transaction_data?.qr_code ?? "";
@@ -226,6 +228,7 @@ const CartaoSchema = z.object({
   issuer_id: z.string().max(50).optional(),
   payer_email: z.string().email().max(120),
   payer_doc: z.string().trim().min(11).max(18),
+  device_id: z.string().trim().max(200).optional(),
 });
 
 export const criarPagamentoCartao = createServerFn({ method: "POST" })
@@ -278,6 +281,7 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
         ...(notification_url ? { notification_url } : {}),
       },
       `catcard-${p.id}-${Date.now()}`,
+      data.device_id,
     );
 
     const aprovado = payment.status === "approved";

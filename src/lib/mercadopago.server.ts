@@ -67,14 +67,17 @@ export async function mpCreatePayment(
   accessToken: string,
   body: MpPaymentBody,
   idempotencyKey: string,
+  deviceId?: string | null,
 ): Promise<MpPaymentResponse> {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+    "X-Idempotency-Key": idempotencyKey,
+  };
+  if (deviceId && deviceId.trim()) headers["X-meli-session-id"] = deviceId.trim();
   const res = await fetch(`${MP_BASE}/v1/payments`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      "X-Idempotency-Key": idempotencyKey,
-    },
+    headers,
     body: JSON.stringify(body),
   });
   const json = (await res.json().catch(() => ({}))) as any;
