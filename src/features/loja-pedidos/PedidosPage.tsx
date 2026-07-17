@@ -49,9 +49,8 @@ export function PedidosPage() {
     const map: Record<string, Pedido[]> = {};
     for (const col of COLUMNS) map[col.key] = [];
     (pedidos ?? []).forEach((p) => {
-      // Cancelados sempre aparecem (mesmo arquivados) para a loja poder reenviar aos entregadores.
-      // Demais pedidos arquivados ficam ocultos até ativar "Mostrar arquivados".
-      if (p.arquivado && !mostrarArquivados && p.status !== "cancelado") return;
+      // Arquivados (incluindo cancelados) ficam ocultos até ativar "Mostrar arquivados".
+      if (p.arquivado && !mostrarArquivados) return;
       const col = COLUMNS.find((c) => c.statuses.includes(p.status));
       if (col) map[col.key].push(p);
     });
