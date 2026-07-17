@@ -198,17 +198,43 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
 
       if (cardNumber.length < 6) throw new Error("Número do cartão incompleto");
-      let pm: any = null;
+      const bin = cardNumber.slice(0, 6);
+
+      // Preferencial: getInstallments retorna payment_method_id + issuer_id válidos p/ este BIN
+      let paymentMethodId: string | null = null;
+      let issuerId: string | undefined;
       try {
-        const pmRes = await mpRef.current.getPaymentMethods({ bin: cardNumber.slice(0, 6) });
-        pm = pmRes?.results?.[0];
+        const inst = await mpRef.current.getInstallments({
+          amount: String(valor),
+          bin,
+          paymentTypeId: "credit_card",
+        });
+        const first = Array.isArray(inst) ? inst[0] : inst?.[0];
+        if (first) {
+          paymentMethodId = first.payment_method_id ?? null;
+          issuerId = first.issuer?.id ? String(first.issuer.id) : undefined;
+        }
       } catch (err) {
-        console.error("[MP] getPaymentMethods erro", err);
+        console.warn("[MP] getInstallments falhou", err);
       }
-      if (!pm) {
+
+      if (!paymentMethodId) {
+        try {
+          const pmRes = await mpRef.current.getPaymentMethods({ bin });
+          const pm = pmRes?.results?.[0];
+          if (pm) {
+            paymentMethodId = pm.id;
+            if (!issuerId && pm.issuer?.id) issuerId = String(pm.issuer.id);
+          }
+        } catch (err) {
+          console.warn("[MP] getPaymentMethods falhou", err);
+        }
+      }
+
+      if (!paymentMethodId) {
         const local = detectBrand(cardNumber);
-        if (!local) throw new Error("Bandeira do cartão não reconhecida");
-        pm = { id: local };
+        if (!local) throw new Error("Cartão não reconhecido. Verifique o número e tente novamente.");
+        paymentMethodId = local;
       }
 
       const tokenRes = await mpRef.current.createCardToken({
@@ -227,8 +253,8 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
           pendente_id: pendenteId,
           card_token: tokenRes.id,
           installments: form.installments,
-          payment_method_id: pm.id,
-          issuer_id: pm.issuer?.id ? String(pm.issuer.id) : undefined,
+          payment_method_id: paymentMethodId,
+          issuer_id: issuerId,
           payer_email: payerEmail,
           payer_doc: payerDoc,
         },
@@ -240,11 +266,23 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
         setErro(`Pagamento não aprovado: ${res.status_detail ?? res.status}`);
       }
     } catch (e: any) {
-      setErro(e?.message ?? "Falha no pagamento");
+      const raw = String(e?.message ?? "");
+      let msg = raw || "Falha no pagamento";
+      if (raw.includes("not_result_by_params")) {
+        msg = "Não foi possível validar este cartão. Confira número, validade e CVV e tente novamente.";
+      } else if (raw.includes("invalid_card_number") || raw.includes("E301")) {
+        msg = "Número do cartão inválido.";
+      } else if (raw.includes("invalid_expiration") || raw.includes("324")) {
+        msg = "Validade do cartão inválida.";
+      } else if (raw.includes("invalid_security_code") || raw.includes("E302")) {
+        msg = "CVV inválido.";
+      }
+      setErro(msg);
     } finally {
       setSubmitting(false);
     }
   };
+
 
   if (aprovado) {
     return (
