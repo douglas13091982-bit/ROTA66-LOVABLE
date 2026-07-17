@@ -489,3 +489,15 @@ function Input({
     </label>
   );
 }
+
+function SecureField({ label, id }: { label: string; id: string }) {
+  return (
+    <label className="block">
+      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
+      <div
+        id={id}
+        className="w-full mt-1 px-3 h-[46px] flex items-center bg-background border border-border rounded-xl focus-within:border-primary"
+      />
+    </label>
+  );
+}
