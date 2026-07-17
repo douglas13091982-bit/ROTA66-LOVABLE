@@ -240,26 +240,62 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
   const [submitting, setSubmitting] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [aprovado, setAprovado] = useState(false);
-  const [form, setForm] = useState({
-    cardNumber: "",
-    holderName: "",
-    expMonth: "",
-    expYear: "",
-    cvv: "",
-    installments: 1,
-  });
+  const [holderName, setHolderName] = useState("");
+  const [installments, setInstallments] = useState(1);
   const mpRef = useRef<any>(null);
+  const fieldsRef = useRef<{ number?: any; expiry?: any; cvv?: any }>({});
+  const binRef = useRef<string>("");
+  const mountedRef = useRef(false);
 
   useEffect(() => {
     loadMpDeviceScript();
+    let cancelled = false;
     loadMpSdk()
       .then(() => {
-        if (window.MercadoPago) {
-          mpRef.current = new window.MercadoPago(publicKey, { locale: "pt-BR" });
-          setReady(true);
-        }
+        if (cancelled || !window.MercadoPago || mountedRef.current) return;
+        mountedRef.current = true;
+        const mp = new window.MercadoPago(publicKey, { locale: "pt-BR" });
+        mpRef.current = mp;
+
+        const style = {
+          input: {
+            "font-size": "15px",
+            "font-family": "inherit",
+            color: "hsl(var(--foreground))",
+            "background-color": "transparent",
+            padding: "0",
+          },
+          "input::placeholder": { color: "hsl(var(--muted-foreground))" },
+        };
+
+        const numberField = mp.fields
+          .create("cardNumber", { placeholder: "0000 0000 0000 0000", style })
+          .mount("mp-sf-number");
+        const expiryField = mp.fields
+          .create("expirationDate", { placeholder: "MM/AA", style })
+          .mount("mp-sf-expiry");
+        const cvvField = mp.fields
+          .create("securityCode", { placeholder: "CVV", style })
+          .mount("mp-sf-cvv");
+
+        fieldsRef.current = { number: numberField, expiry: expiryField, cvv: cvvField };
+
+        numberField.on?.("binChange", (data: any) => {
+          binRef.current = String(data?.bin ?? "").slice(0, 8);
+        });
+
+        setReady(true);
       })
       .catch((e) => setErro(e.message));
+    return () => {
+      cancelled = true;
+      try {
+        fieldsRef.current.number?.unmount?.();
+        fieldsRef.current.expiry?.unmount?.();
+        fieldsRef.current.cvv?.unmount?.();
+      } catch {}
+      mountedRef.current = false;
+    };
   }, [publicKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -268,14 +304,14 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
     setErro(null);
     setSubmitting(true);
     try {
-      const cardNumber = form.cardNumber.replace(/\s/g, "");
       const docDigits = payerDoc.replace(/\D/g, "");
       const docType = docDigits.length > 11 ? "CNPJ" : "CPF";
+      const bin = binRef.current;
 
-      if (cardNumber.length < 6) throw new Error("Número do cartão incompleto");
-      const bin = cardNumber.slice(0, 6);
+      if (!holderName.trim()) throw new Error("Informe o nome impresso no cartão.");
+      if (!bin || bin.length < 6) throw new Error("Número do cartão incompleto.");
 
-      // Preferencial: getInstallments retorna payment_method_id + issuer_id válidos p/ este BIN
+      // getInstallments a partir do BIN capturado pelo Secure Field
       let paymentMethodId: string | null = null;
       let issuerId: string | undefined;
       try {
@@ -307,17 +343,13 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       }
 
       if (!paymentMethodId) {
-        const local = detectBrand(cardNumber);
-        if (!local) throw new Error("Cartão não reconhecido. Verifique o número e tente novamente.");
-        paymentMethodId = local;
+        throw new Error("Cartão não reconhecido. Verifique o número e tente novamente.");
       }
 
-      const tokenRes = await mpRef.current.createCardToken({
-        cardNumber,
-        cardholderName: form.holderName,
-        cardExpirationMonth: form.expMonth,
-        cardExpirationYear: form.expYear.length === 2 ? `20${form.expYear}` : form.expYear,
-        securityCode: form.cvv,
+      // Secure Fields: PAN/CVV/validade NUNCA tocam o JS da aplicação.
+      // O SDK lê direto dos iframes.
+      const tokenRes = await mpRef.current.fields.createCardToken({
+        cardholderName: holderName.trim().toUpperCase(),
         identificationType: docType,
         identificationNumber: docDigits,
       });
@@ -328,7 +360,7 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
         data: {
           pendente_id: pendenteId,
           card_token: tokenRes.id,
-          installments: form.installments,
+          installments,
           payment_method_id: paymentMethodId,
           issuer_id: issuerId,
           payer_email: payerEmail,
@@ -344,15 +376,15 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       }
 
     } catch (e: any) {
-      const raw = String(e?.message ?? "");
+      const raw = String(e?.message ?? e?.[0]?.message ?? "");
       let msg = raw || "Falha no pagamento";
       if (raw.includes("not_result_by_params")) {
         msg = "Não foi possível validar este cartão. Confira número, validade e CVV e tente novamente.";
-      } else if (raw.includes("invalid_card_number") || raw.includes("E301")) {
+      } else if (raw.includes("invalid_card_number") || raw.includes("E301") || raw.includes("205")) {
         msg = "Número do cartão inválido.";
-      } else if (raw.includes("invalid_expiration") || raw.includes("324")) {
+      } else if (raw.includes("invalid_expiration") || raw.includes("324") || raw.includes("208") || raw.includes("209")) {
         msg = "Validade do cartão inválida.";
-      } else if (raw.includes("invalid_security_code") || raw.includes("E302")) {
+      } else if (raw.includes("invalid_security_code") || raw.includes("E302") || raw.includes("224")) {
         msg = "CVV inválido.";
       }
       setErro(msg);
@@ -377,41 +409,19 @@ function PagamentoCartao({ pendenteId, valor, publicKey, payerEmail, payerDoc, o
       <div className="flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2">
         <CreditCard className="h-4 w-4" /> Cartão · R$ {valor.toFixed(2)}
       </div>
-      <Input
-        label="Número do cartão"
-        value={form.cardNumber}
-        onChange={(v) => setForm({ ...form, cardNumber: v.replace(/\D/g, "").slice(0, 19) })}
-        inputMode="numeric"
-        placeholder="0000 0000 0000 0000"
-      />
+
+      <SecureField label="Número do cartão" id="mp-sf-number" />
+
       <Input
         label="Nome impresso"
-        value={form.holderName}
-        onChange={(v) => setForm({ ...form, holderName: v.toUpperCase() })}
+        value={holderName}
+        onChange={(v) => setHolderName(v.toUpperCase())}
         placeholder="COMO ESTÁ NO CARTÃO"
       />
-      <div className="grid grid-cols-3 gap-2">
-        <Input
-          label="Mês"
-          value={form.expMonth}
-          onChange={(v) => setForm({ ...form, expMonth: v.replace(/\D/g, "").slice(0, 2) })}
-          inputMode="numeric"
-          placeholder="MM"
-        />
-        <Input
-          label="Ano"
-          value={form.expYear}
-          onChange={(v) => setForm({ ...form, expYear: v.replace(/\D/g, "").slice(0, 4) })}
-          inputMode="numeric"
-          placeholder="AAAA"
-        />
-        <Input
-          label="CVV"
-          value={form.cvv}
-          onChange={(v) => setForm({ ...form, cvv: v.replace(/\D/g, "").slice(0, 4) })}
-          inputMode="numeric"
-          placeholder="000"
-        />
+
+      <div className="grid grid-cols-2 gap-2">
+        <SecureField label="Validade" id="mp-sf-expiry" />
+        <SecureField label="CVV" id="mp-sf-cvv" />
       </div>
       <label className="block">
         <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Parcelas</span>
