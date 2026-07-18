@@ -51,6 +51,19 @@ export function DocumentosPage() {
 
         <StatusBanner status={data.status} motivo={data.motivo_rejeicao} />
 
+        {!bloqueadoEdicao && (
+          <button
+            type="button"
+            onClick={() => abrirNoNavegadorExterno("/entregador/documentos")}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-blue-500/50 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 transition text-sm font-bold"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Não consegue anexar? Abrir no navegador
+          </button>
+        )}
+
+
+
         <form
           onSubmit={(e) => {
             e.preventDefault();
