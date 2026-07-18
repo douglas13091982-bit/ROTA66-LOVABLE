@@ -187,10 +187,50 @@ export const enviarPushEntregadores = createServerFn({ method: "POST" })
     const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
     const url = `https://${host}/api/public/send-push`;
 
-    let sent = 0;
-    const tag = `admin-push-${Date.now()}`;
+    // Nome dos alvos para log
+    const { data: profs } = await supabaseAdmin
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", alvos);
+    const nomes = new Map<string, string>((profs ?? []).map((p: any) => [p.id, p.full_name || ""]));
 
-    // Envia em paralelo com concorrência limitada
+    const tag = `admin-push-${Date.now()}`;
+    const linkFinal = data.url || "/entregador/disponiveis";
+
+    // Cria registros de log ANTES do disparo (status pending). O endpoint
+    // send-push atualiza cada linha depois do envio.
+    const logRows = alvos.map((uid) => ({
+      sender_user_id: userId,
+      franqueado_efetivo_id: franqueadoEfetivoId,
+      user_id: uid,
+      entregador_nome: nomes.get(uid) || null,
+      title: data.title,
+      body: data.body,
+      url: linkFinal,
+      tag,
+      status: "pending",
+    }));
+    if (logRows.length) {
+      const { error: logErr } = await supabaseAdmin
+        .from("push_admin_logs" as any)
+        .insert(logRows);
+      if (logErr) console.error("[push-admin] insert log falhou", logErr);
+    }
+
+    console.log(
+      "[push-admin] disparo",
+      JSON.stringify({
+        sender: userId,
+        tag,
+        title: data.title,
+        body: data.body,
+        url: linkFinal,
+        destinatarios: alvos.length,
+      })
+    );
+
+    let sent = 0;
+
     const CONC = 10;
     for (let i = 0; i < alvos.length; i += CONC) {
       const batch = alvos.slice(i, i + CONC);
@@ -204,7 +244,7 @@ export const enviarPushEntregadores = createServerFn({ method: "POST" })
                 user_id: uid,
                 title: data.title,
                 body: data.body,
-                url: data.url || "/entregador/disponiveis",
+                url: linkFinal,
                 tag,
               }),
             });
@@ -219,5 +259,36 @@ export const enviarPushEntregadores = createServerFn({ method: "POST" })
       sent += results.reduce((a, b) => a + b, 0);
     }
 
-    return { sent, destinatarios: alvos.length };
+    return { sent, destinatarios: alvos.length, tag };
   });
+
+/**
+ * Lista o histórico de notificações push enviadas pelo painel.
+ * - super_admin: vê tudo
+ * - franqueado / colaborador: vê apenas envios do próprio franqueado efetivo
+ */
+export const listarPushLogs = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const isSuper = await isDonoOuFranqueado(supabase, userId);
+    const franqueadoEfetivoId = isSuper ? null : await getFranqueadoEfetivoId(supabaseAdmin, userId);
+    if (!isSuper && !franqueadoEfetivoId) throw new Error("Sem permissão");
+
+    let q = supabaseAdmin
+      .from("push_admin_logs" as any)
+      .select("id, created_at, user_id, entregador_nome, title, body, url, tag, status, http_status, sent, error")
+      .order("created_at", { ascending: false })
+      .limit(200);
+
+    if (!isSuper && franqueadoEfetivoId) {
+      q = q.eq("franqueado_efetivo_id", franqueadoEfetivoId);
+    }
+
+    const { data, error } = await q;
+    if (error) throw new Error(error.message);
+    return { logs: (data ?? []) as any[] };
+  });
+
