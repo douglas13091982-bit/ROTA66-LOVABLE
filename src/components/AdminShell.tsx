@@ -32,6 +32,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
   { to: "/admin/sons-alerta", label: "Sons de alerta", icon: Bell, area: "notificacao_som", ownerOnly: true },
   { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
+  { to: "/admin/notificacoes", label: "Notificações push", icon: Bell, area: null, superOnly: true },
   { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios", ownerOnly: true },
   { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk", ownerOnly: true },
   { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },

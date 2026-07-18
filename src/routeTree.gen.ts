@@ -75,6 +75,7 @@ import { Route as AuthenticatedAdminRevendedoresRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
+import { Route as AuthenticatedAdminNotificacoesRouteImport } from './routes/_authenticated/admin/notificacoes'
 import { Route as AuthenticatedAdminMinhaFranquiaRouteImport } from './routes/_authenticated/admin/minha-franquia'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
 import { Route as AuthenticatedAdminFranqueadosRouteImport } from './routes/_authenticated/admin/franqueados'
@@ -471,6 +472,12 @@ const AuthenticatedAdminPasswordResetRoute =
     path: '/password-reset',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminNotificacoesRoute =
+  AuthenticatedAdminNotificacoesRouteImport.update({
+    id: '/notificacoes',
+    path: '/notificacoes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminMinhaFranquiaRoute =
   AuthenticatedAdminMinhaFranquiaRouteImport.update({
     id: '/minha-franquia',
@@ -629,6 +636,7 @@ export interface FileRoutesByFullPath {
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
+  '/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -712,6 +720,7 @@ export interface FileRoutesByTo {
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
+  '/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -801,6 +810,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
   '/_authenticated/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
+  '/_authenticated/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
@@ -890,6 +900,7 @@ export interface FileRouteTypes {
     | '/admin/franqueados'
     | '/admin/lojas'
     | '/admin/minha-franquia'
+    | '/admin/notificacoes'
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
@@ -973,6 +984,7 @@ export interface FileRouteTypes {
     | '/admin/franqueados'
     | '/admin/lojas'
     | '/admin/minha-franquia'
+    | '/admin/notificacoes'
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
@@ -1061,6 +1073,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/franqueados'
     | '/_authenticated/admin/lojas'
     | '/_authenticated/admin/minha-franquia'
+    | '/_authenticated/admin/notificacoes'
     | '/_authenticated/admin/password-reset'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
@@ -1602,6 +1615,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPasswordResetRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/notificacoes': {
+      id: '/_authenticated/admin/notificacoes'
+      path: '/notificacoes'
+      fullPath: '/admin/notificacoes'
+      preLoaderRoute: typeof AuthenticatedAdminNotificacoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/minha-franquia': {
       id: '/_authenticated/admin/minha-franquia'
       path: '/minha-franquia'
@@ -1763,6 +1783,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminFranqueadosRoute: typeof AuthenticatedAdminFranqueadosRoute
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
   AuthenticatedAdminMinhaFranquiaRoute: typeof AuthenticatedAdminMinhaFranquiaRoute
+  AuthenticatedAdminNotificacoesRoute: typeof AuthenticatedAdminNotificacoesRoute
   AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
@@ -1799,6 +1820,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminFranqueadosRoute: AuthenticatedAdminFranqueadosRoute,
     AuthenticatedAdminLojasRoute: AuthenticatedAdminLojasRoute,
     AuthenticatedAdminMinhaFranquiaRoute: AuthenticatedAdminMinhaFranquiaRoute,
+    AuthenticatedAdminNotificacoesRoute: AuthenticatedAdminNotificacoesRoute,
     AuthenticatedAdminPasswordResetRoute: AuthenticatedAdminPasswordResetRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,

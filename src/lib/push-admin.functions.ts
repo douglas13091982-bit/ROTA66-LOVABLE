@@ -1,0 +1,190 @@
+import { createServerFn } from "@tanstack/react-start";
+import { getRequestHost } from "@tanstack/react-start/server";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
+const Input = z.object({
+  title: z.string().trim().min(1).max(80),
+  body: z.string().trim().min(1).max(300),
+  url: z.string().trim().max(500).optional().nullable(),
+  filtro: z.enum(["todos", "cidade", "online", "selecionados"]),
+  city_id: z.string().uuid().nullable().optional(),
+  user_ids: z.array(z.string().uuid()).max(500).optional(),
+});
+
+async function isDonoOuFranqueado(supabase: any, userId: string) {
+  const { data: isSuper } = await supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" });
+  return !!isSuper;
+}
+
+/**
+ * Lista entregadores para o painel de push (respeita cidade do franqueado).
+ */
+export const listarEntregadoresParaPush = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    if (!(await isDonoOuFranqueado(supabase, userId))) {
+      throw new Error("Sem permissão");
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Descobrir cidade do franqueado (se houver)
+    const { data: cfg } = await supabaseAdmin
+      .from("franqueados_config" as any)
+      .select("city_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const cityId = (cfg as any)?.city_id as string | null | undefined;
+
+    // Entregadores = profiles com role 'entregador'
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "entregador");
+    const entregadorIds = (roles ?? []).map((r: any) => r.user_id);
+    if (entregadorIds.length === 0) return { entregadores: [], onlineIds: [] as string[], cityId: cityId ?? null };
+
+    let query = supabaseAdmin
+      .from("profiles")
+      .select("id, full_name, phone, city_id")
+      .in("id", entregadorIds)
+      .order("full_name", { ascending: true });
+    if (cityId) query = query.eq("city_id", cityId);
+
+    const { data: profiles } = await query;
+
+    // Quem está online agora
+    const ids = (profiles ?? []).map((p: any) => p.id);
+    let onlineIds: string[] = [];
+    if (ids.length) {
+      const { data: st } = await supabaseAdmin
+        .from("entregador_status")
+        .select("entregador_id, online")
+        .in("entregador_id", ids)
+        .eq("online", true);
+      onlineIds = (st ?? []).map((s: any) => s.entregador_id);
+    }
+
+    return {
+      entregadores: (profiles ?? []).map((p: any) => ({
+        id: p.id,
+        nome: p.full_name || "(sem nome)",
+        phone: p.phone || "",
+      })),
+      onlineIds,
+      cityId: cityId ?? null,
+    };
+  });
+
+/**
+ * Envia push personalizado para entregadores selecionados/filtrados.
+ * Franqueado só pode disparar para entregadores da própria cidade.
+ */
+export const enviarPushEntregadores = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => Input.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    if (!(await isDonoOuFranqueado(supabase, userId))) {
+      throw new Error("Sem permissão");
+    }
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Cidade do franqueado (se houver)
+    const { data: cfg } = await supabaseAdmin
+      .from("franqueados_config" as any)
+      .select("city_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const cityIdFranqueado = (cfg as any)?.city_id as string | null | undefined;
+
+    // Pool de entregadores
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "entregador");
+    const entregadorIds = (roles ?? []).map((r: any) => r.user_id);
+    if (entregadorIds.length === 0) return { sent: 0, destinatarios: 0 };
+
+    let alvos: string[] = [];
+
+    if (data.filtro === "selecionados") {
+      alvos = (data.user_ids ?? []).filter((id) => entregadorIds.includes(id));
+    } else {
+      let q = supabaseAdmin.from("profiles").select("id, city_id").in("id", entregadorIds);
+      if (cityIdFranqueado) q = q.eq("city_id", cityIdFranqueado);
+      else if (data.filtro === "cidade" && data.city_id) q = q.eq("city_id", data.city_id);
+      const { data: profs } = await q;
+      alvos = (profs ?? []).map((p: any) => p.id);
+
+      if (data.filtro === "online") {
+        const { data: st } = await supabaseAdmin
+          .from("entregador_status")
+          .select("entregador_id")
+          .in("entregador_id", alvos)
+          .eq("online", true);
+        alvos = (st ?? []).map((s: any) => s.entregador_id);
+      }
+    }
+
+    // Franqueado: revalidar que todos os alvos são da sua cidade
+    if (cityIdFranqueado && alvos.length) {
+      const { data: profs } = await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .in("id", alvos)
+        .eq("city_id", cityIdFranqueado);
+      alvos = (profs ?? []).map((p: any) => p.id);
+    }
+
+    if (alvos.length === 0) return { sent: 0, destinatarios: 0 };
+
+    // Secret compartilhado com /api/public/send-push
+    const { data: cfgRow } = await supabaseAdmin
+      .from("private_config" as any)
+      .select("value")
+      .eq("key", "push_trigger_secret")
+      .maybeSingle();
+    const secret = (cfgRow as any)?.value as string | undefined;
+    if (!secret) throw new Error("push_trigger_secret não configurado");
+
+    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
+    const url = `https://${host}/api/public/send-push`;
+
+    let sent = 0;
+    const tag = `admin-push-${Date.now()}`;
+
+    // Envia em paralelo com concorrência limitada
+    const CONC = 10;
+    for (let i = 0; i < alvos.length; i += CONC) {
+      const batch = alvos.slice(i, i + CONC);
+      const results = await Promise.all(
+        batch.map(async (uid) => {
+          try {
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "content-type": "application/json", "x-push-secret": secret },
+              body: JSON.stringify({
+                user_id: uid,
+                title: data.title,
+                body: data.body,
+                url: data.url || "/entregador/disponiveis",
+                tag,
+              }),
+            });
+            if (!res.ok) return 0;
+            const j = (await res.json()) as { sent?: number };
+            return j.sent ?? 0;
+          } catch {
+            return 0;
+          }
+        })
+      );
+      sent += results.reduce((a, b) => a + b, 0);
+    }
+
+    return { sent, destinatarios: alvos.length };
+  });
