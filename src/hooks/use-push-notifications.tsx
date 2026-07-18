@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 // Chave pública VAPID (segura para ficar no client)
 const VAPID_PUBLIC_KEY =
-  "BEUDpZugBneF731ZB4quLx-xIBwjRNOD_AgIslaAWt_Ev3lA-Du8s9ROVF9Xi1H4e0kNxwTx67S7BE0GWqby_c8";
+  "BACtRKxjU08cKUmmZREMClwrawTLq9itz6QFLXVkMOcNMTis61hk7ZGfb_JcwcrRBDYynq3_aKl1KutWAgRti3k";
 
 function urlBase64ToUint8Array(base64: string) {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
