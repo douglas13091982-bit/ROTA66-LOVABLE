@@ -33,6 +33,7 @@ export function DisponiveisPage() {
     estouOnline,
   } = usePedidosDisponiveis(dismissed);
   const { aprovado, bloqueado } = useEntregadorAprovacao();
+  const { data: docs, docsAprovados } = useEntregadorDocumentos();
 
   // Dispara o som configurado pelo admin sempre que aparece um grupo novo
   // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
