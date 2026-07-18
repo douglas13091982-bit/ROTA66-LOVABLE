@@ -96,6 +96,7 @@ function Conteudo() {
       setTitle("");
       setBody("");
       setSelecionados(new Set());
+      qc.invalidateQueries({ queryKey: ["admin-push-logs"] });
     },
     onError: (e: any) => toast.error(e?.message || "Falha ao enviar"),
   });
