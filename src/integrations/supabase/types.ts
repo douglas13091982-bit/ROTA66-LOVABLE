@@ -2690,6 +2690,57 @@ export type Database = {
           },
         ]
       }
+      push_admin_logs: {
+        Row: {
+          body: string
+          created_at: string
+          entregador_nome: string | null
+          error: string | null
+          franqueado_efetivo_id: string | null
+          http_status: number | null
+          id: string
+          sender_user_id: string
+          sent: number | null
+          status: string
+          tag: string | null
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          entregador_nome?: string | null
+          error?: string | null
+          franqueado_efetivo_id?: string | null
+          http_status?: number | null
+          id?: string
+          sender_user_id: string
+          sent?: number | null
+          status?: string
+          tag?: string | null
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          entregador_nome?: string | null
+          error?: string | null
+          franqueado_efetivo_id?: string | null
+          http_status?: number | null
+          id?: string
+          sender_user_id?: string
+          sent?: number | null
+          status?: string
+          tag?: string | null
+          title?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
