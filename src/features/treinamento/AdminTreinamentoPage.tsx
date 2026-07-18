@@ -168,6 +168,8 @@ export function AdminTreinamentoPage() {
               Ative apenas em <b>um</b> vídeo por vez (o primeiro ativo será usado).
             </span>
           </label>
+
+          {previewEmbed && (
             <div className="aspect-video w-full rounded-md overflow-hidden border border-white/10 bg-black">
               <iframe src={previewEmbed} className="w-full h-full" allowFullScreen title="preview" />
             </div>
