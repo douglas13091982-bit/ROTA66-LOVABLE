@@ -88,7 +88,7 @@ export function usePushNotifications() {
       const existingSubs = await getExistingPushSubscriptions();
       let sub: PushSubscription | null = existingSubs[0] ?? null;
       for (const existing of existingSubs) {
-        const currentKey = bufToB64Url(sub.options.applicationServerKey ?? null);
+        const currentKey = bufToB64Url(existing.options.applicationServerKey ?? null);
         const expected = VAPID_PUBLIC_KEY.replace(/=+$/, "");
         if (currentKey !== expected) {
           try { await existing.unsubscribe(); } catch {}
