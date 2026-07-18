@@ -66,6 +66,15 @@ export function usePushNotifications() {
         return;
       }
       let sub = await reg.pushManager.getSubscription();
+      // Se a subscription atual foi criada com uma chave VAPID diferente da atual, recria.
+      if (sub) {
+        const currentKey = bufToB64Url(sub.options.applicationServerKey ?? null);
+        const expected = VAPID_PUBLIC_KEY.replace(/=+$/, "");
+        if (currentKey !== expected) {
+          try { await sub.unsubscribe(); } catch {}
+          sub = null;
+        }
+      }
       if (!sub) {
         sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
