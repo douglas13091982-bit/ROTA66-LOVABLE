@@ -119,6 +119,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               item.to === "/admin/suporte" ? suporteBadge :
               item.to === "/admin/alertas" ? alertasCount :
               item.to === "/admin/carteiras" ? saquesPendentes + saquesLojasPendentes :
+              item.to === "/admin/entregadores" ? docsPendentes :
               item.to === "/admin/password-reset" ? resetPendentes : 0;
 
 
