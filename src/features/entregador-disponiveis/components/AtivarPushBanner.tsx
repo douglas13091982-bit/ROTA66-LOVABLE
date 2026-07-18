@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Bell, BellRing, X } from "lucide-react";
 import { toast } from "sonner";
-import { useServerFn } from "@tanstack/react-start";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
-import { enviarPushTeste } from "@/lib/push.functions";
 
 export function AtivarPushBanner() {
   const { state, busy, enable } = usePushNotifications();
-  const enviarTeste = useServerFn(enviarPushTeste);
   const [dismissed, setDismissed] = useState(false);
-  const [testando, setTestando] = useState(false);
+
 
   if (dismissed) return null;
   if (state === "loading" || state === "unsupported") return null;
