@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ShieldCheck, Upload, AlertTriangle, CheckCircle2, Clock, ExternalLink } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Upload, AlertTriangle, CheckCircle2, Clock, ExternalLink, Camera, ImageIcon } from "lucide-react";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { abrirNoNavegadorExterno } from "@/lib/abrir-navegador-externo";
 import { useEntregadorDocumentos } from "./use-entregador-documentos";
@@ -182,28 +182,53 @@ function FieldFile({
       <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-red-600 dark:text-yellow-400">
         {label}
       </label>
-      <label
-        className={`block cursor-pointer border-2 border-dashed rounded-xl p-4 text-center text-sm ${
-          disabled ? "opacity-60 cursor-not-allowed border-border" : "border-border hover:border-red-600"
+      <div
+        className={`border-2 border-dashed rounded-xl p-4 text-center text-sm ${
+          disabled ? "opacity-60 border-border" : "border-border"
         }`}
       >
-        <Upload className="h-5 w-5 mx-auto mb-1 text-muted-foreground" />
         {file ? (
-          <span className="text-green-500 font-bold">{file.name}</span>
+          <p className="text-green-500 font-bold mb-3 break-all">{file.name}</p>
         ) : atual ? (
-          <span className="text-white/70">Arquivo enviado — toque para substituir</span>
+          <p className="text-white/70 mb-3">Arquivo já enviado</p>
         ) : (
-          <span className="text-muted-foreground">Toque para escolher</span>
+          <p className="text-muted-foreground mb-3">Nenhum arquivo selecionado</p>
         )}
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          className="hidden"
-          disabled={disabled}
-          onChange={(e) => onChange(e.target.files?.[0] ?? null)}
-        />
-      </label>
+
+        <div className="grid grid-cols-2 gap-2">
+          <label
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600 text-white font-bold text-xs uppercase tracking-wider ${
+              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-red-700"
+            }`}
+          >
+            <Camera className="h-4 w-4" />
+            Tirar foto
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              disabled={disabled}
+              onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+            />
+          </label>
+          <label
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-background/60 text-foreground font-bold text-xs uppercase tracking-wider ${
+              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-background/80"
+            }`}
+          >
+            <ImageIcon className="h-4 w-4" />
+            Galeria
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              disabled={disabled}
+              onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+            />
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
