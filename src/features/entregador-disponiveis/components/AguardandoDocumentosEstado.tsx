@@ -1,6 +1,5 @@
-import { FileWarning, Upload, Clock, XCircle, ExternalLink } from "lucide-react";
+import { FileWarning, Upload, Clock, XCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { abrirNoNavegadorExterno } from "@/lib/abrir-navegador-externo";
 
 
 type Props = {
