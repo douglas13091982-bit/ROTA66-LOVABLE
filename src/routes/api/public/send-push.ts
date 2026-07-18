@@ -60,21 +60,39 @@ export const Route = createFileRoute("/api/public/send-push")({
         }
 
         let sent = 0;
+        const payloadStr = JSON.stringify({
+          title: payload.title,
+          body: payload.body || "",
+          url: payload.url || "/entregador/disponiveis",
+          tag: payload.tag,
+        });
         await Promise.all(
           subs.map(async (s) => {
             try {
-              const res = await sendWebPush({
+              let res = await sendWebPush({
                 endpoint: s.endpoint,
                 p256dh: s.p256dh,
                 auth: s.auth,
-                // Envia sem payload para evitar falha silenciosa de descriptografia
-                // em alguns Chrome/TWA Android. O service worker mostra a mensagem
-                // padrão e leva o entregador direto para pedidos disponíveis.
-                payload: undefined,
+                payload: payloadStr,
                 vapidPublic,
                 vapidPrivate,
                 vapidSubject,
               });
+              // Fallback: se falhar com payload, reenvia sem payload para não perder
+              // o alerta (o SW mostra a mensagem padrão).
+              if (!(res.status >= 200 && res.status < 300) && res.status !== 404 && res.status !== 410) {
+                const errText = await res.text().catch(() => "");
+                console.error("[send-push] with payload failed", res.status, errText, "— retrying without payload");
+                res = await sendWebPush({
+                  endpoint: s.endpoint,
+                  p256dh: s.p256dh,
+                  auth: s.auth,
+                  payload: undefined,
+                  vapidPublic,
+                  vapidPrivate,
+                  vapidSubject,
+                });
+              }
               if (res.status === 404 || res.status === 410) {
                 await supabaseAdmin.from("push_subscriptions").delete().eq("id", s.id);
               } else if (res.status >= 200 && res.status < 300) {
