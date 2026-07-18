@@ -17,6 +17,7 @@ import { AguardandoDocumentosEstado } from "./components/AguardandoDocumentosEst
 import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
 import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-entregador-documentos";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
+import { AtivarPushBanner } from "./components/AtivarPushBanner";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
