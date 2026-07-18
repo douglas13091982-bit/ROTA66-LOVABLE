@@ -53,17 +53,19 @@ export const listarEntregadoresParaPush = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    if (!(await isDonoOuFranqueado(supabase, userId))) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const isSuper = await isDonoOuFranqueado(supabase, userId);
+    const franqueadoEfetivoId = isSuper ? userId : await getFranqueadoEfetivoId(supabaseAdmin, userId);
+    if (!isSuper && !franqueadoEfetivoId) {
       throw new Error("Sem permissão");
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // Descobrir cidade do franqueado (se houver)
+    // Descobrir cidade do franqueado efetivo (se houver)
     const { data: cfg } = await supabaseAdmin
       .from("franqueados_config" as any)
       .select("city_id")
-      .eq("user_id", userId)
+      .eq("user_id", franqueadoEfetivoId ?? userId)
       .maybeSingle();
     const cityId = (cfg as any)?.city_id as string | null | undefined;
 
