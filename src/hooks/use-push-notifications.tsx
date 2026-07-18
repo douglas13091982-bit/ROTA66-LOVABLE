@@ -23,6 +23,20 @@ function bufToB64Url(buf: ArrayBuffer | null) {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
+async function getExistingPushSubscriptions() {
+  const regs = await navigator.serviceWorker.getRegistrations();
+  const subs: PushSubscription[] = [];
+
+  for (const reg of regs) {
+    try {
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) subs.push(sub);
+    } catch {}
+  }
+
+  return subs;
+}
+
 export type PushState = "unsupported" | "denied" | "granted" | "default" | "loading";
 
 export function usePushNotifications() {
@@ -41,8 +55,8 @@ export function usePushNotifications() {
       return;
     }
     try {
-      const reg = await navigator.serviceWorker.getRegistration("/sw-push.js");
-      const sub = await reg?.pushManager.getSubscription();
+      const subs = await getExistingPushSubscriptions();
+      const sub = subs[0];
       if (Notification.permission === "granted" && sub) setState("granted");
       else setState("default");
     } catch {
@@ -65,8 +79,25 @@ export function usePushNotifications() {
         setState(perm === "denied" ? "denied" : "default");
         return;
       }
-      let sub = await reg.pushManager.getSubscription();
-      // Se a subscription atual foi criada com uma chave VAPID diferente da atual, recria.
+
+      // O navegador mantém apenas uma assinatura Push por origem, não por
+      // arquivo de service worker. Se existia assinatura antiga no sw.js ou
+      // com uma chave VAPID antiga, ela recebia 200/FCM mas nenhum handler
+      // mostrava a notificação no app instalado. Por isso varremos todas as
+      // registrations e recriamos qualquer assinatura incompatível.
+      const existingSubs = await getExistingPushSubscriptions();
+      let sub: PushSubscription | null = existingSubs[0] ?? null;
+      for (const existing of existingSubs) {
+        const currentKey = bufToB64Url(existing.options.applicationServerKey ?? null);
+        const expected = VAPID_PUBLIC_KEY.replace(/=+$/, "");
+        if (currentKey !== expected) {
+          try { await existing.unsubscribe(); } catch {}
+          if (existing === sub) sub = null;
+        } else if (existing !== sub) {
+          try { await existing.unsubscribe(); } catch {}
+        }
+      }
+
       if (sub) {
         const currentKey = bufToB64Url(sub.options.applicationServerKey ?? null);
         const expected = VAPID_PUBLIC_KEY.replace(/=+$/, "");
@@ -75,6 +106,7 @@ export function usePushNotifications() {
           sub = null;
         }
       }
+
       if (!sub) {
         sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
@@ -108,11 +140,10 @@ export function usePushNotifications() {
   const disable = useCallback(async () => {
     setBusy(true);
     try {
-      const reg = await navigator.serviceWorker.getRegistration("/sw-push.js");
-      const sub = await reg?.pushManager.getSubscription();
-      if (sub) {
+      const subs = await getExistingPushSubscriptions();
+      for (const sub of subs) {
         await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
-        await sub.unsubscribe();
+        try { await sub.unsubscribe(); } catch {}
       }
       setState("default");
     } finally {
