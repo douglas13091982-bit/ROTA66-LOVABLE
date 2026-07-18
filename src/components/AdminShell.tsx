@@ -10,6 +10,7 @@ import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-
 import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
 import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
 import { usePasswordResetPendentesCount } from "@/features/admin-password-reset/hooks/use-password-reset-pendentes-count";
+import { useDocsEntregadorPendentesCount } from "@/features/admin-entregadores/hooks/use-docs-pendentes-count";
 import { useFranquia } from "@/hooks/use-franquia";
 
 
@@ -67,6 +68,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
   const { data: saquesLojasPendentes = 0 } = useSaquesLojasPendentesCount();
   const { data: resetPendentes = 0 } = usePasswordResetPendentesCount();
+  const { data: docsPendentes = 0 } = useDocsEntregadorPendentesCount();
 
 
   
@@ -117,6 +119,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               item.to === "/admin/suporte" ? suporteBadge :
               item.to === "/admin/alertas" ? alertasCount :
               item.to === "/admin/carteiras" ? saquesPendentes + saquesLojasPendentes :
+              item.to === "/admin/entregadores" ? docsPendentes :
               item.to === "/admin/password-reset" ? resetPendentes : 0;
 
 
