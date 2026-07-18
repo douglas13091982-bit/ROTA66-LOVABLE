@@ -85,8 +85,16 @@ export const Route = createFileRoute("/api/public/send-push")({
               } else {
                 console.error("[send-push] push failed", res.status, await res.text());
               }
-            } catch (e) {
-              console.error("[send-push] error", e);
+            } catch (e: any) {
+              console.error(
+                "[send-push] error",
+                e?.message || e,
+                "endpoint_host=", (() => { try { return new URL(s.endpoint).host; } catch { return "?"; } })(),
+                "p256dh_len=", s.p256dh?.length,
+                "auth_len=", s.auth?.length,
+                "vapid_pub_len=", vapidPublic?.length,
+                "vapid_priv_len=", vapidPrivate?.length,
+              );
             }
           })
         );
