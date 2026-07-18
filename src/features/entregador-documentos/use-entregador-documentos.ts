@@ -43,7 +43,7 @@ export function useEntregadorDocumentos() {
 
   const upload = async (file: File, prefixo: "cnh" | "veiculo"): Promise<string> => {
     if (!userId) throw new Error("Sem usuário");
-    const webp = await fileToWebp(file, { maxDim: 1600, quality: 0.82 }).catch(() => file);
+    const webp = await convertImageToWebp(file, { maxDimension: 1600, quality: 0.82 }).catch(() => file);
     const path = `${userId}/${prefixo}-${Date.now()}.webp`;
     const { error } = await supabase.storage.from(BUCKET).upload(path, webp, {
       upsert: true,
