@@ -71,16 +71,8 @@ export function DocumentosPage() {
           }}
           className="space-y-4"
         >
-          <FieldFile
-            label="Foto da CNH (frente, legível)"
-            file={cnhFile}
-            atual={data.cnh_path}
-            onChange={setCnhFile}
-            disabled={bloqueadoEdicao}
-          />
-
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.22em] text-white/45 font-bold mb-1.5">
+            <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-neutral-900 dark:text-yellow-400">
               Placa do {veiculoLabel}
             </label>
             <input
@@ -98,12 +90,21 @@ export function DocumentosPage() {
           </div>
 
           <FieldFile
+            label="Foto da CNH (frente, legível)"
+            file={cnhFile}
+            atual={data.cnh_path}
+            onChange={setCnhFile}
+            disabled={bloqueadoEdicao}
+          />
+
+          <FieldFile
             label={`Foto do ${veiculoLabel} (traseira, com placa visível)`}
             file={veiculoFile}
             atual={data.veiculo_foto_path}
             onChange={setVeiculoFile}
             disabled={bloqueadoEdicao}
           />
+
 
           {!bloqueadoEdicao && (
             <button
