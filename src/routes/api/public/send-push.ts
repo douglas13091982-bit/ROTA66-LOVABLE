@@ -59,13 +59,6 @@ export const Route = createFileRoute("/api/public/send-push")({
           return Response.json({ sent: 0 });
         }
 
-        const message = JSON.stringify({
-          title: payload.title,
-          body: payload.body || "",
-          url: payload.url || "/entregador/ativos",
-          tag: payload.tag || undefined,
-        });
-
         let sent = 0;
         await Promise.all(
           subs.map(async (s) => {
@@ -74,7 +67,10 @@ export const Route = createFileRoute("/api/public/send-push")({
                 endpoint: s.endpoint,
                 p256dh: s.p256dh,
                 auth: s.auth,
-                payload: message,
+                // Envia sem payload para evitar falha silenciosa de descriptografia
+                // em alguns Chrome/TWA Android. O service worker mostra a mensagem
+                // padrão e leva o entregador direto para pedidos disponíveis.
+                payload: undefined,
                 vapidPublic,
                 vapidPrivate,
                 vapidSubject,
@@ -253,7 +249,7 @@ async function sendWebPush(opts: {
   endpoint: string;
   p256dh: string;
   auth: string;
-  payload: string;
+  payload?: string;
   vapidPublic: string;
   vapidPrivate: string;
   vapidSubject: string;
@@ -266,15 +262,20 @@ async function sendWebPush(opts: {
     opts.vapidPublic,
     opts.vapidPrivate
   );
-  const body = await encryptPayloadAes128Gcm(opts.payload, opts.p256dh, opts.auth);
+  const body = opts.payload
+    ? await encryptPayloadAes128Gcm(opts.payload, opts.p256dh, opts.auth)
+    : undefined;
+  const headers: Record<string, string> = {
+    authorization,
+    ttl: "60",
+  };
+  if (body) {
+    headers["content-encoding"] = "aes128gcm";
+    headers["content-type"] = "application/octet-stream";
+  }
   return fetch(opts.endpoint, {
     method: "POST",
-    headers: {
-      authorization,
-      "content-encoding": "aes128gcm",
-      "content-type": "application/octet-stream",
-      ttl: "60",
-    },
+    headers,
     body: body as BodyInit,
   });
 }
