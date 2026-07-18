@@ -64,7 +64,7 @@ self.addEventListener("push", (event) => {
   const options = {
     body: data.body || "Toque para ver os pedidos disponíveis.",
     icon: "/icons/icon-192.png",
-    badge: "/icons/icon-192.png",
+    badge: "/icons/badge-72.png",
     vibrate: [200, 80, 200],
     tag: data.tag || fallbackTag,
     renotify: true,
