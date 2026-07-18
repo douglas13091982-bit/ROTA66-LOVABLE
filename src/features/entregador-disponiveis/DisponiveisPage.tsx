@@ -86,6 +86,7 @@ export function DisponiveisPage() {
       title="Rotas Disponíveis"
       topFixed={
         <>
+          <AtivarPushBanner />
           <GanhoHojeCard valor={ganhoHoje} />
           {isListaVisivel && (
             <RotasDisponiveisHeader
