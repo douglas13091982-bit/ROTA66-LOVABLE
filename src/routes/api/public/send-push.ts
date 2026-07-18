@@ -59,13 +59,6 @@ export const Route = createFileRoute("/api/public/send-push")({
           return Response.json({ sent: 0 });
         }
 
-        const message = JSON.stringify({
-          title: payload.title,
-          body: payload.body || "",
-          url: payload.url || "/entregador/ativos",
-          tag: payload.tag || undefined,
-        });
-
         let sent = 0;
         await Promise.all(
           subs.map(async (s) => {
