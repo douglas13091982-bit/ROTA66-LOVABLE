@@ -128,7 +128,8 @@ export function DocumentosReviewDialog({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
