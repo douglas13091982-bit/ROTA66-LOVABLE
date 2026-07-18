@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import {
   ChevronRight,
   CreditCard,
+  FileText,
   HelpCircle,
   Receipt,
   Settings,
@@ -17,6 +18,7 @@ type Item = { key: MenuKey; icon: typeof User; label: string; to?: string };
 
 const ITEMS: Item[] = [
   { key: "info", icon: User, label: "Informações Pessoais" },
+  { key: "documentos", icon: FileText, label: "Meus documentos", to: "/entregador/documentos" },
   { key: "carteira", icon: Wallet, label: "Carteira", to: "/entregador/carteira" },
   { key: "mensalidade", icon: Receipt, label: "Cobrança de mensalidade", to: "/entregador/mensalidade" },
   { key: "pagamentos", icon: CreditCard, label: "Chave Pix" },
