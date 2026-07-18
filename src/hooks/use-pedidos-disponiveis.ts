@@ -287,6 +287,8 @@ export function usePedidosDisponiveis(
           if (!estouOnlineRef.current) return;
           qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
           const novo = payload.new as {
+            id?: string;
+            numero?: number | string | null;
             status?: string;
             entregador_id?: string | null;
           } | null;
@@ -375,7 +377,7 @@ function mostrarNotificacaoLocalNovoPedido(
           renotify: true,
           requireInteraction: true,
           data,
-        });
+        } as NotificationOptions & { vibrate: number[]; renotify: boolean });
         return;
       }
     } catch {}
