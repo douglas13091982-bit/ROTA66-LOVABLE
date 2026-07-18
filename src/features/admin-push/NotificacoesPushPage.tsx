@@ -40,10 +40,18 @@ export function NotificacoesPushPage() {
 function Conteudo() {
   const listar = useServerFn(listarEntregadoresParaPush);
   const enviar = useServerFn(enviarPushEntregadores);
+  const listarLogs = useServerFn(listarPushLogs);
+  const qc = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-push-entregadores"],
     queryFn: () => listar(),
+  });
+
+  const { data: logsData, isLoading: logsLoading } = useQuery({
+    queryKey: ["admin-push-logs"],
+    queryFn: () => listarLogs(),
+    refetchInterval: 5000,
   });
 
   const [title, setTitle] = useState("");
