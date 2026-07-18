@@ -61,6 +61,14 @@ export function DisponiveisPage() {
     );
   }
 
+  if (!docsAprovados) {
+    return (
+      <EntregadorShell title="Disponíveis">
+        <AguardandoDocumentosEstado status={docs?.status ?? "pendente"} motivo={docs?.motivo_rejeicao ?? null} />
+      </EntregadorShell>
+    );
+  }
+
   if (semVinculoNemExterno) {
     return (
       <EntregadorShell title="Disponíveis">
