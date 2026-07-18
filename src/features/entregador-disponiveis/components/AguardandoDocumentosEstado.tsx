@@ -49,16 +49,7 @@ export function AguardandoDocumentosEstado({ status, motivo }: Props) {
         </Link>
       )}
 
-      {!enviado && (
-        <button
-          type="button"
-          onClick={() => abrirNoNavegadorExterno("/entregador/documentos")}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-blue-500/50 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 transition text-sm font-bold"
-        >
-          <ExternalLink className="h-4 w-4" />
-          Se o botão acima não funcionar, abra no navegador
-        </button>
-      )}
+
 
     </div>
   );
