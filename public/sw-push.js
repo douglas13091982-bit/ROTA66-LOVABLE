@@ -17,23 +17,23 @@ self.addEventListener("push", (event) => {
     data = { title: "ROTA 66", body: event.data ? event.data.text() : "" };
   }
   const fallbackTag = `rota66-push-${Date.now()}`;
-  const title = data.title || "ROTA 66";
+  const title = data.title || "🚨 Nova entrega disponível";
   const options = {
-    body: data.body || "",
+    body: data.body || "Toque para ver os pedidos disponíveis.",
     icon: "/icons/icon-192.png",
     badge: "/icons/icon-192.png",
     vibrate: [200, 80, 200],
     tag: data.tag || fallbackTag,
     renotify: true,
-    requireInteraction: false,
-    data: { url: data.url || "/entregador/ativos" },
+    requireInteraction: true,
+    data: { url: data.url || "/entregador/disponiveis" },
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = (event.notification.data && event.notification.data.url) || "/entregador/ativos";
+  const targetUrl = (event.notification.data && event.notification.data.url) || "/entregador/disponiveis";
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
