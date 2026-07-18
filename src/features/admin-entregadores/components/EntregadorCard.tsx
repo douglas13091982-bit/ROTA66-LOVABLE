@@ -112,12 +112,30 @@ export function EntregadorCard({
           {p.tipo_veiculo === "carro" ? <Car className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
           {p.tipo_veiculo === "carro" ? "Carro" : "Moto"}
         </span>
+        {dl && docTipo !== "bike_eletrica" && (
+          <span className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${dl.cls}`}>
+            {dl.label}
+          </span>
+        )}
         {p.created_at && (
           <span className="text-[10px] text-muted-foreground ml-auto">
             Cadastro: {new Date(p.created_at).toLocaleDateString("pt-BR")}
           </span>
         )}
       </div>
+      {docTipo && docTipo !== "bike_eletrica" && (
+        <button
+          onClick={() => setShowDocs(true)}
+          className={`w-full mb-2 flex items-center justify-center gap-1 px-3 py-2 text-xs font-bold uppercase rounded-md ${
+            precisaRevisar
+              ? "bg-amber-600 text-white hover:bg-amber-700 animate-pulse"
+              : "bg-muted text-foreground hover:bg-muted/70"
+          }`}
+        >
+          <FileSearch className="h-3.5 w-3.5" />
+          {precisaRevisar ? "Revisar documentos" : "Ver documentos"}
+        </button>
+      )}
       <div className="grid grid-cols-3 gap-2">
         <button
           onClick={() => onSetStatus(p.id, "aprovado")}
