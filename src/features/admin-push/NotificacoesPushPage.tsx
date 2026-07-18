@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Bell, Send, Search, Users, Radio, User } from "lucide-react";
+import { Bell, Send, Search, Users, Radio, User, Lock } from "lucide-react";
 import { AdminShell } from "@/components/AdminShell";
-import { AdminAreaGate } from "@/components/AdminAreaGate";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,12 +19,20 @@ import {
 type Filtro = "todos" | "cidade" | "online" | "selecionados";
 
 export function NotificacoesPushPage() {
+  const { roles } = useAuth();
+  const isSuper = roles.includes("super_admin");
   return (
-    <AdminAreaGate>
-      <AdminShell title="Notificações push">
+    <AdminShell title="Notificações push">
+      {isSuper ? (
         <Conteudo />
-      </AdminShell>
-    </AdminAreaGate>
+      ) : (
+        <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
+          <Lock className="h-10 w-10 mx-auto text-white/40 mb-3" />
+          <div className="text-lg font-semibold text-white mb-1">Acesso restrito</div>
+          <div className="text-sm text-white/60">Apenas super admin ou franqueado.</div>
+        </div>
+      )}
+    </AdminShell>
   );
 }
 
