@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useLojaSuporteId } from "@/hooks/use-loja-suporte";
+import { useFranquia } from "@/hooks/use-franquia";
 
 const SELECT_COLS =
   "*, plano:planos_loja!lojas_plano_id_fkey(id, nome, mensalidade_valor, taxa_por_pedido, max_funcionarios)";
@@ -9,8 +10,10 @@ const SELECT_COLS =
 export function useMinhaLoja() {
   const { user, roles } = useAuth();
   const suporteLojaId = useLojaSuporteId();
-  const isSuper = roles.includes("super_admin");
-  const alvoId = isSuper ? suporteLojaId : null;
+  const { isFranqueado, isColaborador } = useFranquia();
+  const isSuper = roles.includes("super_admin") || roles.includes("admin");
+  const podeSuporte = isSuper || isFranqueado || isColaborador;
+  const alvoId = podeSuporte ? suporteLojaId : null;
 
   return useQuery({
     queryKey: ["minha-loja", user?.id, alvoId ?? "self"],

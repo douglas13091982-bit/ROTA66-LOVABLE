@@ -7,24 +7,30 @@ export const Route = createFileRoute("/_authenticated/loja")({
     const userId = (context as any).user?.id;
     if (!userId) throw redirect({ to: "/login" });
 
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
+    const [{ data: roles }, { data: colab }] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", userId),
+      (supabase as any)
+        .from("franqueado_colaboradores")
+        .select("id")
+        .eq("colaborador_user_id", userId)
+        .eq("ativo", true)
+        .maybeSingle(),
+    ]);
 
     const list = (roles ?? []).map((r) => r.role as string);
 
     if (list.includes("loja_admin")) return;
 
-    // Admins podem acessar o painel da loja em "modo suporte".
-    const ehAdmin = list.includes("super_admin") || list.includes("admin");
+    // Admins e colaboradores de franqueado podem acessar em "modo suporte".
+    const podeSuporte =
+      list.includes("super_admin") || list.includes("admin") || !!colab;
     const suporteAtivo =
       typeof window !== "undefined" &&
       !!window.sessionStorage.getItem("admin:loja_suporte_id");
-    if (ehAdmin && suporteAtivo) return;
+    if (podeSuporte && suporteAtivo) return;
 
     // Não é loja: manda para a área compatível com o papel real.
-    if (ehAdmin) throw redirect({ to: "/admin" });
+    if (podeSuporte) throw redirect({ to: "/admin" });
     if (list.includes("entregador")) throw redirect({ to: "/entregador" });
     if (list.includes("cliente")) throw redirect({ to: "/clientes" });
     throw redirect({ to: "/" });
