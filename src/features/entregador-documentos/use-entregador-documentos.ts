@@ -69,6 +69,9 @@ export function useEntregadorDocumentos() {
           placa: payload.placa.trim().toUpperCase(),
           status: "enviado",
           motivo_rejeicao: null,
+          reviewed_by: null,
+          reviewed_at: null,
+          submitted_at: new Date().toISOString(),
         })
         .eq("entregador_id", userId);
       if (error) throw error;
