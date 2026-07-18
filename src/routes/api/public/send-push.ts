@@ -106,8 +106,10 @@ const b64urlEncode = (buf: ArrayBuffer | Uint8Array) => {
   return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 };
 const b64urlDecode = (s: string) => {
-  const pad = "=".repeat((4 - (s.length % 4)) % 4);
-  const b64 = (s + pad).replace(/-/g, "+").replace(/_/g, "/");
+  // Tolerante a whitespace/newlines/quotes acidentais no valor da env.
+  const cleaned = String(s).trim().replace(/[^A-Za-z0-9_\-+/=]/g, "").replace(/=+$/, "");
+  const pad = "=".repeat((4 - (cleaned.length % 4)) % 4);
+  const b64 = (cleaned + pad).replace(/-/g, "+").replace(/_/g, "/");
   const raw = atob(b64);
   const out = new Uint8Array(raw.length);
   for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
