@@ -59,6 +59,7 @@ export function AdminTreinamentoPage() {
       youtube_url: form.youtube_url.trim(),
       ordem: Number(form.ordem) || 0,
       ativo: form.ativo,
+      onboarding_entregador: form.onboarding_entregador,
     });
     cancelar();
   };
