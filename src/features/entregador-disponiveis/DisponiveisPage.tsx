@@ -129,6 +129,23 @@ export function DisponiveisPage() {
 
 
       <AnunciosEntregador />
+
+      <PopupPedido
+        open={popupOpen}
+        onOpenChange={setPopupOpen}
+        grupo={grupoPopup}
+        minhaPos={minhaPos}
+        taxaParaExibir={taxaParaExibir}
+        nowMs={nowMs}
+        onAceitar={(items) => {
+          setPopupOpen(false);
+          void aceitarGrupo(items);
+        }}
+        onRecusar={(key, items) => {
+          setPopupOpen(false);
+          recusarGrupo(key, items);
+        }}
+      />
     </EntregadorShell>
   );
 }
