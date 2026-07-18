@@ -183,22 +183,20 @@ function FieldFile({
         {label}
       </label>
       <div
-        className={`border-2 border-dashed rounded-xl p-4 text-center text-sm ${
-          disabled ? "opacity-60 border-border" : "border-border"
-        }`}
+        className={`border-2 border-dashed border-red-600 dark:border-yellow-400 rounded-xl p-4 text-center text-sm bg-red-50/40 dark:bg-yellow-400/5`}
       >
         {file ? (
-          <p className="text-green-500 font-bold mb-3 break-all">{file.name}</p>
+          <p className="text-green-600 dark:text-green-400 font-extrabold mb-3 break-all">{file.name}</p>
         ) : atual ? (
-          <p className="text-white/70 mb-3">Arquivo já enviado</p>
+          <p className="text-neutral-900 dark:text-white font-bold mb-3">✓ Arquivo já enviado</p>
         ) : (
-          <p className="text-muted-foreground mb-3">Nenhum arquivo selecionado</p>
+          <p className="text-neutral-700 dark:text-white/80 font-semibold mb-3">Nenhum arquivo selecionado</p>
         )}
 
         <div className="grid grid-cols-2 gap-2">
           <label
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg bg-red-600 text-white font-bold text-xs uppercase tracking-wider ${
-              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-red-700"
+            className={`flex items-center justify-center gap-2 py-3 rounded-lg bg-red-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-red-600/40 ${
+              disabled ? "cursor-not-allowed" : "cursor-pointer hover:bg-red-700 active:scale-[0.98]"
             }`}
           >
             <Camera className="h-4 w-4" />
@@ -213,8 +211,8 @@ function FieldFile({
             />
           </label>
           <label
-            className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border border-border bg-background/60 text-foreground font-bold text-xs uppercase tracking-wider ${
-              disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-background/80"
+            className={`flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-md shadow-blue-600/40 ${
+              disabled ? "cursor-not-allowed" : "cursor-pointer hover:bg-blue-700 active:scale-[0.98]"
             }`}
           >
             <ImageIcon className="h-4 w-4" />
