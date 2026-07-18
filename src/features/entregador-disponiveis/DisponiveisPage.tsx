@@ -18,6 +18,7 @@ import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
 import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-entregador-documentos";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 import { AtivarPushBanner } from "./components/AtivarPushBanner";
+import { NotificacaoUrgenteDica } from "./components/NotificacaoUrgenteDica";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
@@ -87,6 +88,7 @@ export function DisponiveisPage() {
       topFixed={
         <>
           <AtivarPushBanner />
+          <NotificacaoUrgenteDica />
           <GanhoHojeCard valor={ganhoHoje} />
           {isListaVisivel && (
             <RotasDisponiveisHeader
