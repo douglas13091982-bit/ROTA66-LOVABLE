@@ -179,7 +179,7 @@ function FieldFile({
 }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.22em] text-white/45 font-bold mb-1.5">
+      <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-neutral-900 dark:text-yellow-400">
         {label}
       </label>
       <label
