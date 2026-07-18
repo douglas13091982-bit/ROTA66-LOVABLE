@@ -73,24 +73,10 @@ export function AtivarPushBanner() {
           <Bell className="w-3.5 h-3.5" />
           {busy ? "Ativando…" : "Ativar notificações"}
         </button>
-            ? "Libere as notificações nas configurações do app para receber alertas de novos pedidos."
-            : "Receba um alerta assim que um novo pedido entrar no seu pool."}
-        </p>
-        {!isDenied && (
-          <button
-            type="button"
-            onClick={handleAtivar}
-            disabled={busy}
-            className="mt-2 inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-md disabled:opacity-60"
-          >
-            <Bell className="w-3.5 h-3.5" />
-            {busy ? "Ativando…" : "Ativar notificações"}
-          </button>
-        )}
       </div>
       <button
         type="button"
-        onClick={() => setDismissed(true)}
+        onClick={handleDismiss}
         className="text-muted-foreground hover:text-foreground shrink-0"
         aria-label="Fechar"
       >
