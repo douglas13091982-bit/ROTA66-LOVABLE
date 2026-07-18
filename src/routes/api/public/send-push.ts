@@ -66,6 +66,19 @@ export const Route = createFileRoute("/api/public/send-push")({
           url: payload.url || "/entregador/disponiveis",
           tag: payload.tag,
         });
+        console.log(
+          "[send-push] enviando",
+          JSON.stringify({
+            user_id: payload.user_id,
+            title: payload.title,
+            body: payload.body,
+            url: payload.url,
+            tag: payload.tag,
+            subs: subs.length,
+          })
+        );
+        let lastStatus: number | null = null;
+        let lastError: string | null = null;
         await Promise.all(
           subs.map(async (s) => {
             try {
@@ -78,11 +91,10 @@ export const Route = createFileRoute("/api/public/send-push")({
                 vapidPrivate,
                 vapidSubject,
               });
-              // Fallback: se falhar com payload, reenvia sem payload para não perder
-              // o alerta (o SW mostra a mensagem padrão).
               if (!(res.status >= 200 && res.status < 300) && res.status !== 404 && res.status !== 410) {
                 const errText = await res.text().catch(() => "");
                 console.error("[send-push] with payload failed", res.status, errText, "— retrying without payload");
+                lastError = `payload_fail ${res.status} ${errText}`;
                 res = await sendWebPush({
                   endpoint: s.endpoint,
                   p256dh: s.p256dh,
@@ -93,26 +105,45 @@ export const Route = createFileRoute("/api/public/send-push")({
                   vapidSubject,
                 });
               }
+              lastStatus = res.status;
               if (res.status === 404 || res.status === 410) {
                 await supabaseAdmin.from("push_subscriptions").delete().eq("id", s.id);
               } else if (res.status >= 200 && res.status < 300) {
                 sent++;
               } else {
-                console.error("[send-push] push failed", res.status, await res.text());
+                const txt = await res.text().catch(() => "");
+                lastError = `${res.status} ${txt}`;
+                console.error("[send-push] push failed", res.status, txt);
               }
             } catch (e: any) {
+              lastError = e?.message || String(e);
               console.error(
                 "[send-push] error",
                 e?.message || e,
                 "endpoint_host=", (() => { try { return new URL(s.endpoint).host; } catch { return "?"; } })(),
-                "p256dh_len=", s.p256dh?.length,
-                "auth_len=", s.auth?.length,
-                "vapid_pub_len=", vapidPublic?.length,
-                "vapid_priv_len=", vapidPrivate?.length,
               );
             }
           })
         );
+
+        console.log("[send-push] resultado", JSON.stringify({ user_id: payload.user_id, sent, subs: subs.length }));
+
+        if (payload.tag) {
+          try {
+            await supabaseAdmin
+              .from("push_admin_logs" as any)
+              .update({
+                sent,
+                http_status: lastStatus,
+                error: sent > 0 ? null : lastError,
+                status: sent > 0 ? "enviado" : subs.length === 0 ? "sem_dispositivo" : "falhou",
+              })
+              .eq("tag", payload.tag)
+              .eq("user_id", payload.user_id);
+          } catch (e) {
+            console.error("[send-push] log update failed", e);
+          }
+        }
 
         return Response.json({ sent });
       },
