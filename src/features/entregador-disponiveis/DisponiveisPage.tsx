@@ -13,7 +13,9 @@ import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
 import { RotasDisponiveisHeader } from "./components/RotasDisponiveisHeader";
 import { AguardandoAprovacaoEstado } from "./components/AguardandoAprovacaoEstado";
+import { AguardandoDocumentosEstado } from "./components/AguardandoDocumentosEstado";
 import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
+import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-entregador-documentos";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 
 export function DisponiveisPage() {
@@ -32,6 +34,7 @@ export function DisponiveisPage() {
     estouOnline,
   } = usePedidosDisponiveis(dismissed);
   const { aprovado, bloqueado } = useEntregadorAprovacao();
+  const { data: docs, docsAprovados } = useEntregadorDocumentos();
 
   // Dispara o som configurado pelo admin sempre que aparece um grupo novo
   // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
@@ -55,6 +58,14 @@ export function DisponiveisPage() {
     return (
       <EntregadorShell title="Disponíveis">
         <AguardandoAprovacaoEstado bloqueado={bloqueado} />
+      </EntregadorShell>
+    );
+  }
+
+  if (!docsAprovados) {
+    return (
+      <EntregadorShell title="Disponíveis">
+        <AguardandoDocumentosEstado status={docs?.status ?? "pendente"} motivo={docs?.motivo_rejeicao ?? null} />
       </EntregadorShell>
     );
   }

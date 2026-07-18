@@ -1,7 +1,10 @@
-import { Ban, Bike, Car, Check, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Ban, Bike, Car, Check, FileSearch, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
+import { supabase } from "@/integrations/supabase/client";
 import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
+import { DocumentosReviewDialog } from "./DocumentosReviewDialog";
 
 export function EntregadorCard({
   p,
@@ -19,8 +22,43 @@ export function EntregadorCard({
       ? waLink(p.phone, mensagemAprovacao(p.full_name))
       : null;
 
+  const [docStatus, setDocStatus] = useState<string | null>(null);
+  const [docTipo, setDocTipo] = useState<string | null>(null);
+  const [showDocs, setShowDocs] = useState(false);
+  useEffect(() => {
+    let ativo = true;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("entregador_documentos")
+        .select("status, tipo_veiculo")
+        .eq("entregador_id", p.id)
+        .maybeSingle();
+      if (ativo) {
+        setDocStatus(data?.status ?? null);
+        setDocTipo(data?.tipo_veiculo ?? null);
+      }
+    })();
+    return () => { ativo = false; };
+  }, [p.id, showDocs]);
+
+  const docLabel: Record<string, { label: string; cls: string }> = {
+    pendente: { label: "Docs pendentes", cls: "bg-slate-600/20 text-slate-400" },
+    enviado: { label: "Docs enviados", cls: "bg-amber-600/20 text-amber-400" },
+    aprovado: { label: "Docs OK", cls: "bg-green-600/20 text-green-500" },
+    rejeitado: { label: "Docs rejeitados", cls: "bg-red-600/20 text-red-400" },
+  };
+  const dl = docStatus ? docLabel[docStatus] : null;
+  const precisaRevisar = docStatus === "enviado";
+
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
+      {showDocs && (
+        <DocumentosReviewDialog
+          entregadorId={p.id}
+          nome={p.full_name ?? "entregador"}
+          onClose={() => setShowDocs(false)}
+        />
+      )}
       <div className="flex items-center gap-3 mb-3">
         <div className="h-12 w-12 rounded-full bg-gradient-red shadow-red flex items-center justify-center overflow-hidden">
           {p.avatar_url ? (
@@ -74,12 +112,30 @@ export function EntregadorCard({
           {p.tipo_veiculo === "carro" ? <Car className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
           {p.tipo_veiculo === "carro" ? "Carro" : "Moto"}
         </span>
+        {dl && docTipo !== "bike_eletrica" && (
+          <span className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${dl.cls}`}>
+            {dl.label}
+          </span>
+        )}
         {p.created_at && (
           <span className="text-[10px] text-muted-foreground ml-auto">
             Cadastro: {new Date(p.created_at).toLocaleDateString("pt-BR")}
           </span>
         )}
       </div>
+      {docTipo && docTipo !== "bike_eletrica" && (
+        <button
+          onClick={() => setShowDocs(true)}
+          className={`w-full mb-2 flex items-center justify-center gap-1 px-3 py-2 text-xs font-bold uppercase rounded-md ${
+            precisaRevisar
+              ? "bg-amber-600 text-white hover:bg-amber-700 animate-pulse"
+              : "bg-muted text-foreground hover:bg-muted/70"
+          }`}
+        >
+          <FileSearch className="h-3.5 w-3.5" />
+          {precisaRevisar ? "Revisar documentos" : "Ver documentos"}
+        </button>
+      )}
       <div className="grid grid-cols-3 gap-2">
         <button
           onClick={() => onSetStatus(p.id, "aprovado")}
