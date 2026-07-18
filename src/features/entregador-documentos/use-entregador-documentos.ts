@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { fileToWebp } from "@/lib/image-to-webp";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 
 export type DocStatus = "pendente" | "enviado" | "aprovado" | "rejeitado";
 export type TipoVeiculo = "moto" | "carro" | "bike_eletrica";
