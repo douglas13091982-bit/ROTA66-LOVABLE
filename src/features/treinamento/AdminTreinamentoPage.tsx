@@ -155,7 +155,19 @@ export function AdminTreinamentoPage() {
             </label>
           </div>
 
-          {previewEmbed && (
+          <label className="flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/[0.06] p-3">
+            <input
+              type="checkbox"
+              checked={form.onboarding_entregador}
+              onChange={(e) => setForm((s) => ({ ...s, onboarding_entregador: e.target.checked }))}
+              className="h-4 w-4 mt-0.5"
+            />
+            <span className="text-[12px] text-white/80 leading-snug">
+              <b className="text-yellow-300">Vídeo obrigatório do entregador</b> — será exibido antes do
+              botão de baixar o APK e o entregador precisa assistir antes de baixar.
+              Ative apenas em <b>um</b> vídeo por vez (o primeiro ativo será usado).
+            </span>
+          </label>
             <div className="aspect-video w-full rounded-md overflow-hidden border border-white/10 bg-black">
               <iframe src={previewEmbed} className="w-full h-full" allowFullScreen title="preview" />
             </div>
