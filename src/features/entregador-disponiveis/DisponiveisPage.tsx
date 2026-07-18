@@ -13,6 +13,7 @@ import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
 import { RotasDisponiveisHeader } from "./components/RotasDisponiveisHeader";
 import { AguardandoAprovacaoEstado } from "./components/AguardandoAprovacaoEstado";
+import { AguardandoDocumentosEstado } from "./components/AguardandoDocumentosEstado";
 import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
 import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-entregador-documentos";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
