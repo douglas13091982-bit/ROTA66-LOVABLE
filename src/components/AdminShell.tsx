@@ -10,6 +10,7 @@ import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-
 import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
 import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
 import { usePasswordResetPendentesCount } from "@/features/admin-password-reset/hooks/use-password-reset-pendentes-count";
+import { useDocsEntregadorPendentesCount } from "@/features/admin-entregadores/hooks/use-docs-pendentes-count";
 import { useFranquia } from "@/hooks/use-franquia";
 
 
