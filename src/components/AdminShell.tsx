@@ -68,6 +68,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
   const { data: saquesLojasPendentes = 0 } = useSaquesLojasPendentesCount();
   const { data: resetPendentes = 0 } = usePasswordResetPendentesCount();
+  const { data: docsPendentes = 0 } = useDocsEntregadorPendentesCount();
 
 
   
