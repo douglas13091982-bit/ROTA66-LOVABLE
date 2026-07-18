@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/public/send-push")({
           return new Response("unauthorized", { status: 401 });
         }
 
-        let payload: { user_id?: string; title?: string; body?: string; url?: string };
+        let payload: { user_id?: string; title?: string; body?: string; url?: string; tag?: string };
         try {
           payload = await request.json();
         } catch {
@@ -63,6 +63,7 @@ export const Route = createFileRoute("/api/public/send-push")({
           title: payload.title,
           body: payload.body || "",
           url: payload.url || "/entregador/ativos",
+          tag: payload.tag || undefined,
         });
 
         let sent = 0;

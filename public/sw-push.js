@@ -16,13 +16,14 @@ self.addEventListener("push", (event) => {
   } catch (e) {
     data = { title: "ROTA 66", body: event.data ? event.data.text() : "" };
   }
+  const fallbackTag = `rota66-push-${Date.now()}`;
   const title = data.title || "ROTA 66";
   const options = {
     body: data.body || "",
     icon: "/icons/icon-192.png",
     badge: "/icons/icon-192.png",
     vibrate: [200, 80, 200],
-    tag: data.tag || "rota66-push",
+    tag: data.tag || fallbackTag,
     renotify: true,
     requireInteraction: false,
     data: { url: data.url || "/entregador/ativos" },
