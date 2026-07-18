@@ -300,6 +300,7 @@ export function usePedidosDisponiveis(
             !novo?.entregador_id;
           if (ficouPronto) {
             toast.success("🚨 Novo pedido pronto para retirar!");
+            mostrarNotificacaoLocalNovoPedido(novo, userId);
           }
           // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
           const pedidoMeu =
@@ -345,6 +346,51 @@ export function usePedidosDisponiveis(
     estouOnline,
   };
 
+}
+
+function mostrarNotificacaoLocalNovoPedido(
+  pedido: { id?: string; numero?: number | string | null } | null,
+  userId?: string,
+) {
+  if (typeof window === "undefined") return;
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const tag = `rota66-pedido-local-${pedido?.id || pedido?.numero || Date.now()}`;
+  const title = "🚨 Nova entrega disponível";
+  const body = pedido?.numero
+    ? `Pedido #${pedido.numero} disponível para aceitar.`
+    : "Toque para ver os pedidos disponíveis.";
+  const data = { url: "/entregador/disponiveis" };
+
+  void (async () => {
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration?.("/sw-push.js");
+      if (reg?.showNotification) {
+        await reg.showNotification(title, {
+          body,
+          icon: "/icons/icon-192.png",
+          badge: "/icons/icon-192.png",
+          vibrate: [200, 80, 200],
+          tag,
+          renotify: true,
+          requireInteraction: true,
+          data,
+        });
+        return;
+      }
+    } catch {}
+
+    try {
+      new Notification(title, {
+        body,
+        icon: "/icons/icon-192.png",
+        tag,
+        data,
+      });
+    } catch (err) {
+      console.warn("[push] falha ao exibir notificação local", err, userId);
+    }
+  })();
 }
 
 function criarCalculadorTaxaExibida(
