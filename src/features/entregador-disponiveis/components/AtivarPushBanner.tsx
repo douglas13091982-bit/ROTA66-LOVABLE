@@ -3,15 +3,25 @@ import { Bell, BellRing, X } from "lucide-react";
 import { toast } from "sonner";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
 
+const DISMISS_KEY = "push-banner-dismissed";
+
 export function AtivarPushBanner() {
   const { state, busy, enable } = usePushNotifications();
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem(DISMISS_KEY) === "1";
+  });
 
+  const handleDismiss = () => {
+    try { window.localStorage.setItem(DISMISS_KEY, "1"); } catch {}
+    setDismissed(true);
+  };
 
   if (dismissed) return null;
   if (state === "loading" || state === "unsupported") return null;
+  // Não mostrar banner de "bloqueadas" — o usuário precisa liberar manualmente nas configs do sistema
+  if (state === "denied") return null;
 
-  const isDenied = state === "denied";
   const isGranted = state === "granted";
 
   const handleAtivar = async () => {
