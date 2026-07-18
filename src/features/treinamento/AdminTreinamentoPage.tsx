@@ -36,6 +36,7 @@ export function AdminTreinamentoPage() {
       youtube_url: v.youtube_url,
       ordem: v.ordem,
       ativo: v.ativo,
+      onboarding_entregador: v.onboarding_entregador ?? false,
     });
   };
 
