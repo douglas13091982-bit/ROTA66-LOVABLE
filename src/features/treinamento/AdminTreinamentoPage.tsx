@@ -15,9 +15,10 @@ type FormState = {
   youtube_url: string;
   ordem: number;
   ativo: boolean;
+  onboarding_entregador: boolean;
 };
 
-const EMPTY: FormState = { titulo: "", descricao: "", youtube_url: "", ordem: 0, ativo: true };
+const EMPTY: FormState = { titulo: "", descricao: "", youtube_url: "", ordem: 0, ativo: true, onboarding_entregador: false };
 
 export function AdminTreinamentoPage() {
   const { data: videos, isLoading } = useTreinamentoVideos({ includeInactive: true });
