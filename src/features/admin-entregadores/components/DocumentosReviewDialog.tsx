@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { X, FileCheck2, FileX2, ExternalLink } from "lucide-react";
+import { X, FileCheck2, FileX2, ExternalLink, Upload, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getSignedDocUrl } from "@/features/entregador-documentos/use-entregador-documentos";
+import { convertImageToWebp } from "@/lib/image-to-webp";
 
 type Doc = {
   id: string;
@@ -16,6 +17,8 @@ type Doc = {
   motivo_rejeicao: string | null;
   submitted_at: string | null;
 };
+
+const BUCKET = "entregador-documentos";
 
 export function DocumentosReviewDialog({
   entregadorId,
@@ -30,21 +33,83 @@ export function DocumentosReviewDialog({
   const [cnhUrl, setCnhUrl] = useState<string | null>(null);
   const [veicUrl, setVeicUrl] = useState<string | null>(null);
   const [motivo, setMotivo] = useState("");
+  const [placaEdit, setPlacaEdit] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingCnh, setUploadingCnh] = useState(false);
+  const [uploadingVeic, setUploadingVeic] = useState(false);
+  const [savingPlaca, setSavingPlaca] = useState(false);
+  const cnhInputRef = useRef<HTMLInputElement>(null);
+  const veicInputRef = useRef<HTMLInputElement>(null);
+
+  const refresh = async () => {
+    const { data } = await (supabase as any)
+      .from("entregador_documentos")
+      .select("*")
+      .eq("entregador_id", entregadorId)
+      .maybeSingle();
+    if (!data) return;
+    setDoc(data);
+    setPlacaEdit(data.placa ?? "");
+    setCnhUrl(data.cnh_path ? await getSignedDocUrl(data.cnh_path) : null);
+    setVeicUrl(data.veiculo_foto_path ? await getSignedDocUrl(data.veiculo_foto_path) : null);
+  };
 
   useEffect(() => {
-    (async () => {
-      const { data } = await (supabase as any)
-        .from("entregador_documentos")
-        .select("*")
-        .eq("entregador_id", entregadorId)
-        .maybeSingle();
-      if (!data) return;
-      setDoc(data);
-      if (data.cnh_path) setCnhUrl(await getSignedDocUrl(data.cnh_path));
-      if (data.veiculo_foto_path) setVeicUrl(await getSignedDocUrl(data.veiculo_foto_path));
-    })();
+    refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entregadorId]);
+
+  const uploadDoc = async (file: File, prefixo: "cnh" | "veiculo") => {
+    const webp = await convertImageToWebp(file, { maxDimension: 1600, quality: 0.82 }).catch(() => file);
+    const path = `${entregadorId}/${prefixo}-${Date.now()}.webp`;
+    const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, webp, {
+      upsert: true,
+      contentType: "image/webp",
+    });
+    if (upErr) throw upErr;
+    const patch: any = prefixo === "cnh" ? { cnh_path: path } : { veiculo_foto_path: path };
+    if (doc?.status === "pendente" || doc?.status === "rejeitado") {
+      patch.status = "enviado";
+      patch.motivo_rejeicao = null;
+      patch.submitted_at = new Date().toISOString();
+    }
+    const { error } = await (supabase as any)
+      .from("entregador_documentos")
+      .update(patch)
+      .eq("entregador_id", entregadorId);
+    if (error) throw error;
+  };
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>, prefixo: "cnh" | "veiculo") => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const setter = prefixo === "cnh" ? setUploadingCnh : setUploadingVeic;
+    setter(true);
+    try {
+      await uploadDoc(file, prefixo);
+      toast.success(prefixo === "cnh" ? "CNH enviada" : "Foto do veículo enviada");
+      await refresh();
+    } catch (err: any) {
+      toast.error(err?.message ?? "Falha no upload");
+    } finally {
+      setter(false);
+    }
+  };
+
+  const salvarPlaca = async () => {
+    const nova = placaEdit.trim().toUpperCase();
+    if (!nova) return toast.error("Informe a placa");
+    setSavingPlaca(true);
+    const { error } = await (supabase as any)
+      .from("entregador_documentos")
+      .update({ placa: nova })
+      .eq("entregador_id", entregadorId);
+    setSavingPlaca(false);
+    if (error) return toast.error(error.message);
+    toast.success("Placa salva");
+    refresh();
+  };
 
   const decidir = async (novo: "aprovado" | "rejeitado") => {
     if (novo === "rejeitado" && !motivo.trim()) {
@@ -62,6 +127,8 @@ export function DocumentosReviewDialog({
     onClose();
   };
 
+  const isBike = doc?.tipo_veiculo === "bike_eletrica";
+
   return createPortal(
     <div className="fixed inset-0 z-[100] bg-black/70 flex items-start sm:items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
       <div
@@ -77,13 +144,12 @@ export function DocumentosReviewDialog({
 
         {!doc ? (
           <p className="text-sm text-muted-foreground">Carregando…</p>
-        ) : doc.tipo_veiculo === "bike_eletrica" ? (
+        ) : isBike ? (
           <p className="text-sm">Bike elétrica — documentos não são exigidos.</p>
         ) : (
           <div className="space-y-4">
-            <div className="text-xs">
+            <div className="text-xs space-y-1">
               <div><span className="text-muted-foreground">Tipo:</span> <b>{doc.tipo_veiculo}</b></div>
-              <div><span className="text-muted-foreground">Placa:</span> <b>{doc.placa ?? "—"}</b></div>
               <div><span className="text-muted-foreground">Status atual:</span> <b>{doc.status}</b></div>
               {doc.submitted_at && (
                 <div>
@@ -93,8 +159,40 @@ export function DocumentosReviewDialog({
               )}
             </div>
 
-            <DocPreview label="CNH" url={cnhUrl} />
-            <DocPreview label="Foto do veículo" url={veicUrl} />
+            <div>
+              <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Placa</label>
+              <div className="flex gap-2">
+                <input
+                  value={placaEdit}
+                  onChange={(e) => setPlacaEdit(e.target.value.toUpperCase().slice(0, 10))}
+                  placeholder="ABC1D23"
+                  className="flex-1 bg-background border border-border rounded-md px-3 py-2 text-sm font-mono"
+                />
+                <button
+                  onClick={salvarPlaca}
+                  disabled={savingPlaca || placaEdit.trim() === (doc.placa ?? "")}
+                  className="px-3 py-2 text-xs font-bold uppercase rounded-md bg-primary text-primary-foreground disabled:opacity-50"
+                >
+                  {savingPlaca ? <Loader2 className="h-4 w-4 animate-spin" /> : "Salvar"}
+                </button>
+              </div>
+            </div>
+
+            <DocPreview
+              label="CNH"
+              url={cnhUrl}
+              uploading={uploadingCnh}
+              onPick={() => cnhInputRef.current?.click()}
+            />
+            <input ref={cnhInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "cnh")} />
+
+            <DocPreview
+              label="Foto do veículo"
+              url={veicUrl}
+              uploading={uploadingVeic}
+              onPick={() => veicInputRef.current?.click()}
+            />
+            <input ref={veicInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFile(e, "veiculo")} />
 
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-muted-foreground mb-1">
@@ -133,10 +231,30 @@ export function DocumentosReviewDialog({
   );
 }
 
-function DocPreview({ label, url }: { label: string; url: string | null }) {
+function DocPreview({
+  label,
+  url,
+  uploading,
+  onPick,
+}: {
+  label: string;
+  url: string | null;
+  uploading: boolean;
+  onPick: () => void;
+}) {
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">{label}</div>
+      <div className="flex items-center justify-between mb-1">
+        <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+        <button
+          onClick={onPick}
+          disabled={uploading}
+          className="flex items-center gap-1 text-[10px] uppercase font-bold text-primary hover:underline disabled:opacity-50"
+        >
+          {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+          {url ? "Substituir" : "Enviar"}
+        </button>
+      </div>
       {url ? (
         <a href={url} target="_blank" rel="noopener noreferrer" className="block relative group">
           <img src={url} alt={label} className="w-full max-h-64 object-contain rounded-md border border-border bg-black/40" />
@@ -145,7 +263,9 @@ function DocPreview({ label, url }: { label: string; url: string | null }) {
           </div>
         </a>
       ) : (
-        <div className="text-xs text-muted-foreground italic">Não enviado</div>
+        <div className="text-xs text-muted-foreground italic border border-dashed border-border rounded-md px-3 py-4 text-center">
+          Nenhum arquivo enviado
+        </div>
       )}
     </div>
   );
