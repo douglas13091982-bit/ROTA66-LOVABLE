@@ -830,6 +830,54 @@ export type Database = {
         }
         Relationships: []
       }
+      entregador_documentos: {
+        Row: {
+          cnh_path: string | null
+          created_at: string
+          entregador_id: string
+          id: string
+          motivo_rejeicao: string | null
+          placa: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitted_at: string | null
+          tipo_veiculo: string
+          updated_at: string
+          veiculo_foto_path: string | null
+        }
+        Insert: {
+          cnh_path?: string | null
+          created_at?: string
+          entregador_id: string
+          id?: string
+          motivo_rejeicao?: string | null
+          placa?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          tipo_veiculo: string
+          updated_at?: string
+          veiculo_foto_path?: string | null
+        }
+        Update: {
+          cnh_path?: string | null
+          created_at?: string
+          entregador_id?: string
+          id?: string
+          motivo_rejeicao?: string | null
+          placa?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          tipo_veiculo?: string
+          updated_at?: string
+          veiculo_foto_path?: string | null
+        }
+        Relationships: []
+      }
       entregador_recargas_mp: {
         Row: {
           created_at: string
@@ -3494,6 +3542,10 @@ export type Database = {
           saldo_creditos: number
           saldo_saque: number
         }[]
+      }
+      entregador_pode_operar: {
+        Args: { _entregador_id: string }
+        Returns: boolean
       }
       entregador_pode_receber_ofertas: {
         Args: { _entregador_id: string }
