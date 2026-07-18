@@ -9,6 +9,7 @@ export type TreinamentoVideo = {
   youtube_url: string;
   ordem: number;
   ativo: boolean;
+  onboarding_entregador: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -37,6 +38,7 @@ export type TreinamentoInput = {
   youtube_url: string;
   ordem?: number;
   ativo?: boolean;
+  onboarding_entregador?: boolean;
 };
 
 export function useSalvarTreinamentoVideo() {

@@ -1,0 +1,2 @@
+ALTER TABLE public.treinamento_videos ADD COLUMN IF NOT EXISTS onboarding_entregador boolean NOT NULL DEFAULT false;
+CREATE INDEX IF NOT EXISTS idx_treinamento_videos_onboarding_entregador ON public.treinamento_videos (onboarding_entregador) WHERE onboarding_entregador = true;
