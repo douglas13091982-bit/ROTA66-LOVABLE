@@ -238,6 +238,65 @@ function Conteudo() {
           {mut.isPending ? "Enviando…" : "Enviar notificação"}
         </Button>
       </div>
+
+      <div className="pp-glass rounded-xl p-5 space-y-3">
+        <h3 className="font-semibold flex items-center gap-2">
+          <History className="w-4 h-4" /> Histórico de envios
+          <span className="text-xs text-muted-foreground font-normal">
+            (título, mensagem e link enviados a cada entregador)
+          </span>
+        </h3>
+        <div className="max-h-[480px] overflow-y-auto border rounded-lg divide-y">
+          {logsLoading && <div className="p-3 text-sm text-muted-foreground">Carregando…</div>}
+          {!logsLoading && (logsData?.logs?.length ?? 0) === 0 && (
+            <div className="p-3 text-sm text-muted-foreground">Nenhum envio ainda.</div>
+          )}
+          {(logsData?.logs ?? []).map((l: any) => {
+            const dt = new Date(l.created_at).toLocaleString("pt-BR");
+            const okIcon =
+              l.status === "enviado" ? (
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+              ) : l.status === "pending" ? (
+                <Clock className="w-4 h-4 text-amber-500" />
+              ) : (
+                <XCircle className="w-4 h-4 text-red-500" />
+              );
+            return (
+              <div key={l.id} className="p-3 text-sm space-y-1">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    {okIcon}
+                    <span className="font-medium truncate">
+                      {l.entregador_nome || l.user_id.slice(0, 8)}
+                    </span>
+                  </div>
+                  <span className="text-xs text-muted-foreground shrink-0">{dt}</span>
+                </div>
+                <div className="pl-6 space-y-0.5">
+                  <div>
+                    <span className="text-xs text-muted-foreground">Título: </span>
+                    <span className="font-semibold">{l.title}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground">Mensagem: </span>
+                    <span>{l.body}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="text-xs text-muted-foreground">Link: </span>
+                    <code className="text-xs">{l.url || "—"}</code>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Status: <span className="uppercase">{l.status}</span>
+                    {typeof l.sent === "number" && <> · dispositivos: {l.sent}</>}
+                    {l.http_status && <> · HTTP {l.http_status}</>}
+                    {l.error && <> · <span className="text-red-500">{l.error}</span></>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
