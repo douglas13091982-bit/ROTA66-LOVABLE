@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Bell, BellRing, X } from "lucide-react";
 import { toast } from "sonner";
-import { useServerFn } from "@tanstack/react-start";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
-import { enviarPushTeste } from "@/lib/push.functions";
 
 export function AtivarPushBanner() {
   const { state, busy, enable } = usePushNotifications();
-  const enviarTeste = useServerFn(enviarPushTeste);
   const [dismissed, setDismissed] = useState(false);
-  const [testando, setTestando] = useState(false);
+
 
   if (dismissed) return null;
   if (state === "loading" || state === "unsupported") return null;
@@ -26,26 +23,7 @@ export function AtivarPushBanner() {
     }
   };
 
-  const handleTestar = async () => {
-    setTestando(true);
-    try {
-      const res = await enviarTeste();
-      if (res.subscriptions === 0) {
-        toast.error("Nenhuma inscrição encontrada. Reative as notificações.");
-      } else if (res.sent > 0) {
-        toast.success("Notificação enviada! Verifique seu dispositivo.");
-      } else {
-        toast.error("Push não foi entregue. Verifique as permissões.");
-      }
-    } catch (err) {
-      toast.error("Erro ao enviar notificação de teste.");
-      console.error(err);
-    } finally {
-      setTestando(false);
-    }
-  };
-
-  // Já ativado: mostra só o botão de teste discreto
+  // Já ativado: banner discreto confirmando
   if (isGranted) {
     return (
       <div className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
@@ -53,14 +31,6 @@ export function AtivarPushBanner() {
         <p className="flex-1 text-xs text-muted-foreground">
           Notificações ativas neste dispositivo.
         </p>
-        <button
-          type="button"
-          onClick={handleTestar}
-          disabled={testando}
-          className="text-xs font-semibold text-primary border border-primary/40 px-2.5 py-1 rounded-md disabled:opacity-60"
-        >
-          {testando ? "Enviando…" : "Testar"}
-        </button>
         <button
           type="button"
           onClick={() => setDismissed(true)}
@@ -72,6 +42,7 @@ export function AtivarPushBanner() {
       </div>
     );
   }
+
 
   return (
     <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 flex items-start gap-3">
