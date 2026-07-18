@@ -72,7 +72,7 @@ export function DocumentosPage() {
           className="space-y-4"
         >
           <div>
-            <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-neutral-900 dark:text-yellow-400">
+            <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-red-600 dark:text-yellow-400">
               Placa do {veiculoLabel}
             </label>
             <input
@@ -179,7 +179,7 @@ function FieldFile({
 }) {
   return (
     <div>
-      <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-neutral-900 dark:text-yellow-400">
+      <label className="block text-[11px] uppercase tracking-[0.22em] font-extrabold mb-1.5 text-red-600 dark:text-yellow-400">
         {label}
       </label>
       <label
