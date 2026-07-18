@@ -38,6 +38,7 @@ export type TreinamentoInput = {
   youtube_url: string;
   ordem?: number;
   ativo?: boolean;
+  onboarding_entregador?: boolean;
 };
 
 export function useSalvarTreinamentoVideo() {
