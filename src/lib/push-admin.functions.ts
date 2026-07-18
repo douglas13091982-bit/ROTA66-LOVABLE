@@ -18,23 +18,54 @@ async function isDonoOuFranqueado(supabase: any, userId: string) {
 }
 
 /**
+ * Retorna o user_id do franqueado "efetivo":
+ *  - se o próprio usuário for franqueado, retorna ele mesmo
+ *  - se for colaborador ativo, retorna o franqueado ao qual está vinculado
+ *  - caso contrário retorna null
+ */
+async function getFranqueadoEfetivoId(supabaseAdmin: any, userId: string): Promise<string | null> {
+  const { data: cfgSelf } = await supabaseAdmin
+    .from("franqueados_config")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (cfgSelf?.user_id) return cfgSelf.user_id as string;
+
+  const { data: colab } = await supabaseAdmin
+    .from("franqueado_colaboradores")
+    .select("franqueado_user_id")
+    .eq("colaborador_user_id", userId)
+    .eq("ativo", true)
+    .maybeSingle();
+  return (colab?.franqueado_user_id as string) ?? null;
+}
+
+async function podeUsarPainelPush(supabase: any, supabaseAdmin: any, userId: string) {
+  if (await isDonoOuFranqueado(supabase, userId)) return true;
+  const fid = await getFranqueadoEfetivoId(supabaseAdmin, userId);
+  return !!fid;
+}
+
+/**
  * Lista entregadores para o painel de push (respeita cidade do franqueado).
  */
 export const listarEntregadoresParaPush = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    if (!(await isDonoOuFranqueado(supabase, userId))) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const isSuper = await isDonoOuFranqueado(supabase, userId);
+    const franqueadoEfetivoId = isSuper ? userId : await getFranqueadoEfetivoId(supabaseAdmin, userId);
+    if (!isSuper && !franqueadoEfetivoId) {
       throw new Error("Sem permissão");
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // Descobrir cidade do franqueado (se houver)
+    // Descobrir cidade do franqueado efetivo (se houver)
     const { data: cfg } = await supabaseAdmin
       .from("franqueados_config" as any)
       .select("city_id")
-      .eq("user_id", userId)
+      .eq("user_id", franqueadoEfetivoId ?? userId)
       .maybeSingle();
     const cityId = (cfg as any)?.city_id as string | null | undefined;
 
@@ -87,17 +118,19 @@ export const enviarPushEntregadores = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => Input.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    if (!(await isDonoOuFranqueado(supabase, userId))) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const isSuper = await isDonoOuFranqueado(supabase, userId);
+    const franqueadoEfetivoId = isSuper ? userId : await getFranqueadoEfetivoId(supabaseAdmin, userId);
+    if (!isSuper && !franqueadoEfetivoId) {
       throw new Error("Sem permissão");
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // Cidade do franqueado (se houver)
+    // Cidade do franqueado efetivo (se houver)
     const { data: cfg } = await supabaseAdmin
       .from("franqueados_config" as any)
       .select("city_id")
-      .eq("user_id", userId)
+      .eq("user_id", franqueadoEfetivoId ?? userId)
       .maybeSingle();
     const cityIdFranqueado = (cfg as any)?.city_id as string | null | undefined;
 
