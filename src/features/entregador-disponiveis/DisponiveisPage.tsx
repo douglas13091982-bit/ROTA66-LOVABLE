@@ -24,7 +24,7 @@ import { AtivarPushBanner } from "./components/AtivarPushBanner";
 export function DisponiveisPage() {
   const navigate = useNavigate();
   const { posicao: minhaPos } = useGeolocalizacao();
-  const { dismissed, aceitarGrupo } = useAcoesPedido();
+  const { dismissed, aceitarGrupo, recusarGrupo } = useAcoesPedido();
   const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
   const {
     grupos,
@@ -38,11 +38,13 @@ export function DisponiveisPage() {
   } = usePedidosDisponiveis(dismissed);
   const { aprovado, bloqueado } = useEntregadorAprovacao();
   const { data: docs, docsAprovados } = useEntregadorDocumentos();
+  const nowMs = useRelogio(1000);
 
   // Dispara o som configurado pelo admin sempre que aparece um grupo novo
   // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
   // (gesto do usuário) e do pré-carregamento do MP3.
-  usePopupNotificacao(aprovado ? grupos : []);
+  const { popupOpen, setPopupOpen } = usePopupNotificacao(aprovado ? grupos : []);
+  const grupoPopup = grupos[0] ?? null;
 
 
 
