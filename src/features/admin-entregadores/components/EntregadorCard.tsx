@@ -22,8 +22,43 @@ export function EntregadorCard({
       ? waLink(p.phone, mensagemAprovacao(p.full_name))
       : null;
 
+  const [docStatus, setDocStatus] = useState<string | null>(null);
+  const [docTipo, setDocTipo] = useState<string | null>(null);
+  const [showDocs, setShowDocs] = useState(false);
+  useEffect(() => {
+    let ativo = true;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("entregador_documentos")
+        .select("status, tipo_veiculo")
+        .eq("entregador_id", p.id)
+        .maybeSingle();
+      if (ativo) {
+        setDocStatus(data?.status ?? null);
+        setDocTipo(data?.tipo_veiculo ?? null);
+      }
+    })();
+    return () => { ativo = false; };
+  }, [p.id, showDocs]);
+
+  const docLabel: Record<string, { label: string; cls: string }> = {
+    pendente: { label: "Docs pendentes", cls: "bg-slate-600/20 text-slate-400" },
+    enviado: { label: "Docs enviados", cls: "bg-amber-600/20 text-amber-400" },
+    aprovado: { label: "Docs OK", cls: "bg-green-600/20 text-green-500" },
+    rejeitado: { label: "Docs rejeitados", cls: "bg-red-600/20 text-red-400" },
+  };
+  const dl = docStatus ? docLabel[docStatus] : null;
+  const precisaRevisar = docStatus === "enviado";
+
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
+      {showDocs && (
+        <DocumentosReviewDialog
+          entregadorId={p.id}
+          nome={p.full_name ?? "entregador"}
+          onClose={() => setShowDocs(false)}
+        />
+      )}
       <div className="flex items-center gap-3 mb-3">
         <div className="h-12 w-12 rounded-full bg-gradient-red shadow-red flex items-center justify-center overflow-hidden">
           {p.avatar_url ? (
