@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ShieldCheck, Upload, AlertTriangle, CheckCircle2, Clock, ExternalLink } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Upload, AlertTriangle, CheckCircle2, Clock, ExternalLink, Camera, ImageIcon } from "lucide-react";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { abrirNoNavegadorExterno } from "@/lib/abrir-navegador-externo";
 import { useEntregadorDocumentos } from "./use-entregador-documentos";
