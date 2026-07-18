@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 // Chave pública VAPID (segura para ficar no client)
 const VAPID_PUBLIC_KEY =
-  "BEUDpZugBneF731ZB4quLx-xIBwjRNOD_AgIslaAWt_Ev3lA-Du8s9ROVF9Xi1H4e0kNxwTx67S7BE0GWqby_c8";
+  "BACtRKxjU08cKUmmZREMClwrawTLq9itz6QFLXVkMOcNMTis61hk7ZGfb_JcwcrRBDYynq3_aKl1KutWAgRti3k";
 
 function urlBase64ToUint8Array(base64: string) {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
@@ -66,6 +66,15 @@ export function usePushNotifications() {
         return;
       }
       let sub = await reg.pushManager.getSubscription();
+      // Se a subscription atual foi criada com uma chave VAPID diferente da atual, recria.
+      if (sub) {
+        const currentKey = bufToB64Url(sub.options.applicationServerKey ?? null);
+        const expected = VAPID_PUBLIC_KEY.replace(/=+$/, "");
+        if (currentKey !== expected) {
+          try { await sub.unsubscribe(); } catch {}
+          sub = null;
+        }
+      }
       if (!sub) {
         sub = await reg.pushManager.subscribe({
           userVisibleOnly: true,
