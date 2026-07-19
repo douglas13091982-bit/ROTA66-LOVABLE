@@ -88,6 +88,7 @@ export function DisponiveisPage() {
       topFixed={
         <>
           <AtivarPushBanner />
+          <ApkUpdateBanner />
           <GanhoHojeCard valor={ganhoHoje} />
           {isListaVisivel && (
             <RotasDisponiveisHeader
