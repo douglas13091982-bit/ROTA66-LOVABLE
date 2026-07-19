@@ -67,6 +67,16 @@ export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: 
           Link público: /loja/{slug}
         </a>
       )}
+      {isRota66 && (
+        <button
+          onClick={copiarLinkMotoboy}
+          title="Copiar link público de motoboy avulso (/motoboy/rota66)"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-amber-500/50 bg-amber-500/10 text-amber-500 rounded-md hover:bg-amber-500/20 transition-colors"
+        >
+          {copiado ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+          {copiado ? "Link copiado!" : "Copiar link motoboy"}
+        </button>
+      )}
       <span className="ml-auto inline-flex items-center gap-2 text-xs text-muted-foreground">
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[oklch(0.55_0.26_25)] opacity-75" />
