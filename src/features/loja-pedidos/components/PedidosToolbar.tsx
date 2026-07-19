@@ -10,15 +10,18 @@ import { toast } from "sonner";
 
 interface Props {
   slug?: string | null;
+  lojaId?: string | null;
   mostrarArquivados: boolean;
   onToggleArquivados: () => void;
 }
 
-export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: Props) {
+const LOJA_ROTA66_ID = "3b05b069-ac20-4c10-87c9-2dde2977a9ae";
+
+export function PedidosToolbar({ slug, lojaId, mostrarArquivados, onToggleArquivados }: Props) {
   const [mutado, setMutado] = useState<boolean>(() => isNotificacaoMutada());
   const [copiado, setCopiado] = useState(false);
 
-  const isRota66 = slug === "rota66";
+  const isRota66 = lojaId === LOJA_ROTA66_ID;
   const linkMotoboy =
     typeof window !== "undefined" ? `${window.location.origin}/motoboy/rota66` : "/motoboy/rota66";
 
