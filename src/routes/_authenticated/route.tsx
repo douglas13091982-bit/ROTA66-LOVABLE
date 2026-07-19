@@ -19,7 +19,16 @@ export const Route = createFileRoute("/_authenticated")({
     if (!session?.user) {
       throw redirect({ to: "/login" });
     }
-    return { user: session.user };
+
+    // Busca as roles uma única vez aqui e passa via context para que as
+    // rotas filhas (ex.: /entregador) não precisem repetir a query.
+    const { data: rolesData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", session.user.id);
+    const roles = (rolesData ?? []).map((r) => r.role as string);
+
+    return { user: session.user, roles };
   },
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
   notFoundComponent: () => <GlobalErrorBoundary statusCode={404} />,

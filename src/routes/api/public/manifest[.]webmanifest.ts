@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/public/manifest.webmanifest")({
           name: `${nomeSistema} — Entregador`,
           short_name: nomeSistema,
           description: `App do entregador ${nomeSistema} — gerencie suas entregas em tempo real.`,
-          start_url: "/entregador",
+          start_url: "/entregador/disponiveis",
           scope: "/",
           id: "/entregador",
           display: "standalone",
