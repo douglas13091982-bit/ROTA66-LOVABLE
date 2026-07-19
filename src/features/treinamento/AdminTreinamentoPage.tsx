@@ -195,12 +195,8 @@ export function AdminTreinamentoPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <div className="text-[13px] font-semibold text-white truncate">{v.titulo}</div>
-                      {v.onboarding_entregador && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 uppercase font-bold">
-                          Onboarding entregador
-                        </span>
-                      )}
                       {!v.ativo && (
+
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60 uppercase">
                           Inativo
                         </span>
