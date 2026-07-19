@@ -4,6 +4,8 @@ export type LojaPublica = {
   slug: string;
   telefone: string | null;
   endereco: string | null;
+  endereco_lat: number | null;
+  endereco_lng: number | null;
   cidade: string | null;
   estado: string | null;
   logo_url: string | null;
