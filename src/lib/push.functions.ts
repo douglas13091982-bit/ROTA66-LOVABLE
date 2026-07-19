@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHost } from "@tanstack/react-start/server";
+import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+
 
 /**
  * Envia uma notificação push de teste para o próprio usuário autenticado,
@@ -55,3 +57,116 @@ export const enviarPushTeste = createServerFn({ method: "POST" })
     const json = (await res.json()) as { sent: number };
     return { sent: json.sent ?? 0, subscriptions: subs.length };
   });
+
+/**
+ * Notifica todos os entregadores externos aprovados sobre um novo turno
+ * publicado por uma loja. Deve ser chamado logo após `publicar_turno` ter
+ * sucesso. Restringe pela cidade da loja quando ela possui city_id.
+ */
+export const notificarTurnoPublicado = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ agendamento_id: z.string().uuid() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Carrega o turno e a loja
+    const { data: turno, error: errTurno } = await supabase
+      .from("agendamentos" as any)
+      .select("id, loja_id, data_turno, hora_inicio, valor_por_hora, taxa_por_entrega, duracao_horas")
+      .eq("id", data.agendamento_id)
+      .maybeSingle();
+    if (errTurno || !turno) throw new Error("Turno não encontrado");
+
+    const { data: loja } = await supabaseAdmin
+      .from("lojas")
+      .select("id, nome, city_id, owner_user_id")
+      .eq("id", (turno as any).loja_id)
+      .maybeSingle();
+    if (!loja) throw new Error("Loja não encontrada");
+
+    // Segurança: apenas dono da loja (a RPC publicar_turno já valida via RLS,
+    // mas mantemos o check aqui também).
+    if ((loja as any).owner_user_id !== userId) {
+      const { data: isSuper } = await supabase.rpc("has_role", {
+        _user_id: userId,
+        _role: "super_admin",
+      });
+      if (!isSuper) throw new Error("Sem permissão");
+    }
+
+    // Pool alvo: entregadores aprovados que aceitam pedidos externos.
+    // Restringe pela cidade da loja se houver.
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "entregador");
+    const entregadorIds = (roles ?? []).map((r: any) => r.user_id);
+    if (entregadorIds.length === 0) return { sent: 0, destinatarios: 0 };
+
+    let q = supabaseAdmin
+      .from("profiles")
+      .select("id, city_id, aceita_pedidos_externos")
+      .in("id", entregadorIds)
+      .eq("aceita_pedidos_externos", true);
+    if ((loja as any).city_id) q = q.eq("city_id", (loja as any).city_id);
+    const { data: profs } = await q;
+    const alvos = (profs ?? []).map((p: any) => p.id);
+    if (alvos.length === 0) return { sent: 0, destinatarios: 0 };
+
+    const { data: cfgRow } = await supabaseAdmin
+      .from("private_config" as any)
+      .select("value")
+      .eq("key", "push_trigger_secret")
+      .maybeSingle();
+    const secret = (cfgRow as any)?.value as string | undefined;
+    if (!secret) throw new Error("push_trigger_secret não configurado");
+
+    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
+    const url = `https://${host}/api/public/send-push`;
+
+    const dataFmt = (() => {
+      try {
+        const [y, m, d] = String((turno as any).data_turno).split("-");
+        return `${d}/${m}`;
+      } catch {
+        return String((turno as any).data_turno);
+      }
+    })();
+    const horaFmt = String((turno as any).hora_inicio).slice(0, 5);
+    const valorHora = Number((turno as any).valor_por_hora ?? 0);
+    const nomeLoja = (loja as any).nome || "Loja";
+
+    const title = "Nova Oportunidade Garantida";
+    const body = `${nomeLoja} publicou um turno em ${dataFmt} às ${horaFmt} — R$ ${valorHora.toFixed(2)}/h. Corra e garanta o seu!`;
+    const linkFinal = "/entregador/turnos";
+    const tag = `turno-${(turno as any).id}`;
+
+    let sent = 0;
+    const CONC = 10;
+    for (let i = 0; i < alvos.length; i += CONC) {
+      const batch = alvos.slice(i, i + CONC);
+      const results = await Promise.all(
+        batch.map(async (uid) => {
+          try {
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "content-type": "application/json", "x-push-secret": secret },
+              body: JSON.stringify({ user_id: uid, title, body, url: linkFinal, tag }),
+            });
+            if (!res.ok) return 0;
+            const j = (await res.json()) as { sent?: number };
+            return j.sent ?? 0;
+          } catch {
+            return 0;
+          }
+        }),
+      );
+      sent += results.reduce((a, b) => a + b, 0);
+    }
+
+    return { sent, destinatarios: alvos.length };
+  });
+
