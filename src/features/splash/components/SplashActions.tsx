@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { UtensilsCrossed, Bike, Store } from "lucide-react";
+import { ShoppingBag, Bike, Store } from "lucide-react";
 
 export function SplashActions() {
   return (
