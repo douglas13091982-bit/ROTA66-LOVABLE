@@ -33,25 +33,8 @@ export function AtivarPushBanner() {
     }
   };
 
-  // Já ativado: banner discreto confirmando
-  if (isGranted) {
-    return (
-      <div className="bg-card border border-border rounded-lg p-3 flex items-center gap-3">
-        <BellRing className="w-4 h-4 text-primary shrink-0" />
-        <p className="flex-1 text-xs text-muted-foreground">
-          Notificações ativas neste dispositivo.
-        </p>
-        <button
-          type="button"
-          onClick={handleDismiss}
-          className="text-muted-foreground hover:text-foreground shrink-0"
-          aria-label="Fechar"
-        >
-          <X className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
+  if (isGranted) return null;
+
 
 
   return (
