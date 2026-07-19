@@ -99,7 +99,6 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
           .select("id")
           .eq("loja_id", (turno as any).loja_id)
           .eq("user_id", userId)
-          .eq("ativo", true)
           .maybeSingle();
         if (!funcionario) throw new Error("Sem permissão");
       }
