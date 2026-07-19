@@ -275,7 +275,7 @@ function MotoboyRota66Page() {
                 value={entregaEnd}
                 onChange={setEntregaEnd}
                 onSelect={(s: AddressSelection) => {
-                  setEntregaEnd(s.address);
+                  setEntregaEnd(s.endereco);
                   setEntrega({ lat: s.lat ?? null, lng: s.lng ?? null });
                 }}
                 placeholder="Onde entregar"
