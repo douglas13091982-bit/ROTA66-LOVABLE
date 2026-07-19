@@ -19,7 +19,6 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClientesIndexRouteImport } from './routes/clientes.index'
 import { Route as RastreioPedidoIdRouteImport } from './routes/rastreio.$pedidoId'
-import { Route as MotoboyRota66RouteImport } from './routes/motoboy.rota66'
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as ClientesCidadeRouteImport } from './routes/clientes.$cidade'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
@@ -145,11 +144,6 @@ const ClientesIndexRoute = ClientesIndexRouteImport.update({
 const RastreioPedidoIdRoute = RastreioPedidoIdRouteImport.update({
   id: '/rastreio/$pedidoId',
   path: '/rastreio/$pedidoId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MotoboyRota66Route = MotoboyRota66RouteImport.update({
-  id: '/motoboy/rota66',
-  path: '/motoboy/rota66',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LojaSlugRoute = LojaSlugRouteImport.update({
@@ -622,7 +616,6 @@ export interface FileRoutesByFullPath {
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
-  '/motoboy/rota66': typeof MotoboyRota66Route
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -707,7 +700,6 @@ export interface FileRoutesByTo {
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
-  '/motoboy/rota66': typeof MotoboyRota66Route
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes': typeof ClientesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -798,7 +790,6 @@ export interface FileRoutesById {
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
-  '/motoboy/rota66': typeof MotoboyRota66Route
   '/rastreio/$pedidoId': typeof RastreioPedidoIdRoute
   '/clientes/': typeof ClientesIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -889,7 +880,6 @@ export interface FileRouteTypes {
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
-    | '/motoboy/rota66'
     | '/rastreio/$pedidoId'
     | '/clientes/'
     | '/.mcp/invoke-tool/$tool'
@@ -974,7 +964,6 @@ export interface FileRouteTypes {
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
-    | '/motoboy/rota66'
     | '/rastreio/$pedidoId'
     | '/clientes'
     | '/.mcp/invoke-tool/$tool'
@@ -1064,7 +1053,6 @@ export interface FileRouteTypes {
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
-    | '/motoboy/rota66'
     | '/rastreio/$pedidoId'
     | '/clientes/'
     | '/.mcp/invoke-tool/$tool'
@@ -1151,7 +1139,6 @@ export interface RootRouteChildren {
   CSlugRoute: typeof CSlugRoute
   ClientesCidadeRoute: typeof ClientesCidadeRoute
   LojaSlugRoute: typeof LojaSlugRoute
-  MotoboyRota66Route: typeof MotoboyRota66Route
   RastreioPedidoIdRoute: typeof RastreioPedidoIdRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -1234,13 +1221,6 @@ declare module '@tanstack/react-router' {
       path: '/rastreio/$pedidoId'
       fullPath: '/rastreio/$pedidoId'
       preLoaderRoute: typeof RastreioPedidoIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/motoboy/rota66': {
-      id: '/motoboy/rota66'
-      path: '/motoboy/rota66'
-      fullPath: '/motoboy/rota66'
-      preLoaderRoute: typeof MotoboyRota66RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/loja/$slug': {
@@ -2005,7 +1985,6 @@ const rootRouteChildren: RootRouteChildren = {
   CSlugRoute: CSlugRoute,
   ClientesCidadeRoute: ClientesCidadeRoute,
   LojaSlugRoute: LojaSlugRoute,
-  MotoboyRota66Route: MotoboyRota66Route,
   RastreioPedidoIdRoute: RastreioPedidoIdRoute,
   ClientesIndexRoute: ClientesIndexRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,

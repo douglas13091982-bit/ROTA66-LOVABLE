@@ -76,7 +76,6 @@ export function PedidosPage() {
     <LojaShell title="Pedidos">
       <PedidosToolbar
         slug={loja.slug}
-        lojaId={loja.id}
         mostrarArquivados={mostrarArquivados}
         onToggleArquivados={() => setMostrarArquivados((v) => !v)}
       />

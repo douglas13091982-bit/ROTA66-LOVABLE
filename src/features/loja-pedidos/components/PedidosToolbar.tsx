@@ -1,40 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { PlusCircle, Eye, EyeOff, Volume2, VolumeX, Copy, Check } from "lucide-react";
+import { PlusCircle, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
 import {
   isNotificacaoMutada,
   setNotificacaoMutada,
   pararNotificacao,
 } from "@/lib/notificacao-som";
-import { toast } from "sonner";
 
 interface Props {
   slug?: string | null;
-  lojaId?: string | null;
   mostrarArquivados: boolean;
   onToggleArquivados: () => void;
 }
 
-const LOJA_ROTA66_ID = "3b05b069-ac20-4c10-87c9-2dde2977a9ae";
-
-export function PedidosToolbar({ slug, lojaId, mostrarArquivados, onToggleArquivados }: Props) {
+export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: Props) {
   const [mutado, setMutado] = useState<boolean>(() => isNotificacaoMutada());
-  const [copiado, setCopiado] = useState(false);
-
-  const isRota66 = lojaId === LOJA_ROTA66_ID;
-  const linkMotoboy =
-    typeof window !== "undefined" ? `${window.location.origin}/motoboy/rota66` : "/motoboy/rota66";
-
-  const copiarLinkMotoboy = async () => {
-    try {
-      await navigator.clipboard.writeText(linkMotoboy);
-      setCopiado(true);
-      toast.success("Link do motoboy copiado!");
-      setTimeout(() => setCopiado(false), 2000);
-    } catch {
-      toast.error("Não foi possível copiar. Copie manualmente: " + linkMotoboy);
-    }
-  };
 
   useEffect(() => {
     const onChange = (e: Event) => {
@@ -69,16 +49,6 @@ export function PedidosToolbar({ slug, lojaId, mostrarArquivados, onToggleArquiv
         >
           Link público: /loja/{slug}
         </a>
-      )}
-      {isRota66 && (
-        <button
-          onClick={copiarLinkMotoboy}
-          title="Copiar link público de motoboy avulso (/motoboy/rota66)"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-amber-500/50 bg-amber-500/10 text-amber-500 rounded-md hover:bg-amber-500/20 transition-colors"
-        >
-          {copiado ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-          {copiado ? "Link copiado!" : "Copiar link motoboy"}
-        </button>
       )}
       <span className="ml-auto inline-flex items-center gap-2 text-xs text-muted-foreground">
         <span className="relative flex h-2 w-2">
