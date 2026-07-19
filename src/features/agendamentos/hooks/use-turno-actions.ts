@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { notificarTurnoPublicado } from "@/lib/push.functions";
@@ -6,6 +7,7 @@ import { notificarTurnoPublicado } from "@/lib/push.functions";
 
 export function useTurnoActions(turnoId: string, onChange: () => void) {
   const [busy, setBusy] = useState(false);
+  const notificarTurnoPublicadoFn = useServerFn(notificarTurnoPublicado);
 
   async function rpc(fn: string) {
     setBusy(true);
@@ -28,7 +30,7 @@ export function useTurnoActions(turnoId: string, onChange: () => void) {
       toast.success("Turno publicado! Os entregadores externos foram notificados.");
       // Dispara push "Nova Oportunidade Garantida" para todos os entregadores
       // aprovados da cidade da loja (sem bloquear o fluxo em caso de falha).
-      notificarTurnoPublicado({ data: { agendamento_id: turnoId } }).catch((e) => {
+      notificarTurnoPublicadoFn({ data: { agendamento_id: turnoId } }).catch((e) => {
         console.error("[publicar_turno] falha ao enviar push", e);
       });
       onChange();
