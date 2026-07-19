@@ -16,6 +16,22 @@ interface Props {
 
 export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: Props) {
   const [mutado, setMutado] = useState<boolean>(() => isNotificacaoMutada());
+  const [copiado, setCopiado] = useState(false);
+
+  const isRota66 = slug === "rota66";
+  const linkMotoboy =
+    typeof window !== "undefined" ? `${window.location.origin}/motoboy/rota66` : "/motoboy/rota66";
+
+  const copiarLinkMotoboy = async () => {
+    try {
+      await navigator.clipboard.writeText(linkMotoboy);
+      setCopiado(true);
+      toast.success("Link do motoboy copiado!");
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      toast.error("Não foi possível copiar. Copie manualmente: " + linkMotoboy);
+    }
+  };
 
   useEffect(() => {
     const onChange = (e: Event) => {
