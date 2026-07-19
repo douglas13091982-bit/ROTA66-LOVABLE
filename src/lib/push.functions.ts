@@ -61,7 +61,7 @@ export const enviarPushTeste = createServerFn({ method: "POST" })
 /**
  * Notifica todos os entregadores externos aprovados sobre um novo turno
  * publicado por uma loja. Deve ser chamado logo após `publicar_turno` ter
- * sucesso. Restringe pela cidade da loja quando ela possui city_id.
+ * sucesso e usa os mesmos destinatários gravados em `agendamento_ofertas`.
  */
 export const notificarTurnoPublicado = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
