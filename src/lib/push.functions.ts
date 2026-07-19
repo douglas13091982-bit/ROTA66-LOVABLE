@@ -73,7 +73,7 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Carrega o turno e a loja
-    const { data: turno, error: errTurno } = await supabase
+    const { data: turno, error: errTurno } = await supabaseAdmin
       .from("agendamentos" as any)
       .select("id, loja_id, data_turno, hora_inicio, valor_por_hora, taxa_por_entrega, duracao_horas")
       .eq("id", data.agendamento_id)
@@ -82,38 +82,36 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
 
     const { data: loja } = await supabaseAdmin
       .from("lojas")
-      .select("id, nome, city_id, owner_user_id")
+      .select("id, nome, city_id, owner_id")
       .eq("id", (turno as any).loja_id)
       .maybeSingle();
     if (!loja) throw new Error("Loja não encontrada");
 
-    // Segurança: apenas dono da loja (a RPC publicar_turno já valida via RLS,
-    // mas mantemos o check aqui também).
-    if ((loja as any).owner_user_id !== userId) {
+    // Segurança: apenas dono da loja, super admin ou funcionário ativo da loja.
+    if ((loja as any).owner_id !== userId) {
       const { data: isSuper } = await supabase.rpc("has_role", {
         _user_id: userId,
         _role: "super_admin",
       });
-      if (!isSuper) throw new Error("Sem permissão");
+      if (!isSuper) {
+        const { data: funcionario } = await supabaseAdmin
+          .from("loja_funcionarios" as any)
+          .select("id")
+          .eq("loja_id", (turno as any).loja_id)
+          .eq("user_id", userId)
+          .eq("ativo", true)
+          .maybeSingle();
+        if (!funcionario) throw new Error("Sem permissão");
+      }
     }
 
-    // Pool alvo: entregadores aprovados que aceitam pedidos externos.
-    // Restringe pela cidade da loja se houver.
-    const { data: roles } = await supabaseAdmin
-      .from("user_roles")
-      .select("user_id")
-      .eq("role", "entregador");
-    const entregadorIds = (roles ?? []).map((r: any) => r.user_id);
-    if (entregadorIds.length === 0) return { sent: 0, destinatarios: 0 };
-
-    let q = supabaseAdmin
-      .from("profiles")
-      .select("id, city_id, aceita_pedidos_externos")
-      .in("id", entregadorIds)
-      .eq("aceita_pedidos_externos", true);
-    if ((loja as any).city_id) q = q.eq("city_id", (loja as any).city_id);
-    const { data: profs } = await q;
-    const alvos = (profs ?? []).map((p: any) => p.id);
+    // Pool alvo: exatamente os entregadores que receberam oferta do turno
+    // na RPC publicar_turno. Assim o push acompanha a mesma regra do pool.
+    const { data: ofertas } = await supabaseAdmin
+      .from("agendamento_ofertas" as any)
+      .select("entregador_id")
+      .eq("agendamento_id", data.agendamento_id);
+    const alvos = Array.from(new Set((ofertas ?? []).map((o: any) => o.entregador_id).filter(Boolean)));
     if (alvos.length === 0) return { sent: 0, destinatarios: 0 };
 
     const { data: cfgRow } = await supabaseAdmin
@@ -143,6 +141,32 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
     const body = `${nomeLoja} publicou um turno em ${dataFmt} às ${horaFmt} — R$ ${valorHora.toFixed(2)}/h. Corra e garanta o seu!`;
     const linkFinal = "/entregador/turnos";
     const tag = `turno-${(turno as any).id}`;
+
+    const { data: profs } = await supabaseAdmin
+      .from("profiles")
+      .select("id, full_name")
+      .in("id", alvos);
+    const nomes = new Map<string, string>((profs ?? []).map((p: any) => [p.id, p.full_name || ""]));
+
+    const logRows = alvos.map((uid) => ({
+      sender_user_id: userId,
+      user_id: uid,
+      entregador_nome: nomes.get(uid) || null,
+      title,
+      body,
+      url: linkFinal,
+      tag,
+      status: "pending",
+    }));
+    if (logRows.length) {
+      const { error: logErr } = await supabaseAdmin.from("push_admin_logs" as any).insert(logRows);
+      if (logErr) console.error("[turno-push] insert log falhou", logErr);
+    }
+
+    console.log(
+      "[turno-push] disparo",
+      JSON.stringify({ turno_id: (turno as any).id, tag, destinatarios: alvos.length }),
+    );
 
     let sent = 0;
     const CONC = 10;

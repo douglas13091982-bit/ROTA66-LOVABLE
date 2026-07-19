@@ -56,6 +56,22 @@ export const Route = createFileRoute("/api/public/send-push")({
           return new Response("db error", { status: 500 });
         }
         if (!subs || subs.length === 0) {
+          if (payload.tag) {
+            try {
+              await supabaseAdmin
+                .from("push_admin_logs" as any)
+                .update({
+                  sent: 0,
+                  http_status: null,
+                  error: "Nenhum dispositivo com push ativo para este entregador",
+                  status: "sem_dispositivo",
+                })
+                .eq("tag", payload.tag)
+                .eq("user_id", payload.user_id);
+            } catch (e) {
+              console.error("[send-push] log sem dispositivo failed", e);
+            }
+          }
           return Response.json({ sent: 0 });
         }
 
