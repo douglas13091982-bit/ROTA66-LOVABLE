@@ -73,7 +73,7 @@ export function CriarLojaDialog({ open, onClose, onCreated }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-8 sm:pt-16 overflow-y-auto">
       <div className="w-full max-w-md bg-card border border-border rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-card">
           <div className="flex items-center gap-2">
