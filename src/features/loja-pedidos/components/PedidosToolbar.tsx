@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { PlusCircle, Eye, EyeOff, Volume2, VolumeX } from "lucide-react";
+import { PlusCircle, Eye, EyeOff, Volume2, VolumeX, Copy, Check } from "lucide-react";
 import {
   isNotificacaoMutada,
   setNotificacaoMutada,
   pararNotificacao,
 } from "@/lib/notificacao-som";
+import { toast } from "sonner";
 
 interface Props {
   slug?: string | null;
