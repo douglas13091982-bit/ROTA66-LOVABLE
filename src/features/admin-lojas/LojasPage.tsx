@@ -68,6 +68,12 @@ export function LojasPage() {
           onRemove={remove}
         />
       )}
+
+      <CriarLojaDialog
+        open={criarOpen}
+        onClose={() => setCriarOpen(false)}
+        onCreated={invalidate}
+      />
     </AdminShell>
   );
 }
