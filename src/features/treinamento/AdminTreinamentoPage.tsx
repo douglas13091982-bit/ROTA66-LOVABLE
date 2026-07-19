@@ -155,19 +155,6 @@ export function AdminTreinamentoPage() {
             </label>
           </div>
 
-          <label className="flex items-start gap-2 rounded-md border border-yellow-500/30 bg-yellow-500/[0.06] p-3">
-            <input
-              type="checkbox"
-              checked={form.onboarding_entregador}
-              onChange={(e) => setForm((s) => ({ ...s, onboarding_entregador: e.target.checked }))}
-              className="h-4 w-4 mt-0.5"
-            />
-            <span className="text-[12px] text-white/80 leading-snug">
-              <b className="text-yellow-300">Vídeo obrigatório do entregador</b> — será exibido antes do
-              botão de baixar o APK e o entregador precisa assistir antes de baixar.
-              Ative apenas em <b>um</b> vídeo por vez (o primeiro ativo será usado).
-            </span>
-          </label>
 
           {previewEmbed && (
             <div className="aspect-video w-full rounded-md overflow-hidden border border-white/10 bg-black">
@@ -208,12 +195,8 @@ export function AdminTreinamentoPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <div className="text-[13px] font-semibold text-white truncate">{v.titulo}</div>
-                      {v.onboarding_entregador && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-300 uppercase font-bold">
-                          Onboarding entregador
-                        </span>
-                      )}
                       {!v.ativo && (
+
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/60 uppercase">
                           Inativo
                         </span>
