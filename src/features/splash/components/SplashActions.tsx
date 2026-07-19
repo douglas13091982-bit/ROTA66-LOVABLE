@@ -6,7 +6,7 @@ export function SplashActions() {
     <div className="w-full max-w-sm space-y-3 animate-[fadeUp_1300ms_ease-out_both]">
       <Link
         to="/clientes"
-        className="flex items-center justify-center gap-3 w-full text-center bg-[#bb1010]/85 shadow-elevated rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] hover:bg-[#bb1010] hover:shadow-red hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 ease-premium"
+        className="animate-cta-pulse flex items-center justify-center gap-3 w-full text-center bg-[#bb1010]/85 shadow-elevated rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] hover:bg-[#bb1010] hover:shadow-red hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 ease-premium"
       >
         <ShoppingBag className="h-5 w-5" />
         PEÇA AGORA
