@@ -1,4 +1,4 @@
-import { Bike, Car, Zap } from "lucide-react";
+import { Bike, Car, Zap, Check } from "lucide-react";
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits } from "@/lib/sanitize";
 import { useCidades } from "@/hooks/use-cidades";
@@ -76,21 +76,42 @@ export function EntregadorFields({
           Tipo de veículo <span className="text-destructive">*</span>
         </span>
         <div className="grid grid-cols-3 gap-2">
-          {VEICULOS.map(({ value, label, Icon, desc }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setTipoVeiculo(value)}
-              className={`p-3 rounded-md border-2 text-center transition-all ${
-                tipoVeiculo === value ? "border-primary bg-primary/10 shadow-red" : "border-border hover:border-primary/50"
-              }`}
-              title={desc}
-            >
-              <Icon className={`h-6 w-6 mx-auto mb-1 ${tipoVeiculo === value ? "text-primary" : "text-muted-foreground"}`} />
-              <div className="font-display text-sm tracking-wide">{label}</div>
-              <div className="text-[10px] text-muted-foreground mt-0.5">{desc}</div>
-            </button>
-          ))}
+          {VEICULOS.map(({ value, label, Icon, desc }) => {
+            const selected = tipoVeiculo === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setTipoVeiculo(value)}
+                aria-pressed={selected}
+                className={`relative p-3 rounded-lg border-2 text-center transition-all duration-200 ${
+                  selected
+                    ? "border-primary bg-primary/15 shadow-[0_0_0_3px_hsl(var(--primary)/0.25)] scale-[1.03] ring-2 ring-primary/40"
+                    : "border-border/70 bg-background/40 hover:border-primary/50 hover:bg-primary/5 opacity-80"
+                }`}
+                title={desc}
+              >
+                {selected && (
+                  <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md">
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                  </span>
+                )}
+                <Icon
+                  className={`h-7 w-7 mx-auto mb-1 transition-colors ${
+                    selected ? "text-primary" : "text-muted-foreground"
+                  }`}
+                />
+                <div
+                  className={`font-display text-sm tracking-wide ${
+                    selected ? "text-primary font-bold" : "text-foreground"
+                  }`}
+                >
+                  {label}
+                </div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">{desc}</div>
+              </button>
+            );
+          })}
         </div>
       </div>
       <AvatarUpload file={avatarFile} preview={avatarPreview} onChange={onAvatarChange} />
