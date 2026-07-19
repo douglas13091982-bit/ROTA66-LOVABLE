@@ -8,7 +8,7 @@ export function useLojaPublica(slug: string) {
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("lojas_publicas")
-        .select("id, nome, slug, telefone, endereco, cidade, estado, logo_url, taxa_entrega_base, ativa")
+        .select("id, nome, slug, telefone, endereco, endereco_lat, endereco_lng, cidade, estado, logo_url, taxa_entrega_base, ativa")
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;

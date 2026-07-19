@@ -7,6 +7,20 @@ interface Props {
 }
 
 export function PedidoFormSection({ loja, onSuccess }: Props) {
+  const enderecoMatriz = (loja.endereco ?? "").trim();
+  const enderecosColetaSalvos = enderecoMatriz
+    ? [
+        {
+          id: "__matriz__",
+          rotulo: "Matriz",
+          endereco: enderecoMatriz,
+          lat: loja.endereco_lat ?? null,
+          lng: loja.endereco_lng ?? null,
+          padrao: true,
+        },
+      ]
+    : [];
+
   return (
     <main className="max-w-2xl mx-auto p-6">
       <div className="mb-5">
@@ -19,7 +33,8 @@ export function PedidoFormSection({ loja, onSuccess }: Props) {
         <PedidoForm
           lojaId={loja.id}
           taxaBase={Number(loja.taxa_entrega_base) || 0}
-          enderecoColetaPadrao={loja.endereco ?? ""}
+          enderecoColetaPadrao={enderecoMatriz}
+          enderecosColetaSalvos={enderecosColetaSalvos}
           asCliente
           onSuccess={onSuccess}
         />
