@@ -1,4 +1,4 @@
-import roadBg from "@/assets/splash-road.png";
+import roadBg from "@/assets/splash-road.webp";
 import roadBgDesktop from "@/assets/estrada-desktop.png.asset.json";
 
 export function SplashBackground() {
