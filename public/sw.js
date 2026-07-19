@@ -1,12 +1,36 @@
 // Service Worker do ROTA 66 — fornece o handler `fetch` necessário para que
 // o navegador considere o site instalável (beforeinstallprompt) e também
-// recebe Web Push. Não faz cache agressivo: passa toda navegação pela rede e
-// só faz fallback básico para assets estáticos, evitando servir HTML antigo.
+// recebe Web Push. Estratégia:
+// - HTML/navegação: network-first com timeout de 3s (fallback pro cache);
+// - Assets estáticos com hash: stale-while-revalidate;
+// - Precache de ícones e recursos críticos no install para reduzir tempo
+//   até o primeiro pixel quando o TWA abre offline/lento.
 
-const CACHE = "rota66-runtime-v1";
+const CACHE = "rota66-runtime-v2";
+const PRECACHE_URLS = [
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/notification-icon.webp",
+  "/icons/badge-72.png",
+];
+const NAV_TIMEOUT_MS = 3000;
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
+  event.waitUntil(
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE);
+        await Promise.allSettled(
+          PRECACHE_URLS.map((url) =>
+            fetch(url, { cache: "reload" })
+              .then((res) => (res.ok ? cache.put(url, res.clone()) : null))
+              .catch(() => null)
+          )
+        );
+      } catch {}
+    })()
+  );
 });
 
 self.addEventListener("activate", (event) => {
@@ -21,6 +45,22 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function networkWithTimeout(request, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout")), timeoutMs);
+    fetch(request).then(
+      (res) => {
+        clearTimeout(timer);
+        resolve(res);
+      },
+      (err) => {
+        clearTimeout(timer);
+        reject(err);
+      }
+    );
+  });
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
@@ -28,9 +68,21 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // HTML / navegação: sempre rede primeiro (sem cache de HTML)
+  // HTML / navegação: rede primeiro com timeout de 3s, fallback pro cache
   if (req.mode === "navigate") {
-    event.respondWith(fetch(req).catch(() => caches.match(req)));
+    event.respondWith(
+      (async () => {
+        try {
+          const res = await networkWithTimeout(req, NAV_TIMEOUT_MS);
+          return res;
+        } catch {
+          const cached = await caches.match(req);
+          if (cached) return cached;
+          // último recurso: tenta rede sem timeout
+          return fetch(req);
+        }
+      })()
+    );
     return;
   }
 
