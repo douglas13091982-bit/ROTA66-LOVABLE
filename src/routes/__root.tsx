@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/use-auth";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { AndroidApkRedirect } from "@/components/AndroidApkRedirect";
 import { registerAppServiceWorker } from "@/lib/register-sw";
 
 import appCss from "../styles.css?url";
@@ -92,6 +93,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Outlet />
+        <AndroidApkRedirect />
         <InstallPrompt />
         <Toaster theme="dark" position="top-right" richColors />
       </AuthProvider>
