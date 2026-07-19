@@ -264,7 +264,7 @@ function MotoboyRota66Page() {
                 value={coletaEnd}
                 onChange={setColetaEnd}
                 onSelect={(s: AddressSelection) => {
-                  setColetaEnd(s.address);
+                  setColetaEnd(s.endereco);
                   setColeta({ lat: s.lat ?? null, lng: s.lng ?? null });
                 }}
                 placeholder="Onde o motoboy vai buscar"
