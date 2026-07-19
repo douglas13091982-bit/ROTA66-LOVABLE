@@ -1,4 +1,4 @@
-import { Bike, Car, Zap } from "lucide-react";
+import { Bike, Car, Zap, Check } from "lucide-react";
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits } from "@/lib/sanitize";
 import { useCidades } from "@/hooks/use-cidades";
