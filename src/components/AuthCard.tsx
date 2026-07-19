@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { useBranding } from "@/hooks/use-branding";
-import roadBg from "@/assets/splash-road.png";
+import roadBg from "@/assets/splash-road.webp";
 import roadBgDesktop from "@/assets/estrada-desktop.png.asset.json";
 
 export function AuthCard({ title, subtitle, children, footer }: {

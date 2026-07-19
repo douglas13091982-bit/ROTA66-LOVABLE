@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import fallbackLogo from "@/assets/rota66-logo.png";
+import fallbackLogo from "@/assets/rota66-logo.webp";
 
 export type Branding = {
   id?: string;

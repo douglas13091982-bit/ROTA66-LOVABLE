@@ -63,7 +63,7 @@ self.addEventListener("push", (event) => {
   const title = data.title || "🚨 Nova entrega disponível";
   const options = {
     body: data.body || "Toque para ver os pedidos disponíveis.",
-    icon: "/icons/notification-icon.png",
+    icon: "/icons/notification-icon.webp",
     badge: "/icons/badge-72.png",
     vibrate: [200, 80, 200],
     tag: data.tag || fallbackTag,

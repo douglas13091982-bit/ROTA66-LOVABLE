@@ -1,28 +1,28 @@
 import { useLojaCategorias } from "@/hooks/use-loja-categorias";
 import { getCategoriaIcon } from "@/lib/categoria-icons";
 
-import iconRestaurante from "@/assets/categorias/restaurante.png";
-import iconLanchonete from "@/assets/categorias/lanchonete.png";
-import iconPizzaria from "@/assets/categorias/pizzaria.png";
-import iconSorveteria from "@/assets/categorias/sorveteria.png";
-import iconDoceria from "@/assets/categorias/doceria.png";
-import iconPadaria from "@/assets/categorias/padaria.png";
-import iconAcougue from "@/assets/categorias/acougue.png";
-import iconHortifruti from "@/assets/categorias/hortifruti.png";
-import iconMercado from "@/assets/categorias/mercado.png";
-import iconConveniencia from "@/assets/categorias/conveniencia.png";
-import iconBebidas from "@/assets/categorias/bebidas.png";
-import iconFarmacia from "@/assets/categorias/farmacia.png";
-import iconPetShop from "@/assets/categorias/pet_shop.png";
-import iconAutoPecas from "@/assets/categorias/auto_pecas.png";
-import iconMotoPecas from "@/assets/categorias/moto_pecas.png";
-import iconRoupas from "@/assets/categorias/roupas.png";
-import iconCalcados from "@/assets/categorias/calcados.png";
-import iconConstrucao from "@/assets/categorias/material_construcao.png";
-import iconEletronicos from "@/assets/categorias/eletronicos.png";
-import iconFloricultura from "@/assets/categorias/floricultura.png";
-import iconLivraria from "@/assets/categorias/livraria.png";
-import iconOutros from "@/assets/categorias/outros.png";
+import iconRestaurante from "@/assets/categorias/restaurante.webp";
+import iconLanchonete from "@/assets/categorias/lanchonete.webp";
+import iconPizzaria from "@/assets/categorias/pizzaria.webp";
+import iconSorveteria from "@/assets/categorias/sorveteria.webp";
+import iconDoceria from "@/assets/categorias/doceria.webp";
+import iconPadaria from "@/assets/categorias/padaria.webp";
+import iconAcougue from "@/assets/categorias/acougue.webp";
+import iconHortifruti from "@/assets/categorias/hortifruti.webp";
+import iconMercado from "@/assets/categorias/mercado.webp";
+import iconConveniencia from "@/assets/categorias/conveniencia.webp";
+import iconBebidas from "@/assets/categorias/bebidas.webp";
+import iconFarmacia from "@/assets/categorias/farmacia.webp";
+import iconPetShop from "@/assets/categorias/pet_shop.webp";
+import iconAutoPecas from "@/assets/categorias/auto_pecas.webp";
+import iconMotoPecas from "@/assets/categorias/moto_pecas.webp";
+import iconRoupas from "@/assets/categorias/roupas.webp";
+import iconCalcados from "@/assets/categorias/calcados.webp";
+import iconConstrucao from "@/assets/categorias/material_construcao.webp";
+import iconEletronicos from "@/assets/categorias/eletronicos.webp";
+import iconFloricultura from "@/assets/categorias/floricultura.webp";
+import iconLivraria from "@/assets/categorias/livraria.webp";
+import iconOutros from "@/assets/categorias/outros.webp";
 
 const ICONS: Record<string, string> = {
   restaurante: iconRestaurante,
