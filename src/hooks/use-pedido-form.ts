@@ -30,6 +30,7 @@ type Args = {
   enderecoColetaPadrao: string;
   enderecosColetaSalvos: EnderecoColetaSalvo[];
   asCliente: boolean;
+  bonusPadrao?: number;
   onSuccess?: (numero: number) => void;
 };
 
