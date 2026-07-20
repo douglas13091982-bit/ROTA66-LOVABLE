@@ -19,6 +19,7 @@ type Props = {
   taxaBase: number;
   enderecoColetaPadrao?: string;
   enderecosColetaSalvos?: EnderecoColetaSalvo[];
+  bonusPadrao?: number;
   onSuccess?: (numero: number) => void;
   /** true = cliente final (anon); false = loja registrando manualmente */
   asCliente?: boolean;
@@ -29,6 +30,7 @@ export function PedidoForm({
   taxaBase,
   enderecoColetaPadrao = "",
   enderecosColetaSalvos = [],
+  bonusPadrao = 0,
   onSuccess,
   asCliente = false,
 }: Props) {
@@ -38,6 +40,7 @@ export function PedidoForm({
     enderecoColetaPadrao,
     enderecosColetaSalvos,
     asCliente,
+    bonusPadrao,
     onSuccess,
   });
 

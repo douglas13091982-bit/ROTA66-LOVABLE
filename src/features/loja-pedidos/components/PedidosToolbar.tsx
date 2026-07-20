@@ -6,14 +6,25 @@ import {
   setNotificacaoMutada,
   pararNotificacao,
 } from "@/lib/notificacao-som";
+import { BonusEntregadorToggle } from "./BonusEntregadorToggle";
 
 interface Props {
   slug?: string | null;
+  lojaId?: string;
+  bonusAtivo?: boolean;
+  bonusValor?: number;
   mostrarArquivados: boolean;
   onToggleArquivados: () => void;
 }
 
-export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: Props) {
+export function PedidosToolbar({
+  slug,
+  lojaId,
+  bonusAtivo = false,
+  bonusValor = 0,
+  mostrarArquivados,
+  onToggleArquivados,
+}: Props) {
   const [mutado, setMutado] = useState<boolean>(() => isNotificacaoMutada());
 
   useEffect(() => {
@@ -57,6 +68,13 @@ export function PedidosToolbar({ slug, mostrarArquivados, onToggleArquivados }: 
         </span>
         Tempo real
       </span>
+      {lojaId && (
+        <BonusEntregadorToggle
+          lojaId={lojaId}
+          initialAtivo={bonusAtivo}
+          initialValor={bonusValor}
+        />
+      )}
       <button
         onClick={toggleMute}
         title={mutado ? "Som silenciado — clique para reativar" : "Silenciar som de novos pedidos"}
