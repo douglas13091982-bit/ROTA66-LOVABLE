@@ -72,6 +72,7 @@ export function usePedidoForm({
   enderecoColetaPadrao,
   enderecosColetaSalvos,
   asCliente,
+  bonusPadrao = 0,
   onSuccess,
 }: Args) {
   const qc = useQueryClient();
