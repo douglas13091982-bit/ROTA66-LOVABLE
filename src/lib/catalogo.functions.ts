@@ -67,7 +67,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const ids = Array.from(new Set(data.itens.map((i) => i.produto_id)));
     const { data: produtos, error: prodErr } = await supabaseAdmin
       .from("produtos")
-      .select("id, nome, preco, preco_promocional, ativo, loja_id")
+      .select("id, nome, preco, preco_promocional, preco_promocional_ate, ativo, loja_id")
       .in("id", ids);
     if (prodErr) throw new Error(prodErr.message);
 
