@@ -1469,6 +1469,8 @@ export type Database = {
           ativa: boolean
           avulsa_plataforma: boolean
           bairro: string | null
+          bonus_entregador_ativo: boolean
+          bonus_entregador_valor: number
           catalogo_ativo: boolean
           catalogo_layout: string
           catalogo_slug: string | null
@@ -1507,6 +1509,8 @@ export type Database = {
           ativa?: boolean
           avulsa_plataforma?: boolean
           bairro?: string | null
+          bonus_entregador_ativo?: boolean
+          bonus_entregador_valor?: number
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
@@ -1545,6 +1549,8 @@ export type Database = {
           ativa?: boolean
           avulsa_plataforma?: boolean
           bairro?: string | null
+          bonus_entregador_ativo?: boolean
+          bonus_entregador_valor?: number
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
