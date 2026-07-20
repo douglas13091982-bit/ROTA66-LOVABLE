@@ -1,4 +1,4 @@
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, promoAtiva, type Produto } from "@/routes/-catalogo-types";
 import { AddButton, QtyStepper } from "./QtyStepper";
 
 type Props = {
