@@ -11,6 +11,7 @@ export type ConfigForm = {
   catalogo_layout: "cards" | "lista";
   categoria: LojaCategoria | "";
   usar_horario_automatico: boolean;
+  city_id: string;
 };
 
 export const DEFAULT_FORM: ConfigForm = {
@@ -22,4 +23,5 @@ export const DEFAULT_FORM: ConfigForm = {
   catalogo_layout: "cards",
   categoria: "",
   usar_horario_automatico: false,
+  city_id: "",
 };

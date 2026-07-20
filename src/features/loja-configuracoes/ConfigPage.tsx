@@ -4,6 +4,7 @@ import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { CatalogoLayoutPicker } from "./components/CatalogoLayoutPicker";
 import { CategoriaSelect } from "./components/CategoriaSelect";
+import { CidadeSelect } from "./components/CidadeSelect";
 import { EnderecoMatriz } from "./components/EnderecoMatriz";
 import { Field } from "./components/Field";
 import { HorarioFuncionamentoEditor } from "./components/HorarioFuncionamentoEditor";
@@ -57,6 +58,11 @@ export function ConfigPage() {
         <CategoriaSelect
           value={form.categoria}
           onChange={(v) => setForm({ ...form, categoria: v })}
+        />
+
+        <CidadeSelect
+          value={form.city_id}
+          onChange={(v) => setForm({ ...form, city_id: v })}
         />
 
         <LogoUploader

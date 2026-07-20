@@ -33,6 +33,7 @@ export function useConfigLoja(loja: any | undefined) {
       catalogo_layout: loja.catalogo_layout ?? "cards",
       categoria: (loja.categoria ?? "") as LojaCategoria | "",
       usar_horario_automatico: !!loja.usar_horario_automatico,
+      city_id: loja.city_id ?? "",
     });
     const h = loja.horario_funcionamento;
     setHorario(h && typeof h === "object" && Object.keys(h).length ? h : HORARIO_PADRAO);
@@ -74,7 +75,17 @@ export function useConfigLoja(loja: any | undefined) {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!loja) return;
+    if (!form.city_id) {
+      toast.error("Selecione a cidade da loja");
+      return;
+    }
     setSaving(true);
+    // Busca nome/uf da cidade para manter os campos texto sincronizados.
+    const { data: cidadeRow } = await (supabase as any)
+      .from("cidades")
+      .select("nome, uf")
+      .eq("id", form.city_id)
+      .maybeSingle();
     const { error } = await supabase
       .from("lojas")
       .update({
@@ -90,6 +101,9 @@ export function useConfigLoja(loja: any | undefined) {
         categoria: form.categoria || null,
         usar_horario_automatico: true,
         horario_funcionamento: horario,
+        city_id: form.city_id,
+        cidade: cidadeRow?.nome ?? undefined,
+        estado: cidadeRow?.uf ?? undefined,
       } as any)
       .eq("id", loja.id);
     setSaving(false);
