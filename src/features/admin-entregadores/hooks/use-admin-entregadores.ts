@@ -81,10 +81,19 @@ export function useAdminEntregadores() {
     }
 
 
+    if (status === "aprovado") {
+      try {
+        await notificarEntregadorAprovado({ data: { entregador_id } });
+      } catch (e) {
+        console.error("[notificar-aprovado] falhou", e);
+      }
+    }
+
     toast.success(status === "aprovado" ? "Entregador aprovado" : "Entregador bloqueado");
     invalidate();
 
   };
+
 
   const remove = async (entregador_id: string, nome: string) => {
     if (
