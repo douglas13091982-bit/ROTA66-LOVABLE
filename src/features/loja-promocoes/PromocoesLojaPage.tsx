@@ -22,6 +22,41 @@ export function PromocoesLojaPage() {
   const [body, setBody] = useState("");
   const [url, setUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [produtoId, setProdutoId] = useState<string>("");
+  const [produtoQuery, setProdutoQuery] = useState("");
+
+  const { data: produtos = [] } = useProdutosCatalogo(loja?.id, true);
+  const produtoSelecionado = useMemo(
+    () => produtos.find((p) => p.id === produtoId) || null,
+    [produtos, produtoId],
+  );
+  const produtosFiltrados = useMemo(() => {
+    const q = produtoQuery.trim().toLowerCase();
+    const base = produtos.slice(0, 100);
+    if (!q) return base.slice(0, 20);
+    return base.filter((p) => p.nome.toLowerCase().includes(q)).slice(0, 20);
+  }, [produtos, produtoQuery]);
+
+  function escolherProduto(p: (typeof produtos)[number]) {
+    setProdutoId(p.id);
+    setProdutoQuery("");
+    if (!title.trim()) {
+      const preco = Number(p.preco).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      setTitle(`🔥 ${p.nome} por ${preco}`.slice(0, 80));
+    }
+    if (!body.trim() && p.descricao) {
+      setBody(p.descricao.slice(0, 300));
+    }
+    if (p.imagem_url) setImageUrl(p.imagem_url);
+  }
+
+  function limparProduto() {
+    setProdutoId("");
+    setImageUrl("");
+  }
 
   const { data: historico = [], isLoading } = useQuery({
     queryKey: ["promocoes-loja", loja?.id],
