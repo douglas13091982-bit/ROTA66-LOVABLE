@@ -5,6 +5,7 @@ import { CidadeHero } from "./components/CidadeHero";
 import { CategoriasFiltro } from "./components/CategoriasFiltro";
 import { LojasList } from "./components/LojasList";
 import { BottomNavCliente } from "./components/BottomNavCliente";
+import { AtivarPushClienteBanner } from "./components/AtivarPushClienteBanner";
 
 interface Props {
   cidade: string;
@@ -32,6 +33,7 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pt-5">
+        <AtivarPushClienteBanner />
         <LojasList lojas={filtradas} isLoading={isLoading} cidade={cidade} />
       </main>
 

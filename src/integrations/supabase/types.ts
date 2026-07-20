@@ -2696,6 +2696,89 @@ export type Database = {
           },
         ]
       }
+      promocoes_lojas: {
+        Row: {
+          body: string
+          cidade_nome: string | null
+          city_id: string | null
+          created_at: string
+          created_by: string
+          destinatarios: number
+          enviada_at: string | null
+          erro: string | null
+          id: string
+          image_url: string | null
+          loja_id: string
+          sent: number
+          status: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          body: string
+          cidade_nome?: string | null
+          city_id?: string | null
+          created_at?: string
+          created_by: string
+          destinatarios?: number
+          enviada_at?: string | null
+          erro?: string | null
+          id?: string
+          image_url?: string | null
+          loja_id: string
+          sent?: number
+          status?: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          body?: string
+          cidade_nome?: string | null
+          city_id?: string | null
+          created_at?: string
+          created_by?: string
+          destinatarios?: number
+          enviada_at?: string | null
+          erro?: string | null
+          id?: string
+          image_url?: string | null
+          loja_id?: string
+          sent?: number
+          status?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promocoes_lojas_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cidades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promocoes_lojas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promocoes_lojas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promocoes_lojas_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_admin_logs: {
         Row: {
           body: string

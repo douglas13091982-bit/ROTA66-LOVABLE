@@ -45,6 +45,7 @@ import { Route as AuthenticatedRevendedorGanhosRouteImport } from './routes/_aut
 import { Route as AuthenticatedRevendedorCobrancasRouteImport } from './routes/_authenticated/revendedor/cobrancas'
 import { Route as AuthenticatedLojaTreinamentoRouteImport } from './routes/_authenticated/loja/treinamento'
 import { Route as AuthenticatedLojaSuporteRouteImport } from './routes/_authenticated/loja/suporte'
+import { Route as AuthenticatedLojaPromocoesRouteImport } from './routes/_authenticated/loja/promocoes'
 import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authenticated/loja/produtos'
 import { Route as AuthenticatedLojaPedidosRouteImport } from './routes/_authenticated/loja/pedidos'
 import { Route as AuthenticatedLojaNovoPedidoRouteImport } from './routes/_authenticated/loja/novo-pedido'
@@ -290,6 +291,12 @@ const AuthenticatedLojaSuporteRoute =
   AuthenticatedLojaSuporteRouteImport.update({
     id: '/suporte',
     path: '/suporte',
+    getParentRoute: () => AuthenticatedLojaRouteRoute,
+  } as any)
+const AuthenticatedLojaPromocoesRoute =
+  AuthenticatedLojaPromocoesRouteImport.update({
+    id: '/promocoes',
+    path: '/promocoes',
     getParentRoute: () => AuthenticatedLojaRouteRoute,
   } as any)
 const AuthenticatedLojaProdutosRoute =
@@ -667,6 +674,7 @@ export interface FileRoutesByFullPath {
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
+  '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
@@ -751,6 +759,7 @@ export interface FileRoutesByTo {
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
+  '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
@@ -841,6 +850,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/_authenticated/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/_authenticated/loja/produtos': typeof AuthenticatedLojaProdutosRoute
+  '/_authenticated/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/_authenticated/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/_authenticated/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
   '/_authenticated/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
@@ -931,6 +941,7 @@ export interface FileRouteTypes {
     | '/loja/novo-pedido'
     | '/loja/pedidos'
     | '/loja/produtos'
+    | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
     | '/revendedor/cobrancas'
@@ -1015,6 +1026,7 @@ export interface FileRouteTypes {
     | '/loja/novo-pedido'
     | '/loja/pedidos'
     | '/loja/produtos'
+    | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
     | '/revendedor/cobrancas'
@@ -1104,6 +1116,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/novo-pedido'
     | '/_authenticated/loja/pedidos'
     | '/_authenticated/loja/produtos'
+    | '/_authenticated/loja/promocoes'
     | '/_authenticated/loja/suporte'
     | '/_authenticated/loja/treinamento'
     | '/_authenticated/revendedor/cobrancas'
@@ -1403,6 +1416,13 @@ declare module '@tanstack/react-router' {
       path: '/suporte'
       fullPath: '/loja/suporte'
       preLoaderRoute: typeof AuthenticatedLojaSuporteRouteImport
+      parentRoute: typeof AuthenticatedLojaRouteRoute
+    }
+    '/_authenticated/loja/promocoes': {
+      id: '/_authenticated/loja/promocoes'
+      path: '/promocoes'
+      fullPath: '/loja/promocoes'
+      preLoaderRoute: typeof AuthenticatedLojaPromocoesRouteImport
       parentRoute: typeof AuthenticatedLojaRouteRoute
     }
     '/_authenticated/loja/produtos': {
@@ -1888,6 +1908,7 @@ interface AuthenticatedLojaRouteRouteChildren {
   AuthenticatedLojaNovoPedidoRoute: typeof AuthenticatedLojaNovoPedidoRoute
   AuthenticatedLojaPedidosRoute: typeof AuthenticatedLojaPedidosRoute
   AuthenticatedLojaProdutosRoute: typeof AuthenticatedLojaProdutosRoute
+  AuthenticatedLojaPromocoesRoute: typeof AuthenticatedLojaPromocoesRoute
   AuthenticatedLojaSuporteRoute: typeof AuthenticatedLojaSuporteRoute
   AuthenticatedLojaTreinamentoRoute: typeof AuthenticatedLojaTreinamentoRoute
   AuthenticatedLojaIndexRoute: typeof AuthenticatedLojaIndexRoute
@@ -1905,6 +1926,7 @@ const AuthenticatedLojaRouteRouteChildren: AuthenticatedLojaRouteRouteChildren =
     AuthenticatedLojaNovoPedidoRoute: AuthenticatedLojaNovoPedidoRoute,
     AuthenticatedLojaPedidosRoute: AuthenticatedLojaPedidosRoute,
     AuthenticatedLojaProdutosRoute: AuthenticatedLojaProdutosRoute,
+    AuthenticatedLojaPromocoesRoute: AuthenticatedLojaPromocoesRoute,
     AuthenticatedLojaSuporteRoute: AuthenticatedLojaSuporteRoute,
     AuthenticatedLojaTreinamentoRoute: AuthenticatedLojaTreinamentoRoute,
     AuthenticatedLojaIndexRoute: AuthenticatedLojaIndexRoute,
