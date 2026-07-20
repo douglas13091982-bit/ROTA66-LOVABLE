@@ -1,6 +1,7 @@
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits, sanitizeName } from "@/lib/sanitize";
 import { useLojaCategorias } from "@/hooks/use-loja-categorias";
+import { useCidades } from "@/hooks/use-cidades";
 import type { LojaCategoria } from "@/lib/loja-categorias";
 import { progressiveFormatCnpj } from "../logic/format-progressivo";
 
@@ -11,6 +12,8 @@ type Props = {
   setCnpj: (v: string) => void;
   categoria: LojaCategoria | "";
   setCategoria: (v: LojaCategoria | "") => void;
+  cityId: string;
+  setCityId: (v: string) => void;
   aceiteContrato: boolean;
   setAceiteContrato: (v: boolean) => void;
   contratoVersao?: number | null;
@@ -24,12 +27,15 @@ export function LojaFields({
   setCnpj,
   categoria,
   setCategoria,
+  cityId,
+  setCityId,
   aceiteContrato,
   setAceiteContrato,
   contratoVersao,
   onOpenContrato,
 }: Props) {
   const { categorias } = useLojaCategorias();
+  const { cidades, isLoading: loadingCidades } = useCidades();
   return (
     <>
       <AuthInput
@@ -69,6 +75,28 @@ export function LojaFields({
             </option>
           ))}
         </select>
+      </label>
+      <label className="block mb-5">
+        <span className="block text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-2.5">
+          Cidade da loja <span className="text-destructive">*</span>
+        </span>
+        <select
+          required
+          value={cityId}
+          onChange={(e) => setCityId(e.target.value)}
+          disabled={loadingCidades}
+          className="w-full bg-background/60 border border-border/60 rounded-lg px-4 py-3 text-foreground focus:outline-none focus:border-primary/70 focus:ring-2 focus:ring-primary/25 transition-all"
+        >
+          <option value="">{loadingCidades ? "Carregando..." : "Selecione a cidade"}</option>
+          {cidades.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.nome} — {c.uf}
+            </option>
+          ))}
+        </select>
+        <p className="text-[11px] text-muted-foreground mt-2">
+          Define em qual franquia sua loja vai operar.
+        </p>
       </label>
       <label className="flex items-start gap-3 mb-5 cursor-pointer select-none rounded-lg border border-border/60 bg-background/40 p-3">
         <input

@@ -136,6 +136,8 @@ export function CadastroPage({
                   setCnpj={(v) => update("cnpj", v)}
                   categoria={form.categoria}
                   setCategoria={(v) => update("categoria", v)}
+                  cityId={form.cityId}
+                  setCityId={(v) => update("cityId", v)}
                   aceiteContrato={form.aceiteContrato}
                   setAceiteContrato={(v) => update("aceiteContrato", v)}
                   contratoVersao={contratoAtivo?.versao}
