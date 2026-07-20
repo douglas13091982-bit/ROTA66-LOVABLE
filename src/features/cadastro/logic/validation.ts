@@ -45,6 +45,7 @@ export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx)
     if (!cnpjDigits) return fail("CNPJ é obrigatório para lojas");
     if (!isValidCnpj(cnpjDigits)) return fail("CNPJ inválido");
     if (!form.categoria) return fail("Selecione a categoria de atuação da loja");
+    if (!form.cityId) return fail("Selecione a cidade da loja");
     if (!form.aceiteContrato) return fail("Você precisa aceitar os Termos de Uso para continuar");
     if (contratoLoading || !contratoId) {
       return fail("Aguarde o carregamento dos Termos de Uso e tente novamente.");
