@@ -1,16 +1,11 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { AuthCard, AuthInput, AuthPasswordInput, PrimaryButton } from "@/components/AuthCard";
-import { sanitizeEmail, sanitizeName, sanitizePhone } from "@/lib/sanitize";
-import { normalizeBrPhone } from "@/lib/format/document";
+import { AuthCard } from "@/components/AuthCard";
 import { useContratoAtivo } from "@/components/ContratoView";
 import { ContratoDialog } from "@/components/ContratoDialog";
-import { ClienteFields } from "./components/ClienteFields";
-import { EntregadorFields } from "./components/EntregadorFields";
-import { LojaFields } from "./components/LojaFields";
-import { PasswordRequirements } from "./components/PasswordRequirements";
 import { RoleBadge, RoleSelector } from "./components/RoleSelector";
+import { SignupWizard } from "./components/SignupWizard";
 import type { Role } from "./logic/roles";
 import { useSignupForm } from "./logic/use-signup-form";
 import { useSignupSubmit } from "./logic/use-signup-submit";
@@ -39,8 +34,7 @@ export function CadastroPage({
     redirectTo,
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     try {
       await submit();
@@ -53,7 +47,7 @@ export function CadastroPage({
     <>
       <AuthCard
         title="ENTRE NA ROTA"
-        subtitle={step === "select" ? "Escolha seu perfil" : "Complete seu cadastro"}
+        subtitle={step === "select" ? "Escolha seu perfil" : "Vamos criar sua conta"}
         footer={
           <>
             Já tem conta?{" "}
@@ -81,7 +75,7 @@ export function CadastroPage({
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              Voltar
+              Trocar perfil
             </button>
 
             {role && <RoleBadge role={role} />}
@@ -94,116 +88,19 @@ export function CadastroPage({
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
-              <AuthInput
-                label={role === "loja_admin" ? "Nome do responsável" : "Nome completo"}
-                required
-                value={form.fullName}
-                onChange={(e) => update("fullName", sanitizeName(e.target.value, 120))}
-                maxLength={120}
-                autoComplete="name"
+            {role && (
+              <SignupWizard
+                role={role}
+                form={form}
+                update={update}
+                handleAvatarChange={handleAvatarChange}
+                contratoLoading={contratoLoading}
+                contratoVersao={contratoAtivo?.versao}
+                onOpenContrato={() => setContratoModalOpen(true)}
+                submitting={loading}
+                onSubmit={handleSubmit}
               />
-
-              {role === "loja_admin" && (
-                <AuthInput
-                  label="Nome da loja"
-                  required
-                  value={form.nomeLoja}
-                  onChange={(e) => update("nomeLoja", sanitizeName(e.target.value, 120))}
-                  placeholder="Ex.: Pizzaria do Zé"
-                  maxLength={120}
-                  autoComplete="organization"
-                />
-              )}
-
-              <AuthInput
-                label="Telefone"
-                type="tel"
-                inputMode="tel"
-                required
-                value={form.phone}
-                onChange={(e) => update("phone", normalizeBrPhone(sanitizePhone(e.target.value, 16)))}
-                placeholder="(11) 99999-9999"
-                maxLength={20}
-                autoComplete="tel"
-              />
-
-              {role === "loja_admin" && (
-                <LojaFields
-                  nomeLoja={form.nomeLoja}
-                  setNomeLoja={(v) => update("nomeLoja", v)}
-                  cnpj={form.cnpj}
-                  setCnpj={(v) => update("cnpj", v)}
-                  categoria={form.categoria}
-                  setCategoria={(v) => update("categoria", v)}
-                  cityId={form.cityId}
-                  setCityId={(v) => update("cityId", v)}
-                  aceiteContrato={form.aceiteContrato}
-                  setAceiteContrato={(v) => update("aceiteContrato", v)}
-                  contratoVersao={contratoAtivo?.versao}
-                  onOpenContrato={() => setContratoModalOpen(true)}
-                />
-              )}
-
-              {role === "entregador" && (
-                <EntregadorFields
-                  cpf={form.cpf}
-                  setCpf={(v) => update("cpf", v)}
-                  tipoVeiculo={form.tipoVeiculo}
-                  setTipoVeiculo={(v) => update("tipoVeiculo", v)}
-                  cityId={form.cityId}
-                  setCityId={(v) => update("cityId", v)}
-                  avatarFile={form.avatarFile}
-                  avatarPreview={form.avatarPreview}
-                  onAvatarChange={handleAvatarChange}
-                />
-              )}
-
-              {role === "cliente" && (
-                <ClienteFields
-                  cpf={form.cpf}
-                  setCpf={(v) => update("cpf", v)}
-                  endereco={form.endereco}
-                  setEndereco={(v) => update("endereco", v)}
-                  cidade={form.cidade}
-                  setCidade={(v) => update("cidade", v)}
-                  estado={form.estado}
-                  setEstado={(v) => update("estado", v)}
-                />
-              )}
-
-
-              <AuthInput
-                label="E-mail"
-                type="email"
-                inputMode="email"
-                required
-                value={form.email}
-                onChange={(e) => update("email", sanitizeEmail(e.target.value))}
-                maxLength={254}
-                autoComplete="email"
-              />
-              <AuthPasswordInput
-                label="Senha"
-                required
-                value={form.password}
-                onChange={(e) => update("password", e.target.value)}
-                minLength={8}
-                placeholder="Crie uma senha forte"
-              />
-              <PasswordRequirements password={form.password} />
-
-              <PrimaryButton
-                type="submit"
-                disabled={loading || (role === "loja_admin" && contratoLoading)}
-              >
-                {loading
-                  ? "Criando..."
-                  : role === "loja_admin" && contratoLoading
-                    ? "Carregando termos..."
-                    : "Criar conta"}
-              </PrimaryButton>
-            </form>
+            )}
           </div>
         )}
       </AuthCard>
