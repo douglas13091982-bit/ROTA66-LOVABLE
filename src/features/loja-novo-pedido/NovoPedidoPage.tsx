@@ -31,6 +31,11 @@ export function NovoPedidoPage() {
             taxaBase={Number(loja.taxa_entrega_base) || 0}
             enderecoColetaPadrao={matrizEndereco}
             enderecosColetaSalvos={enderecosComMatriz}
+            bonusPadrao={
+              (loja as any).bonus_entregador_ativo
+                ? Number((loja as any).bonus_entregador_valor ?? 0)
+                : 0
+            }
             onSuccess={() => navigate({ to: "/loja/pedidos" })}
           />
         </div>
