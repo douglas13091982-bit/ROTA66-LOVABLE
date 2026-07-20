@@ -103,7 +103,10 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
       }
       const { error: errUp } = await supabaseAdmin
         .from("produtos")
-        .update({ preco_promocional: data.preco_promocional })
+        .update({
+          preco_promocional: data.preco_promocional,
+          preco_promocional_ate: data.valido_ate ?? null,
+        })
         .eq("id", data.produto_id);
       if (errUp) throw new Error(errUp.message);
     }
