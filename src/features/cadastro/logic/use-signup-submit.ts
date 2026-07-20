@@ -58,6 +58,17 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
   async function criarLoja(userId: string): Promise<{ id: string } | null> {
     const cnpjDigits = onlyDigits(form.cnpj);
     const slug = buildSlug(form.nomeLoja);
+    let cidadeNome: string | null = null;
+    let cidadeUf: string | null = null;
+    if (form.cityId) {
+      const { data: cidadeRow } = await (supabase as any)
+        .from("cidades")
+        .select("nome, uf")
+        .eq("id", form.cityId)
+        .maybeSingle();
+      cidadeNome = cidadeRow?.nome ?? null;
+      cidadeUf = cidadeRow?.uf ?? null;
+    }
     const { data, error } = await supabase
       .from("lojas")
       .insert({
@@ -67,6 +78,9 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
         cnpj: cnpjDigits,
         telefone: normalizeBrPhone(form.phone),
         categoria: form.categoria || null,
+        city_id: form.cityId || null,
+        cidade: cidadeNome,
+        estado: cidadeUf,
         indicado_por_entregador_id: indicadorTipo === "entregador" ? indicadorId || null : null,
         revendedor_id: indicadorTipo === "revendedor" ? indicadorId || null : null,
       } as any)
