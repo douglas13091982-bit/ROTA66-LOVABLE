@@ -276,6 +276,32 @@ export function PromocoesLojaPage() {
                       </span>
                     </span>
                   </div>
+
+                  <div className="pt-2 border-t border-primary/20 space-y-1">
+                    <Label className="text-primary text-xs">⏰ Válido até (opcional)</Label>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Input
+                        type="datetime-local"
+                        value={validoAte}
+                        onChange={(e) => setValidoAte(e.target.value)}
+                        className="max-w-[240px]"
+                      />
+                      {validoAte && (
+                        <button
+                          type="button"
+                          onClick={() => setValidoAte("")}
+                          className="text-xs text-muted-foreground hover:text-foreground underline"
+                        >
+                          limpar
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Após esse horário o preço promocional deixa de valer automaticamente. Deixe em
+                      branco para promoção sem prazo (você desliga manualmente).
+                    </p>
+                  </div>
+
                   <p className="text-xs text-muted-foreground">
                     Ao enviar, este valor passa a valer no cardápio e no checkout do cliente. Deixe
                     em branco para apenas divulgar sem alterar o preço.
