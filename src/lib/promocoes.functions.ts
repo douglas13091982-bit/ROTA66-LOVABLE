@@ -129,7 +129,6 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         image_url: data.image_url?.trim() || null,
         produto_id: data.produto_id || null,
         preco_promocional: data.preco_promocional ?? null,
-        preco_promocional: data.preco_promocional ?? null,
         valido_ate: data.valido_ate ?? null,
         created_by: userId,
         status: "pending",
