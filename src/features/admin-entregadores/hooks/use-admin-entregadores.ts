@@ -3,7 +3,9 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useFranquia } from "@/hooks/use-franquia";
+import { notificarEntregadorAprovado } from "@/lib/push.functions";
 import type { EntregadorRow, StatusEntregador } from "../logic/types";
+
 
 
 export function useAdminEntregadores() {
