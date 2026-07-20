@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, type Produto } from "@/routes/-catalogo-types";
 import type { AdicionalEscolhido } from "../logic/cart-line";
 
 type Props = {
