@@ -206,24 +206,30 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Autoriza: super_admin, admin_franqueado ou colaborador do franqueado.
+    // Autoriza: super_admin, franqueado (config) ou colaborador ativo.
     const { data: isSuper } = await supabase.rpc("has_role", {
       _user_id: userId,
       _role: "super_admin",
     });
     if (!isSuper) {
-      const { data: isFranq } = await supabase.rpc("has_role", {
-        _user_id: userId,
-        _role: "admin_franqueado",
-      });
-      if (!isFranq) {
-        const { data: isCco } = await supabase.rpc("has_role", {
-          _user_id: userId,
-          _role: "franqueado_colaborador",
-        });
-        if (!isCco) throw new Error("Sem permissão");
+      const { data: cfgSelf } = await supabaseAdmin
+        .from("franqueados_config" as any)
+        .select("user_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      let autorizado = !!(cfgSelf as any)?.user_id;
+      if (!autorizado) {
+        const { data: colab } = await supabaseAdmin
+          .from("franqueado_colaboradores" as any)
+          .select("id")
+          .eq("colaborador_user_id", userId)
+          .eq("ativo", true)
+          .maybeSingle();
+        autorizado = !!colab;
       }
+      if (!autorizado) throw new Error("Sem permissão");
     }
+
 
     const { data: subs } = await supabaseAdmin
       .from("push_subscriptions")
