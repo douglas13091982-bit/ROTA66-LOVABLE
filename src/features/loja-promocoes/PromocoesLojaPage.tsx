@@ -142,24 +142,114 @@ export function PromocoesLojaPage() {
               <p className="text-xs text-muted-foreground mt-1">{body.length}/300</p>
             </div>
             <div>
-              <Label>Link ao tocar (opcional)</Label>
-              <Input
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder={`/loja/${loja?.catalogo_slug || loja?.slug || "sua-loja"}`}
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Se vazio, abre o catálogo da sua loja.
+              <Label className="flex items-center gap-2">
+                <Package className="w-4 h-4" /> Produto do catálogo (opcional)
+              </Label>
+              <p className="text-xs text-muted-foreground mt-1 mb-2">
+                Escolha um produto do seu cardápio — usamos a imagem dele automaticamente e o cliente
+                é levado direto pra sua loja.
               </p>
+              {produtoSelecionado ? (
+                <div className="flex items-center gap-3 rounded-lg border bg-muted/40 p-2">
+                  {produtoSelecionado.imagem_url ? (
+                    <img
+                      src={produtoSelecionado.imagem_url}
+                      alt={produtoSelecionado.nome}
+                      className="w-14 h-14 rounded object-cover border"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded bg-muted grid place-items-center text-muted-foreground">
+                      <Package className="w-5 h-5" />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm truncate">{produtoSelecionado.nome}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {Number(produtoSelecionado.preco).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </div>
+                  </div>
+                  <Button type="button" variant="ghost" size="icon" onClick={limparProduto}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Input
+                    value={produtoQuery}
+                    onChange={(e) => setProdutoQuery(e.target.value)}
+                    placeholder="Buscar produto pelo nome…"
+                  />
+                  {produtosFiltrados.length > 0 && (
+                    <div className="mt-2 max-h-60 overflow-y-auto rounded-lg border divide-y">
+                      {produtosFiltrados.map((p) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => escolherProduto(p)}
+                          className="w-full flex items-center gap-3 p-2 text-left hover:bg-muted transition"
+                        >
+                          {p.imagem_url ? (
+                            <img
+                              src={p.imagem_url}
+                              alt={p.nome}
+                              className="w-10 h-10 rounded object-cover border shrink-0"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded bg-muted grid place-items-center text-muted-foreground shrink-0">
+                              <Package className="w-4 h-4" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium truncate">{p.nome}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {Number(p.preco).toLocaleString("pt-BR", {
+                                style: "currency",
+                                currency: "BRL",
+                              })}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {produtos.length === 0 && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Nenhum produto no catálogo ainda.
+                    </p>
+                  )}
+                </>
+              )}
             </div>
-            <div>
-              <Label>Imagem (URL, opcional)</Label>
-              <Input
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://..."
-              />
-            </div>
+
+            <details className="text-xs">
+              <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+                Opções avançadas (link e imagem manuais)
+              </summary>
+              <div className="mt-3 space-y-3">
+                <div>
+                  <Label>Link ao tocar</Label>
+                  <Input
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder={`/loja/${loja?.catalogo_slug || loja?.slug || "sua-loja"}`}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Se vazio, abre o catálogo da sua loja.
+                  </p>
+                </div>
+                <div>
+                  <Label>Imagem (URL)</Label>
+                  <Input
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://..."
+                  />
+                </div>
+              </div>
+            </details>
           </div>
 
           <div className="flex justify-end">
