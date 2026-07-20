@@ -35,6 +35,11 @@ export function PedidoFormSection({ loja, onSuccess }: Props) {
           taxaBase={Number(loja.taxa_entrega_base) || 0}
           enderecoColetaPadrao={enderecoMatriz}
           enderecosColetaSalvos={enderecosColetaSalvos}
+          bonusPadrao={
+            (loja as any).bonus_entregador_ativo
+              ? Number((loja as any).bonus_entregador_valor ?? 0)
+              : 0
+          }
           asCliente
           onSuccess={onSuccess}
         />
