@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ChevronLeft, X, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { criarPedidoCatalogo } from "@/lib/catalogo.functions";
 import { useTarifaEntrega } from "@/hooks/use-tarifa-entrega";
@@ -11,6 +12,7 @@ import type { CartItem } from "../hooks/use-cart";
 import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { resolveAddressToPlace } from "@/lib/google-maps-places";
 
 type Props = {
@@ -54,7 +56,9 @@ export function CheckoutDialog({
   onRemove,
 }: Props) {
   const enviar = useServerFn(criarPedidoCatalogo);
+  const { user, loading: authLoading } = useAuth();
   const [step, setStep] = useState<Step>("carrinho");
+  const redirectPath = typeof window !== "undefined" ? window.location.pathname + window.location.search : `/loja/${slug}`;
   const [form, setForm] = useState<CheckoutForm>({
     cliente_nome: "",
     cliente_telefone: "",
@@ -268,14 +272,39 @@ export function CheckoutDialog({
         {step !== "pagar" && (
           <div className="border-t border-border p-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] bg-card shrink-0">
             {step === "carrinho" ? (
-              <button
-                onClick={() => setStep("dados")}
-                disabled={cartItems.length === 0}
-                className="cc-cta w-full px-5 py-3.5 rounded-2xl font-semibold uppercase text-[12px] tracking-[0.18em] disabled:opacity-40 flex items-center justify-between"
-              >
-                <span>Continuar</span>
-                <span className="cc-price normal-case tracking-tight text-base">R$ {total.toFixed(2)}</span>
-              </button>
+              !authLoading && !user ? (
+                <div className="space-y-2">
+                  <div className="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2.5 text-[13px] text-foreground/90 flex items-center gap-2">
+                    <LogIn className="h-4 w-4 shrink-0 text-primary" />
+                    <span>Entre ou crie sua conta para finalizar o pedido. Seu carrinho fica salvo.</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      to="/login"
+                      search={{ redirect: redirectPath }}
+                      className="cc-cta text-center px-4 py-3 rounded-2xl font-semibold uppercase text-[12px] tracking-[0.18em]"
+                    >
+                      Entrar
+                    </Link>
+                    <Link
+                      to="/cadastro"
+                      search={{ role: "cliente", redirect: redirectPath }}
+                      className="text-center px-4 py-3 rounded-2xl font-semibold uppercase text-[12px] tracking-[0.18em] border border-primary/40 text-primary hover:bg-primary/10"
+                    >
+                      Criar conta
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setStep("dados")}
+                  disabled={cartItems.length === 0 || authLoading}
+                  className="cc-cta w-full px-5 py-3.5 rounded-2xl font-semibold uppercase text-[12px] tracking-[0.18em] disabled:opacity-40 flex items-center justify-between"
+                >
+                  <span>Continuar</span>
+                  <span className="cc-price normal-case tracking-tight text-base">R$ {total.toFixed(2)}</span>
+                </button>
+              )
             ) : (
               <>
                 <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">

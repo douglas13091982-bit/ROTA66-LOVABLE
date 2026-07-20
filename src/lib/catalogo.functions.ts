@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const AdicionalSchema = z.object({ opcao_id: z.string().uuid() });
 
@@ -37,9 +38,11 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 }
 
 export const criarPedidoCatalogo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => InputSchema.parse(data))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const clienteUserId = context.userId;
 
     // 1. Loja precisa estar ativa, aprovada e com catálogo ativo
     const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
@@ -191,7 +194,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
           loja_id: loja.id,
           forma_pagamento: data.forma_pagamento,
           valor_total,
-          dados: snapshot as any,
+          dados: { ...snapshot, cliente_user_id: clienteUserId } as any,
           status: "aguardando",
         } as any)
         .select("id")
@@ -213,7 +216,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       .from("pedidos")
       .insert({
         loja_id: loja.id,
-        cliente_user_id: null,
+        cliente_user_id: clienteUserId,
         cliente_nome: data.cliente_nome,
         cliente_telefone: data.cliente_telefone,
         endereco_entrega: data.endereco_entrega,

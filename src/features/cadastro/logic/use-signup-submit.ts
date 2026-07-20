@@ -22,9 +22,10 @@ type Deps = {
   contratoLoading: boolean;
   indicadorId?: string | null;
   indicadorTipo?: "entregador" | "revendedor" | null;
+  redirectTo?: string;
 };
 
-export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId, indicadorTipo }: Deps) {
+export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, indicadorId, indicadorTipo, redirectTo }: Deps) {
   const navigate = useNavigate();
 
   async function checarCpfDisponivel(cpfDigits: string): Promise<boolean> {
@@ -156,6 +157,10 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
     }
 
     toast.success("Conta criada com sucesso!");
+    if (redirectTo) {
+      navigate({ to: redirectTo, replace: true });
+      return { loading: false };
+    }
     if (role === "cliente") {
       navigate({
         to: "/clientes/$cidade",
