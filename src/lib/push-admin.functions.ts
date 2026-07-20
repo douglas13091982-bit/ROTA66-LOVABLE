@@ -292,3 +292,76 @@ export const listarPushLogs = createServerFn({ method: "GET" })
     return { logs: (data ?? []) as any[] };
   });
 
+/**
+ * Lista clientes cadastrados que têm notificação push ATIVA (>=1 subscription).
+ * - super_admin (dono): vê todos
+ * - franqueado / colaborador: só clientes da cidade do franqueado
+ */
+export const listarClientesComPush = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const isSuper = await isDonoOuFranqueado(supabase, userId);
+    const franqueadoEfetivoId = isSuper ? userId : await getFranqueadoEfetivoId(supabaseAdmin, userId);
+    if (!isSuper && !franqueadoEfetivoId) throw new Error("Sem permissão");
+
+    // Cidade do franqueado (se houver). Dono da franquia vê todas cidades.
+    const { data: cfg } = await supabaseAdmin
+      .from("franqueados_config" as any)
+      .select("city_id")
+      .eq("user_id", franqueadoEfetivoId ?? userId)
+      .maybeSingle();
+    const cityIdFranqueado = (cfg as any)?.city_id as string | null | undefined;
+
+    // Todos user_ids com role 'cliente'
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id")
+      .eq("role", "cliente");
+    const clienteIds = Array.from(new Set((roles ?? []).map((r: any) => r.user_id as string)));
+    if (clienteIds.length === 0) return { clientes: [], total: 0, cityId: cityIdFranqueado ?? null };
+
+    // Filtra apenas quem tem push_subscriptions
+    const { data: subs } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select("user_id, created_at")
+      .in("user_id", clienteIds);
+
+    const subMap = new Map<string, { count: number; last: string }>();
+    for (const s of subs ?? []) {
+      const uid = (s as any).user_id as string;
+      const created = (s as any).created_at as string;
+      const cur = subMap.get(uid);
+      if (!cur) subMap.set(uid, { count: 1, last: created });
+      else subMap.set(uid, { count: cur.count + 1, last: cur.last > created ? cur.last : created });
+    }
+    const idsComPush = Array.from(subMap.keys());
+    if (idsComPush.length === 0) return { clientes: [], total: 0, cityId: cityIdFranqueado ?? null };
+
+    // Perfis (com filtro de cidade se franqueado)
+    let q = supabaseAdmin
+      .from("profiles")
+      .select("id, full_name, phone, cidade, estado, city_id, created_at")
+      .in("id", idsComPush);
+    if (cityIdFranqueado) q = q.eq("city_id", cityIdFranqueado);
+    const { data: profiles } = await q;
+
+    const clientes = (profiles ?? [])
+      .map((p: any) => ({
+        id: p.id,
+        nome: p.full_name || "(sem nome)",
+        phone: p.phone || "",
+        cidade: p.cidade || "",
+        estado: p.estado || "",
+        dispositivos: subMap.get(p.id)?.count ?? 0,
+        ultima_inscricao: subMap.get(p.id)?.last ?? null,
+        criado_em: p.created_at,
+      }))
+      .sort((a, b) => (b.ultima_inscricao ?? "").localeCompare(a.ultima_inscricao ?? ""));
+
+    return { clientes, total: clientes.length, cityId: cityIdFranqueado ?? null };
+  });
+
+
