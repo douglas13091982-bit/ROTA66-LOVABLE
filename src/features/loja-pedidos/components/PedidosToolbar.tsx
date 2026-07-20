@@ -68,6 +68,13 @@ export function PedidosToolbar({
         </span>
         Tempo real
       </span>
+      {lojaId && (
+        <BonusEntregadorToggle
+          lojaId={lojaId}
+          initialAtivo={bonusAtivo}
+          initialValor={bonusValor}
+        />
+      )}
       <button
         onClick={toggleMute}
         title={mutado ? "Som silenciado — clique para reativar" : "Silenciar som de novos pedidos"}
