@@ -24,7 +24,14 @@ export type Produto = {
   nome: string;
   descricao: string | null;
   preco: number;
+  preco_promocional?: number | null;
   imagem_url: string | null;
   categoria: string | null;
   adicionais_grupos?: AdicionalGrupo[];
 };
+
+export function precoEfetivo(p: { preco: number | string; preco_promocional?: number | string | null }): number {
+  const promo = p.preco_promocional != null ? Number(p.preco_promocional) : null;
+  if (promo != null && !isNaN(promo) && promo > 0) return promo;
+  return Number(p.preco) || 0;
+}
