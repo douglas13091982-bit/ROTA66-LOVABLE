@@ -51,7 +51,7 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-[15px] leading-tight tracking-tight text-foreground truncate">{p.nome}</h3>
               {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-1 mt-0.5">{p.descricao}</p>}
-              {p.preco_promocional != null && Number(p.preco_promocional) > 0 ? (
+              {promoAtiva(p) ? (
                 <span className="mt-1 inline-flex items-baseline gap-2">
                   <span className="cc-price text-[16px] text-primary leading-none">R$ {precoEfetivo(p).toFixed(2)}</span>
                   <span className="text-[11px] text-muted-foreground line-through">R$ {Number(p.preco).toFixed(2)}</span>
