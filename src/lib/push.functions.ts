@@ -193,3 +193,89 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
     return { sent, destinatarios: alvos.length };
   });
 
+/**
+ * Envia push para um entregador informando que sua conta foi aprovada
+ * e ele já pode receber pedidos.
+ */
+export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ entregador_id: z.string().uuid() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Autoriza: super_admin, admin_franqueado ou colaborador do franqueado.
+    const { data: isSuper } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "super_admin",
+    });
+    if (!isSuper) {
+      const { data: isFranq } = await supabase.rpc("has_role", {
+        _user_id: userId,
+        _role: "admin_franqueado",
+      });
+      if (!isFranq) {
+        const { data: isCco } = await supabase.rpc("has_role", {
+          _user_id: userId,
+          _role: "franqueado_colaborador",
+        });
+        if (!isCco) throw new Error("Sem permissão");
+      }
+    }
+
+    const { data: subs } = await supabaseAdmin
+      .from("push_subscriptions")
+      .select("id")
+      .eq("user_id", data.entregador_id);
+    if (!subs || subs.length === 0) return { sent: 0, destinatarios: 0 };
+
+    const { data: cfgRow } = await supabaseAdmin
+      .from("private_config" as any)
+      .select("value")
+      .eq("key", "push_trigger_secret")
+      .maybeSingle();
+    const secret = (cfgRow as any)?.value as string | undefined;
+    if (!secret) throw new Error("push_trigger_secret não configurado");
+
+    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
+    const url = `https://${host}/api/public/send-push`;
+
+    const { data: prof } = await supabaseAdmin
+      .from("profiles")
+      .select("full_name")
+      .eq("id", data.entregador_id)
+      .maybeSingle();
+
+    const title = "🎉 Conta aprovada!";
+    const body = "Sua conta foi liberada. Você já pode receber pedidos agora mesmo.";
+    const linkFinal = "/entregador/disponiveis";
+    const tag = `aprovado-${data.entregador_id}`;
+
+    await supabaseAdmin.from("push_admin_logs" as any).insert({
+      sender_user_id: userId,
+      user_id: data.entregador_id,
+      entregador_nome: (prof as any)?.full_name || null,
+      title,
+      body,
+      url: linkFinal,
+      tag,
+      status: "pending",
+    });
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-push-secret": secret },
+        body: JSON.stringify({ user_id: data.entregador_id, title, body, url: linkFinal, tag }),
+      });
+      if (!res.ok) return { sent: 0, destinatarios: 1 };
+      const j = (await res.json()) as { sent?: number };
+      return { sent: j.sent ?? 0, destinatarios: 1 };
+    } catch {
+      return { sent: 0, destinatarios: 1 };
+    }
+  });
+
+
