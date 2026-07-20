@@ -248,6 +248,47 @@ export function PromocoesLojaPage() {
                   )}
                 </>
               )}
+
+              {produtoSelecionado && (
+                <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2">
+                  <Label className="text-primary">💰 Preço promocional (aplicado no cardápio)</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm text-muted-foreground">R$</span>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0.01"
+                      value={precoPromo}
+                      onChange={(e) => setPrecoPromo(e.target.value)}
+                      placeholder={`Ex: ${(Number(produtoSelecionado.preco) * 0.8).toFixed(2)}`}
+                      className="max-w-[160px]"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Preço normal:{" "}
+                      <span className="line-through">
+                        {Number(produtoSelecionado.preco).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </span>
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Ao enviar, este valor passa a valer no cardápio e no checkout do cliente. Deixe
+                    em branco para apenas divulgar sem alterar o preço.
+                  </p>
+                  {produtoSelecionado.preco_promocional != null && (
+                    <button
+                      type="button"
+                      onClick={() => removerPromoMut.mutate(produtoSelecionado.id)}
+                      disabled={removerPromoMut.isPending}
+                      className="text-xs text-red-500 hover:underline"
+                    >
+                      Remover preço promocional atual do produto
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             <details className="text-xs">
