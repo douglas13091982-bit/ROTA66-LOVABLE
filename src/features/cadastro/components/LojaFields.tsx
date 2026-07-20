@@ -27,12 +27,15 @@ export function LojaFields({
   setCnpj,
   categoria,
   setCategoria,
+  cityId,
+  setCityId,
   aceiteContrato,
   setAceiteContrato,
   contratoVersao,
   onOpenContrato,
 }: Props) {
   const { categorias } = useLojaCategorias();
+  const { cidades, isLoading: loadingCidades } = useCidades();
   return (
     <>
       <AuthInput
