@@ -22,6 +22,7 @@ export function PromocoesLojaPage() {
   const [body, setBody] = useState("");
   const [url, setUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [precoPromo, setPrecoPromo] = useState<string>("");
   const [produtoId, setProdutoId] = useState<string>("");
   const [produtoQuery, setProdutoQuery] = useState("");
 
