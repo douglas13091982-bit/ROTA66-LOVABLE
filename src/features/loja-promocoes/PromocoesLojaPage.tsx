@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Megaphone, Send, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Megaphone, Send, Clock, CheckCircle2, XCircle, Package, X } from "lucide-react";
 import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { enviarPromocaoLoja } from "@/lib/promocoes.functions";
+import { useProdutosCatalogo } from "@/features/loja-catalogo/hooks/use-catalogo";
 
 export function PromocoesLojaPage() {
   const { data: loja } = useMinhaLoja();
