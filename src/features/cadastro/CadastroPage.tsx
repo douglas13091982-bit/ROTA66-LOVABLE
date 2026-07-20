@@ -19,7 +19,8 @@ import { useIndicador } from "./logic/use-indicador";
 export function CadastroPage({
   initialRole,
   refCodigo,
-}: { initialRole?: Role; refCodigo?: string } = {}) {
+  redirectTo,
+}: { initialRole?: Role; refCodigo?: string; redirectTo?: string } = {}) {
   const [step, setStep] = useState<"select" | "form">(initialRole ? "form" : "select");
   const [role, setRole] = useState<Role | null>(initialRole ?? null);
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,7 @@ export function CadastroPage({
     contratoLoading,
     indicadorId: indicador?.id ?? null,
     indicadorTipo: indicador?.tipo ?? null,
+    redirectTo,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

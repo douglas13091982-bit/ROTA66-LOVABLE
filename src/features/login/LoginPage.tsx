@@ -1,9 +1,10 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { AuthCard } from "@/components/AuthCard";
 import { LoginForm } from "./components/LoginForm";
 import { useLoginSubmit } from "./logic/use-login-submit";
 
 export function LoginPage() {
+  const { redirect } = useSearch({ from: "/login" }) as { redirect?: string };
   const {
     email,
     setEmail,
@@ -11,7 +12,9 @@ export function LoginPage() {
     setPassword,
     loading,
     handleEmailLogin,
-  } = useLoginSubmit();
+  } = useLoginSubmit(redirect);
+
+  const cadastroSearch = redirect ? { redirect } : {};
 
   return (
     <AuthCard
@@ -20,7 +23,7 @@ export function LoginPage() {
       footer={
         <>
           Ainda não tem conta?{" "}
-          <Link to="/cadastro" className="text-primary font-bold hover:underline">
+          <Link to="/cadastro" search={cadastroSearch} className="text-primary font-bold hover:underline">
             Cadastre-se
           </Link>
         </>

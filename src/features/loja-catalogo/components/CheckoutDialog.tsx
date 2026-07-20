@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { ChevronLeft, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ChevronLeft, X, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { criarPedidoCatalogo } from "@/lib/catalogo.functions";
 import { useTarifaEntrega } from "@/hooks/use-tarifa-entrega";
@@ -11,6 +12,7 @@ import type { CartItem } from "../hooks/use-cart";
 import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { resolveAddressToPlace } from "@/lib/google-maps-places";
 
 type Props = {

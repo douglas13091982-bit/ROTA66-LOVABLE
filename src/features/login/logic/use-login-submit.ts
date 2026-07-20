@@ -9,7 +9,7 @@ import { redirectByRole } from "./redirect-by-role";
  * Encapsula o estado do formulário e os fluxos de autenticação
  * (e-mail/senha e Google OAuth via Lovable).
  */
-export function useLoginSubmit() {
+export function useLoginSubmit(redirectTo?: string) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +28,10 @@ export function useLoginSubmit() {
       return;
     }
     toast.success("Bem-vindo de volta!");
+    if (redirectTo) {
+      navigate({ to: redirectTo, replace: true });
+      return;
+    }
     if (data.user) await redirectByRole(data.user.id, navigate);
     else navigate({ to: "/" });
   };
@@ -43,7 +47,7 @@ export function useLoginSubmit() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/" });
+    navigate({ to: redirectTo ?? "/" });
   };
 
   return {
