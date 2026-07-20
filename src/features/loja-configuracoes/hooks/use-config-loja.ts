@@ -33,6 +33,7 @@ export function useConfigLoja(loja: any | undefined) {
       catalogo_layout: loja.catalogo_layout ?? "cards",
       categoria: (loja.categoria ?? "") as LojaCategoria | "",
       usar_horario_automatico: !!loja.usar_horario_automatico,
+      city_id: loja.city_id ?? "",
     });
     const h = loja.horario_funcionamento;
     setHorario(h && typeof h === "object" && Object.keys(h).length ? h : HORARIO_PADRAO);
