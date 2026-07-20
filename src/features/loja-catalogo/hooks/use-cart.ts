@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, type Produto } from "@/routes/-catalogo-types";
 import { lineIdFor, type AdicionalEscolhido } from "../logic/cart-line";
 
 export type CartLine = {
