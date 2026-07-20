@@ -67,7 +67,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const ids = Array.from(new Set(data.itens.map((i) => i.produto_id)));
     const { data: produtos, error: prodErr } = await supabaseAdmin
       .from("produtos")
-      .select("id, nome, preco, preco_promocional, ativo, loja_id")
+      .select("id, nome, preco, preco_promocional, preco_promocional_ate, ativo, loja_id")
       .in("id", ids);
     if (prodErr) throw new Error(prodErr.message);
 
@@ -119,10 +119,11 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         if (o.produto_id !== p.id) throw new Error("Adicional não pertence ao produto");
         return { opcao_id: o.id, nome: o.nome, preco: o.preco, grupo_id: o.grupo_id, grupo_nome: o.grupo_nome };
       });
-      const precoBase =
-        p.preco_promocional != null && Number(p.preco_promocional) > 0
-          ? Number(p.preco_promocional)
-          : Number(p.preco);
+      const promoValida =
+        p.preco_promocional != null &&
+        Number(p.preco_promocional) > 0 &&
+        (!p.preco_promocional_ate || new Date(p.preco_promocional_ate).getTime() > Date.now());
+      const precoBase = promoValida ? Number(p.preco_promocional) : Number(p.preco);
       const precoUnit = precoBase + adicionaisItem.reduce((s, a) => s + a.preco, 0);
       const subtotal = precoUnit * it.qtd;
       valor_produtos += subtotal;

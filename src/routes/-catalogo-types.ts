@@ -25,13 +25,27 @@ export type Produto = {
   descricao: string | null;
   preco: number;
   preco_promocional?: number | null;
+  preco_promocional_ate?: string | null;
   imagem_url: string | null;
   categoria: string | null;
   adicionais_grupos?: AdicionalGrupo[];
 };
 
-export function precoEfetivo(p: { preco: number | string; preco_promocional?: number | string | null }): number {
+export function promoAtiva(p: {
+  preco_promocional?: number | string | null;
+  preco_promocional_ate?: string | null;
+}): boolean {
   const promo = p.preco_promocional != null ? Number(p.preco_promocional) : null;
-  if (promo != null && !isNaN(promo) && promo > 0) return promo;
+  if (!promo || isNaN(promo) || promo <= 0) return false;
+  if (!p.preco_promocional_ate) return true;
+  return new Date(p.preco_promocional_ate).getTime() > Date.now();
+}
+
+export function precoEfetivo(p: {
+  preco: number | string;
+  preco_promocional?: number | string | null;
+  preco_promocional_ate?: string | null;
+}): number {
+  if (promoAtiva(p)) return Number(p.preco_promocional);
   return Number(p.preco) || 0;
 }

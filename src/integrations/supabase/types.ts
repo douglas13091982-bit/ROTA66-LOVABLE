@@ -2595,6 +2595,7 @@ export type Database = {
           ordem: number
           preco: number
           preco_promocional: number | null
+          preco_promocional_ate: string | null
           updated_at: string
         }
         Insert: {
@@ -2611,6 +2612,7 @@ export type Database = {
           ordem?: number
           preco?: number
           preco_promocional?: number | null
+          preco_promocional_ate?: string | null
           updated_at?: string
         }
         Update: {
@@ -2627,6 +2629,7 @@ export type Database = {
           ordem?: number
           preco?: number
           preco_promocional?: number | null
+          preco_promocional_ate?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -2718,6 +2721,7 @@ export type Database = {
           status: string
           title: string
           url: string | null
+          valido_ate: string | null
         }
         Insert: {
           body: string
@@ -2737,6 +2741,7 @@ export type Database = {
           status?: string
           title: string
           url?: string | null
+          valido_ate?: string | null
         }
         Update: {
           body?: string
@@ -2756,6 +2761,7 @@ export type Database = {
           status?: string
           title?: string
           url?: string | null
+          valido_ate?: string | null
         }
         Relationships: [
           {

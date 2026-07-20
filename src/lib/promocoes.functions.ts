@@ -22,6 +22,7 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         image_url: z.string().trim().max(600).optional().nullable(),
         produto_id: z.string().uuid().optional().nullable(),
         preco_promocional: z.number().positive().max(999999).optional().nullable(),
+        valido_ate: z.string().datetime().optional().nullable(),
       })
       .parse(d),
   )
@@ -102,7 +103,10 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
       }
       const { error: errUp } = await supabaseAdmin
         .from("produtos")
-        .update({ preco_promocional: data.preco_promocional })
+        .update({
+          preco_promocional: data.preco_promocional,
+          preco_promocional_ate: data.valido_ate ?? null,
+        })
         .eq("id", data.produto_id);
       if (errUp) throw new Error(errUp.message);
     }
@@ -125,6 +129,7 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         image_url: data.image_url?.trim() || null,
         produto_id: data.produto_id || null,
         preco_promocional: data.preco_promocional ?? null,
+        valido_ate: data.valido_ate ?? null,
         created_by: userId,
         status: "pending",
       })
