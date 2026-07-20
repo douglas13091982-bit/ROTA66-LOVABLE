@@ -1,7 +1,11 @@
 import { AuthInput } from "@/components/AuthCard";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { sanitizeDigits } from "@/lib/sanitize";
+import { progressiveFormatCpf } from "../logic/format-progressivo";
 
 type Props = {
+  cpf: string;
+  setCpf: (v: string) => void;
   endereco: string;
   setEndereco: (v: string) => void;
   cidade: string;
@@ -10,9 +14,24 @@ type Props = {
   setEstado: (v: string) => void;
 };
 
-export function ClienteFields({ endereco, setEndereco, cidade, setCidade, estado, setEstado }: Props) {
+export function ClienteFields({ cpf, setCpf, endereco, setEndereco, cidade, setCidade, estado, setEstado }: Props) {
   return (
     <>
+      <AuthInput
+        label="CPF"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9.\-]*"
+        required
+        value={cpf}
+        onChange={(e) => setCpf(progressiveFormatCpf(sanitizeDigits(e.target.value, 11)))}
+        placeholder="000.000.000-00"
+        maxLength={14}
+        autoComplete="off"
+      />
+      <p className="text-[11px] text-muted-foreground -mt-2 mb-3">
+        Usaremos automaticamente nos pagamentos por Pix e cartão.
+      </p>
       <AddressAutocomplete
         label="Endereço"
         required

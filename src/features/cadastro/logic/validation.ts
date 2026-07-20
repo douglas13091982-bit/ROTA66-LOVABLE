@@ -54,6 +54,8 @@ export function validateSignup({ role, form, contratoLoading, contratoId }: Ctx)
   }
 
   if (role === "cliente") {
+    if (!cpfDigits) return fail("CPF é obrigatório");
+    if (!isValidCpf(cpfDigits)) return fail("CPF inválido");
     if (!form.endereco.trim() || !form.cidade.trim() || !form.estado.trim()) {
       return fail("Informe endereço, cidade e estado para continuar.");
     }

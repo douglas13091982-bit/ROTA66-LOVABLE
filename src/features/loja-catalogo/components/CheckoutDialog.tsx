@@ -122,7 +122,7 @@ export function CheckoutDialog({
       if (!user || cancelado) return;
       const { data: profile } = await supabase
         .from("profiles")
-        .select("full_name, phone, endereco")
+        .select("full_name, phone, endereco, cpf")
         .eq("id", user.id)
         .maybeSingle();
       if (cancelado) return;
@@ -131,6 +131,7 @@ export function CheckoutDialog({
         cliente_nome: f.cliente_nome || profile?.full_name || "",
         cliente_telefone: f.cliente_telefone || profile?.phone || "",
         cliente_email: f.cliente_email || user.email || "",
+        cliente_doc: f.cliente_doc || profile?.cpf || "",
         endereco_entrega: f.endereco_entrega || profile?.endereco || "",
       }));
       // Geocodifica endereço do perfil para calcular o frete automaticamente.

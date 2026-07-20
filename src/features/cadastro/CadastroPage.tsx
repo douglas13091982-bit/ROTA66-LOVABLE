@@ -159,6 +159,8 @@ export function CadastroPage({
 
               {role === "cliente" && (
                 <ClienteFields
+                  cpf={form.cpf}
+                  setCpf={(v) => update("cpf", v)}
                   endereco={form.endereco}
                   setEndereco={(v) => update("endereco", v)}
                   cidade={form.cidade}
@@ -167,6 +169,7 @@ export function CadastroPage({
                   setEstado={(v) => update("estado", v)}
                 />
               )}
+
 
               <AuthInput
                 label="E-mail"
