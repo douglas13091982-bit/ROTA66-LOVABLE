@@ -94,34 +94,42 @@ export function PromocoesLojaPage() {
   const mut = useMutation({
     mutationFn: async () => {
       if (!loja?.id) throw new Error("Loja não carregada");
+      const preco = Number(precoPromo);
+      const precoValido = produtoId && preco > 0 && !isNaN(preco);
+      const tituloFinal = title.trim() || produtoTitleHint;
       return enviar({
         data: {
           loja_id: loja.id,
-          title: title.trim(),
+          title: tituloFinal,
           body: body.trim(),
           url: url.trim() || undefined,
           image_url: imageUrl.trim() || undefined,
+          produto_id: produtoId || undefined,
+          preco_promocional: precoValido ? preco : undefined,
         },
       });
     },
     onSuccess: (res) => {
       toast.success(
         res.destinatarios === 0
-          ? "Promoção registrada — nenhum cliente com notificações ativas na cidade ainda."
-          : `Enviado para ${res.destinatarios} cliente(s) — ${res.sent} dispositivo(s).`,
+          ? "Promoção registrada — preço aplicado no cardápio. Nenhum cliente com notificações ativas na cidade ainda."
+          : `Enviado para ${res.destinatarios} cliente(s) — ${res.sent} dispositivo(s). Preço promocional já vale no cardápio.`,
       );
       setTitle("");
       setBody("");
       setUrl("");
       setImageUrl("");
+      setProdutoId("");
+      setPrecoPromo("");
       qc.invalidateQueries({ queryKey: ["promocoes-loja", loja?.id] });
+      qc.invalidateQueries({ queryKey: ["catalogo-produtos", loja?.id] });
     },
     onError: (e: any) => toast.error(e?.message || "Falha ao enviar"),
   });
 
   const podeEnviar =
     !!loja?.id &&
-    title.trim().length >= 3 &&
+    (title.trim().length >= 3 || produtoTitleHint.length >= 3) &&
     body.trim().length >= 3 &&
     !mut.isPending;
 
