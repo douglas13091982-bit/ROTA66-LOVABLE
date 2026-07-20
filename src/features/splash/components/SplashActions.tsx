@@ -14,20 +14,20 @@ export function SplashActions() {
 
       <Link
         to="/cadastro"
-        search={{ role: "entregador" }}
-        className="flex items-center justify-center gap-3 w-full text-center rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] border border-white/25 bg-[#003965]/70 hover:bg-[#003965]/95 hover:border-white/50 transition-all duration-300 ease-premium"
-      >
-        <Bike className="h-5 w-5" />
-        SOU ENTREGADOR
-      </Link>
-
-      <Link
-        to="/cadastro"
         search={{ role: "loja_admin" }}
         className="flex items-center justify-center gap-3 w-full text-center rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] border border-white/25 bg-[#003965]/70 hover:bg-[#003965]/95 hover:border-white/50 transition-all duration-300 ease-premium"
       >
         <Store className="h-5 w-5" />
         CADASTRAR MINHA LOJA
+      </Link>
+
+      <Link
+        to="/cadastro"
+        search={{ role: "entregador" }}
+        className="flex items-center justify-center gap-3 w-full text-center rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] border border-white/25 bg-[#003965]/70 hover:bg-[#003965]/95 hover:border-white/50 transition-all duration-300 ease-premium"
+      >
+        <Bike className="h-5 w-5" />
+        SOU ENTREGADOR
       </Link>
 
       <div className="pt-4 text-center text-xs tracking-[0.2em] text-white/60">
