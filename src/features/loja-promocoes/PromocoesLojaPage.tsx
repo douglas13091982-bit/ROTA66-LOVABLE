@@ -41,23 +41,40 @@ export function PromocoesLojaPage() {
   function escolherProduto(p: (typeof produtos)[number]) {
     setProdutoId(p.id);
     setProdutoQuery("");
-    if (!title.trim()) {
-      const preco = Number(p.preco).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-      setTitle(`🔥 ${p.nome} por ${preco}`.slice(0, 80));
-    }
-    if (!body.trim() && p.descricao) {
-      setBody(p.descricao.slice(0, 300));
-    }
+    if (p.preco_promocional != null) setPrecoPromo(String(p.preco_promocional));
+    else setPrecoPromo("");
     if (p.imagem_url) setImageUrl(p.imagem_url);
+    if (!body.trim() && p.descricao) setBody(p.descricao.slice(0, 300));
   }
 
   function limparProduto() {
     setProdutoId("");
     setImageUrl("");
+    setPrecoPromo("");
   }
+
+  const produtoTitleHint = useMemo(() => {
+    if (!produtoSelecionado) return "";
+    const preco = Number(precoPromo);
+    if (!preco || isNaN(preco)) return `🔥 ${produtoSelecionado.nome}`;
+    const fmt = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return `🔥 ${produtoSelecionado.nome} por ${fmt}`.slice(0, 80);
+  }, [produtoSelecionado, precoPromo]);
+
+  const removerPromoMut = useMutation({
+    mutationFn: async (produto_id: string) => {
+      const { error } = await (supabase as any)
+        .from("produtos")
+        .update({ preco_promocional: null })
+        .eq("id", produto_id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Preço promocional removido do produto");
+      qc.invalidateQueries({ queryKey: ["catalogo-produtos", loja?.id] });
+    },
+    onError: (e: any) => toast.error(e?.message || "Falha ao remover"),
+  });
 
   const { data: historico = [], isLoading } = useQuery({
     queryKey: ["promocoes-loja", loja?.id],
