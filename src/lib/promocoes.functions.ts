@@ -22,6 +22,7 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         image_url: z.string().trim().max(600).optional().nullable(),
         produto_id: z.string().uuid().optional().nullable(),
         preco_promocional: z.number().positive().max(999999).optional().nullable(),
+        valido_ate: z.string().datetime().optional().nullable(),
       })
       .parse(d),
   )
