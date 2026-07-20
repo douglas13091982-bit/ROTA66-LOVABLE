@@ -2594,6 +2594,7 @@ export type Database = {
           nome: string
           ordem: number
           preco: number
+          preco_promocional: number | null
           updated_at: string
         }
         Insert: {
@@ -2609,6 +2610,7 @@ export type Database = {
           nome: string
           ordem?: number
           preco?: number
+          preco_promocional?: number | null
           updated_at?: string
         }
         Update: {
@@ -2624,6 +2626,7 @@ export type Database = {
           nome?: string
           ordem?: number
           preco?: number
+          preco_promocional?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -2709,6 +2712,8 @@ export type Database = {
           id: string
           image_url: string | null
           loja_id: string
+          preco_promocional: number | null
+          produto_id: string | null
           sent: number
           status: string
           title: string
@@ -2726,6 +2731,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           loja_id: string
+          preco_promocional?: number | null
+          produto_id?: string | null
           sent?: number
           status?: string
           title: string
@@ -2743,6 +2750,8 @@ export type Database = {
           id?: string
           image_url?: string | null
           loja_id?: string
+          preco_promocional?: number | null
+          produto_id?: string | null
           sent?: number
           status?: string
           title?: string
@@ -2775,6 +2784,13 @@ export type Database = {
             columns: ["loja_id"]
             isOneToOne: false
             referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promocoes_lojas_produto_id_fkey"
+            columns: ["produto_id"]
+            isOneToOne: false
+            referencedRelation: "produtos"
             referencedColumns: ["id"]
           },
         ]

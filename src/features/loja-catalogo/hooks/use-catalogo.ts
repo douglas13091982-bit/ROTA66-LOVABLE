@@ -40,7 +40,7 @@ export function useProdutosCatalogo(lojaId: string | undefined, catalogoAtivo: b
       const { data, error } = await (supabase as any)
         .from("produtos")
         .select(
-          "id, nome, descricao, preco, imagem_url, categoria, adicionais_grupos:produto_adicional_grupos(id, nome, obrigatorio, min_escolhas, max_escolhas, ordem, opcoes:produto_adicional_opcoes(id, nome, preco, ativo, ordem))",
+          "id, nome, descricao, preco, preco_promocional, imagem_url, categoria, adicionais_grupos:produto_adicional_grupos(id, nome, obrigatorio, min_escolhas, max_escolhas, ordem, opcoes:produto_adicional_opcoes(id, nome, preco, ativo, ordem))",
         )
         .eq("loja_id", lojaId!)
         .eq("ativo", true)

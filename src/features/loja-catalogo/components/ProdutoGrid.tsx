@@ -1,4 +1,4 @@
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, type Produto } from "@/routes/-catalogo-types";
 import { AddButton, QtyStepper } from "./QtyStepper";
 
 type Props = {
@@ -51,7 +51,15 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
             <div className="flex-1 min-w-0">
               <h3 className="font-display text-[15px] leading-tight tracking-tight text-foreground truncate">{p.nome}</h3>
               {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-1 mt-0.5">{p.descricao}</p>}
-              <span className="cc-price text-[16px] text-primary leading-none mt-1 inline-block">R$ {Number(p.preco).toFixed(2)}</span>
+              {p.preco_promocional != null && Number(p.preco_promocional) > 0 ? (
+                <span className="mt-1 inline-flex items-baseline gap-2">
+                  <span className="cc-price text-[16px] text-primary leading-none">R$ {precoEfetivo(p).toFixed(2)}</span>
+                  <span className="text-[11px] text-muted-foreground line-through">R$ {Number(p.preco).toFixed(2)}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">Promo</span>
+                </span>
+              ) : (
+                <span className="cc-price text-[16px] text-primary leading-none mt-1 inline-block">R$ {Number(p.preco).toFixed(2)}</span>
+              )}
             </div>
             <div className="shrink-0">{renderControls(p)}</div>
           </div>
@@ -75,7 +83,14 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
             <h3 className="font-display text-[15px] leading-tight tracking-tight text-foreground line-clamp-1">{p.nome}</h3>
             {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-2 mt-0.5 leading-snug">{p.descricao}</p>}
             <div className="mt-auto pt-2 flex items-center justify-between gap-2">
-              <span className="cc-price text-[18px] text-primary leading-none">R$ {Number(p.preco).toFixed(2)}</span>
+              {p.preco_promocional != null && Number(p.preco_promocional) > 0 ? (
+                <span className="inline-flex items-baseline gap-2">
+                  <span className="cc-price text-[18px] text-primary leading-none">R$ {precoEfetivo(p).toFixed(2)}</span>
+                  <span className="text-[12px] text-muted-foreground line-through">R$ {Number(p.preco).toFixed(2)}</span>
+                </span>
+              ) : (
+                <span className="cc-price text-[18px] text-primary leading-none">R$ {Number(p.preco).toFixed(2)}</span>
+              )}
               {renderControls(p)}
             </div>
           </div>

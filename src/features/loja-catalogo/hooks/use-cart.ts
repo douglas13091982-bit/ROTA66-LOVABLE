@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, type Produto } from "@/routes/-catalogo-types";
 import { lineIdFor, type AdicionalEscolhido } from "../logic/cart-line";
 
 export type CartLine = {
@@ -30,7 +30,7 @@ export function useCart(produtos: Produto[] | undefined) {
       const produto = produtosMap.get(line.produto_id);
       if (!produto) return null;
       const precoUnit =
-        Number(produto.preco) + line.adicionais.reduce((s, a) => s + Number(a.preco), 0);
+        precoEfetivo(produto) + line.adicionais.reduce((s, a) => s + Number(a.preco), 0);
       return { lineId: line.lineId, produto, adicionais: line.adicionais, qtd: line.qtd, precoUnit };
     })
     .filter(Boolean) as CartItem[];

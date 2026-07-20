@@ -22,6 +22,7 @@ export function PromocoesLojaPage() {
   const [body, setBody] = useState("");
   const [url, setUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [precoPromo, setPrecoPromo] = useState<string>("");
   const [produtoId, setProdutoId] = useState<string>("");
   const [produtoQuery, setProdutoQuery] = useState("");
 
@@ -40,23 +41,40 @@ export function PromocoesLojaPage() {
   function escolherProduto(p: (typeof produtos)[number]) {
     setProdutoId(p.id);
     setProdutoQuery("");
-    if (!title.trim()) {
-      const preco = Number(p.preco).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-      setTitle(`🔥 ${p.nome} por ${preco}`.slice(0, 80));
-    }
-    if (!body.trim() && p.descricao) {
-      setBody(p.descricao.slice(0, 300));
-    }
+    if (p.preco_promocional != null) setPrecoPromo(String(p.preco_promocional));
+    else setPrecoPromo("");
     if (p.imagem_url) setImageUrl(p.imagem_url);
+    if (!body.trim() && p.descricao) setBody(p.descricao.slice(0, 300));
   }
 
   function limparProduto() {
     setProdutoId("");
     setImageUrl("");
+    setPrecoPromo("");
   }
+
+  const produtoTitleHint = useMemo(() => {
+    if (!produtoSelecionado) return "";
+    const preco = Number(precoPromo);
+    if (!preco || isNaN(preco)) return `🔥 ${produtoSelecionado.nome}`;
+    const fmt = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return `🔥 ${produtoSelecionado.nome} por ${fmt}`.slice(0, 80);
+  }, [produtoSelecionado, precoPromo]);
+
+  const removerPromoMut = useMutation({
+    mutationFn: async (produto_id: string) => {
+      const { error } = await (supabase as any)
+        .from("produtos")
+        .update({ preco_promocional: null })
+        .eq("id", produto_id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Preço promocional removido do produto");
+      qc.invalidateQueries({ queryKey: ["catalogo-produtos", loja?.id] });
+    },
+    onError: (e: any) => toast.error(e?.message || "Falha ao remover"),
+  });
 
   const { data: historico = [], isLoading } = useQuery({
     queryKey: ["promocoes-loja", loja?.id],
@@ -76,34 +94,42 @@ export function PromocoesLojaPage() {
   const mut = useMutation({
     mutationFn: async () => {
       if (!loja?.id) throw new Error("Loja não carregada");
+      const preco = Number(precoPromo);
+      const precoValido = produtoId && preco > 0 && !isNaN(preco);
+      const tituloFinal = title.trim() || produtoTitleHint;
       return enviar({
         data: {
           loja_id: loja.id,
-          title: title.trim(),
+          title: tituloFinal,
           body: body.trim(),
           url: url.trim() || undefined,
           image_url: imageUrl.trim() || undefined,
+          produto_id: produtoId || undefined,
+          preco_promocional: precoValido ? preco : undefined,
         },
       });
     },
     onSuccess: (res) => {
       toast.success(
         res.destinatarios === 0
-          ? "Promoção registrada — nenhum cliente com notificações ativas na cidade ainda."
-          : `Enviado para ${res.destinatarios} cliente(s) — ${res.sent} dispositivo(s).`,
+          ? "Promoção registrada — preço aplicado no cardápio. Nenhum cliente com notificações ativas na cidade ainda."
+          : `Enviado para ${res.destinatarios} cliente(s) — ${res.sent} dispositivo(s). Preço promocional já vale no cardápio.`,
       );
       setTitle("");
       setBody("");
       setUrl("");
       setImageUrl("");
+      setProdutoId("");
+      setPrecoPromo("");
       qc.invalidateQueries({ queryKey: ["promocoes-loja", loja?.id] });
+      qc.invalidateQueries({ queryKey: ["catalogo-produtos", loja?.id] });
     },
     onError: (e: any) => toast.error(e?.message || "Falha ao enviar"),
   });
 
   const podeEnviar =
     !!loja?.id &&
-    title.trim().length >= 3 &&
+    (title.trim().length >= 3 || produtoTitleHint.length >= 3) &&
     body.trim().length >= 3 &&
     !mut.isPending;
 
@@ -221,6 +247,47 @@ export function PromocoesLojaPage() {
                     </p>
                   )}
                 </>
+              )}
+
+              {produtoSelecionado && (
+                <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2">
+                  <Label className="text-primary">💰 Preço promocional (aplicado no cardápio)</Label>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm text-muted-foreground">R$</span>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0.01"
+                      value={precoPromo}
+                      onChange={(e) => setPrecoPromo(e.target.value)}
+                      placeholder={`Ex: ${(Number(produtoSelecionado.preco) * 0.8).toFixed(2)}`}
+                      className="max-w-[160px]"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Preço normal:{" "}
+                      <span className="line-through">
+                        {Number(produtoSelecionado.preco).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })}
+                      </span>
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Ao enviar, este valor passa a valer no cardápio e no checkout do cliente. Deixe
+                    em branco para apenas divulgar sem alterar o preço.
+                  </p>
+                  {produtoSelecionado.preco_promocional != null && (
+                    <button
+                      type="button"
+                      onClick={() => removerPromoMut.mutate(produtoSelecionado.id)}
+                      disabled={removerPromoMut.isPending}
+                      className="text-xs text-red-500 hover:underline"
+                    >
+                      Remover preço promocional atual do produto
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 

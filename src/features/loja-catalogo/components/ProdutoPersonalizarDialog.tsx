@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
-import type { Produto } from "@/routes/-catalogo-types";
+import { precoEfetivo, type Produto } from "@/routes/-catalogo-types";
 import type { AdicionalEscolhido } from "../logic/cart-line";
 
 type Props = {
@@ -54,7 +54,7 @@ export function ProdutoPersonalizarDialog({ produto, onClose, onConfirm }: Props
     return out;
   }, [sel, grupos]);
 
-  const precoUnit = Number(produto.preco) + escolhidas.reduce((s, a) => s + a.preco, 0);
+  const precoUnit = precoEfetivo(produto) + escolhidas.reduce((s, a) => s + a.preco, 0);
   const total = precoUnit * qtd;
 
   const invalido = grupos.some((g) => {

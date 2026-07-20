@@ -20,6 +20,8 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         body: z.string().trim().min(3).max(300),
         url: z.string().trim().max(400).optional().nullable(),
         image_url: z.string().trim().max(600).optional().nullable(),
+        produto_id: z.string().uuid().optional().nullable(),
+        preco_promocional: z.number().positive().max(999999).optional().nullable(),
       })
       .parse(d),
   )
@@ -85,7 +87,27 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
       .eq("id", (loja as any).city_id)
       .maybeSingle();
 
-    // 4. Cria registro pendente
+    // 4a. Se veio produto + preco_promocional, aplica o preço promocional no produto
+    if (data.produto_id && data.preco_promocional != null && data.preco_promocional > 0) {
+      const { data: prod } = await supabaseAdmin
+        .from("produtos")
+        .select("id, loja_id, preco")
+        .eq("id", data.produto_id)
+        .maybeSingle();
+      if (!prod || (prod as any).loja_id !== data.loja_id) {
+        throw new Error("Produto não pertence a esta loja");
+      }
+      if (Number(data.preco_promocional) >= Number((prod as any).preco)) {
+        throw new Error("Preço promocional deve ser menor que o preço atual do produto");
+      }
+      const { error: errUp } = await supabaseAdmin
+        .from("produtos")
+        .update({ preco_promocional: data.preco_promocional })
+        .eq("id", data.produto_id);
+      if (errUp) throw new Error(errUp.message);
+    }
+
+    // 4b. Cria registro pendente
     const linkFinal =
       (data.url && data.url.trim().length > 0
         ? data.url.trim()
@@ -101,6 +123,8 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
         body: data.body.trim(),
         url: linkFinal,
         image_url: data.image_url?.trim() || null,
+        produto_id: data.produto_id || null,
+        preco_promocional: data.preco_promocional ?? null,
         created_by: userId,
         status: "pending",
       })
