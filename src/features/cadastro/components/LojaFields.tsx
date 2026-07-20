@@ -1,6 +1,7 @@
 import { AuthInput } from "@/components/AuthCard";
 import { sanitizeDigits, sanitizeName } from "@/lib/sanitize";
 import { useLojaCategorias } from "@/hooks/use-loja-categorias";
+import { useCidades } from "@/hooks/use-cidades";
 import type { LojaCategoria } from "@/lib/loja-categorias";
 import { progressiveFormatCnpj } from "../logic/format-progressivo";
 
@@ -11,6 +12,8 @@ type Props = {
   setCnpj: (v: string) => void;
   categoria: LojaCategoria | "";
   setCategoria: (v: LojaCategoria | "") => void;
+  cityId: string;
+  setCityId: (v: string) => void;
   aceiteContrato: boolean;
   setAceiteContrato: (v: boolean) => void;
   contratoVersao?: number | null;
