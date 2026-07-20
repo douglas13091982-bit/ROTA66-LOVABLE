@@ -93,7 +93,7 @@ export function usePedidoForm({
   const [trocoPara, setTrocoPara] = useState<string>("");
   const [itens, setItens] = useState<Item[]>([{ nome: "", qtd: 1, preco: 0 }]);
   const [loading, setLoading] = useState(false);
-  const [bonus, setBonus] = useState<number>(0);
+  const [bonus, setBonus] = useState<number>(Number(bonusPadrao) || 0);
   const [coletaCoords, setColetaCoords] = useState<Coords>({
     lat: enderecoInicial?.lat ?? null,
     lng: enderecoInicial?.lng ?? null,
