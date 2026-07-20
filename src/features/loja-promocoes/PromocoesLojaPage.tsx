@@ -107,6 +107,7 @@ export function PromocoesLojaPage() {
           image_url: imageUrl.trim() || undefined,
           produto_id: produtoId || undefined,
           preco_promocional: precoValido ? preco : undefined,
+          valido_ate: validoAte ? new Date(validoAte).toISOString() : undefined,
         },
       });
     },
@@ -122,6 +123,7 @@ export function PromocoesLojaPage() {
       setImageUrl("");
       setProdutoId("");
       setPrecoPromo("");
+      setValidoAte("");
       qc.invalidateQueries({ queryKey: ["promocoes-loja", loja?.id] });
       qc.invalidateQueries({ queryKey: ["catalogo-produtos", loja?.id] });
     },
