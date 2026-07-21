@@ -26,7 +26,7 @@ export function TarifasTable({
         <tbody>
           {tarifas.map((t) => (
             <tr key={t.id} className="border-t border-border">
-              <td className="p-4 font-bold uppercase tracking-wider">{t.tipo_veiculo}</td>
+
               <td className="p-4">{t.faixa_km_min} – {t.faixa_km_max} km</td>
               <td className="p-4 text-primary font-bold">R$ {Number(t.valor).toFixed(2)}</td>
               <td className="p-4">R$ {Number(t.valor_minimo ?? 0).toFixed(2)}</td>
