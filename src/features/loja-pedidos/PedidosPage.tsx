@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { ConfirmarCodigoDialog } from "@/components/ConfirmarCodigoDialog";
@@ -44,6 +46,24 @@ export function PedidosPage() {
 
   const actions = usePedidoActions(loja?.id);
   const raioAgrupamentoKm = useRaioAgrupamentoKm();
+
+  async function handleConfirmarColeta(p: Pedido) {
+    if (p.codigo_coleta) {
+      const { error } = await supabase.rpc("confirmar_coleta", {
+        _pedido_id: p.id,
+        _codigo: p.codigo_coleta,
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.success("Coleta confirmada!");
+      qc.invalidateQueries({ queryKey: ["pedidos", loja?.id] });
+      return;
+    }
+    setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: null });
+  }
+
 
   const grouped = useMemo(() => {
     const map: Record<string, Pedido[]> = {};
@@ -94,9 +114,7 @@ export function PedidosPage() {
           lotesEmPreparo={lotesEmPreparo}
           actions={actions}
           onOpenDetalhe={setDetalhe}
-          onConfirmarColeta={(p) =>
-            setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
-          }
+          onConfirmarColeta={handleConfirmarColeta}
         />
       )}
 
@@ -105,11 +123,10 @@ export function PedidosPage() {
         lojaNome={loja.nome}
         actions={actions}
         onClose={() => setDetalhe(null)}
-        onConfirmarColeta={(p) =>
-          setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
-        }
+        onConfirmarColeta={handleConfirmarColeta}
         onUpdateDetalhe={setDetalhe}
       />
+
 
       {confirmar && (
         <ConfirmarCodigoDialog
