@@ -280,6 +280,7 @@ export function usePedidoForm({
     trocoPara, setTrocoPara,
     itens,
     bonus, setBonus,
+    origem, setOrigem,
     coletaCoords, setColetaCoords,
     entregaCoords, setEntregaCoords,
     enderecoColetaId,
