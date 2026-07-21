@@ -20,15 +20,27 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/login" });
     }
 
-    // Busca as roles uma única vez aqui e passa via context para que as
-    // rotas filhas (ex.: /entregador) não precisem repetir a query.
-    const { data: rolesData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", session.user.id);
+    // Centraliza roles + flag de colaborador de franqueado aqui para que
+    // TODOS os sub-layouts e componentes leiam a mesma fonte de verdade
+    // (evita UI escondida para colaboradores com acesso efetivo).
+    const [{ data: rolesData }, { data: colab }] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", session.user.id),
+      (supabase as any)
+        .from("franqueado_colaboradores")
+        .select("id")
+        .eq("colaborador_user_id", session.user.id)
+        .eq("ativo", true)
+        .maybeSingle(),
+    ]);
     const roles = (rolesData ?? []).map((r) => r.role as string);
+    const isFranqueadoColaborador = !!colab;
+    // Injeta role sintética para que checagens `roles.includes(...)` em
+    // componentes vejam o colaborador de franqueado sem query adicional.
+    if (isFranqueadoColaborador && !roles.includes("franqueado_colaborador")) {
+      roles.push("franqueado_colaborador");
+    }
 
-    return { user: session.user, roles };
+    return { user: session.user, roles, isFranqueadoColaborador };
   },
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
   notFoundComponent: () => <GlobalErrorBoundary statusCode={404} />,
