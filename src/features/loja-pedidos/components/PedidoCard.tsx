@@ -149,9 +149,9 @@ export function PedidoCard({
                   e.stopPropagation();
                   onConfirmarColeta(p);
                 }}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-[oklch(0.40_0.06_265)] hover:bg-[oklch(0.45_0.06_265)] text-white font-bold uppercase text-[9px] tracking-wider rounded"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-[9px] tracking-wider rounded"
               >
-                <KeyRound className="h-2.5 w-2.5" /> Coleta
+                <KeyRound className="h-2.5 w-2.5" /> Confirmar
               </span>
             )}
             {p.codigo_entrega && (
