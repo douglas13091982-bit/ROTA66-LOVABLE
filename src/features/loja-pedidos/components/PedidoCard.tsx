@@ -66,15 +66,6 @@ export function PedidoCard({
       <div className="flex items-center justify-between gap-2">
         <div className="font-display text-base tracking-wide leading-none">#{p.numero}</div>
         <div className="flex items-center gap-1.5">
-          {p.status === "em_rota" && p.codigo_coleta && (
-            <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border border-primary/50 bg-primary/10 text-primary font-mono font-bold text-[11px] tracking-widest"
-              title="Código de coleta"
-            >
-              <KeyRound className="h-2.5 w-2.5" />
-              {p.codigo_coleta}
-            </span>
-          )}
           <PedidoChatBadge pedidoId={p.id} senderRole="loja" />
           <span
             className={`px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full ${STATUS_COLOR[p.status]}`}
