@@ -31,10 +31,31 @@ export function useAnuncios() {
   };
 
   const handleFile = async (file: File) => {
-    if (!file.type.startsWith("image/")) return toast.error("Selecione uma imagem");
-    if (file.size > ANUNCIO_MAX_BYTES) return toast.error("Imagem muito grande (máx 800KB)");
+    const nameLower = (file.name || "").toLowerCase();
+    const looksImage =
+      file.type.startsWith("image/") ||
+      /\.(jpe?g|png|webp|heic|heif|gif|bmp|tiff?)$/.test(nameLower);
+    if (!looksImage) return toast.error("Selecione uma imagem");
+    // Limite alto só para evitar carregar arquivos absurdos no navegador antes da compressão.
+    if (file.size > 15 * 1024 * 1024)
+      return toast.error("Imagem muito grande (máx 15MB antes da compressão)");
     try {
-      const dataUrl = await convertImageToWebpDataUrl(file);
+      // Banner de anúncio: comprime agressivo (máx 1200px, qualidade 0.78).
+      let dataUrl = await convertImageToWebpDataUrl(file, {
+        maxDimension: 1200,
+        quality: 0.78,
+      });
+      // data URL em base64 ~1.37x o tamanho binário. Se ainda passar do limite,
+      // tenta comprimir mais forte antes de desistir.
+      if (dataUrl.length > ANUNCIO_MAX_BYTES * 1.4) {
+        dataUrl = await convertImageToWebpDataUrl(file, {
+          maxDimension: 900,
+          quality: 0.7,
+        });
+      }
+      if (dataUrl.length > ANUNCIO_MAX_BYTES * 1.4) {
+        return toast.error("Imagem muito pesada mesmo após compressão. Envie uma menor.");
+      }
       setImageDataUrl(dataUrl);
     } catch {
       toast.error("Falha ao processar imagem");
