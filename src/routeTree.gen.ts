@@ -83,6 +83,7 @@ import { Route as AuthenticatedAdminFranqueadosRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminFinanceiroRouteImport } from './routes/_authenticated/admin/financeiro'
 import { Route as AuthenticatedAdminFaturamentoSistemaRouteImport } from './routes/_authenticated/admin/faturamento-sistema'
 import { Route as AuthenticatedAdminEntregadoresRouteImport } from './routes/_authenticated/admin/entregadores'
+import { Route as AuthenticatedAdminDespesasRouteImport } from './routes/_authenticated/admin/despesas'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCreditosEntregadorRouteImport } from './routes/_authenticated/admin/creditos-entregador'
 import { Route as AuthenticatedAdminContratosRouteImport } from './routes/_authenticated/admin/contratos'
@@ -521,6 +522,12 @@ const AuthenticatedAdminEntregadoresRoute =
     path: '/entregadores',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminDespesasRoute =
+  AuthenticatedAdminDespesasRouteImport.update({
+    id: '/despesas',
+    path: '/despesas',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminDashboardRoute =
   AuthenticatedAdminDashboardRouteImport.update({
     id: '/dashboard',
@@ -645,6 +652,7 @@ export interface FileRoutesByFullPath {
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/despesas': typeof AuthenticatedAdminDespesasRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
@@ -731,6 +739,7 @@ export interface FileRoutesByTo {
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/despesas': typeof AuthenticatedAdminDespesasRoute
   '/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
@@ -823,6 +832,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/_authenticated/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/_authenticated/admin/despesas': typeof AuthenticatedAdminDespesasRoute
   '/_authenticated/admin/entregadores': typeof AuthenticatedAdminEntregadoresRoute
   '/_authenticated/admin/faturamento-sistema': typeof AuthenticatedAdminFaturamentoSistemaRoute
   '/_authenticated/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
@@ -915,6 +925,7 @@ export interface FileRouteTypes {
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
+    | '/admin/despesas'
     | '/admin/entregadores'
     | '/admin/faturamento-sistema'
     | '/admin/financeiro'
@@ -1001,6 +1012,7 @@ export interface FileRouteTypes {
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
+    | '/admin/despesas'
     | '/admin/entregadores'
     | '/admin/faturamento-sistema'
     | '/admin/financeiro'
@@ -1092,6 +1104,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/contratos'
     | '/_authenticated/admin/creditos-entregador'
     | '/_authenticated/admin/dashboard'
+    | '/_authenticated/admin/despesas'
     | '/_authenticated/admin/entregadores'
     | '/_authenticated/admin/faturamento-sistema'
     | '/_authenticated/admin/financeiro'
@@ -1697,6 +1710,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEntregadoresRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/despesas': {
+      id: '/_authenticated/admin/despesas'
+      path: '/despesas'
+      fullPath: '/admin/despesas'
+      preLoaderRoute: typeof AuthenticatedAdminDespesasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/dashboard': {
       id: '/_authenticated/admin/dashboard'
       path: '/dashboard'
@@ -1818,6 +1838,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminContratosRoute: typeof AuthenticatedAdminContratosRoute
   AuthenticatedAdminCreditosEntregadorRoute: typeof AuthenticatedAdminCreditosEntregadorRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+  AuthenticatedAdminDespesasRoute: typeof AuthenticatedAdminDespesasRoute
   AuthenticatedAdminEntregadoresRoute: typeof AuthenticatedAdminEntregadoresRoute
   AuthenticatedAdminFaturamentoSistemaRoute: typeof AuthenticatedAdminFaturamentoSistemaRoute
   AuthenticatedAdminFinanceiroRoute: typeof AuthenticatedAdminFinanceiroRoute
@@ -1855,6 +1876,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminCreditosEntregadorRoute:
       AuthenticatedAdminCreditosEntregadorRoute,
     AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+    AuthenticatedAdminDespesasRoute: AuthenticatedAdminDespesasRoute,
     AuthenticatedAdminEntregadoresRoute: AuthenticatedAdminEntregadoresRoute,
     AuthenticatedAdminFaturamentoSistemaRoute:
       AuthenticatedAdminFaturamentoSistemaRoute,
