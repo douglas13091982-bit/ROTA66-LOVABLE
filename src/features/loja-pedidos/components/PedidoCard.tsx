@@ -133,17 +133,28 @@ export function PedidoCard({
               </button>
             )}
             {p.status === "em_rota" && (
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onConfirmarColeta(p);
-                }}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-[9px] tracking-wider rounded"
-              >
-                <KeyRound className="h-2.5 w-2.5" /> Confirmar
-              </span>
+              <>
+                {p.codigo_coleta && (
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded border border-primary/50 bg-primary/10 text-primary font-mono font-bold text-[11px] tracking-widest"
+                    title="Código de coleta"
+                  >
+                    <KeyRound className="h-2.5 w-2.5" />
+                    {p.codigo_coleta}
+                  </span>
+                )}
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onConfirmarColeta(p);
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase text-[9px] tracking-wider rounded"
+                >
+                  <KeyRound className="h-2.5 w-2.5" /> Confirmar
+                </span>
+              </>
             )}
             {p.codigo_entrega && (
               <span
