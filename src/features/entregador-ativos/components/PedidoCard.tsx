@@ -207,6 +207,46 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             Cheguei na entrega
           </button>
+        ) : p.origem === "ifood" ? (
+          <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 space-y-3 shadow-soft">
+            <div className="text-center">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-600 text-white text-[10px] font-bold uppercase tracking-[0.18em] mb-2">
+                Pedido iFood
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Confirme a entrega pelo link oficial do iFood e depois toque em
+                <b className="text-foreground"> Finalizar entrega</b>.
+              </p>
+            </div>
+            <a
+              href="https://confirmacao-entrega-propria.ifood.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-lg"
+            >
+              Abrir confirmação iFood
+            </a>
+            <button
+              disabled={loading}
+              onClick={async () => {
+                const ok = await confirmar("");
+                if (!ok) return;
+                if (isCartao && p.endereco_coleta) {
+                  abrirRetornoLoja(p.endereco_coleta, p.id, p.numero);
+                }
+                refresh();
+              }}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-lg disabled:opacity-60"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Finalizando...
+                </>
+              ) : (
+                "Finalizar entrega"
+              )}
+            </button>
+          </div>
         ) : (
           <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 space-y-3 shadow-soft">
             <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold">

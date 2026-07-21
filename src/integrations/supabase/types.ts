@@ -2212,6 +2212,7 @@ export type Database = {
           mp_pix_expira_em: string | null
           numero: number
           observacoes: string | null
+          origem: string
           pagamento_aprovado_em: string | null
           rota_id: string | null
           rota_ordem: number | null
@@ -2262,6 +2263,7 @@ export type Database = {
           mp_pix_expira_em?: string | null
           numero?: number
           observacoes?: string | null
+          origem?: string
           pagamento_aprovado_em?: string | null
           rota_id?: string | null
           rota_ordem?: number | null
@@ -2312,6 +2314,7 @@ export type Database = {
           mp_pix_expira_em?: string | null
           numero?: number
           observacoes?: string | null
+          origem?: string
           pagamento_aprovado_em?: string | null
           rota_id?: string | null
           rota_ordem?: number | null
@@ -3483,6 +3486,7 @@ export type Database = {
           mp_pix_expira_em: string | null
           numero: number
           observacoes: string | null
+          origem: string
           pagamento_aprovado_em: string | null
           rota_id: string | null
           rota_ordem: number | null
