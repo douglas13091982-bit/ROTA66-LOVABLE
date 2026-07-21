@@ -1,6 +1,6 @@
 // Service Worker dedicado a Web Push para o ROTA 66 Entregador.
 // Não faz cache de assets — apenas escuta `push` e `notificationclick`.
-// v3 — restaura badge vermelha (Badging API) e ícone ROTA no card.
+// v4 — ícone grande à direita sobrescrito com PNG 1x1 transparente para ocultar.
 
 self.addEventListener("install", () => {
   self.skipWaiting();
