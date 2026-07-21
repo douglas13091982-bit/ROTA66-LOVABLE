@@ -91,6 +91,9 @@ export function EntregadoresTabela({
                       {st.label}
                     </span>
                   </td>
+                  <td className={`px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums ${Number(p.saldo_carteira) > 0 ? "text-green-500 font-bold" : "text-muted-foreground"}`}>
+                    {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                  </td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap text-[11px]">
                     {p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—"}
                   </td>
@@ -126,7 +129,7 @@ export function EntregadoresTabela({
             })}
             {list.length === 0 && !isLoading && (
               <tr>
-                <td colSpan={6} className="text-center text-muted-foreground py-8">
+                <td colSpan={7} className="text-center text-muted-foreground py-8">
                   Nenhum entregador no filtro.
                 </td>
               </tr>
