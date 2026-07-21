@@ -215,6 +215,7 @@ export function usePedidoForm({
         endereco_coleta_lng: coletaCoords.lng,
         endereco_entrega_lat: entregaCoords.lat,
         endereco_entrega_lng: entregaCoords.lng,
+        origem,
       };
 
       const { data, error } = await supabase
