@@ -41,6 +41,7 @@ export function AtivosPage({ destaque }: Props) {
         p.taxa_entrega,
         Number(p.loja_taxa_por_pedido ?? 0),
         p.loja_plano_mensal_ativo,
+        p.forma_pagamento,
       ),
     0,
   );
