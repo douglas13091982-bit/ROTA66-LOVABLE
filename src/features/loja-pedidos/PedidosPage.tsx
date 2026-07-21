@@ -18,7 +18,7 @@ import { PedidosToolbar } from "./components/PedidosToolbar";
 import { PedidosKanban, PedidosVazio } from "./components/PedidosKanban";
 import { PedidoDrawer } from "./components/PedidoDrawer";
 
-type ConfirmarState = { id: string; numero: number; tipo: "coleta" | "entrega" };
+type ConfirmarState = { id: string; numero: number; tipo: "coleta" | "entrega"; codigo: string | null };
 
 export function PedidosPage() {
   const { data: loja } = useMinhaLoja();
@@ -95,7 +95,7 @@ export function PedidosPage() {
           actions={actions}
           onOpenDetalhe={setDetalhe}
           onConfirmarColeta={(p) =>
-            setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta" })
+            setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
           }
         />
       )}
@@ -106,7 +106,7 @@ export function PedidosPage() {
         actions={actions}
         onClose={() => setDetalhe(null)}
         onConfirmarColeta={(p) =>
-          setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta" })
+          setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
         }
         onUpdateDetalhe={setDetalhe}
       />
@@ -120,6 +120,7 @@ export function PedidosPage() {
           pedidoId={confirmar.id}
           pedidoNumero={confirmar.numero}
           tipo={confirmar.tipo}
+          codigoEsperado={confirmar.codigo}
           onSuccess={() => qc.invalidateQueries({ queryKey: ["pedidos", loja.id] })}
         />
       )}
