@@ -8,7 +8,8 @@ export function useConfirmarEntrega(pedidoId: string) {
   const [loading, setLoading] = useState(false);
 
   async function confirmar(codigo: string) {
-    if (codigo.length !== 4) return false;
+    // Pedidos do iFood confirmam sem código (codigo === "")
+    if (codigo !== "" && codigo.length !== 4) return false;
     setLoading(true);
     const { error } = await supabase.rpc("confirmar_entrega", {
       _pedido_id: pedidoId,
