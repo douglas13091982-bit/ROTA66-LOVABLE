@@ -24,15 +24,22 @@ export function useAdminEntregadores() {
         .eq("role", "entregador");
       const ids = (roles ?? []).map((r) => r.user_id);
       if (ids.length === 0) return [];
-      const [{ data: profiles }, { data: statuses }] = await Promise.all([
+      const [{ data: profiles }, { data: statuses }, { data: saldos }] = await Promise.all([
         supabase.from("profiles").select("*").in("id", ids),
         (supabase as any)
           .from("entregador_status_conta")
           .select("*")
           .in("entregador_id", ids),
+        (supabase as any)
+          .from("entregadores_saldo_saque")
+          .select("entregador_id, saldo")
+          .in("entregador_id", ids),
       ]);
       const stMap = new Map<string, any>(
         (statuses ?? []).map((s: any) => [s.entregador_id, s])
+      );
+      const saldoMap = new Map<string, number>(
+        (saldos ?? []).map((s: any) => [s.entregador_id, Number(s.saldo) || 0])
       );
       // A lista final usa apenas profiles que o RLS liberou para este admin.
       // Para franqueado, isso remove entregadores sem city_id ou de outra cidade.
@@ -48,6 +55,7 @@ export function useAdminEntregadores() {
           ...p,
           created_at: p.created_at ?? null,
           status: stMap.get(id)?.status ?? "pendente",
+          saldo_carteira: saldoMap.get(id) ?? 0,
         };
       });
       rows.sort((a: any, b: any) => {
