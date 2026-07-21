@@ -1,8 +1,9 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Package } from "lucide-react";
 import { PedidoListItem } from "@/components/entregador/PedidoListItem";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
+import { minutosAtrasoGrupo, ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import { OrdenacaoToggle } from "./OrdenacaoToggle";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
 
@@ -62,28 +63,41 @@ export function RotasDisponiveisList({
   ordenacao,
   onOrdenacaoChange,
 }: Props) {
+  // Tick a cada 30s para reavaliar "em atraso" e o contador de minutos.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setAgora(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
+
   const gruposOrdenados = useMemo(() => {
     const arr = [...grupos];
-    if (ordenacao === "valor") {
-      arr.sort((a, b) => {
+    const cmpBase = (a: GrupoPedido, b: GrupoPedido) => {
+      if (ordenacao === "valor") {
         const va = a.items.reduce((s, p) => s + taxaParaExibir(p), 0);
         const vb = b.items.reduce((s, p) => s + taxaParaExibir(p), 0);
         return vb - va;
-      });
-    } else {
-      arr.sort((a, b) => {
-        // Primário: entrega mais próxima do ponto de coleta.
-        const dEntregaA = distanciaEntregaDesdeColetaKm(a);
-        const dEntregaB = distanciaEntregaDesdeColetaKm(b);
-        if (Math.abs(dEntregaA - dEntregaB) >= 0.05) {
-          return dEntregaA - dEntregaB;
-        }
-        // Desempate: proximidade da minha posição até o ponto de coleta.
-        return distanciaColetaKm(a, minhaPos) - distanciaColetaKm(b, minhaPos);
-      });
-    }
+      }
+      const dEntregaA = distanciaEntregaDesdeColetaKm(a);
+      const dEntregaB = distanciaEntregaDesdeColetaKm(b);
+      if (Math.abs(dEntregaA - dEntregaB) >= 0.05) {
+        return dEntregaA - dEntregaB;
+      }
+      return distanciaColetaKm(a, minhaPos) - distanciaColetaKm(b, minhaPos);
+    };
+    arr.sort((a, b) => {
+      // Prioridade absoluta: pedidos em atraso vêm sempre no topo,
+      // ordenados pelo maior tempo de espera primeiro.
+      const atrasoA = minutosAtrasoGrupo(a, agora);
+      const atrasoB = minutosAtrasoGrupo(b, agora);
+      const aAtrasado = atrasoA >= ATRASO_POOL_MINUTOS;
+      const bAtrasado = atrasoB >= ATRASO_POOL_MINUTOS;
+      if (aAtrasado !== bAtrasado) return aAtrasado ? -1 : 1;
+      if (aAtrasado && bAtrasado && atrasoA !== atrasoB) return atrasoB - atrasoA;
+      return cmpBase(a, b);
+    });
     return arr;
-  }, [grupos, ordenacao, taxaParaExibir, minhaPos]);
+  }, [grupos, ordenacao, taxaParaExibir, minhaPos, agora]);
 
   return (
     <div className="max-w-xl mx-auto">
@@ -112,6 +126,7 @@ export function RotasDisponiveisList({
           minhaPos={minhaPos}
           taxaParaExibir={taxaParaExibir}
           onAceitar={onAceitar}
+          minutosAtraso={minutosAtrasoGrupo(grupo, agora)}
         />
       ))}
     </div>
