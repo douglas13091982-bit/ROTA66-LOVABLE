@@ -95,16 +95,20 @@ export function buildSignupMetadata(role: Role, form: SignupForm) {
 }
 
 export function mapSignupError(message: string, hasCpf: boolean): string {
-  if (/cpf/i.test(message)) {
-    return message.includes("já existe") || message.includes("já está cadastrado")
-      ? "Este CPF já está cadastrado."
-      : "CPF inválido";
-  }
-  if (/database error saving new user/i.test(message) && hasCpf) {
+  const msg = message ?? "";
+  const cpfTaken =
+    /já está cadastrado/i.test(msg) ||
+    /já existe/i.test(msg) ||
+    /profiles_cpf_unique/i.test(msg) ||
+    (/duplicate key|unique constraint|23505/i.test(msg) && /cpf/i.test(msg));
+  if (cpfTaken) return "Este CPF já está cadastrado.";
+  if (/cpf/i.test(msg)) return "CPF inválido";
+  if (hasCpf && /database error saving new user|unexpected_failure/i.test(msg)) {
     return "Este CPF já está cadastrado.";
   }
-  return message;
+  return msg;
 }
+
 
 export function buildSlug(nomeLoja: string): string {
   const base =
