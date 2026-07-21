@@ -83,9 +83,16 @@ export function PedidoDrawer({
         <SheetHeader className="pb-4 border-b border-[oklch(0.78_0.16_75_/_0.25)]">
           <SheetTitle className="pp-title-page text-3xl text-white flex items-center justify-between gap-3">
             <span>Pedido <span className="text-[var(--rota-gold)]">#{detalhe.numero}</span></span>
-            <span className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full ${STATUS_COLOR[detalhe.status]}`}>
-              {STATUS_LABEL[detalhe.status]}
-            </span>
+            <div className="flex items-center gap-2">
+              {detalhe.origem === "ifood" && (
+                <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full bg-red-600 text-white">
+                  iFood
+                </span>
+              )}
+              <span className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full ${STATUS_COLOR[detalhe.status]}`}>
+                {STATUS_LABEL[detalhe.status]}
+              </span>
+            </div>
           </SheetTitle>
           <SheetDescription className="flex items-center gap-1.5 text-xs pp-eyebrow !tracking-[0.2em]">
             <Calendar className="h-3 w-3" />
