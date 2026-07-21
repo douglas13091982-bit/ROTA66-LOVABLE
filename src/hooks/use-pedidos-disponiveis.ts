@@ -395,6 +395,15 @@ function criarCalculadorTaxaExibida(
       return Number((freteEntregador + taxaPlano).toFixed(2));
     };
 
+    // FONTE DA VERDADE: o valor que o cliente já pagou/vai pagar está em
+    // `taxa_entrega`. Se existir, usa direto — não recalcula por km, senão
+    // o card do pool promete um valor maior do que o entregador vai receber
+    // de fato ao finalizar a corrida.
+    const taxaSalva = Number(p.taxa_entrega);
+    if (Number.isFinite(taxaSalva) && taxaSalva > 0) {
+      return Number(taxaSalva.toFixed(2));
+    }
+
     const freteSnapshot = liquidoEntregador(
       p.taxa_entrega,
       taxaPlano,
@@ -420,4 +429,5 @@ function criarCalculadorTaxaExibida(
     return tarifaClienteAPartirDoFrete(t ?? freteGlobalMinimo ?? freteSnapshot);
   };
 }
+
 
