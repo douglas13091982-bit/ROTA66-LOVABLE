@@ -10,8 +10,8 @@ export const Route = createFileRoute("/api/public/mp-webhook-plataforma")({
       GET: async () => new Response("ok", { status: 200 }),
       POST: async ({ request }) => {
         const { handleMpPlataformaWebhook } = await import("@/lib/mp-webhook-dispatcher.server");
-        // strict=false: preserva comportamento anterior tolerante a payloads sem assinatura.
-        return handleMpPlataformaWebhook(request, { strict: false });
+        // strict=true: exige assinatura x-signature válida do Mercado Pago.
+        return handleMpPlataformaWebhook(request, { strict: true });
       },
     },
   },
