@@ -47,6 +47,24 @@ export function PedidosPage() {
   const actions = usePedidoActions(loja?.id);
   const raioAgrupamentoKm = useRaioAgrupamentoKm();
 
+  async function handleConfirmarColeta(p: Pedido) {
+    if (p.codigo_coleta) {
+      const { error } = await supabase.rpc("confirmar_coleta", {
+        _pedido_id: p.id,
+        _codigo: p.codigo_coleta,
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      toast.success("Coleta confirmada!");
+      qc.invalidateQueries({ queryKey: ["pedidos", loja?.id] });
+      return;
+    }
+    setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: null });
+  }
+
+
   const grouped = useMemo(() => {
     const map: Record<string, Pedido[]> = {};
     for (const col of COLUMNS) map[col.key] = [];
