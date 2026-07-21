@@ -21,18 +21,8 @@ export function NovaTarifaForm({ onSubmit }: { onSubmit: (form: TarifaFormState)
         <DollarSign className="h-5 w-5 text-primary" />
         Nova tarifa
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 gap-3">
-        <FieldLabel label="Veículo" hint="Tipo de transporte do entregador">
-          <select
-            value={form.tipo_veiculo}
-            onChange={(e) => setForm({ ...form, tipo_veiculo: e.target.value as TipoVeiculo })}
-            className={inputClass}
-          >
-            {VEICULOS.map((v) => (
-              <option key={v} value={v}>{v}</option>
-            ))}
-          </select>
-        </FieldLabel>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
+
 
         <FieldLabel label="KM mínimo" hint="Início da faixa de distância">
           <input type="number" step="0.1" value={form.faixa_km_min}
