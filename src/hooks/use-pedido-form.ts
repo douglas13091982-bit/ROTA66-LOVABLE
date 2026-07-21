@@ -94,6 +94,7 @@ export function usePedidoForm({
   const [itens, setItens] = useState<Item[]>([{ nome: "", qtd: 1, preco: 0 }]);
   const [loading, setLoading] = useState(false);
   const [bonus, setBonus] = useState<number>(Number(bonusPadrao) || 0);
+  const [origem, setOrigem] = useState<"proprio" | "ifood">("proprio");
   const [coletaCoords, setColetaCoords] = useState<Coords>({
     lat: enderecoInicial?.lat ?? null,
     lng: enderecoInicial?.lng ?? null,
