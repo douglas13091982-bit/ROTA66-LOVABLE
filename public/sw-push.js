@@ -33,7 +33,7 @@ self.addEventListener("push", (event) => {
   const title = data.title || "🚨 Nova entrega disponível";
   const options = {
     body: data.body || "Toque para ver os pedidos disponíveis.",
-    // icon/image omitidos propositalmente para não exibir thumbnail grande à direita
+    icon: "/icons/blank-1x1.png", // PNG transparente 1x1 para não exibir thumbnail à direita
     badge: "/icons/badge-72.png",
     vibrate: [200, 80, 200],
     tag: data.tag || fallbackTag,
