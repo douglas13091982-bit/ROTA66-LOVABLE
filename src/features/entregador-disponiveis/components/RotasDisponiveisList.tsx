@@ -126,6 +126,7 @@ export function RotasDisponiveisList({
           minhaPos={minhaPos}
           taxaParaExibir={taxaParaExibir}
           onAceitar={onAceitar}
+          minutosAtraso={minutosAtrasoGrupo(grupo, agora)}
         />
       ))}
     </div>
