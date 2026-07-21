@@ -92,7 +92,28 @@ function PedidoListItemBase({
   return (
     <div
       className="pedido-list-card relative rounded-xl px-4 py-3.5 mb-3 transition-all duration-300 hover:-translate-y-0.5"
+      style={
+        atrasado
+          ? {
+              boxShadow:
+                "0 0 0 2px oklch(0.72 0.20 30), 0 10px 28px -10px oklch(0.55 0.22 30 / 0.65)",
+            }
+          : undefined
+      }
     >
+      {atrasado && (
+        <div
+          className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded-md text-[11px] font-black uppercase tracking-[0.16em] animate-pulse"
+          style={{
+            background:
+              "linear-gradient(90deg, oklch(0.55 0.22 30), oklch(0.62 0.22 40))",
+            color: "#fff",
+          }}
+        >
+          <AlertTriangle className="h-3.5 w-3.5" />
+          <span>Em atraso · {minutosAtraso} min</span>
+        </div>
+      )}
       <div className="flex items-center justify-between gap-3 mb-1.5">
         <div className="flex items-center gap-2 text-[12px] font-semibold">
           <span style={{ color: "oklch(0.68 0.20 27)" }}>#{principal.numero}</span>
