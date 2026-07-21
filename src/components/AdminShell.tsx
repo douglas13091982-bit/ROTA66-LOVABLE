@@ -45,6 +45,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/revendedores", label: "Revendedores", icon: Handshake, area: null, ownerOnly: true },
   { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
   { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true, donoFranquiaOnly: true },
+  { to: "/admin/despesas", label: "Despesas do negócio", icon: Calculator, area: null, franqueadoOnly: true },
   { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
   { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, donoFranquiaOnly: true },
   { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, ownerOnly: true },
