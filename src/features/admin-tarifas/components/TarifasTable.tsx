@@ -48,7 +48,8 @@ export function TarifasTable({
           ))}
           {tarifas.length === 0 && (
             <tr>
-              <td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhuma tarifa cadastrada.</td>
+              <td colSpan={6} className="p-8 text-center text-muted-foreground">Nenhuma tarifa cadastrada.</td>
+
             </tr>
           )}
         </tbody>
