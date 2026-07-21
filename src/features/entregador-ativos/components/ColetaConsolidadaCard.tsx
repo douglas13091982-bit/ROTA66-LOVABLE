@@ -33,6 +33,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
           Number(p.taxa_entrega ?? 0),
           Number(p.loja_taxa_por_pedido ?? 0),
           p.loja_plano_mensal_ativo,
+          p.forma_pagamento,
         ),
       0,
     );
