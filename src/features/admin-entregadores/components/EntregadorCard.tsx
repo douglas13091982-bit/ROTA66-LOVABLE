@@ -117,6 +117,16 @@ export function EntregadorCard({
             {dl.label}
           </span>
         )}
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
+            Number(p.saldo_carteira) > 0
+              ? "bg-green-600/20 text-green-500"
+              : "bg-muted text-muted-foreground"
+          }`}
+          title="Saldo disponível na carteira"
+        >
+          Carteira: {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+        </span>
         {p.created_at && (
           <span className="text-[10px] text-muted-foreground ml-auto">
             Cadastro: {new Date(p.created_at).toLocaleDateString("pt-BR")}

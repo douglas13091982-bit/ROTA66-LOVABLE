@@ -10,6 +10,7 @@ export type EntregadorRow = {
   tipo_veiculo: string | null;
   status: StatusEntregador;
   created_at: string | null;
+  saldo_carteira: number;
   [key: string]: any;
 };
 
