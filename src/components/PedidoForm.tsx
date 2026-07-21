@@ -132,6 +132,25 @@ export function PedidoForm({
         onRemove={form.removeItem}
       />
 
+      <label className="flex items-start gap-3 p-3 rounded-md border border-border bg-background/60 cursor-pointer hover:border-primary/60">
+        <input
+          type="checkbox"
+          checked={form.origem === "ifood"}
+          onChange={(e) => form.setOrigem(e.target.checked ? "ifood" : "proprio")}
+          className="mt-0.5 h-4 w-4 accent-primary"
+        />
+        <div className="text-xs">
+          <div className="font-bold uppercase tracking-wider text-foreground">
+            Pedido do iFood
+          </div>
+          <div className="text-muted-foreground mt-0.5">
+            Marque se este pedido veio do iFood. O entregador finalizará a entrega pelo
+            link oficial do iFood (sem código de 4 dígitos).
+          </div>
+        </div>
+      </label>
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className={LABEL_CLS}>Forma de pagamento</label>
