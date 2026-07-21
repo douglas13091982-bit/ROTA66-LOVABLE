@@ -107,7 +107,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
     <div className="panel-premium flex">
       {/* Sidebar */}
       <aside
-        className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 w-[260px] h-screen pp-glass-strong border-r flex flex-col transition-transform duration-500`}
+        className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 ${collapsed ? "w-[76px]" : "w-[260px]"} h-screen pp-glass-strong border-r flex flex-col transition-[transform,width] duration-500`}
         style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
       >
         {/* Brand */}
@@ -115,15 +115,25 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
           <div className="flex items-center justify-between gap-2">
             <Link to="/" className="flex items-center gap-3 group min-w-0">
               <div className="relative shrink-0">
-                <img src={logoUrl} alt={nomeSistema} className="h-14 w-14 object-contain transition-transform duration-500 group-hover:scale-105" />
+                <img src={logoUrl} alt={nomeSistema} className={`${collapsed ? "h-10 w-10" : "h-14 w-14"} object-contain transition-all duration-500 group-hover:scale-105`} />
               </div>
-              <div className="min-w-0">
-                <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
-                <div className="pp-eyebrow text-[9px] mt-0.5">Painel da loja</div>
-              </div>
+              {!collapsed && (
+                <div className="min-w-0">
+                  <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
+                  <div className="pp-eyebrow text-[9px] mt-0.5">Painel da loja</div>
+                </div>
+              )}
             </Link>
             <button onClick={() => setOpen(false)} className="md:hidden text-white/60 hover:text-white" aria-label="Fechar menu">
               <X className="h-5 w-5" />
+            </button>
+            <button
+              onClick={toggleCollapsed}
+              className="hidden md:grid h-7 w-7 place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition"
+              aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+              title={collapsed ? "Expandir menu" : "Recolher menu"}
+            >
+              {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </button>
           </div>
         </div>
@@ -132,7 +142,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <div className="pp-eyebrow px-3 pb-2">Operação</div>
+          {!collapsed && <div className="pp-eyebrow px-3 pb-2">Operação</div>}
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
@@ -142,16 +152,17 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className={`pp-nav ${active ? "pp-nav-active" : ""}`}
+                title={collapsed ? item.label : undefined}
+                className={`pp-nav ${active ? "pp-nav-active" : ""} ${collapsed ? "justify-center px-2" : ""}`}
               >
                 <Icon />
-                <span className="flex-1 truncate">{item.label}</span>
-                {badge > 0 && (
+                {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+                {!collapsed && badge > 0 && (
                   <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-red text-white text-[10px] font-bold flex items-center justify-center">
                     {badge > 9 ? "9+" : badge}
                   </span>
                 )}
-                {active && badge === 0 && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
+                {!collapsed && active && badge === 0 && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
               </Link>
             );
           })}
@@ -159,7 +170,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
 
         {/* Footer */}
         <div className="px-3 py-3 border-t border-white/5 space-y-2">
-          {loja && (
+          {loja && !collapsed && (
             <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.02] border border-white/5">
               <div className="min-w-0 flex-1">
                 <div className="text-[12px] font-bold uppercase tracking-wider text-white">Loja Aberta</div>
@@ -179,23 +190,27 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
               </button>
             </div>
           )}
-          <div className="flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/[0.02] border border-white/5">
+          <div className={`flex items-center gap-3 ${collapsed ? "px-0 justify-center" : "px-2"} py-2.5 rounded-xl bg-white/[0.02] border border-white/5`}>
             <div className="h-9 w-9 rounded-full grid place-items-center text-sm font-semibold text-white shrink-0" style={{ background: "linear-gradient(135deg, oklch(0.62 0.22 27), oklch(0.42 0.20 27))" }}>
               {initials}
             </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[12px] font-semibold text-white truncate">Conta</div>
-              <div className="text-[10.5px] text-white/50 truncate">{user?.email}</div>
-            </div>
-            <button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition disabled:opacity-50"
-              aria-label="Sair"
-              title="Sair"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
+            {!collapsed && (
+              <div className="min-w-0 flex-1">
+                <div className="text-[12px] font-semibold text-white truncate">Conta</div>
+                <div className="text-[10.5px] text-white/50 truncate">{user?.email}</div>
+              </div>
+            )}
+            {!collapsed && (
+              <button
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition disabled:opacity-50"
+                aria-label="Sair"
+                title="Sair"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
       </aside>
