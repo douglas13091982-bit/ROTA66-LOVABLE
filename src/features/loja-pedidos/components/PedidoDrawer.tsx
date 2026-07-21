@@ -175,6 +175,27 @@ export function PedidoDrawer({
             </div>
           </div>
 
+          {detalhe.codigo_coleta && detalhe.status !== "entregue" && detalhe.status !== "cancelado" && (
+            <div className="pp-card p-4 space-y-3 border-2 border-[oklch(0.78_0.16_75_/_0.5)] bg-[oklch(0.16_0.015_260_/_0.7)]">
+              <div className="pp-eyebrow flex items-center gap-2">
+                <KeyRound className="h-3.5 w-3.5" /> Código de coleta (confira com o entregador)
+              </div>
+              <div className="flex justify-center gap-2">
+                {String(detalhe.codigo_coleta).split("").map((d, i) => (
+                  <div
+                    key={i}
+                    className="h-14 w-12 flex items-center justify-center rounded-lg border-2 border-[oklch(0.78_0.16_75_/_0.5)] bg-[oklch(0.20_0.02_260)] text-3xl font-mono font-bold text-[var(--rota-gold)]"
+                  >
+                    {d}
+                  </div>
+                ))}
+              </div>
+              <div className="text-[11px] text-center text-[var(--panel-text-muted)]">
+                Peça para o entregador mostrar o mesmo número no app antes de liberar o pedido.
+              </div>
+            </div>
+          )}
+
           {detalhe.entregador_id && (
             <EntregadorPixCard pedidoId={detalhe.id} pedidoNumero={detalhe.numero} />
           )}

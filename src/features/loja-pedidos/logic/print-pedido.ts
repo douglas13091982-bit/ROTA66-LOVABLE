@@ -32,6 +32,9 @@ interface PedidoImprimivel {
   taxa_entrega?: number | null;
   bonus_entregador?: number | null;
   forma_pagamento?: string | null;
+  codigo_coleta?: string | null;
+  codigo_entrega?: string | null;
+  origem?: string | null;
 }
 
 function buildItensTableRows(itens: PedidoItem[]): string {
@@ -74,6 +77,9 @@ const PRINT_STYLES = `
   td { padding: 2px 0; vertical-align: top; }
   .total { font-size: 14px; font-weight: bold; }
   hr { border: none; border-top: 1px dashed #000; margin: 8px 0; }
+  .codigo-box { border: 2px dashed #000; padding: 10px 8px; text-align: center; margin: 10px 0; }
+  .codigo-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+  .codigo-num { font-size: 40px; font-weight: 900; letter-spacing: 12px; font-family: 'Courier New', monospace; line-height: 1; }
   @media print { body { padding: 0; } }
 `;
 
@@ -101,6 +107,16 @@ export async function imprimirPedido(
 <body>
   <h1>${escapeHtml(lojaNome ?? "Pedido")}</h1>
   <div class="muted" style="text-align:center">Pedido #${escapeHtml(p.numero)} — ${escapeHtml(formatDateTime(p.created_at))}</div>
+
+  ${p.codigo_coleta ? `<div class="codigo-box">
+    <div class="codigo-label">Código de coleta</div>
+    <div class="codigo-num">${escapeHtml(p.codigo_coleta)}</div>
+    <div class="muted" style="margin-top:4px">Confira com o entregador antes de liberar o pedido</div>
+  </div>` : ""}
+  ${p.codigo_entrega && p.origem !== "ifood" ? `<div class="codigo-box">
+    <div class="codigo-label">Código de entrega (cliente)</div>
+    <div class="codigo-num">${escapeHtml(p.codigo_entrega)}</div>
+  </div>` : ""}
 
   <h2>Cliente</h2>
   <div>${escapeHtml(p.cliente_nome ?? "")}</div>
