@@ -55,8 +55,10 @@ function PedidoListItemBase({
   minhaPos,
   taxaParaExibir,
   onAceitar,
+  minutosAtraso = 0,
 }: Props) {
   const principal = grupo.items[0];
+  const atrasado = minutosAtraso >= ATRASO_POOL_MINUTOS;
   const totalBonus = useMemo(
     () => grupo.items.reduce((s, p) => s + Number(p.bonus_entregador ?? 0), 0),
     [grupo.items],
