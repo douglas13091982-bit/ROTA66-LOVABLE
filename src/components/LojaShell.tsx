@@ -262,6 +262,14 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
           >
             <Menu className="h-5 w-5" />
           </button>
+          <button
+            className="hidden md:grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition"
+            onClick={toggleCollapsed}
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+            title={collapsed ? "Expandir menu" : "Recolher menu"}
+          >
+            <PanelLeft className="h-5 w-5" />
+          </button>
 
           <div className="flex items-center gap-2 text-white/40 text-[12px]">
             <span>Loja</span>
