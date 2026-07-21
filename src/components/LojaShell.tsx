@@ -59,8 +59,20 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   
   
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.localStorage.getItem("loja-sidebar-collapsed") === "1";
+  });
   const [scrolled, setScrolled] = useState(false);
   const [togglingAtiva, setTogglingAtiva] = useState(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed((v) => {
+      const nv = !v;
+      try { window.localStorage.setItem("loja-sidebar-collapsed", nv ? "1" : "0"); } catch {}
+      return nv;
+    });
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
