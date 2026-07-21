@@ -17,20 +17,13 @@ import type { TarifaFaixa } from "@/types/pedido";
 
 type Coords = { lat: number | null; lng: number | null };
 
-async function buscarTarifasPorVeiculo(): Promise<Map<string, TarifaFaixa[]>> {
+async function buscarTarifas(): Promise<TarifaFaixa[]> {
   const { data } = await supabase
     .from("tarifas_globais")
-    .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km, tipo_veiculo")
+    .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
     .eq("ativa", true)
     .order("faixa_km_min", { ascending: true });
-  const map = new Map<string, TarifaFaixa[]>();
-  for (const row of (data ?? []) as any[]) {
-    const tv = String(row.tipo_veiculo ?? "moto");
-    const arr = map.get(tv) ?? [];
-    arr.push(row as TarifaFaixa);
-    map.set(tv, arr);
-  }
-  return map;
+  return (data ?? []) as TarifaFaixa[];
 }
 
 async function buscarTaxaPlanoLoja(
