@@ -1,7 +1,9 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AlertTriangle } from "lucide-react";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { resumirEnderecoEntrega } from "@/lib/endereco";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 
 type Props = {
@@ -9,6 +11,8 @@ type Props = {
   minhaPos: LatLng | null;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
+  /** Minutos que o pedido mais antigo do grupo está no pool. */
+  minutosAtraso?: number;
 };
 
 // Arredonda para ~11m (4 casas decimais) — evita re-render a cada drift
