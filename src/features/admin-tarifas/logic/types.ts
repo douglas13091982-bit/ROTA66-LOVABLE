@@ -1,4 +1,5 @@
-export const VEICULOS = ["moto", "carro", "caminhonete"] as const;
+// Tarifa única padrão — sem distinção por tipo de veículo.
+export const VEICULOS = ["moto"] as const;
 export type TipoVeiculo = (typeof VEICULOS)[number];
 
 export type TarifaRow = {

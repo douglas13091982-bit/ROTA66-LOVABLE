@@ -67,22 +67,15 @@ function CalcularFretePage() {
     );
   };
 
-  const { data: tarifasPorVeiculo = new Map<string, TarifaFaixa[]>() } = useQuery({
-    queryKey: ["tarifas-globais-publico", "todos-veiculos"],
-    queryFn: async (): Promise<Map<string, TarifaFaixa[]>> => {
+  const { data: tarifas = [] } = useQuery({
+    queryKey: ["tarifas-globais-publico"],
+    queryFn: async (): Promise<TarifaFaixa[]> => {
       const { data } = await supabase
         .from("tarifas_globais")
-        .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km, tipo_veiculo")
+        .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
         .eq("ativa", true)
         .order("faixa_km_min", { ascending: true });
-      const map = new Map<string, TarifaFaixa[]>();
-      for (const row of (data ?? []) as any[]) {
-        const tv = String(row.tipo_veiculo ?? "moto");
-        const arr = map.get(tv) ?? [];
-        arr.push(row as TarifaFaixa);
-        map.set(tv, arr);
-      }
-      return map;
+      return (data ?? []) as TarifaFaixa[];
     },
   });
 
@@ -91,7 +84,7 @@ function CalcularFretePage() {
     !!coletaCoords?.lng &&
     !!entregaCoords?.lat &&
     !!entregaCoords?.lng &&
-    tarifasPorVeiculo.size > 0;
+    tarifas.length > 0;
 
   const { data: resultado, isFetching: calculando } = useQuery({
     queryKey: [
@@ -101,7 +94,7 @@ function CalcularFretePage() {
       coletaCoords?.lng,
       entregaCoords?.lat,
       entregaCoords?.lng,
-      tarifasPorVeiculo.size,
+      tarifas.length,
     ],
     enabled: podeCalcular,
     queryFn: async () => {
@@ -110,18 +103,13 @@ function CalcularFretePage() {
       const resp = await calcularDistanciaDirigindo({ data: { origem, destino } });
       if (resp.km == null) return null;
       const km = resp.km;
-      // Cliente paga o MAIOR frete entre os tipos de veículo ativos.
-      let base: number | null = null;
-      for (const [, tarifas] of tarifasPorVeiculo) {
-        const v = calcularTarifaPorFaixa(km, tarifas);
-        if (v == null) continue;
-        if (base == null || v > base) base = v;
-      }
+      const base = calcularTarifaPorFaixa(km, tarifas);
       if (base == null) return null;
       const total = Number(base.toFixed(2));
       return { km, base, total };
     },
   });
+
 
 
 

@@ -15,7 +15,6 @@ export function TarifasTable({
       <table className="w-full text-sm">
         <thead className="bg-background">
           <tr className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <th className="text-left p-4">Veículo</th>
             <th className="text-left p-4">Faixa (km)</th>
             <th className="text-left p-4">Base</th>
             <th className="text-left p-4">Mínimo</th>
@@ -27,7 +26,7 @@ export function TarifasTable({
         <tbody>
           {tarifas.map((t) => (
             <tr key={t.id} className="border-t border-border">
-              <td className="p-4 font-bold uppercase tracking-wider">{t.tipo_veiculo}</td>
+
               <td className="p-4">{t.faixa_km_min} – {t.faixa_km_max} km</td>
               <td className="p-4 text-primary font-bold">R$ {Number(t.valor).toFixed(2)}</td>
               <td className="p-4">R$ {Number(t.valor_minimo ?? 0).toFixed(2)}</td>
@@ -49,7 +48,8 @@ export function TarifasTable({
           ))}
           {tarifas.length === 0 && (
             <tr>
-              <td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhuma tarifa cadastrada.</td>
+              <td colSpan={6} className="p-8 text-center text-muted-foreground">Nenhuma tarifa cadastrada.</td>
+
             </tr>
           )}
         </tbody>

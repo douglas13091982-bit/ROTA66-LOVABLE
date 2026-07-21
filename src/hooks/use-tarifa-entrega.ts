@@ -17,20 +17,13 @@ import type { TarifaFaixa } from "@/types/pedido";
 
 type Coords = { lat: number | null; lng: number | null };
 
-async function buscarTarifasPorVeiculo(): Promise<Map<string, TarifaFaixa[]>> {
+async function buscarTarifas(): Promise<TarifaFaixa[]> {
   const { data } = await supabase
     .from("tarifas_globais")
-    .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km, tipo_veiculo")
+    .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
     .eq("ativa", true)
     .order("faixa_km_min", { ascending: true });
-  const map = new Map<string, TarifaFaixa[]>();
-  for (const row of (data ?? []) as any[]) {
-    const tv = String(row.tipo_veiculo ?? "moto");
-    const arr = map.get(tv) ?? [];
-    arr.push(row as TarifaFaixa);
-    map.set(tv, arr);
-  }
-  return map;
+  return (data ?? []) as TarifaFaixa[];
 }
 
 async function buscarTaxaPlanoLoja(
@@ -81,29 +74,18 @@ export function useTarifaEntrega(
     let cancelled = false;
     (async () => {
       const km = haversineKm(coleta, entrega);
-      const [tarifasPorVeiculo, plano] = await Promise.all([
-        buscarTarifasPorVeiculo(),
+      const [tarifas, plano] = await Promise.all([
+        buscarTarifas(),
         buscarTaxaPlanoLoja(lojaId),
       ]);
       if (cancelled) return;
-      if (tarifasPorVeiculo.size === 0) {
+      if (tarifas.length === 0) {
         setTaxa(0);
         setInfo(null);
         return;
       }
 
-      // Cliente paga o MAIOR frete entre os tipos de veículo ativos, para
-      // sempre cobrir o repasse do entregador (independente de moto/carro).
-      let valorGlobal: number | null = null;
-      let tarifasBase: TarifaFaixa[] = [];
-      for (const [, tarifas] of tarifasPorVeiculo) {
-        const v = calcularTarifaPorFaixa(km, tarifas);
-        if (v == null) continue;
-        if (valorGlobal == null || v > valorGlobal) {
-          valorGlobal = v;
-          tarifasBase = tarifas;
-        }
-      }
+      const valorGlobal = calcularTarifaPorFaixa(km, tarifas);
       if (valorGlobal == null) {
         setTaxa(0);
         setInfo(null);
@@ -112,7 +94,7 @@ export function useTarifaEntrega(
 
       const taxaPlano = plano.taxa;
       const total = Number((valorGlobal + taxaPlano).toFixed(2));
-      const faixa = encontrarFaixa(km, tarifasBase);
+      const faixa = encontrarFaixa(km, tarifas);
       setTaxa(total);
       if (faixa) {
         const sufixoPlano =
@@ -123,6 +105,7 @@ export function useTarifaEntrega(
           `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · frete R$ ${valorGlobal.toFixed(2)}${sufixoPlano}`,
         );
       }
+
 
 
     })();

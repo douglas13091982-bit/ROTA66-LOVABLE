@@ -221,29 +221,16 @@ export function usePedidosDisponiveis(
   });
 
   const { data: tarifasGlobais } = useQuery({
-    queryKey: ["tarifas-globais-entregador", tipoVeiculo],
+    queryKey: ["tarifas-globais-entregador"],
     enabled: !!userId,
     queryFn: async () => {
+      // Tarifa única padrão — sem distinção por tipo de veículo.
       const { data, error } = await supabase
         .from("tarifas_globais")
         .select("*")
-        .eq("ativa", true)
-        .eq("tipo_veiculo", tipoVeiculo);
+        .eq("ativa", true);
       if (error) throw error;
-      if ((data ?? []).length > 0 || tipoVeiculo === "moto") {
-        return (data ?? []) as unknown as TarifaFaixa[];
-      }
-
-      // Se ainda não houver uma tabela específica para o veículo do entregador,
-      // usa a tarifa global padrão da operação (moto). Isso evita voltar para
-      // snapshots antigos do pedido, como R$ 6,00, quando a global atual é R$ 8,00.
-      const fallback = await supabase
-        .from("tarifas_globais")
-        .select("*")
-        .eq("ativa", true)
-        .eq("tipo_veiculo", "moto");
-      if (fallback.error) throw fallback.error;
-      return (fallback.data ?? []) as unknown as TarifaFaixa[];
+      return (data ?? []) as unknown as TarifaFaixa[];
     },
   });
 
