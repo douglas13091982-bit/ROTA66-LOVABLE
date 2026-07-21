@@ -3,7 +3,7 @@ import type { PedidoHistorico } from "../logic/types";
 
 export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   const taxaLoja = Number(pedido.loja_taxa_por_pedido ?? 0);
-  const valor = liquidoEntregador(pedido.taxa_entrega, taxaLoja, pedido.loja_plano_mensal_ativo);
+  const valor = liquidoEntregador(pedido.taxa_entrega, taxaLoja, pedido.loja_plano_mensal_ativo, pedido.forma_pagamento);
   const hora = new Date(pedido.updated_at).toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
