@@ -56,6 +56,13 @@ export function DisponiveisPage() {
     [aceitarGrupo],
   );
 
+  // Enquanto o status de aprovação/documentos ainda está carregando, não
+  // renderiza nada — evita o "piscar" da tela de aguardando aprovação em
+  // recargas do app quando o usuário já está aprovado.
+  if (aprovacaoLoading || docsLoading) {
+    return <EntregadorShell title="Disponíveis"><div className="h-40" /></EntregadorShell>;
+  }
+
   if (!aprovado) {
     return (
       <EntregadorShell title="Disponíveis">
