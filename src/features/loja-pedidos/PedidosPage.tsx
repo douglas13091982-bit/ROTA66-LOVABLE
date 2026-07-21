@@ -114,9 +114,7 @@ export function PedidosPage() {
           lotesEmPreparo={lotesEmPreparo}
           actions={actions}
           onOpenDetalhe={setDetalhe}
-          onConfirmarColeta={(p) =>
-            setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
-          }
+          onConfirmarColeta={handleConfirmarColeta}
         />
       )}
 
@@ -125,11 +123,10 @@ export function PedidosPage() {
         lojaNome={loja.nome}
         actions={actions}
         onClose={() => setDetalhe(null)}
-        onConfirmarColeta={(p) =>
-          setConfirmar({ id: p.id, numero: p.numero, tipo: "coleta", codigo: p.codigo_coleta ?? null })
-        }
+        onConfirmarColeta={handleConfirmarColeta}
         onUpdateDetalhe={setDetalhe}
       />
+
 
       {confirmar && (
         <ConfirmarCodigoDialog
