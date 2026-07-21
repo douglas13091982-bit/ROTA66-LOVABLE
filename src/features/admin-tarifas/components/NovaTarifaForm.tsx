@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DollarSign, Plus } from "lucide-react";
-import { INITIAL_FORM, VEICULOS, type TarifaFormState, type TipoVeiculo } from "../logic/types";
+import { INITIAL_FORM, type TarifaFormState } from "../logic/types";
 import { FieldLabel, inputClass } from "./FieldLabel";
 
 export function NovaTarifaForm({ onSubmit }: { onSubmit: (form: TarifaFormState) => Promise<boolean> }) {
