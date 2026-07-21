@@ -66,6 +66,7 @@ function PedidoListItemBase({
             taxaParaExibir(p),
             Number(p.loja_taxa_por_pedido ?? 0),
             p.loja_plano_mensal_ativo,
+            p.forma_pagamento,
           ),
         0,
       ) + totalBonus,

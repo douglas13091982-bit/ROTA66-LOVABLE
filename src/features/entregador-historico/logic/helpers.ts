@@ -51,11 +51,11 @@ export function agregar(
     for (const p of dentro) {
       const k = new Date(p.updated_at).toISOString().slice(0, 10);
       const b = buckets.find((x) => x.key === k);
-      if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo);
+      if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento);
     }
 
     const total = dentro.reduce(
-      (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo),
+      (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento),
       0
     );
     return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
@@ -82,11 +82,11 @@ export function agregar(
     const d = new Date(p.updated_at);
     const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     const b = buckets.find((x) => x.key === k);
-    if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo);
+    if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento);
   }
 
   const total = dentro.reduce(
-    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo),
+    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento),
     0
   );
   return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
