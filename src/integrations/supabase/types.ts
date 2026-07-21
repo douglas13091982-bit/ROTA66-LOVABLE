@@ -1114,6 +1114,81 @@ export type Database = {
         }
         Relationships: []
       }
+      franqueado_despesas: {
+        Row: {
+          categoria: string | null
+          competencia: string
+          created_at: string
+          created_by: string | null
+          descricao: string
+          franqueado_user_id: string
+          id: string
+          observacao: string | null
+          pago: boolean
+          tipo: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          categoria?: string | null
+          competencia: string
+          created_at?: string
+          created_by?: string | null
+          descricao: string
+          franqueado_user_id: string
+          id?: string
+          observacao?: string | null
+          pago?: boolean
+          tipo?: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          categoria?: string | null
+          competencia?: string
+          created_at?: string
+          created_by?: string | null
+          descricao?: string
+          franqueado_user_id?: string
+          id?: string
+          observacao?: string | null
+          pago?: boolean
+          tipo?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
+      }
+      franqueado_socios: {
+        Row: {
+          created_at: string
+          franqueado_user_id: string
+          id: string
+          nome: string
+          ordem: number
+          percentual: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          franqueado_user_id: string
+          id?: string
+          nome: string
+          ordem?: number
+          percentual?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          franqueado_user_id?: string
+          id?: string
+          nome?: string
+          ordem?: number
+          percentual?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       franqueados_config: {
         Row: {
           ativo: boolean
