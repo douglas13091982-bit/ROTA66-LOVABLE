@@ -15,7 +15,6 @@ export function TarifasTable({
       <table className="w-full text-sm">
         <thead className="bg-background">
           <tr className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <th className="text-left p-4">Veículo</th>
             <th className="text-left p-4">Faixa (km)</th>
             <th className="text-left p-4">Base</th>
             <th className="text-left p-4">Mínimo</th>
