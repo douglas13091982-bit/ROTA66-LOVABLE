@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 import type { AdminEntregadorItem } from "../logic/types";
