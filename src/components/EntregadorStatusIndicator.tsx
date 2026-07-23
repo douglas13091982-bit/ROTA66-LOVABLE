@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Circle, Clock, MapPin, WifiOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 
