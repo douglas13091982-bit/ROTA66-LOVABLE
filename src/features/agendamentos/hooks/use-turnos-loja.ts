@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { EntregadorAceito, TurnoRow } from "../logic/types";
 
 export function useTurnosLoja(lojaId: string | undefined) {
@@ -62,17 +63,16 @@ export function useTurnosLoja(lojaId: string | undefined) {
 
   useEffect(() => {
     if (!lojaId) return;
-    const ch = supabase
-      .channel(`turnos-loja-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "agendamentos", filter: `loja_id=eq.${lojaId}` },
-        () => carregar(),
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`turnos-loja-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "agendamentos", filter: `loja_id=eq.${lojaId}` },
+          () => carregar(),
+        )
+        .subscribe()
+    );
   }, [lojaId, carregar]);
 
   return { turnos, loading, carregar };

@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import {
   criarRecargaPixLoja,
   consultarStatusRecargaLoja,
@@ -101,27 +102,26 @@ export function useSaldoLoja(lojaId: string | null | undefined) {
   // Realtime: atualiza saldo e movimentos automaticamente (ex: débito ao entregar pedido)
   useEffect(() => {
     if (!lojaId) return;
-    const channel = supabase
-      .channel(`loja-saldo-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "lojas_saldo", filter: `loja_id=eq.${lojaId}` },
-        () => {
-          qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "lojas_saldo_movimentos", filter: `loja_id=eq.${lojaId}` },
-        () => {
-          qc.invalidateQueries({ queryKey: ["loja-saldo-movs", lojaId] });
-          qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`loja-saldo-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "lojas_saldo", filter: `loja_id=eq.${lojaId}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "lojas_saldo_movimentos", filter: `loja_id=eq.${lojaId}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["loja-saldo-movs", lojaId] });
+            qc.invalidateQueries({ queryKey: ["loja-saldo", lojaId] });
+          },
+        )
+        .subscribe()
+    );
   }, [lojaId, qc]);
 
   return {

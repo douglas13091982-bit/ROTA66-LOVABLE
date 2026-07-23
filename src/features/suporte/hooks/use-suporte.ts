@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { Mensagem, Modo, Ticket } from "../types";
 
 const TICKETS_KEY = (modo: Modo, lojaId?: string) =>
@@ -33,19 +34,18 @@ export function useTicketsRealtime(modo: Modo, lojaId?: string) {
   useEffect(() => {
     if (modo === "loja" && !lojaId) return;
     const channelName = `suporte-tickets-${modo}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "suporte_tickets" },
-        () => {
-          qc.invalidateQueries({ queryKey: TICKETS_KEY(modo, lojaId) });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "suporte_tickets" },
+          () => {
+            qc.invalidateQueries({ queryKey: TICKETS_KEY(modo, lojaId) });
+          },
+        )
+        .subscribe(),
+    );
   }, [modo, lojaId, qc, uid]);
 }
 
@@ -71,19 +71,18 @@ export function useMensagensRealtime(ticketId: string | null) {
   useEffect(() => {
     if (!ticketId) return;
     const channelName = `suporte-mensagens-${ticketId}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
-        () => {
-          qc.invalidateQueries({ queryKey: ["suporte-mensagens", ticketId] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["suporte-mensagens", ticketId] });
+          },
+        )
+        .subscribe(),
+    );
   }, [ticketId, qc, uid]);
 }
 

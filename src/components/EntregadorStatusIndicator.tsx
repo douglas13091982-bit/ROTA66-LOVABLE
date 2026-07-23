@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Circle, Clock, MapPin, WifiOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 
@@ -39,22 +40,21 @@ export function EntregadorStatusIndicator() {
   // Realtime: sempre que o próprio status mudar no banco, refaz a query
   useEffect(() => {
     if (!user?.id) return;
-    const ch = supabase
-      .channel(`entregador-self-status-${user.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "entregador_status",
-          filter: `entregador_id=eq.${user.id}`,
-        },
-        () => qc.invalidateQueries({ queryKey: ["entregador-self-status", user.id] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`entregador-self-status-${user.id}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "entregador_status",
+            filter: `entregador_id=eq.${user.id}`,
+          },
+          () => qc.invalidateQueries({ queryKey: ["entregador-self-status", user.id] })
+        )
+        .subscribe()
+    );
   }, [user?.id, qc]);
 
   const { data } = useQuery({

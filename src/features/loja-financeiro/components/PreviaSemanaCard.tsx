@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 
 type Props = {
   lojaId: string;
@@ -44,17 +45,16 @@ export function PreviaSemanaCard({ lojaId, taxaPorPedido, planoMensalAtivo }: Pr
   useEffect(() => {
     if (!lojaId) return;
     carregar();
-    const ch = supabase
-      .channel(`previa-semana-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "pedidos", filter: `loja_id=eq.${lojaId}` },
-        () => carregar(),
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`previa-semana-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "pedidos", filter: `loja_id=eq.${lojaId}` },
+          () => carregar(),
+        )
+        .subscribe()
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lojaId]);
 

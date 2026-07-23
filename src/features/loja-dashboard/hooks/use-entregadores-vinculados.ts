@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 import type { EntregadorItem } from "../logic/types";
 
@@ -9,17 +10,16 @@ export function useEntregadoresVinculados(lojaId: string) {
   const { ttlMin, tick } = useOnlineTtlTicker(20_000);
 
   useEffect(() => {
-    const ch = supabase
-      .channel(`loja-entregador-status-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_status" },
-        () => qc.invalidateQueries({ queryKey: ["loja-entregadores-lista", lojaId] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`loja-entregador-status-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_status" },
+          () => qc.invalidateQueries({ queryKey: ["loja-entregadores-lista", lojaId] })
+        )
+        .subscribe()
+    );
   }, [lojaId, qc]);
 
   const { data: raw, isLoading } = useQuery({

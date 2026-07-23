@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 import type { AdminEntregadorItem } from "../logic/types";
@@ -11,18 +12,18 @@ export function useEntregadoresLista() {
   const { ttlMin, tick } = useOnlineTtlTicker(20_000);
 
   useEffect(() => {
-    const ch = supabase
-      .channel("admin-entregador-status")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_status" },
-        () => qc.invalidateQueries({ queryKey: ["admin-entregadores-lista"] }),
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel("admin-entregador-status")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_status" },
+          () => qc.invalidateQueries({ queryKey: ["admin-entregadores-lista"] }),
+        )
+        .subscribe()
+    );
   }, [qc]);
+
 
   const { data: raw, isLoading } = useQuery({
     queryKey: ["admin-entregadores-lista", user?.id],

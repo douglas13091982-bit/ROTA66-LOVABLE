@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { RastreioData } from "../logic/types";
 
 export function useRastreio(pedidoId: string) {
@@ -19,17 +20,16 @@ export function useRastreio(pedidoId: string) {
   });
 
   useEffect(() => {
-    const channel = supabase
-      .channel(`rastreio-${pedidoId}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "pedidos", filter: `id=eq.${pedidoId}` },
-        () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`rastreio-${pedidoId}`)
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "pedidos", filter: `id=eq.${pedidoId}` },
+          () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
+        )
+        .subscribe()
+    );
   }, [pedidoId, qc]);
 
   return query;

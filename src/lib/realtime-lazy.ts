@@ -20,7 +20,7 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 
-type ChannelLike = { unsubscribe?: () => unknown } & Record<string, unknown>;
+type ChannelLike = { unsubscribe?: () => unknown };
 
 type IdleHandle = number;
 type IdleCallback = (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void;
