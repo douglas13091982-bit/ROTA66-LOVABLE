@@ -45,32 +45,31 @@ export function useTurnosEntregador(userId: string | undefined) {
 
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`turnos-entregador-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "agendamento_ofertas",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        (payload) => {
-          carregar();
-          if (payload.eventType === "INSERT") {
-            toast.success("🔔 Nova oportunidade de turno disponível!", { duration: 6000 });
-          }
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "agendamentos" },
-        () => carregar(),
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`turnos-entregador-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "agendamento_ofertas",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          (payload) => {
+            carregar();
+            if (payload.eventType === "INSERT") {
+              toast.success("🔔 Nova oportunidade de turno disponível!", { duration: 6000 });
+            }
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "agendamentos" },
+          () => carregar(),
+        )
+        .subscribe()
+    );
   }, [userId, carregar]);
 
   return { disponiveis, meus, loading, carregar };
