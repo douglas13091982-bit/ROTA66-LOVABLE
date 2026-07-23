@@ -139,19 +139,21 @@ export function EntregadoresMapaTempoReal({
 
     // Realtime: qualquer mudança em entregador_status (ex.: entregador clica
     // offline) dispara refetch imediato — sem esperar o próximo polling.
-    const ch = supabase
-      .channel(`mapa-entregadores-${source}-${lojaId ?? "admin"}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_status" },
-        () => fetchData()
-      )
-      .subscribe();
+    const stopCh = subscribeLazy(() =>
+      supabase
+        .channel(`mapa-entregadores-${source}-${lojaId ?? "admin"}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_status" },
+          () => fetchData()
+        )
+        .subscribe()
+    );
 
     return () => {
       cancel = true;
       clearInterval(id);
-      supabase.removeChannel(ch);
+      stopCh();
     };
   }, [source, lojaId]);
 
