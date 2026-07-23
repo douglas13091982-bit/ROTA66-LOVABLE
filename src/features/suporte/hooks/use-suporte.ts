@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { Mensagem, Modo, Ticket } from "../types";
 
 const TICKETS_KEY = (modo: Modo, lojaId?: string) =>
