@@ -65,46 +65,47 @@ export function useAdminFinanceiro() {
 
   useEffect(() => {
     carregar();
-    const channel = supabase
-      .channel("admin-financeiro-realtime")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "cobrancas_loja" },
-        (payload) => {
-          carregar();
-          const novo: any = payload.new;
-          const antigo: any = payload.old;
-          if (
-            payload.eventType === "UPDATE" &&
-            novo?.pago_solicitado_em &&
-            !novo?.pago &&
-            antigo?.pago_solicitado_em !== novo?.pago_solicitado_em
-          ) {
-            toast.info(`Uma loja avisou o pagamento de uma taxa (R$ ${Number(novo.valor).toFixed(2)})`);
+    const stopCh = subscribeLazy(() =>
+      supabase
+        .channel("admin-financeiro-realtime")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "cobrancas_loja" },
+          (payload) => {
+            carregar();
+            const novo: any = payload.new;
+            const antigo: any = payload.old;
+            if (
+              payload.eventType === "UPDATE" &&
+              novo?.pago_solicitado_em &&
+              !novo?.pago &&
+              antigo?.pago_solicitado_em !== novo?.pago_solicitado_em
+            ) {
+              toast.info(`Uma loja avisou o pagamento de uma taxa (R$ ${Number(novo.valor).toFixed(2)})`);
+            }
           }
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "mensalidades_loja" },
-        (payload) => {
-          carregar();
-          const novo: any = payload.new;
-          const antigo: any = payload.old;
-          if (
-            payload.eventType === "UPDATE" &&
-            novo?.pago_solicitado_em &&
-            !novo?.pago &&
-            antigo?.pago_solicitado_em !== novo?.pago_solicitado_em
-          ) {
-            toast.info(`Uma loja avisou o pagamento de uma mensalidade (R$ ${Number(novo.valor).toFixed(2)})`);
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "mensalidades_loja" },
+          (payload) => {
+            carregar();
+            const novo: any = payload.new;
+            const antigo: any = payload.old;
+            if (
+              payload.eventType === "UPDATE" &&
+              novo?.pago_solicitado_em &&
+              !novo?.pago &&
+              antigo?.pago_solicitado_em !== novo?.pago_solicitado_em
+            ) {
+              toast.info(`Uma loja avisou o pagamento de uma mensalidade (R$ ${Number(novo.valor).toFixed(2)})`);
+            }
           }
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+        )
+        .subscribe()
+    );
+    return () => { stopCh(); };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
