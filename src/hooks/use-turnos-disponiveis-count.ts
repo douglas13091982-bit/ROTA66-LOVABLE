@@ -7,6 +7,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 
 const REFETCH_MS = 30_000;
@@ -33,31 +34,30 @@ export function useTurnosDisponiveisCount(): number {
 
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`turnos-count-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "agendamento_ofertas",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        () => {
-          qc.invalidateQueries({ queryKey: ["turnos-disponiveis-count", userId] });
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "agendamentos" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["turnos-disponiveis-count", userId] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`turnos-count-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "agendamento_ofertas",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          () => {
+            qc.invalidateQueries({ queryKey: ["turnos-disponiveis-count", userId] });
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "agendamentos" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["turnos-disponiveis-count", userId] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
   return data ?? 0;

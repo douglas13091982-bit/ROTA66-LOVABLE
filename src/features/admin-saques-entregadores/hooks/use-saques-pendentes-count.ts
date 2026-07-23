@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useFranquia } from "@/hooks/use-franquia";
 
 export function useSaquesPendentesCount() {
@@ -30,22 +31,20 @@ export function useSaquesPendentesCount() {
   useEffect(() => {
     if (!enabled) return;
     const channelName = `admin-entregador-saques-rt-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_saques" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["admin-saques-entregadores-pendentes-count"] });
-          qc.invalidateQueries({ queryKey: ["admin-saques-entregadores"] });
-          qc.invalidateQueries({ queryKey: ["admin-saques-entregadores-recentes"] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_saques" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["admin-saques-entregadores-pendentes-count"] });
+            qc.invalidateQueries({ queryKey: ["admin-saques-entregadores"] });
+            qc.invalidateQueries({ queryKey: ["admin-saques-entregadores-recentes"] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [qc, uid, enabled]);
 
   return query;
