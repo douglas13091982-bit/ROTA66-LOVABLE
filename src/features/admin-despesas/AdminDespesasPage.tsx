@@ -27,6 +27,8 @@ type Despesa = {
   pago: boolean;
   observacao: string | null;
   created_at: string;
+  recorrente: boolean;
+  recorrencia_id: string | null;
 };
 
 function competenciaAtual(): string {
@@ -55,6 +57,8 @@ export function AdminDespesasPage() {
     tipo: "despesa" as "despesa" | "investimento",
     valor: "",
     observacao: "",
+    recorrente: false,
+    meses: "12",
   });
 
   const { data: socios, isLoading: loadingSocios } = useQuery({
@@ -104,21 +108,47 @@ export function AdminDespesasPage() {
     mutationFn: async () => {
       const valor = Number(form.valor.replace(",", "."));
       if (!form.descricao.trim() || !valor || valor <= 0) throw new Error("Preencha descrição e valor");
-      const { error } = await (supabase as any).from("franqueado_despesas").insert({
-        franqueado_user_id: franqueadoUserId,
-        descricao: form.descricao.trim(),
-        categoria: form.categoria.trim() || null,
-        tipo: form.tipo,
-        valor,
-        competencia,
-        observacao: form.observacao.trim() || null,
-        created_by: user?.id,
+
+      // Monta as competências (recorrente = N meses a partir da competência atual)
+      const meses = form.recorrente ? Math.min(Math.max(Number(form.meses) || 12, 1), 60) : 1;
+      const recorrencia_id = form.recorrente
+        ? (globalThis.crypto?.randomUUID?.() ??
+            `${Date.now()}-${Math.random().toString(36).slice(2)}`)
+        : null;
+
+      const [yStr, mStr] = competencia.split("-");
+      const baseYear = Number(yStr);
+      const baseMonth = Number(mStr); // 1-12
+      const rows = Array.from({ length: meses }).map((_, i) => {
+        const total = baseMonth - 1 + i;
+        const y = baseYear + Math.floor(total / 12);
+        const m = (total % 12) + 1;
+        const comp = `${y}-${String(m).padStart(2, "0")}`;
+        return {
+          franqueado_user_id: franqueadoUserId,
+          descricao: form.descricao.trim(),
+          categoria: form.categoria.trim() || null,
+          tipo: form.tipo,
+          valor,
+          competencia: comp,
+          observacao: form.observacao.trim() || null,
+          created_by: user?.id,
+          recorrente: form.recorrente,
+          recorrencia_id,
+        };
       });
+
+      const { error } = await (supabase as any).from("franqueado_despesas").insert(rows);
       if (error) throw error;
+      return { meses };
     },
-    onSuccess: () => {
-      toast.success("Lançamento adicionado");
-      setForm({ descricao: "", categoria: "", tipo: "despesa", valor: "", observacao: "" });
+    onSuccess: (r) => {
+      toast.success(
+        r.meses > 1
+          ? `Programado em ${r.meses} meses`
+          : "Lançamento adicionado",
+      );
+      setForm({ descricao: "", categoria: "", tipo: "despesa", valor: "", observacao: "", recorrente: false, meses: "12" });
       qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Erro ao adicionar"),
@@ -131,6 +161,24 @@ export function AdminDespesasPage() {
     },
     onSuccess: () => {
       toast.success("Excluído");
+      qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Erro"),
+  });
+
+  const delSerieMut = useMutation({
+    mutationFn: async (d: Despesa) => {
+      if (!d.recorrencia_id) throw new Error("Não é uma série recorrente");
+      // Remove apenas a competência atual e futuras (mantém histórico já pago)
+      const { error } = await (supabase as any)
+        .from("franqueado_despesas")
+        .delete()
+        .eq("recorrencia_id", d.recorrencia_id)
+        .gte("competencia", d.competencia);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Série encerrada a partir deste mês");
       qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Erro"),
@@ -349,6 +397,35 @@ export function AdminDespesasPage() {
               onChange={(e) => setForm({ ...form, observacao: e.target.value })}
             />
           </div>
+
+          {/* Recorrência mensal */}
+          <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3 flex flex-wrap items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-white cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.recorrente}
+                onChange={(e) => setForm({ ...form, recorrente: e.target.checked })}
+                className="h-4 w-4 accent-yellow-500"
+              />
+              <span>Esta despesa é <b>mensal</b> (recorrente)</span>
+            </label>
+            {form.recorrente && (
+              <div className="flex items-center gap-2 text-sm text-white/80">
+                <span>Programar por</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={60}
+                  value={form.meses}
+                  onChange={(e) => setForm({ ...form, meses: e.target.value })}
+                  className="w-20 px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm text-right focus:outline-none focus:border-white/30"
+                />
+                <span>meses</span>
+                <span className="text-xs text-white/50">— lançamentos serão criados automaticamente</span>
+              </div>
+            )}
+          </div>
+
           <button
             className="mt-4 px-4 py-2 rounded-lg font-semibold text-black flex items-center gap-2"
             style={{ background: "var(--rota-gold)" }}
@@ -420,6 +497,11 @@ export function AdminDespesasPage() {
                       {d.categoria && (
                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-white/5 text-white/60">{d.categoria}</span>
                       )}
+                      {d.recorrente && (
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">
+                          Mensal
+                        </span>
+                      )}
                     </div>
                     {d.observacao && <div className="text-xs text-white/50 mt-0.5">{d.observacao}</div>}
                   </div>
@@ -432,12 +514,25 @@ export function AdminDespesasPage() {
                   >
                     {d.pago ? "Pago" : "Em aberto"}
                   </button>
+                  {d.recorrencia_id && (
+                    <button
+                      onClick={() =>
+                        confirm("Encerrar a recorrência a partir deste mês? Meses futuros serão removidos.") &&
+                        delSerieMut.mutate(d)
+                      }
+                      className="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-orange-600/20 text-orange-300 hover:bg-orange-600/30"
+                      title="Encerrar série recorrente"
+                    >
+                      Encerrar série
+                    </button>
+                  )}
                   <button
                     onClick={() => confirm("Excluir lançamento?") && delMut.mutate(d.id)}
                     className="text-red-400 hover:text-red-300"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
+
                 </div>
               ))}
             </div>

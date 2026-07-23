@@ -1125,6 +1125,8 @@ export type Database = {
           id: string
           observacao: string | null
           pago: boolean
+          recorrencia_id: string | null
+          recorrente: boolean
           tipo: string
           updated_at: string
           valor: number
@@ -1139,6 +1141,8 @@ export type Database = {
           id?: string
           observacao?: string | null
           pago?: boolean
+          recorrencia_id?: string | null
+          recorrente?: boolean
           tipo?: string
           updated_at?: string
           valor?: number
@@ -1153,6 +1157,8 @@ export type Database = {
           id?: string
           observacao?: string | null
           pago?: boolean
+          recorrencia_id?: string | null
+          recorrente?: boolean
           tipo?: string
           updated_at?: string
           valor?: number
