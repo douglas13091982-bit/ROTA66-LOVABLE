@@ -497,6 +497,11 @@ export function AdminDespesasPage() {
                       {d.categoria && (
                         <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-white/5 text-white/60">{d.categoria}</span>
                       )}
+                      {d.recorrente && (
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-yellow-500/15 text-yellow-300 border border-yellow-500/30">
+                          Mensal
+                        </span>
+                      )}
                     </div>
                     {d.observacao && <div className="text-xs text-white/50 mt-0.5">{d.observacao}</div>}
                   </div>
@@ -509,12 +514,25 @@ export function AdminDespesasPage() {
                   >
                     {d.pago ? "Pago" : "Em aberto"}
                   </button>
+                  {d.recorrencia_id && (
+                    <button
+                      onClick={() =>
+                        confirm("Encerrar a recorrência a partir deste mês? Meses futuros serão removidos.") &&
+                        delSerieMut.mutate(d)
+                      }
+                      className="text-[10px] font-bold uppercase px-2.5 py-1 rounded bg-orange-600/20 text-orange-300 hover:bg-orange-600/30"
+                      title="Encerrar série recorrente"
+                    >
+                      Encerrar série
+                    </button>
+                  )}
                   <button
                     onClick={() => confirm("Excluir lançamento?") && delMut.mutate(d.id)}
                     className="text-red-400 hover:text-red-300"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
+
                 </div>
               ))}
             </div>
