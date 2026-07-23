@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 
 /**
@@ -39,19 +40,18 @@ export function useChatNaoLidasGlobal() {
 
   useEffect(() => {
     if (!userId) return;
-    const channel = supabase
-      .channel(`chat-nao-lidas-global-${userId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedido_mensagens" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map", userId] });
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`chat-nao-lidas-global-${userId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "pedido_mensagens" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map", userId] });
+          }
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
   return query;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { useChatNaoLidasPorPedido } from "@/hooks/use-chat-nao-lidas";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
@@ -115,20 +116,19 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
   // Realtime
   useEffect(() => {
     if (!open) return;
-    const channel = supabase
-      .channel(`chat-pedido-${pedidoId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
-        () => {
-          qc.invalidateQueries({ queryKey: ["chat-pedido", pedidoId] });
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`chat-pedido-${pedidoId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "pedido_mensagens", filter: `pedido_id=eq.${pedidoId}` },
+          () => {
+            qc.invalidateQueries({ queryKey: ["chat-pedido", pedidoId] });
+            qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
+          }
+        )
+        .subscribe() as never,
+    );
   }, [open, pedidoId, qc]);
 
   // Scroll bottom
