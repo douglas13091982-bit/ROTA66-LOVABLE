@@ -12,6 +12,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { haversineKm } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
@@ -95,29 +96,28 @@ export function usePedidosDisponiveis(
   // e os grupos somem da tela imediatamente.
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`self-status-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "entregador_status",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        (payload) => {
-          const novo = (payload.new ?? null) as { online?: boolean; updated_at?: string } | null;
-          if (novo) {
-            qc.setQueryData(["entregador-self-status", userId], novo);
-          } else {
-            qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
+    return subscribeLazy(() =>
+      supabase
+        .channel(`self-status-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "entregador_status",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          (payload) => {
+            const novo = (payload.new ?? null) as { online?: boolean; updated_at?: string } | null;
+            if (novo) {
+              qc.setQueryData(["entregador-self-status", userId], novo);
+            } else {
+              qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
+            }
           }
-        }
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
 
@@ -148,24 +148,23 @@ export function usePedidosDisponiveis(
   // aparecer/sumir instantaneamente sem esperar o refetch de 15s.
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`rota-ativa-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "pedidos",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        () => {
-          qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`rota-ativa-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "pedidos",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          () => {
+            qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
 
@@ -237,73 +236,69 @@ export function usePedidosDisponiveis(
   // Realtime — ofertas externas para mim
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`minhas-ofertas-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "pedido_ofertas",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        (payload) => {
-          if (!estouOnlineRef.current) return;
-          qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
-          if (payload.eventType === "INSERT") {
-            toast.success("🚨 Nova oferta de pedido disponível!");
-          }
-        },
-
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`minhas-ofertas-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "pedido_ofertas",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          (payload) => {
+            if (!estouOnlineRef.current) return;
+            qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+            if (payload.eventType === "INSERT") {
+              toast.success("🚨 Nova oferta de pedido disponível!");
+            }
+          },
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
   // Realtime — qualquer pedido novo invalida o pool unificado
   useEffect(() => {
     if (!userId) return;
-    const channel = supabase
-      .channel(`entregador-pedidos-${userId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedidos" },
-        (payload) => {
-          if (!estouOnlineRef.current) return;
-          qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
-          const novo = payload.new as {
-            id?: string;
-            numero?: number | string | null;
-            status?: string;
-            entregador_id?: string | null;
-          } | null;
-          const anterior = payload.old as {
-            status?: string;
-            entregador_id?: string | null;
-          } | null;
-          const ficouPronto =
-            (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
-            novo?.status === "pronto" &&
-            !novo?.entregador_id;
-          if (ficouPronto) {
-            toast.success("🚨 Novo pedido pronto para retirar!");
-            mostrarNotificacaoLocalNovoPedido(novo, userId);
-          }
-          // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
-          const pedidoMeu =
-            novo?.entregador_id === userId || anterior?.entregador_id === userId;
-          if (pedidoMeu) {
-            qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
-          }
-        },
-
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`entregador-pedidos-${userId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "pedidos" },
+          (payload) => {
+            if (!estouOnlineRef.current) return;
+            qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+            const novo = payload.new as {
+              id?: string;
+              numero?: number | string | null;
+              status?: string;
+              entregador_id?: string | null;
+            } | null;
+            const anterior = payload.old as {
+              status?: string;
+              entregador_id?: string | null;
+            } | null;
+            const ficouPronto =
+              (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
+              novo?.status === "pronto" &&
+              !novo?.entregador_id;
+            if (ficouPronto) {
+              toast.success("🚨 Novo pedido pronto para retirar!");
+              mostrarNotificacaoLocalNovoPedido(novo, userId);
+            }
+            // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
+            const pedidoMeu =
+              novo?.entregador_id === userId || anterior?.entregador_id === userId;
+            if (pedidoMeu) {
+              qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
+            }
+          },
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
 

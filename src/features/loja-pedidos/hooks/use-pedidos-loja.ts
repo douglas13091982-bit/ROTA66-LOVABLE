@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import {
   DEFAULT_SOM,
   fetchConfigSom,
@@ -70,24 +71,23 @@ export function usePedidosRealtime(lojaId: string | undefined) {
 
   useEffect(() => {
     if (!lojaId) return;
-    const channel = supabase
-      .channel(`pedidos-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "pedidos", filter: `loja_id=eq.${lojaId}` },
-        (payload) => {
-          qc.invalidateQueries({ queryKey: ["pedidos", lojaId] });
-          if (payload.eventType === "INSERT") {
-            toast.success("🚨 Novo pedido recebido!");
-            const cfg = { ...somCfgRef.current, ativo: true, volume: Math.max(somCfgRef.current.volume ?? 0.6, 1) };
-            tocarNotificacao(cfg);
-          }
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`pedidos-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "pedidos", filter: `loja_id=eq.${lojaId}` },
+          (payload) => {
+            qc.invalidateQueries({ queryKey: ["pedidos", lojaId] });
+            if (payload.eventType === "INSERT") {
+              toast.success("🚨 Novo pedido recebido!");
+              const cfg = { ...somCfgRef.current, ativo: true, volume: Math.max(somCfgRef.current.volume ?? 0.6, 1) };
+              tocarNotificacao(cfg);
+            }
+          },
+        )
+        .subscribe() as never,
+    );
   }, [lojaId, qc]);
 }
 
@@ -104,36 +104,35 @@ export function useChatMensagensEntregador(opts: {
 
   useEffect(() => {
     if (!lojaId || !pedidos || pedidos.length === 0) return;
-    const channel = supabase
-      .channel(`chat-msgs-loja-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "pedido_mensagens" },
-        (payload) => {
-          const msg: any = payload.new;
-          if (!msg || msg.sender_role !== "entregador") return;
-          const pedido = pedidosRef.current.find((p) => p.id === msg.pedido_id);
-          if (!pedido) return;
-          if (detalheIdRef.current === msg.pedido_id) return;
-          const preview = String(msg.mensagem ?? "").slice(0, 80);
-          toast.message(`💬 Nova mensagem · Pedido #${pedido.numero}`, {
-            description: preview,
-            duration: 10000,
-            action: {
-              label: "Abrir",
-              onClick: () => {
-                const atual = pedidosRef.current.find((p) => p.id === msg.pedido_id) ?? pedido;
-                onAbrir(atual);
+    return subscribeLazy(() =>
+      supabase
+        .channel(`chat-msgs-loja-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "pedido_mensagens" },
+          (payload) => {
+            const msg: any = payload.new;
+            if (!msg || msg.sender_role !== "entregador") return;
+            const pedido = pedidosRef.current.find((p) => p.id === msg.pedido_id);
+            if (!pedido) return;
+            if (detalheIdRef.current === msg.pedido_id) return;
+            const preview = String(msg.mensagem ?? "").slice(0, 80);
+            toast.message(`💬 Nova mensagem · Pedido #${pedido.numero}`, {
+              description: preview,
+              duration: 10000,
+              action: {
+                label: "Abrir",
+                onClick: () => {
+                  const atual = pedidosRef.current.find((p) => p.id === msg.pedido_id) ?? pedido;
+                  onAbrir(atual);
+                },
               },
-            },
-          });
-          qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+            });
+            qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map"] });
+          },
+        )
+        .subscribe() as never,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lojaId, !!pedidos?.length, qc]);
 }

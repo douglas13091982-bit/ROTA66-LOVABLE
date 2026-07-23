@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { PedidoAtivo } from "../logic/types";
 
 function mapPedido(p: any): PedidoAtivo {
@@ -25,24 +26,23 @@ export function usePedidosAtivos(userId: string | undefined) {
   // visível no app do entregador por vários segundos.
   useEffect(() => {
     if (!userId) return;
-    const ch = supabase
-      .channel(`pedidos-ativos-${userId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "pedidos",
-          filter: `entregador_id=eq.${userId}`,
-        },
-        () => {
-          qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`pedidos-ativos-${userId}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "pedidos",
+            filter: `entregador_id=eq.${userId}`,
+          },
+          () => {
+            qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [userId, qc]);
 
   return useQuery({
