@@ -1,9 +1,12 @@
 import { useState } from "react";
-import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Download, FileSpreadsheet, Upload, AlertCircle, CheckCircle2 } from "lucide-react";
+
+// xlsx é ~150 KB gzip. Import dinâmico mantém fora do bundle da rota de
+// produtos até o lojista realmente abrir "Importar em massa".
+const loadXLSX = () => import("xlsx");
 
 type LinhaImport = {
   nome: string;
@@ -24,7 +27,8 @@ const EXEMPLO = [
   { nome: "Batata Frita G", descricao: "Porção 300g", preco: 22.5, categoria: "Acompanhamentos", ativo: "sim", ordem: 3 },
 ];
 
-function baixarModelo(formato: "csv" | "xlsx") {
+async function baixarModelo(formato: "csv" | "xlsx") {
+  const XLSX = await loadXLSX();
   const ws = XLSX.utils.json_to_sheet(EXEMPLO, { header: COLUNAS as unknown as string[] });
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Produtos");
@@ -101,10 +105,11 @@ export function ImportarProdutosDialog({ lojaId, onImported, children }: {
   async function handleArquivo(file: File) {
     setArquivo(file.name);
     try {
+      const XLSX = await loadXLSX();
       const buf = await file.arrayBuffer();
       const wb = XLSX.read(buf, { type: "array" });
       const ws = wb.Sheets[wb.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json<any>(ws, { defval: "" });
+      const json = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws, { defval: "" });
       if (!json.length) {
         toast.error("Planilha vazia");
         return;
@@ -115,8 +120,8 @@ export function ImportarProdutosDialog({ lojaId, onImported, children }: {
         return;
       }
       // normaliza chaves para lowercase
-      const norm = json.map((r) => {
-        const out: any = {};
+      const norm = json.map((r: Record<string, unknown>) => {
+        const out: Record<string, unknown> = {};
         for (const k of Object.keys(r)) out[k.toLowerCase().trim()] = r[k];
         return out;
       });

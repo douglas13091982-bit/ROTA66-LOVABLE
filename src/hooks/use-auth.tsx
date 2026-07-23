@@ -37,23 +37,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return list;
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    let currentUserId: string | null = null;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
       setUser(newSession?.user ?? null);
-      if (newSession?.user) {
-        // Defer role fetch to avoid deadlocks inside the auth callback
-        setTimeout(() => {
-          loadRoles(newSession.user.id).then(setRoles);
-        }, 0);
-      } else {
+
+      // Só recarrega roles em transições reais de identidade. Sem esse filtro,
+      // TOKEN_REFRESHED (~horário) e INITIAL_SESSION (todo mount) disparavam
+      // dezenas de milhares de queries em user_roles por dia.
+      if (!newSession?.user) {
+        currentUserId = null;
         setRoles([]);
+        return;
       }
+      const nextId = newSession.user.id;
+      const isIdentityEvent =
+        event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED";
+      if (!isIdentityEvent && currentUserId === nextId) return;
+      currentUserId = nextId;
+      // Defer role fetch to avoid deadlocks inside the auth callback
+      setTimeout(() => {
+        loadRoles(nextId).then(setRoles);
+      }, 0);
     });
 
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
+        currentUserId = s.user.id;
         loadRoles(s.user.id).then((list) => {
           setRoles(list);
           setLoading(false);
