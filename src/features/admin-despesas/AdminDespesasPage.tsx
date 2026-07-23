@@ -108,21 +108,47 @@ export function AdminDespesasPage() {
     mutationFn: async () => {
       const valor = Number(form.valor.replace(",", "."));
       if (!form.descricao.trim() || !valor || valor <= 0) throw new Error("Preencha descrição e valor");
-      const { error } = await (supabase as any).from("franqueado_despesas").insert({
-        franqueado_user_id: franqueadoUserId,
-        descricao: form.descricao.trim(),
-        categoria: form.categoria.trim() || null,
-        tipo: form.tipo,
-        valor,
-        competencia,
-        observacao: form.observacao.trim() || null,
-        created_by: user?.id,
+
+      // Monta as competências (recorrente = N meses a partir da competência atual)
+      const meses = form.recorrente ? Math.min(Math.max(Number(form.meses) || 12, 1), 60) : 1;
+      const recorrencia_id = form.recorrente
+        ? (globalThis.crypto?.randomUUID?.() ??
+            `${Date.now()}-${Math.random().toString(36).slice(2)}`)
+        : null;
+
+      const [yStr, mStr] = competencia.split("-");
+      const baseYear = Number(yStr);
+      const baseMonth = Number(mStr); // 1-12
+      const rows = Array.from({ length: meses }).map((_, i) => {
+        const total = baseMonth - 1 + i;
+        const y = baseYear + Math.floor(total / 12);
+        const m = (total % 12) + 1;
+        const comp = `${y}-${String(m).padStart(2, "0")}`;
+        return {
+          franqueado_user_id: franqueadoUserId,
+          descricao: form.descricao.trim(),
+          categoria: form.categoria.trim() || null,
+          tipo: form.tipo,
+          valor,
+          competencia: comp,
+          observacao: form.observacao.trim() || null,
+          created_by: user?.id,
+          recorrente: form.recorrente,
+          recorrencia_id,
+        };
       });
+
+      const { error } = await (supabase as any).from("franqueado_despesas").insert(rows);
       if (error) throw error;
+      return { meses };
     },
-    onSuccess: () => {
-      toast.success("Lançamento adicionado");
-      setForm({ descricao: "", categoria: "", tipo: "despesa", valor: "", observacao: "" });
+    onSuccess: (r) => {
+      toast.success(
+        r.meses > 1
+          ? `Programado em ${r.meses} meses`
+          : "Lançamento adicionado",
+      );
+      setForm({ descricao: "", categoria: "", tipo: "despesa", valor: "", observacao: "", recorrente: false, meses: "12" });
       qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
     },
     onError: (e: any) => toast.error(e?.message ?? "Erro ao adicionar"),
