@@ -65,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
+        currentUserId = s.user.id;
         loadRoles(s.user.id).then((list) => {
           setRoles(list);
           setLoading(false);
