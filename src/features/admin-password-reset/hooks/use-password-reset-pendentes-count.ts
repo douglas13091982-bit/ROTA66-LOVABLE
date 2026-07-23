@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useFranquia } from "@/hooks/use-franquia";
 
 export function usePasswordResetPendentesCount() {
@@ -29,21 +30,19 @@ export function usePasswordResetPendentesCount() {
   useEffect(() => {
     if (!enabled) return;
     const channelName = `admin-password-reset-rt-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "password_reset_requests" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["admin-password-reset-pendentes-count"] });
-          qc.invalidateQueries({ queryKey: ["admin-password-reset"] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "password_reset_requests" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["admin-password-reset-pendentes-count"] });
+            qc.invalidateQueries({ queryKey: ["admin-password-reset"] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [qc, uid, enabled]);
 
   return query;

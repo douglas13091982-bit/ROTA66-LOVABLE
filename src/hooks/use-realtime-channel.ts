@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type {
   RealtimePostgresChangesPayload,
   RealtimePostgresChangesFilter,
@@ -20,7 +21,8 @@ export interface RealtimeOptions {
 
 /**
  * Inscreve em mudanças realtime de uma tabela e chama `onChange` para cada evento.
- * Cancela inscrição no unmount. Reinscreve quando dependências mudam.
+ * A criação do canal é adiada via `subscribeLazy` (idle + visibilidade da aba)
+ * para não competir com o critical path. Cancela inscrição no unmount.
  */
 export function useRealtimeChannel<T extends Record<string, unknown>>(
   options: RealtimeOptions,
@@ -38,21 +40,19 @@ export function useRealtimeChannel<T extends Record<string, unknown>>(
   useEffect(() => {
     if (!enabled) return;
 
-    const ch = supabase.channel(channel);
-    const config = {
-      event,
-      schema,
-      table,
-      ...(filter ? { filter } : {}),
-    } as unknown as RealtimePostgresChangesFilter<Event>;
-
-    ch.on("postgres_changes", config, (payload) => {
-      onChange(payload as RealtimePostgresChangesPayload<T>);
-    }).subscribe();
-
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() => {
+      const ch = supabase.channel(channel);
+      const config = {
+        event,
+        schema,
+        table,
+        ...(filter ? { filter } : {}),
+      } as unknown as RealtimePostgresChangesFilter<Event>;
+      ch.on("postgres_changes", config, (payload) => {
+        onChange(payload as RealtimePostgresChangesPayload<T>);
+      }).subscribe();
+      return ch as never;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel, table, event, filter, schema, enabled]);
 }

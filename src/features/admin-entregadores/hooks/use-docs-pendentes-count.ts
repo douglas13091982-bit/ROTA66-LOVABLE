@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useFranquia } from "@/hooks/use-franquia";
 import { useAdminPermissoes } from "@/hooks/use-admin-permissoes";
 
@@ -31,21 +32,19 @@ export function useDocsEntregadorPendentesCount() {
   useEffect(() => {
     if (!enabled) return;
     const channelName = `admin-docs-entregador-rt-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_documentos" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["admin-docs-entregador-pendentes-count"] });
-          qc.invalidateQueries({ queryKey: ["admin-entregadores"] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_documentos" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["admin-docs-entregador-pendentes-count"] });
+            qc.invalidateQueries({ queryKey: ["admin-entregadores"] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [qc, uid, enabled]);
 
   return query;

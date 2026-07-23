@@ -1,6 +1,7 @@
 import { useEffect, useId } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useFranquia } from "@/hooks/use-franquia";
 
 export function useSaquesLojasPendentesCount() {
@@ -29,22 +30,20 @@ export function useSaquesLojasPendentesCount() {
   useEffect(() => {
     if (!enabled) return;
     const channelName = `admin-lojas-saques-rt-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "lojas_saques" },
-        () => {
-          qc.invalidateQueries({ queryKey: ["admin-saques-lojas-pendentes-count"] });
-          qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
-          qc.invalidateQueries({ queryKey: ["admin-saques-lojas-recentes"] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "lojas_saques" },
+          () => {
+            qc.invalidateQueries({ queryKey: ["admin-saques-lojas-pendentes-count"] });
+            qc.invalidateQueries({ queryKey: ["admin-saques-lojas"] });
+            qc.invalidateQueries({ queryKey: ["admin-saques-lojas-recentes"] });
+          },
+        )
+        .subscribe() as never,
+    );
   }, [qc, uid, enabled]);
 
   return query;
