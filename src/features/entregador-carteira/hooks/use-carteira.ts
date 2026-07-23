@@ -51,31 +51,34 @@ export function useCarteira() {
         qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
         qc.invalidateQueries({ queryKey: ["ganho-hoje", uid] });
       };
-      stop = subscribeLazy(() =>
-        supabase
-          .channel(`entregador-saldo-${uid}`)
-          .on(
-            "postgres_changes",
-            { event: "*", schema: "public", table: "entregador_creditos", filter: `entregador_id=eq.${uid}` },
-            invalidarSaldo,
-          )
-          .on(
-            "postgres_changes",
-            { event: "INSERT", schema: "public", table: "entregador_creditos_transacoes", filter: `entregador_id=eq.${uid}` },
-            invalidarSaldo,
-          )
-          .on(
-            "postgres_changes",
-            { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
-            invalidarSaldo,
-          )
-          .on(
-            "postgres_changes",
-            { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
-            invalidarSaldo,
-          )
-          .subscribe() as never,
+      stop = subscribeLazy(
+        () =>
+          supabase
+            .channel(`entregador-saldo-${uid}`)
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "entregador_creditos", filter: `entregador_id=eq.${uid}` },
+              invalidarSaldo,
+            )
+            .on(
+              "postgres_changes",
+              { event: "INSERT", schema: "public", table: "entregador_creditos_transacoes", filter: `entregador_id=eq.${uid}` },
+              invalidarSaldo,
+            )
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
+              invalidarSaldo,
+            )
+            .on(
+              "postgres_changes",
+              { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
+              invalidarSaldo,
+            )
+            .subscribe() as never,
+        invalidarSaldo,
       );
+
     })();
     return () => {
       cancelled = true;
