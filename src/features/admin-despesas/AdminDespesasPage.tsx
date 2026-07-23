@@ -397,6 +397,35 @@ export function AdminDespesasPage() {
               onChange={(e) => setForm({ ...form, observacao: e.target.value })}
             />
           </div>
+
+          {/* Recorrência mensal */}
+          <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.02] p-3 flex flex-wrap items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-white cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.recorrente}
+                onChange={(e) => setForm({ ...form, recorrente: e.target.checked })}
+                className="h-4 w-4 accent-yellow-500"
+              />
+              <span>Esta despesa é <b>mensal</b> (recorrente)</span>
+            </label>
+            {form.recorrente && (
+              <div className="flex items-center gap-2 text-sm text-white/80">
+                <span>Programar por</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={60}
+                  value={form.meses}
+                  onChange={(e) => setForm({ ...form, meses: e.target.value })}
+                  className="w-20 px-2 py-1.5 rounded-md bg-white/5 border border-white/10 text-white text-sm text-right focus:outline-none focus:border-white/30"
+                />
+                <span>meses</span>
+                <span className="text-xs text-white/50">— lançamentos serão criados automaticamente</span>
+              </div>
+            )}
+          </div>
+
           <button
             className="mt-4 px-4 py-2 rounded-lg font-semibold text-black flex items-center gap-2"
             style={{ background: "var(--rota-gold)" }}
