@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { ConfigCreditos, SaldoEntregador, TransacaoCredito } from "../logic/types";
 
 export function useCarteira() {
@@ -40,7 +41,7 @@ export function useCarteira() {
   // Realtime: atualiza saldo e histórico quando um pedido é entregue / saque processado
   useEffect(() => {
     let cancelled = false;
-    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let stop: (() => void) | null = null;
     (async () => {
       const { data } = await supabase.auth.getUser();
       const uid = data.user?.id;
@@ -50,33 +51,35 @@ export function useCarteira() {
         qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
         qc.invalidateQueries({ queryKey: ["ganho-hoje", uid] });
       };
-      channel = supabase
-        .channel(`entregador-saldo-${uid}`)
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "entregador_creditos", filter: `entregador_id=eq.${uid}` },
-          invalidarSaldo,
-        )
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "entregador_creditos_transacoes", filter: `entregador_id=eq.${uid}` },
-          invalidarSaldo,
-        )
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
-          invalidarSaldo,
-        )
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
-          invalidarSaldo,
-        )
-        .subscribe();
+      stop = subscribeLazy(() =>
+        supabase
+          .channel(`entregador-saldo-${uid}`)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "entregador_creditos", filter: `entregador_id=eq.${uid}` },
+            invalidarSaldo,
+          )
+          .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "entregador_creditos_transacoes", filter: `entregador_id=eq.${uid}` },
+            invalidarSaldo,
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "entregadores_saldo_saque", filter: `entregador_id=eq.${uid}` },
+            invalidarSaldo,
+          )
+          .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
+            invalidarSaldo,
+          )
+          .subscribe() as never,
+      );
     })();
     return () => {
       cancelled = true;
-      if (channel) supabase.removeChannel(channel);
+      if (stop) stop();
     };
   }, [qc]);
 
