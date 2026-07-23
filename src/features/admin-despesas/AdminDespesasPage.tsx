@@ -57,6 +57,8 @@ export function AdminDespesasPage() {
     tipo: "despesa" as "despesa" | "investimento",
     valor: "",
     observacao: "",
+    recorrente: false,
+    meses: "12",
   });
 
   const { data: socios, isLoading: loadingSocios } = useQuery({
