@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import { toast } from "sonner";
 import { mapMeuTurno } from "../logic/helpers";
 import type { MeuTurno, MeuTurnoRow, TurnoDisponivel } from "../logic/types";
