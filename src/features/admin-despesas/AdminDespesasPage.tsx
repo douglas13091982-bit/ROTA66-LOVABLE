@@ -166,6 +166,24 @@ export function AdminDespesasPage() {
     onError: (e: any) => toast.error(e?.message ?? "Erro"),
   });
 
+  const delSerieMut = useMutation({
+    mutationFn: async (d: Despesa) => {
+      if (!d.recorrencia_id) throw new Error("Não é uma série recorrente");
+      // Remove apenas a competência atual e futuras (mantém histórico já pago)
+      const { error } = await (supabase as any)
+        .from("franqueado_despesas")
+        .delete()
+        .eq("recorrencia_id", d.recorrencia_id)
+        .gte("competencia", d.competencia);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Série encerrada a partir deste mês");
+      qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Erro"),
+  });
+
   const togglePagoMut = useMutation({
     mutationFn: async (d: Despesa) => {
       const { error } = await (supabase as any)
