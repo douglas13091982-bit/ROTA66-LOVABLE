@@ -26,23 +26,26 @@ export function usePedidosAtivos(userId: string | undefined) {
   // visível no app do entregador por vários segundos.
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`pedidos-ativos-${userId}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "pedidos",
-            filter: `entregador_id=eq.${userId}`,
-          },
-          () => {
-            qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] });
-          },
-        )
-        .subscribe() as never,
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`pedidos-ativos-${userId}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "pedidos",
+              filter: `entregador_id=eq.${userId}`,
+            },
+            () => {
+              qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] });
+            },
+          )
+          .subscribe() as never,
+      () => qc.invalidateQueries({ queryKey: ["pedidos-ativos", userId] }),
     );
+
   }, [userId, qc]);
 
   return useQuery({

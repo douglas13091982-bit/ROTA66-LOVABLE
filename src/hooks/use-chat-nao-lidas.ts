@@ -40,18 +40,21 @@ export function useChatNaoLidasGlobal() {
 
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`chat-nao-lidas-global-${userId}`)
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "pedido_mensagens" },
-          () => {
-            qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map", userId] });
-          }
-        )
-        .subscribe() as never,
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`chat-nao-lidas-global-${userId}`)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "pedido_mensagens" },
+            () => {
+              qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map", userId] });
+            }
+          )
+          .subscribe() as never,
+      () => qc.invalidateQueries({ queryKey: ["chat-nao-lidas-map", userId] }),
     );
+
   }, [userId, qc]);
 
   return query;

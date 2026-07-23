@@ -20,17 +20,20 @@ export function useRastreio(pedidoId: string) {
   });
 
   useEffect(() => {
-    return subscribeLazy(() =>
-      supabase
-        .channel(`rastreio-${pedidoId}`)
-        .on(
-          "postgres_changes",
-          { event: "UPDATE", schema: "public", table: "pedidos", filter: `id=eq.${pedidoId}` },
-          () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
-        )
-        .subscribe()
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`rastreio-${pedidoId}`)
+          .on(
+            "postgres_changes",
+            { event: "UPDATE", schema: "public", table: "pedidos", filter: `id=eq.${pedidoId}` },
+            () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
+          )
+          .subscribe(),
+      () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
     );
   }, [pedidoId, qc]);
+
 
   return query;
 }

@@ -40,21 +40,24 @@ export function EntregadorStatusIndicator() {
   // Realtime: sempre que o próprio status mudar no banco, refaz a query
   useEffect(() => {
     if (!user?.id) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`entregador-self-status-${user.id}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "entregador_status",
-            filter: `entregador_id=eq.${user.id}`,
-          },
-          () => qc.invalidateQueries({ queryKey: ["entregador-self-status", user.id] })
-        )
-        .subscribe()
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`entregador-self-status-${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "entregador_status",
+              filter: `entregador_id=eq.${user.id}`,
+            },
+            () => qc.invalidateQueries({ queryKey: ["entregador-self-status", user.id] })
+          )
+          .subscribe(),
+      () => qc.invalidateQueries({ queryKey: ["entregador-self-status", user.id] }),
     );
+
   }, [user?.id, qc]);
 
   const { data } = useQuery({
