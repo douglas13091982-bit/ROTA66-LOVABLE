@@ -45,6 +45,38 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png" },
       { rel: "icon", type: "image/png", sizes: "512x512", href: "/icons/icon-512.png" },
 
+      // ===== iOS splash screens (apple-touch-startup-image) =====
+      // Portrait
+      ...([
+        { w: 430, h: 932, r: 3 },   // iPhone 15/14 Pro Max
+        { w: 393, h: 852, r: 3 },   // iPhone 15/14 Pro
+        { w: 428, h: 926, r: 3 },   // iPhone 12/13 Pro Max
+        { w: 390, h: 844, r: 3 },   // iPhone 14/13/12
+        { w: 414, h: 896, r: 3 },   // iPhone XS Max / 11 Pro Max
+        { w: 375, h: 812, r: 3 },   // iPhone X/XS/11 Pro
+        { w: 414, h: 896, r: 2 },   // iPhone XR / 11
+        { w: 414, h: 736, r: 3 },   // iPhone 8 Plus
+        { w: 375, h: 667, r: 2 },   // iPhone 8/SE2/7/6
+        { w: 320, h: 568, r: 2 },   // iPhone SE 1st
+        { w: 1024, h: 1366, r: 2 }, // iPad Pro 12.9"
+        { w: 834, h: 1194, r: 2 },  // iPad Pro 11"
+        { w: 834, h: 1112, r: 2 },  // iPad Pro 10.5"
+        { w: 810, h: 1080, r: 2 },  // iPad 10.2"
+        { w: 768, h: 1024, r: 2 },  // iPad 9.7"
+      ].flatMap(({ w, h, r }) => [
+        {
+          rel: "apple-touch-startup-image",
+          href: `/splash/splash-${w * r}x${h * r}.png`,
+          media: `screen and (device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${r}) and (orientation: portrait)`,
+        },
+        {
+          rel: "apple-touch-startup-image",
+          href: `/splash/splash-${h * r}x${w * r}.png`,
+          media: `screen and (device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${r}) and (orientation: landscape)`,
+        },
+      ])),
+
+
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
