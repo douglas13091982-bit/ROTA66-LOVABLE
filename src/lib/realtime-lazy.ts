@@ -43,13 +43,21 @@ const cancelIdle = (handle: IdleHandle) => {
 /**
  * Adia a criação do canal Realtime para o próximo idle e para quando a aba
  * estiver visível. Retorna uma função de cleanup segura para `useEffect`.
+ *
+ * `onResume` (opcional) roda toda vez que a aba volta a ficar visível depois
+ * de estar oculta — use para invalidar queries e recuperar eventos perdidos
+ * enquanto o WebSocket ficou suspenso (comum em TWA/PWA no Android).
  */
-export function subscribeLazy(setup: () => ChannelLike | null | undefined): () => void {
+export function subscribeLazy(
+  setup: () => ChannelLike | null | undefined,
+  onResume?: () => void,
+): () => void {
   if (typeof window === "undefined") return () => {};
 
   let channel: ChannelLike | null = null;
   let cancelled = false;
   let idleHandle: IdleHandle = 0;
+  let wasHidden = document.visibilityState !== "visible";
 
   const tryStart = () => {
     if (cancelled || channel) return;
@@ -65,7 +73,20 @@ export function subscribeLazy(setup: () => ChannelLike | null | undefined): () =
   };
 
   const onVisibility = () => {
-    if (document.visibilityState === "visible") tryStart();
+    if (document.visibilityState === "visible") {
+      const resumed = wasHidden && channel != null;
+      wasHidden = false;
+      tryStart();
+      if (resumed && onResume) {
+        try {
+          onResume();
+        } catch (err) {
+          console.warn("[subscribeLazy] onResume falhou:", err);
+        }
+      }
+    } else {
+      wasHidden = true;
+    }
   };
 
   document.addEventListener("visibilitychange", onVisibility);
@@ -85,3 +106,4 @@ export function subscribeLazy(setup: () => ChannelLike | null | undefined): () =
     }
   };
 }
+
