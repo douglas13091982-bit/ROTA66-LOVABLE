@@ -64,25 +64,27 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
     lockPortrait();
 
     if (!user?.id) return;
-    const ch = supabase
-      .channel(`entregador-pagamentos-${user.id}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "pedidos", filter: `entregador_id=eq.${user.id}` },
-        (payload) => {
-          const oldPaga = (payload.old as any)?.entrega_paga;
-          const newRow = payload.new as any;
-          if (!oldPaga && newRow?.entrega_paga) {
-            toast.success(`💸 Pedido #${newRow.numero}: a loja marcou sua entrega como paga!`, {
-              duration: 8000,
-            });
-            qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
-            qc.invalidateQueries({ queryKey: ["pedidos-historico"] });
+    const stopCh = subscribeLazy(() =>
+      supabase
+        .channel(`entregador-pagamentos-${user.id}`)
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "pedidos", filter: `entregador_id=eq.${user.id}` },
+          (payload) => {
+            const oldPaga = (payload.old as any)?.entrega_paga;
+            const newRow = payload.new as any;
+            if (!oldPaga && newRow?.entrega_paga) {
+              toast.success(`💸 Pedido #${newRow.numero}: a loja marcou sua entrega como paga!`, {
+                duration: 8000,
+              });
+              qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+              qc.invalidateQueries({ queryKey: ["pedidos-historico"] });
+            }
           }
-        }
-      )
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
+        )
+        .subscribe()
+    );
+    return () => { stopCh(); };
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
