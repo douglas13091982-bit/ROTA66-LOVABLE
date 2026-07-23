@@ -74,20 +74,23 @@ export function useMensagensRealtime(ticketId: string | null) {
   useEffect(() => {
     if (!ticketId) return;
     const channelName = `suporte-mensagens-${ticketId}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    return subscribeLazy(() =>
-      supabase
-        .channel(channelName)
-        .on(
-          "postgres_changes",
-          { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
-          () => {
-            qc.invalidateQueries({ queryKey: ["suporte-mensagens", ticketId] });
-          },
-        )
-        .subscribe(),
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(channelName)
+          .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "suporte_mensagens", filter: `ticket_id=eq.${ticketId}` },
+            () => {
+              qc.invalidateQueries({ queryKey: ["suporte-mensagens", ticketId] });
+            },
+          )
+          .subscribe(),
+      () => qc.invalidateQueries({ queryKey: ["suporte-mensagens", ticketId] }),
     );
   }, [ticketId, qc, uid]);
 }
+
 
 export function useEnviarMensagem(modo: Modo) {
   const qc = useQueryClient();
