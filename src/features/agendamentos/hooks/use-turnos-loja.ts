@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { EntregadorAceito, TurnoRow } from "../logic/types";
 
 export function useTurnosLoja(lojaId: string | undefined) {
