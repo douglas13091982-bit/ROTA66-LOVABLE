@@ -10,17 +10,16 @@ export function useEntregadoresVinculados(lojaId: string) {
   const { ttlMin, tick } = useOnlineTtlTicker(20_000);
 
   useEffect(() => {
-    const ch = supabase
-      .channel(`loja-entregador-status-${lojaId}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "entregador_status" },
-        () => qc.invalidateQueries({ queryKey: ["loja-entregadores-lista", lojaId] })
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(ch);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(`loja-entregador-status-${lojaId}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "entregador_status" },
+          () => qc.invalidateQueries({ queryKey: ["loja-entregadores-lista", lojaId] })
+        )
+        .subscribe()
+    );
   }, [lojaId, qc]);
 
   const { data: raw, isLoading } = useQuery({
