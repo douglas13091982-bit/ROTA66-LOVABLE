@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { notFound } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { RastreioData } from "../logic/types";
 
 export function useRastreio(pedidoId: string) {
