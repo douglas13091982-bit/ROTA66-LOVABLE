@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 import type { Cobranca, ConfigFinanceiro, Mensalidade } from "../logic/types";
 
 export function useAdminFinanceiro() {
