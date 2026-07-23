@@ -14,6 +14,7 @@ import { RetornoLojaDialog } from "@/features/entregador-ativos/components/Retor
 
 
 import { supabase } from "@/integrations/supabase/client";
+import { subscribeLazy } from "@/lib/realtime-lazy";
 
 
 const NAV = [
