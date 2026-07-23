@@ -34,19 +34,18 @@ export function useTicketsRealtime(modo: Modo, lojaId?: string) {
   useEffect(() => {
     if (modo === "loja" && !lojaId) return;
     const channelName = `suporte-tickets-${modo}-${uid}-${Math.random().toString(36).slice(2, 8)}`;
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "suporte_tickets" },
-        () => {
-          qc.invalidateQueries({ queryKey: TICKETS_KEY(modo, lojaId) });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return subscribeLazy(() =>
+      supabase
+        .channel(channelName)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "suporte_tickets" },
+          () => {
+            qc.invalidateQueries({ queryKey: TICKETS_KEY(modo, lojaId) });
+          },
+        )
+        .subscribe(),
+    );
   }, [modo, lojaId, qc, uid]);
 }
 
