@@ -27,7 +27,8 @@ const EXEMPLO = [
   { nome: "Batata Frita G", descricao: "Porção 300g", preco: 22.5, categoria: "Acompanhamentos", ativo: "sim", ordem: 3 },
 ];
 
-function baixarModelo(formato: "csv" | "xlsx") {
+async function baixarModelo(formato: "csv" | "xlsx") {
+  const XLSX = await loadXLSX();
   const ws = XLSX.utils.json_to_sheet(EXEMPLO, { header: COLUNAS as unknown as string[] });
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Produtos");
