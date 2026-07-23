@@ -1,9 +1,12 @@
 import { useState } from "react";
-import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { Download, FileSpreadsheet, Upload, AlertCircle, CheckCircle2 } from "lucide-react";
+
+// xlsx é ~150 KB gzip. Import dinâmico mantém fora do bundle da rota de
+// produtos até o lojista realmente abrir "Importar em massa".
+const loadXLSX = () => import("xlsx");
 
 type LinhaImport = {
   nome: string;
