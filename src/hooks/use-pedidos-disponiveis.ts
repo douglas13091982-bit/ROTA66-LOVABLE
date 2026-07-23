@@ -262,15 +262,17 @@ export function usePedidosDisponiveis(
   // Realtime — qualquer pedido novo invalida o pool unificado
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`entregador-pedidos-${userId}`)
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "pedidos" },
-          (payload) => {
-            if (!estouOnlineRef.current) return;
-            qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`entregador-pedidos-${userId}`)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "pedidos" },
+            (payload) => {
+              if (!estouOnlineRef.current) return;
+              qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+
             const novo = payload.new as {
               id?: string;
               numero?: number | string | null;
