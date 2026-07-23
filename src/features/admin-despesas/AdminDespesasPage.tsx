@@ -27,6 +27,8 @@ type Despesa = {
   pago: boolean;
   observacao: string | null;
   created_at: string;
+  recorrente: boolean;
+  recorrencia_id: string | null;
 };
 
 function competenciaAtual(): string {
