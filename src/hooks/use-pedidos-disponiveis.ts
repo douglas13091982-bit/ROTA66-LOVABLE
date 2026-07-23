@@ -300,8 +300,16 @@ export function usePedidosDisponiveis(
           },
         )
         .subscribe() as never,
+      () => {
+        // Resync ao voltar de background: eventos perdidos enquanto o WS estava suspenso.
+        qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+        qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
+        qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
+        qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
+      },
     );
   }, [userId, qc]);
+
 
 
   const pedidos = useMemo(
