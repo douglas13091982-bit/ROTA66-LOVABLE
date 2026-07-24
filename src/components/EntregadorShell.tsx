@@ -121,7 +121,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="entregador-theme panel-premium min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
           <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
-            style={{ background: "linear-gradient(135deg, oklch(0.62 0.22 27), oklch(0.42 0.20 27))" }}
+            style={{ background: "linear-gradient(135deg, #AE0000, #6D0000)" }}
           >
             <Smartphone className="h-10 w-10 text-white" />
           </div>
