@@ -98,8 +98,9 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       >
         <span
           className={`grid place-items-center h-9 w-14 rounded-full transition-all duration-300 ${
-            !online ? "bg-white shadow text-[#0f304d]" : "text-white/60"
+            !online ? "text-white" : "text-white/60"
           }`}
+          style={!online ? { background: "#AE0000", boxShadow: "0 6px 18px -6px rgba(174,0,0,0.65)" } : undefined}
         >
           <Power className="h-4 w-4" />
         </span>
