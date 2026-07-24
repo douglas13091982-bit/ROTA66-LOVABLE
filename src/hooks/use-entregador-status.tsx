@@ -87,16 +87,18 @@ export function useEntregadorStatus() {
         },
         (err) => {
           if (sessionRef.current !== mySession) return;
-          const msg =
-            err.code === err.PERMISSION_DENIED
-              ? "Permissão de localização negada. Ative para aparecer no mapa."
-              : err.code === err.POSITION_UNAVAILABLE
-                ? "Localização indisponível no momento."
-                : "Não foi possível obter sua localização.";
-          setGeoError(msg);
-          if (!warned) {
-            toast.error(msg);
-            warned = true;
+          // Só avisamos o entregador quando o problema é acionável
+          // (permissão negada). Timeout / posição indisponível são comuns
+          // em preview/iframe e quando o app está em background — barulho
+          // demais para virar toast a cada 30s.
+          if (err.code === err.PERMISSION_DENIED) {
+            setGeoError("Permissão de localização negada. Ative para aparecer no mapa.");
+            if (!warned) {
+              toast.error("Permissão de localização negada. Ative para aparecer no mapa.");
+              warned = true;
+            }
+          } else {
+            setGeoError(null);
           }
         },
         { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
