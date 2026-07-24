@@ -22,6 +22,10 @@ export function AdminEntregadoresPage() {
 
   return (
     <AdminShell title="Entregadores">
+      <div className="mb-6">
+        <EntregadoresMapaTempoReal source="admin" title="Controle em tempo real" />
+      </div>
+
       <ToolbarBusca
         search={search}
         onSearchChange={setSearch}
