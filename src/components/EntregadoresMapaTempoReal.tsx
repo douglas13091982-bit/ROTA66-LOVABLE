@@ -187,7 +187,7 @@ export function EntregadoresMapaTempoReal({
               "data:image/svg+xml;charset=UTF-8," +
               encodeURIComponent(
                 `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-                  <circle cx="20" cy="20" r="16" fill="#10b981" stroke="#ffffff" stroke-width="3"/>
+                  <circle cx="20" cy="20" r="16" fill="#107037" stroke="#ffffff" stroke-width="3"/>
                   <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(8 8)">
                     <circle cx="18.5" cy="17.5" r="3.5"/>
                     <circle cx="5.5" cy="17.5" r="3.5"/>
