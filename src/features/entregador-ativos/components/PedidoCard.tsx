@@ -267,7 +267,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               Você recebe
             </div>
-            <div className="font-display text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums">
+            <div className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums break-all">
               R$ {liquido.toFixed(2).replace(".", ",")}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
