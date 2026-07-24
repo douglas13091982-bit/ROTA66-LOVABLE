@@ -1,4 +1,4 @@
-import { MapPin, Trophy } from "lucide-react";
+import { MapPin, Trophy, ChevronRight } from "lucide-react";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
 
 interface Props {
@@ -23,38 +23,40 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected }:
       aria-selected={ariaSelected}
       onClick={onClick}
       className={[
-        "flex-1 min-w-0 flex items-center gap-3 rounded-2xl px-4 py-3.5 transition-all duration-300 text-left",
+        "flex-1 min-w-0 flex items-center gap-2 rounded-xl px-2.5 py-2 transition-all duration-300 text-left",
         active
-          ? "shadow-lg shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/50"
-          : "border border-white/15 hover:border-white/30",
+          ? "bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
+          : "bg-[#0b2540]/60 border border-white/12 hover:border-white/25",
       ].join(" ")}
-      style={
-        active
-          ? { background: "#AE0000" }
-          : { background: "rgba(11,37,64,0.55)" }
-      }
     >
       <span
         className={[
-          "grid place-items-center h-9 w-9 rounded-full shrink-0",
-          active ? "bg-white/15 text-white" : "bg-white/8 text-white/90 border border-white/15",
+          "grid place-items-center h-7 w-7 rounded-full shrink-0",
+          active ? "bg-white/15 text-white" : "bg-white/8 text-white/85",
         ].join(" ")}
       >
         {icon}
       </span>
       <span className="flex flex-col leading-tight min-w-0 flex-1">
-        <span className="text-[13px] font-extrabold tracking-[0.06em] uppercase text-white whitespace-nowrap">
+        <span className="text-[10px] font-extrabold tracking-[0.1em] uppercase text-white whitespace-nowrap">
           {title}
         </span>
         <span
           className={[
-            "text-[11px] font-medium tracking-wide truncate",
-            active ? "text-white/90" : "text-white/60",
+            "text-[9px] font-medium tracking-wide truncate",
+            active ? "text-white/85" : "text-white/55",
           ].join(" ")}
         >
           {subtitle}
         </span>
       </span>
+      <ChevronRight
+        className={[
+          "h-3.5 w-3.5 shrink-0 transition-colors",
+          active ? "text-white" : "text-white/40",
+        ].join(" ")}
+        strokeWidth={2.5}
+      />
     </button>
   );
 }
@@ -62,7 +64,7 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected }:
 export function OrdenacaoToggle({ value, onChange }: Props) {
   return (
     <div
-      className="mb-4 flex gap-3"
+      className="mb-4 flex gap-2"
       role="tablist"
       aria-label="Ordenar pedidos"
     >
@@ -72,7 +74,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         onClick={() => onChange("proximos")}
         title="Mais Próximos"
         subtitle="Ver pedidos próximos"
-        icon={<MapPin className="h-4 w-4" strokeWidth={2.5} />}
+        icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
       />
       <OrdenacaoCard
         active={value === "valor"}
@@ -80,7 +82,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         onClick={() => onChange("valor")}
         title="Maior Valor"
         subtitle="Ver maior valor"
-        icon={<Trophy className="h-4 w-4" strokeWidth={2.5} />}
+        icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
       />
     </div>
   );
