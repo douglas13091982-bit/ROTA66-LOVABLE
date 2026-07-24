@@ -183,12 +183,21 @@ export function EntregadoresMapaTempoReal({
           map: mapRef.current,
           title: e.full_name ?? "Entregador",
           icon: {
-            path: g.maps.SymbolPath.CIRCLE,
-            scale: 10,
-            fillColor: "#dc2626",
-            fillOpacity: 1,
-            strokeColor: "#ffffff",
-            strokeWeight: 3,
+            url:
+              "data:image/svg+xml;charset=UTF-8," +
+              encodeURIComponent(
+                `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+                  <circle cx="20" cy="20" r="16" fill="#dc2626" stroke="#ffffff" stroke-width="3"/>
+                  <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(8 8)">
+                    <circle cx="18.5" cy="17.5" r="3.5"/>
+                    <circle cx="5.5" cy="17.5" r="3.5"/>
+                    <path d="M15 6a1 1 0 100-2h-1a1 1 0 100 2h1zm-3 11.5L8.5 8 6 5H3"/>
+                    <path d="M8.5 8h7l3 9.5"/>
+                  </g>
+                </svg>`
+              ),
+            scaledSize: new g.maps.Size(40, 40),
+            anchor: new g.maps.Point(20, 20),
           },
         });
         const info = new g.maps.InfoWindow({
