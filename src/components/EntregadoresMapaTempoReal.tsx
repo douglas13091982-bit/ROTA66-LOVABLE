@@ -14,6 +14,27 @@ type Entregador = {
 
 const MAPS_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 const TRACKING_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string | undefined;
+const DARK_MAP_STYLE: any[] = [
+  { elementType: "geometry", stylers: [{ color: "#0f172a" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#cbd5e1" }] },
+  { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#64748b" }] },
+  { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#0b3d2e" }] },
+  { featureType: "poi.park", elementType: "labels.text.fill", stylers: [{ color: "#3f6b52" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e293b" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#0f172a" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#64748b" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#334155" }] },
+  { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#0f172a" }] },
+  { featureType: "road.highway", elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
+  { featureType: "transit", elementType: "geometry", stylers: [{ color: "#1e293b" }] },
+  { featureType: "transit.station", elementType: "labels.text.fill", stylers: [{ color: "#64748b" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0b1a2b" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#3b5c7a" }] },
+  { featureType: "water", elementType: "labels.text.stroke", stylers: [{ color: "#0b1a2b" }] },
+];
+
 
 let mapsLoading: Promise<void> | null = null;
 function loadGoogleMaps(): Promise<void> {
@@ -70,6 +91,8 @@ export function EntregadoresMapaTempoReal({
           disableDefaultUI: false,
           streetViewControl: false,
           mapTypeControl: false,
+          backgroundColor: "#0b1220",
+          styles: DARK_MAP_STYLE,
         });
         // Centraliza na localização do navegador da loja/admin se houver permissão
         if (typeof navigator !== "undefined" && navigator.geolocation) {
