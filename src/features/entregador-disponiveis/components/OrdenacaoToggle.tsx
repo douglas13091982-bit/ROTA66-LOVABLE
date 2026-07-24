@@ -82,7 +82,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         onClick={() => onChange("valor")}
         title="Maior Valor"
         subtitle="Ver maior valor"
-        icon={<Trophy className="h-4 w-4" strokeWidth={2.5} />}
+        icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
       />
     </div>
   );
