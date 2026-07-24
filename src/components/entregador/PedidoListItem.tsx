@@ -92,14 +92,6 @@ function PedidoListItemBase({
   return (
     <div
       className="pedido-list-card relative rounded-xl px-4 py-3.5 mb-3 transition-all duration-300 hover:-translate-y-0.5"
-      style={
-        atrasado
-          ? {
-              boxShadow:
-                "0 0 0 2px oklch(0.72 0.20 30), 0 10px 28px -10px oklch(0.55 0.22 30 / 0.65)",
-            }
-          : undefined
-      }
     >
       {atrasado && (
         <div
