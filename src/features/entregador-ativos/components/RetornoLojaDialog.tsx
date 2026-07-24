@@ -115,7 +115,7 @@ export function RetornoLojaDialog() {
           </div>
           <div className="flex items-start gap-2">
             <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-            <span className="font-semibold text-sm">{endereco}</span>
+            <span className="font-semibold text-sm text-gray-500">{endereco}</span>
           </div>
         </div>
 
