@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Store, MapPin, ArrowRight, CreditCard } from "lucide-react";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { resumirEnderecoEntrega } from "@/lib/endereco";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
@@ -15,8 +15,14 @@ type Props = {
   minutosAtraso?: number;
 };
 
-// Arredonda para ~11m (4 casas decimais) — evita re-render a cada drift
-// minúsculo do GPS. Os km exibidos têm 1 casa decimal, então é seguro.
+// Paleta de marca Rota 66
+const BRAND = {
+  red: "#C91C1C",
+  navy: "#0D2B45",
+  navySoft: "#1C2633",
+  gray: "#B8C2CC",
+} as const;
+
 function roundPos(p: LatLng | null): string {
   if (!p) return "";
   return `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`;
@@ -78,123 +84,196 @@ function PedidoListItemBase({
       ) + totalBonus,
     [grupo.items, taxaParaExibir, totalBonus],
   );
-  const km = kmAteLoja(principal, minhaPos);
+  const kmLoja = kmAteLoja(principal, minhaPos);
   const distEntrega = kmEntrega(principal);
   const nomeLoja = principal.loja_nome || "Loja";
   const bairroLoja = principal.loja_bairro;
   const endereco = resumirEnderecoEntrega(principal.endereco_entrega);
-
-
-
+  const ehRota = grupo.items.length > 1;
+  const ehCartao = ["cartao", "cartao_credito", "cartao_debito"].includes(
+    (principal.forma_pagamento ?? "").toLowerCase(),
+  );
 
   const handleAceitar = useCallback(() => onAceitar(grupo), [onAceitar, grupo]);
 
   return (
     <div
-      className="pedido-list-card relative rounded-xl px-4 py-3.5 mb-3 transition-all duration-300 hover:-translate-y-0.5"
+      className="pedido-list-card relative mb-4 overflow-hidden"
+      style={{
+        background: BRAND.navySoft,
+        borderRadius: 22,
+        border: `1px solid rgba(255,255,255,0.06)`,
+        boxShadow: "0 12px 32px -16px rgba(0,0,0,0.55)",
+      }}
     >
-      {atrasado && (
-        <div
-          className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded-md text-[11px] font-black uppercase tracking-[0.16em] animate-pulse"
-          style={{
-            background:
-              "linear-gradient(90deg, oklch(0.55 0.22 30), oklch(0.62 0.22 40))",
-            color: "#fff",
-          }}
-        >
-          <AlertTriangle className="h-3.5 w-3.5" />
-          <span>Em atraso · {minutosAtraso} min</span>
-        </div>
-      )}
-      <div className="flex items-center justify-between gap-3 mb-1.5">
-        <div className="flex items-center gap-2 text-[12px] font-semibold">
-          <span style={{ color: "oklch(0.68 0.20 27)" }}>#{principal.numero}</span>
-          {grupo.items.length > 1 && (
-            <span
-              className="text-[10px] font-bold uppercase tracking-[0.18em] px-1.5 py-0.5 rounded"
-              style={{ background: "oklch(0.78 0.16 75 / 0.15)", color: "oklch(0.85 0.15 80)" }}
-            >
-              ROTA · {grupo.items.length}
-            </span>
-          )}
-          {km && (
+      {/* Header: status + valor */}
+      <div
+        className="px-5 py-4 flex items-center justify-between"
+        style={{ background: atrasado ? BRAND.red : BRAND.navy }}
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          {atrasado ? (
             <>
-              <span className="text-white/30">·</span>
-              <span className="text-white/55">{km} km</span>
+              <div className="p-2 rounded-xl" style={{ background: "rgba(255,255,255,0.14)" }}>
+                <AlertTriangle className="h-4 w-4 !text-white" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-black !text-white/85 uppercase tracking-[0.18em] leading-none">
+                  Atrasado
+                </span>
+                <span className="text-sm font-extrabold !text-white leading-tight mt-0.5">
+                  {minutosAtraso} min
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <span
+                className="text-[10px] font-black !text-white/70 uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg"
+                style={{ background: "rgba(255,255,255,0.08)" }}
+              >
+                #{principal.numero}
+              </span>
+              {ehRota && (
+                <span
+                  className="text-[10px] font-black uppercase tracking-[0.18em] px-2 py-1 rounded-lg"
+                  style={{ background: BRAND.red, color: "#fff" }}
+                >
+                  Rota · {grupo.items.length}
+                </span>
+              )}
             </>
           )}
-          {["cartao", "cartao_credito", "cartao_debito"].includes(
-            (principal.forma_pagamento ?? "").toLowerCase(),
-          ) && (
-            <span
-              className="text-[10px] font-bold uppercase tracking-[0.18em] px-1.5 py-0.5 rounded"
-              style={{ background: "oklch(0.55 0.18 145 / 0.25)", color: "oklch(0.82 0.14 145)" }}
-            >
-              💳 RETORNAR
-            </span>
-          )}
         </div>
-        <div className="flex flex-col items-end">
-          <div className="text-2xl font-bold text-white tracking-tight">
+        <div className="text-right shrink-0">
+          <p className="text-[9px] font-bold !text-white/70 uppercase tracking-[0.2em]">Ganhos</p>
+          <p className="text-2xl font-black !text-white tracking-tight tabular-nums">
             R$ {total.toFixed(2).replace(".", ",")}
-          </div>
-          {totalBonus > 0 && (
-            <div
-              className="text-[10px] font-bold uppercase tracking-[0.15em] mt-0.5 px-1.5 py-0.5 rounded"
-              style={{ background: "oklch(0.78 0.16 75 / 0.18)", color: "oklch(0.88 0.15 80)" }}
-            >
-              + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
-            </div>
-          )}
+          </p>
         </div>
       </div>
 
+      {/* Body */}
+      <div className="p-5 space-y-5">
+        {/* Timeline: loja → cliente */}
+        <div className="relative">
+          <div
+            className="absolute left-[23px] top-11 bottom-11 w-[2px]"
+            style={{ background: "rgba(255,255,255,0.10)" }}
+          />
 
+          {/* Loja (coleta) */}
+          <div className="flex items-start gap-4 relative">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <Store className="h-5 w-5" style={{ color: BRAND.gray }} />
+            </div>
+            <div className="flex-1 min-w-0 pt-1">
+              <div className="flex items-center gap-2">
+                <h3 className="text-[14px] font-black !text-white uppercase tracking-wide truncate">
+                  {nomeLoja}
+                </h3>
+              </div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+                {bairroLoja || "Loja"}
+                {kmLoja && <span className="ml-1.5 !text-white/70">· {kmLoja} km</span>}
+              </p>
+            </div>
+          </div>
 
+          <div className="h-4" />
 
-      <div className="space-y-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 text-[15px] font-bold text-white leading-tight">
-            <span className="truncate">{nomeLoja}</span>
-            {bairroLoja && (
-              <span className="text-[11px] font-bold text-emerald-400 shrink-0">
-                {bairroLoja}
+          {/* Cliente (entrega) */}
+          <div className="flex items-start gap-4 relative">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: "rgba(201,28,28,0.10)", border: "1px solid rgba(201,28,28,0.25)" }}
+            >
+              <MapPin className="h-5 w-5" style={{ color: BRAND.red }} />
+            </div>
+            <div className="flex-1 min-w-0 pt-1">
+              {ehRota ? (
+                <>
+                  <h3 className="text-[13px] font-bold !text-white/90 leading-tight">
+                    {grupo.items.length} entregas agrupadas
+                  </h3>
+                  <p className="text-[11px] font-medium mt-0.5" style={{ color: BRAND.gray }}>
+                    Endereços liberados após aceitar
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-[13px] font-bold !text-white/95 leading-tight truncate">
+                    {endereco || "Cliente"}
+                  </h3>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+                    Cliente
+                    {distEntrega && <span className="ml-1.5 !text-white/70">· {distEntrega} km</span>}
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Métricas */}
+        <div className="grid grid-cols-2 gap-3">
+          <div
+            className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.05)" }}
+          >
+            <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
+              Distância
+            </span>
+            <span className="text-base font-black !text-white tabular-nums">
+              {distEntrega ?? kmLoja ?? "—"}
+              <span className="text-[10px] font-bold ml-1" style={{ color: BRAND.gray }}>KM</span>
+            </span>
+          </div>
+          <div
+            className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.05)" }}
+          >
+            <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
+              Chamada
+            </span>
+            <span className="text-base font-black !text-white tabular-nums">
+              #{principal.numero}
+            </span>
+          </div>
+        </div>
+
+        {/* Extras: bônus + retornar troco */}
+        {(totalBonus > 0 || ehCartao) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {totalBonus > 0 && (
+              <span
+                className="text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg"
+                style={{ background: "rgba(201,28,28,0.14)", color: "#fff" }}
+              >
+                + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
+              </span>
+            )}
+            {ehCartao && (
+              <span
+                className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg !text-white"
+                style={{ background: "rgba(255,255,255,0.08)" }}
+              >
+                <CreditCard className="h-3 w-3" /> Retornar
               </span>
             )}
           </div>
-          <div className="mt-0.5 leading-snug">
-            {grupo.items.length > 1 ? (
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[13px] font-bold text-yellow-400">
-                  {grupo.items.length} entregas agrupadas
-                </span>
-                <span className="text-[11.5px] text-white/55">
-                  · detalhes liberados após aceitar
-                </span>
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[13px] font-bold text-yellow-400">Entrega</span>
-                <span className="text-[11.5px] text-white/55">
-                  {endereco}
-                  {distEntrega && (
-                    <span className="text-white/75 font-semibold ml-1">· {distEntrega} km</span>
-                  )}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        )}
+
+        {/* Botão aceitar */}
         <BotaoAceitarPress onAceitar={handleAceitar} />
       </div>
     </div>
   );
 }
 
-// Memo com comparador estável: a lista re-renderiza a cada tick de polling
-// (5s pool + 15s rota + 30s ganho). Sem isso, cada card refaz todo o cálculo
-// de tarifa/haversine em loop. Posição arredondada para evitar re-render a
-// cada drift de GPS.
 export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
   if (prev.onAceitar !== next.onAceitar) return false;
   if (prev.taxaParaExibir !== next.taxaParaExibir) return false;
@@ -205,7 +284,7 @@ export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
 
 function BotaoAceitarPress({
   onAceitar,
-  label = "Aceitar",
+  label = "Aceitar Pedido",
 }: {
   onAceitar: () => void;
   label?: string;
@@ -251,15 +330,17 @@ function BotaoAceitarPress({
       onPointerLeave={stop}
       onPointerCancel={stop}
       onContextMenu={(e) => e.preventDefault()}
-      className="relative w-full h-14 !text-white text-[13px] font-bold uppercase tracking-[0.18em] rounded-lg active:scale-95 transition-all duration-200 overflow-hidden select-none [&_*]:!text-white"
+      className="relative w-full h-14 !text-white text-[13px] font-black uppercase tracking-[0.22em] active:scale-[0.98] transition-transform duration-150 overflow-hidden select-none flex items-center justify-center gap-3 [&_*]:!text-white"
       style={{
-        background: "linear-gradient(135deg, #AE0000, #8A0000)",
-        boxShadow: "0 6px 18px -6px rgba(221, 0, 8, 0.7)",
+        background: BRAND.red,
+        borderRadius: 18,
+        boxShadow: "0 12px 28px -12px rgba(201,28,28,0.55)",
       }}
     >
       <span className="relative z-10">{progresso > 0 ? "Segure..." : label}</span>
+      <ArrowRight className="h-5 w-5 relative z-10" />
       <div
-        className="absolute inset-0 bg-white/25 transition-all duration-75 ease-linear"
+        className="absolute inset-0 bg-white/20 transition-all duration-75 ease-linear"
         style={{ width: `${progresso}%` }}
       />
     </button>
