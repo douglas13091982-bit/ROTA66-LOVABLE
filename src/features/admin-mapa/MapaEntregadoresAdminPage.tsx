@@ -103,6 +103,7 @@ export function MapaEntregadoresAdminPage() {
             )}
           </div>
         </div>
+        </div>
       </div>
     </AdminShell>
   );
