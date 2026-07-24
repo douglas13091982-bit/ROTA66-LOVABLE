@@ -17,6 +17,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { useTheme } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
@@ -120,24 +121,35 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     }
   }
 
-  // Paleta fixa Rota 66
+  // Paleta Rota 66 (theme-aware)
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const RED = "#C91C1C";
-  const NAVY = "#0D2B45";
-  const MUTED = "#8FA3B8";
-  const DIVIDER = "rgba(255,255,255,0.08)";
+  const BG = isLight ? "#FFFFFF" : "#0D2B45";
+  const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
+  const MUTED = isLight ? "#8A94A6" : "#8FA3B8";
+  const DIVIDER = isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.08)";
+  const SUBTLE_BORDER = isLight ? "rgba(13,43,69,0.12)" : "rgba(255,255,255,0.15)";
+  const SUBTLE_BG = isLight ? "rgba(13,43,69,0.03)" : "rgba(255,255,255,0.02)";
+  const ICON_CIRCLE_BG = isLight ? "#FDECEC" : "transparent";
+  const RING_CLASS = isDestaque
+    ? isLight
+      ? "ring-4 ring-black/10"
+      : "ring-4 ring-white/20"
+    : "";
 
   const stagePillLabel = isColeta ? "INDO BUSCAR" : "EM ENTREGA";
-  const stagePillColor = isColeta ? "#F5B301" : "#7DD3FC";
+  const stagePillColor = isColeta ? (isLight ? RED : "#F5B301") : (isLight ? "#0EA5E9" : "#7DD3FC");
 
   return (
     <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${
-        isDestaque ? "ring-4 ring-white/20" : ""
-      }`}
+      className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${RING_CLASS}`}
       style={{
-        background: NAVY,
-        boxShadow: "0 20px 60px -20px rgba(0,0,0,0.6)",
+        background: BG,
+        boxShadow: isLight
+          ? "0 20px 60px -20px rgba(13,43,69,0.15)"
+          : "0 20px 60px -20px rgba(0,0,0,0.6)",
       }}
     >
       {/* Header: número + timer */}
@@ -149,7 +161,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             Pedido
           </div>
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none text-white mt-1 truncate">
+          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none mt-1 truncate" style={{ color: TEXT }}>
             #{p.numero}
           </div>
           <div className="text-[11px] mt-2" style={{ color: MUTED }}>
@@ -198,14 +210,15 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       <div className="flex items-center gap-3">
         <div
           className="h-11 w-11 rounded-full border flex items-center justify-center shrink-0"
-          style={{ borderColor: "rgba(255,255,255,0.15)" }}
+          style={{ borderColor: SUBTLE_BORDER, background: ICON_CIRCLE_BG }}
         >
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-white font-bold text-base truncate">
+          <div className="font-bold text-base truncate" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
+
           {p.cliente_telefone && (
             <a
               href={`tel:${p.cliente_telefone}`}
@@ -242,11 +255,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div className="flex items-start gap-4">
           <div
             className="h-12 w-12 rounded-full border flex items-center justify-center shrink-0"
-            style={{ borderColor: "rgba(255,255,255,0.15)" }}
+            style={{ borderColor: SUBTLE_BORDER, background: ICON_CIRCLE_BG }}
           >
             <MapPin className="h-5 w-5" style={{ color: RED }} />
           </div>
-          <div className="flex-1 min-w-0 text-white text-[15px] leading-snug font-medium">
+          <div className="flex-1 min-w-0 text-[15px] leading-snug font-medium" style={{ color: TEXT }}>
             {endereco}
             {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
           </div>
@@ -258,16 +271,17 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               aria-label="Abrir rota no mapa"
               className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-2xl border transition-all active:scale-95"
               style={{
-                borderColor: "rgba(255,255,255,0.12)",
+                borderColor: SUBTLE_BORDER,
                 color: MUTED,
               }}
             >
               <MapIcon className="h-5 w-5" style={{ color: RED }} />
-              <span className="text-[10px] font-bold tracking-[0.14em] mt-1 text-white/80">
+              <span className="text-[10px] font-bold tracking-[0.14em] mt-1" style={{ color: TEXT, opacity: 0.8 }}>
                 MAPA
               </span>
             </a>
           )}
+
         </div>
       </div>
 
@@ -283,11 +297,14 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               Você recebe
             </div>
-            <div className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums break-all">
+            <div
+              className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 tabular-nums break-all"
+              style={{ color: isLight ? "#10B981" : "#34D399" }}
+            >
               R$ {liquido.toFixed(2).replace(".", ",")}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
-              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
                 <TrendingUp className="h-4 w-4" />
                 +R$ {Number(p.bonus_entregador).toFixed(2)} bônus
               </div>
@@ -298,20 +315,26 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <div
             className="mt-5 rounded-2xl border grid grid-cols-3"
             style={{
-              borderColor: "rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.02)",
+              borderColor: SUBTLE_BORDER,
+              background: SUBTLE_BG,
             }}
           >
             <Stat
               icon={<Wallet className="h-5 w-5" style={{ color: RED }} />}
               label="Pagamento"
               value={formaPagamentoLabel(p.forma_pagamento)}
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
             <Stat
               icon={<RouteIcon className="h-5 w-5" style={{ color: RED }} />}
               label="Distância"
               value={distanciaKm != null ? `${distanciaKm.toFixed(1)} km` : "—"}
               withBorder
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
             <Stat
               icon={<DollarSign className="h-5 w-5" style={{ color: RED }} />}
@@ -322,8 +345,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                   : "—"
               }
               withBorder
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
           </div>
+
         </>
       )}
 
@@ -332,17 +359,17 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div
           className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
           style={{
-            borderColor: "rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.02)",
+            borderColor: SUBTLE_BORDER,
+            background: SUBTLE_BG,
           }}
         >
           <div
             className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: "rgba(255,255,255,0.1)" }}
+            style={{ background: isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.1)" }}
           >
-            <Info className="h-4 w-4 text-white/80" />
+            <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
-          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+          <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
             Assim que você chegar ao local, clique em{" "}
             <b style={{ color: "#F5B301" }}>CHEGUEI NA COLETA.</b>
           </p>
@@ -353,22 +380,23 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div
           className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
           style={{
-            borderColor: "rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.02)",
+            borderColor: SUBTLE_BORDER,
+            background: SUBTLE_BG,
           }}
         >
           <div
             className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: "rgba(255,255,255,0.1)" }}
+            style={{ background: isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.1)" }}
           >
-            <Info className="h-4 w-4 text-white/80" />
+            <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
-          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+          <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
             Ao chegar no cliente, clique em{" "}
-            <b style={{ color: "#7DD3FC" }}>CHEGUEI NA ENTREGA.</b>
+            <b style={{ color: isLight ? "#0EA5E9" : "#7DD3FC" }}>CHEGUEI NA ENTREGA.</b>
           </p>
         </div>
       )}
+
 
       {/* CTA / Estados */}
       <div className="mt-5">
@@ -388,8 +416,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <div
               className="rounded-2xl border p-5 text-center"
               style={{
-                borderColor: "rgba(255,255,255,0.12)",
-                background: "rgba(255,255,255,0.03)",
+                borderColor: SUBTLE_BORDER,
+                background: SUBTLE_BG,
               }}
             >
               <div
@@ -417,8 +445,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <div
             className="rounded-2xl border p-5 space-y-3"
             style={{
-              borderColor: "rgba(255,255,255,0.12)",
-              background: "rgba(255,255,255,0.03)",
+              borderColor: SUBTLE_BORDER,
+              background: SUBTLE_BG,
             }}
           >
             <div className="text-center">
@@ -427,7 +455,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               </div>
               <p className="text-xs" style={{ color: MUTED }}>
                 Confirme a entrega pelo link do iFood e depois toque em{" "}
-                <b className="text-white">Finalizar entrega</b>.
+                <b style={{ color: TEXT }}>Finalizar entrega</b>.
               </p>
             </div>
             <a
@@ -463,8 +491,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <div
             className="rounded-2xl border p-5 space-y-3"
             style={{
-              borderColor: "rgba(255,255,255,0.12)",
-              background: "rgba(255,255,255,0.03)",
+              borderColor: SUBTLE_BORDER,
+              background: SUBTLE_BG,
             }}
           >
             <div
@@ -516,32 +544,39 @@ function Stat({
   label,
   value,
   withBorder,
+  textColor,
+  mutedColor,
+  borderColor,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   withBorder?: boolean;
+  textColor?: string;
+  mutedColor?: string;
+  borderColor?: string;
 }) {
   return (
     <div
       className={`flex flex-col items-center justify-center py-4 px-2 ${
         withBorder ? "border-l" : ""
       }`}
-      style={{ borderColor: "rgba(255,255,255,0.08)" }}
+      style={{ borderColor: borderColor ?? "rgba(255,255,255,0.08)" }}
     >
       {icon}
       <div
         className="text-[10px] font-semibold uppercase tracking-[0.18em] mt-2"
-        style={{ color: "#8FA3B8" }}
+        style={{ color: mutedColor ?? "#8FA3B8" }}
       >
         {label}
       </div>
-      <div className="text-white font-semibold text-[15px] mt-1 truncate max-w-full">
+      <div className="font-semibold text-[15px] mt-1 truncate max-w-full" style={{ color: textColor ?? "#FFFFFF" }}>
         {value}
       </div>
     </div>
   );
 }
+
 
 function CtaButton({
   onClick,
