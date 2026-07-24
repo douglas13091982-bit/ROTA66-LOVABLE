@@ -9,7 +9,10 @@ export const reverseGeocode = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
-    const connKey = process.env.GOOGLE_MAPS_API_KEY;
+    const connKey =
+      process.env.GOOGLE_MAPS_API_KEY ??
+      process.env.GOOGLE_MAPS_API_KEY_1 ??
+      process.env.GOOGLE_MAPS_API_KEY_2;
     if (!apiKey || !connKey) {
       return { address: null as string | null, error: "missing_credentials" };
     }
