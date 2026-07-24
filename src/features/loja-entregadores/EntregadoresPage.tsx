@@ -4,7 +4,6 @@ import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { VincularEntregadorForm } from "./components/VincularEntregadorForm";
 import { useEntregadoresLoja } from "./hooks/use-entregadores-loja";
 import { Lock } from "lucide-react";
-import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 
 export function EntregadoresPage() {
   const { data: loja } = useMinhaLoja();
@@ -22,9 +21,7 @@ export function EntregadoresPage() {
 
   return (
     <LojaShell title="Entregadores">
-      <div className="mb-6">
-        <EntregadoresMapaTempoReal source="loja" lojaId={loja.id} title="Entregadores em tempo real" />
-      </div>
+
 
       {planoAtivo ? (
         <VincularEntregadorForm lojaId={loja.id} onDone={invalidate} />

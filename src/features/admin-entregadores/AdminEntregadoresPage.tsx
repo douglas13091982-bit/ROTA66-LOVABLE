@@ -7,7 +7,6 @@ import { ToolbarBusca, type ViewMode } from "./components/ToolbarBusca";
 import { StatusFilterTabs } from "./components/StatusFilterTabs";
 import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { EntregadoresTabela } from "./components/EntregadoresTabela";
-import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 
 export function AdminEntregadoresPage() {
   const { data, isLoading, setStatus, remove } = useAdminEntregadores();
@@ -22,9 +21,7 @@ export function AdminEntregadoresPage() {
 
   return (
     <AdminShell title="Entregadores">
-      <div className="mb-6">
-        <EntregadoresMapaTempoReal source="admin" title="Controle em tempo real" />
-      </div>
+
 
       <ToolbarBusca
         search={search}
