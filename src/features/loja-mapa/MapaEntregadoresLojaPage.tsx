@@ -39,7 +39,7 @@ export function MapaEntregadoresLojaPage() {
 
   return (
     <LojaShell title="Mapa">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
         <div className="lg:col-span-2 flex flex-col gap-4">
           <EntregadoresMapaTempoReal
             source="loja"
@@ -82,7 +82,7 @@ function ListaEntregadores({
   setQ: (v: string) => void;
 }) {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col max-h-[720px]">
+    <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col h-full min-h-0">
       <div className="px-4 py-3 border-b border-border">
         <h3 className="font-display tracking-wide text-lg mb-2">{title}</h3>
         <div className="relative">
