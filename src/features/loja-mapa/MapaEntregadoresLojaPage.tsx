@@ -54,7 +54,7 @@ export function MapaEntregadoresLojaPage() {
         />
       </div>
 
-      <MiniDashboard online={online} offline={offline} total={data.length} />
+      <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={data.length} />
     </LojaShell>
   );
 }
