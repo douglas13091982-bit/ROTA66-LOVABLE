@@ -76,7 +76,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Mais Próximos"
         subtitle="Ver pedidos próximos"
         icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-gradient-to-br from-[#1e6fd9] to-[#0f4a99] shadow-md shadow-[#1e6fd9]/40 ring-1 ring-[#4a90e2]/40"
+        activeClasses="bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
       />
       <OrdenacaoCard
         active={value === "valor"}
