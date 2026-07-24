@@ -76,8 +76,24 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     p.loja_plano_mensal_ativo,
     p.forma_pagamento,
   );
+  // Distância: usa distancia_metros; senão calcula haversine coleta→entrega
+  const haversineKm = (() => {
+    const la1 = p.endereco_coleta_lat;
+    const lo1 = p.endereco_coleta_lng;
+    const la2 = p.endereco_entrega_lat;
+    const lo2 = p.endereco_entrega_lng;
+    if (la1 == null || lo1 == null || la2 == null || lo2 == null) return null;
+    const toRad = (x: number) => (x * Math.PI) / 180;
+    const R = 6371;
+    const dLat = toRad(la2 - la1);
+    const dLon = toRad(lo2 - lo1);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(la1)) * Math.cos(toRad(la2)) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  })();
   const distanciaKm =
-    p.distancia_metros != null ? p.distancia_metros / 1000 : null;
+    p.distancia_metros != null ? p.distancia_metros / 1000 : haversineKm;
   const valorPorKm =
     distanciaKm && distanciaKm > 0 ? liquido / distanciaKm : null;
 
