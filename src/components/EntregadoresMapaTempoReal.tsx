@@ -5,6 +5,8 @@ import { Bike, Loader2, MapPin } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
 
+type Stage = "livre" | "indo_coletar" | "chegou_coleta" | "em_rota_entrega";
+
 type Entregador = {
   entregador_id: string;
   full_name: string | null;
@@ -12,7 +14,24 @@ type Entregador = {
   lat: number;
   lng: number;
   updated_at: string;
+  stage?: Stage | null;
 };
+
+// Cores por estágio do fluxo de entrega
+const STAGE_COLORS: Record<Stage, string> = {
+  livre: "#00D492",           // verde neon — sem pedido
+  indo_coletar: "#3B82F6",    // azul — aceitou, indo coletar
+  chegou_coleta: "#F59E0B",   // âmbar — chegou na coleta
+  em_rota_entrega: "#A855F7", // roxo — em rota de entrega
+};
+
+const STAGE_LABELS: Record<Stage, string> = {
+  livre: "Livre",
+  indo_coletar: "Indo coletar",
+  chegou_coleta: "Na coleta",
+  em_rota_entrega: "Em entrega",
+};
+
 
 const MAPS_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 const TRACKING_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string | undefined;
@@ -40,14 +59,14 @@ const DARK_MAP_STYLE: any[] = [
   { featureType: "water", elementType: "labels.text.stroke", stylers: [{ color: "#0b1a2b" }] },
 ];
 
-function pulseIcon(g: any, phase: number) {
+function pulseIcon(g: any, phase: number, color: string = STAGE_COLORS.livre) {
   // phase: 0..1
   const haloR = 10 + phase * 18; // 10 -> 28
   const haloOpacity = 0.75 * (1 - phase); // 0.75 -> 0
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
-    <circle cx="30" cy="30" r="${haloR.toFixed(1)}" fill="#00D492" fill-opacity="${haloOpacity.toFixed(2)}"/>
-    <circle cx="30" cy="30" r="${(haloR - 3).toFixed(1)}" fill="none" stroke="#00D492" stroke-opacity="${(haloOpacity * 0.6).toFixed(2)}" stroke-width="1"/>
-    <circle cx="30" cy="30" r="9" fill="#00D492" stroke="#00D492" stroke-width="1.5"/>
+    <circle cx="30" cy="30" r="${haloR.toFixed(1)}" fill="${color}" fill-opacity="${haloOpacity.toFixed(2)}"/>
+    <circle cx="30" cy="30" r="${(haloR - 3).toFixed(1)}" fill="none" stroke="${color}" stroke-opacity="${(haloOpacity * 0.6).toFixed(2)}" stroke-width="1"/>
+    <circle cx="30" cy="30" r="9" fill="${color}" stroke="${color}" stroke-width="1.5"/>
   </svg>`;
   return {
     url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
@@ -94,6 +113,7 @@ export function EntregadoresMapaTempoReal({
   const mapDivRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
+  const stageRef = useRef<Map<string, Stage>>(new Map());
   const infoRef = useRef<any>(null);
   const addressCacheRef = useRef<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
@@ -241,6 +261,9 @@ export function EntregadoresMapaTempoReal({
       seen.add(e.entregador_id);
       const pos = { lat: Number(e.lat), lng: Number(e.lng) };
       bounds.extend(pos);
+      const stage: Stage = (e.stage as Stage) ?? "livre";
+      stageRef.current.set(e.entregador_id, stage);
+      const color = STAGE_COLORS[stage];
       const existing = markersRef.current.get(e.entregador_id);
       if (existing) {
         const prev = existing.getPosition?.();
@@ -253,20 +276,25 @@ export function EntregadoresMapaTempoReal({
           position: pos,
           map: mapRef.current,
           title: e.full_name ?? "Entregador",
-          icon: pulseIcon(g, 0),
-
+          icon: pulseIcon(g, 0, color),
         });
         const buildContent = (address: string | null, loadingAddr: boolean) => {
+          const curStage = stageRef.current.get(e.entregador_id) ?? "livre";
+          const curColor = STAGE_COLORS[curStage];
+          const curLabel = STAGE_LABELS[curStage];
           const nome = (e.full_name ?? "Entregador").replace(/</g, "&lt;");
           const fone = e.phone ? e.phone.replace(/</g, "&lt;") : "";
           const enderecoHtml = loadingAddr
             ? `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #cbd5e1;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
             : address
-              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:#22c55e;font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
+              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:${curColor};font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
               : `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;">Endereço indisponível</div>`;
           return `<div style="font-family:sans-serif;padding:4px 6px;color:#f8fafc;">
             <div style="font-weight:600;color:#ffffff;">${nome}</div>
-            ${fone ? `<div style="font-size:12px;color:#cbd5e1;">${fone}</div>` : ""}
+            <div style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:2px 8px;border-radius:999px;background:${curColor}22;border:1px solid ${curColor}66;font-size:11px;color:${curColor};font-weight:600;">
+              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${curColor};"></span>${curLabel}
+            </div>
+            ${fone ? `<div style="font-size:12px;color:#cbd5e1;margin-top:4px;">${fone}</div>` : ""}
             <div style="font-size:11px;color:#94a3b8;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
             ${enderecoHtml}
           </div>`;
@@ -298,6 +326,7 @@ export function EntregadoresMapaTempoReal({
       if (!seen.has(id)) {
         marker.setMap(null);
         markersRef.current.delete(id);
+        stageRef.current.delete(id);
       }
     }
 
@@ -309,15 +338,16 @@ export function EntregadoresMapaTempoReal({
     }
   }, [entregadores]);
 
-  // Pulso neon animado nos marcadores
+  // Pulso neon animado nos marcadores (cor por estágio)
   useEffect(() => {
     const start = performance.now();
     const id = setInterval(() => {
       const g = window.google;
       if (!g?.maps) return;
       const phase = ((performance.now() - start) % 1600) / 1600;
-      for (const marker of markersRef.current.values()) {
-        marker.setIcon(pulseIcon(g, phase));
+      for (const [entregadorId, marker] of markersRef.current.entries()) {
+        const stage = stageRef.current.get(entregadorId) ?? "livre";
+        marker.setIcon(pulseIcon(g, phase, STAGE_COLORS[stage]));
       }
     }, 80); // ~12fps
     return () => clearInterval(id);
@@ -363,6 +393,18 @@ export function EntregadoresMapaTempoReal({
               : "Nenhum entregador online no momento"}
           </div>
         )}
+      </div>
+      {/* Legenda dos estágios */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 border-t border-white/10 bg-[#0b1220]">
+        {(Object.keys(STAGE_COLORS) as Stage[]).map((s) => (
+          <div key={s} className="flex items-center gap-1.5 text-[11px] text-slate-300">
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: STAGE_COLORS[s], boxShadow: `0 0 6px ${STAGE_COLORS[s]}` }}
+            />
+            {STAGE_LABELS[s]}
+          </div>
+        ))}
       </div>
     </div>
   );
