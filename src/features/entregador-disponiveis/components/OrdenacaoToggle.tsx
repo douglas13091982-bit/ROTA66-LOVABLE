@@ -1,4 +1,4 @@
-import { MapPin, Trophy } from "lucide-react";
+import { MapPin, Trophy, ChevronRight } from "lucide-react";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
 
 interface Props {
