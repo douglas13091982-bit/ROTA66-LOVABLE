@@ -5,6 +5,8 @@ import { Bike, Loader2, MapPin } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
 
+type Stage = "livre" | "indo_coletar" | "chegou_coleta" | "em_rota_entrega";
+
 type Entregador = {
   entregador_id: string;
   full_name: string | null;
@@ -12,7 +14,24 @@ type Entregador = {
   lat: number;
   lng: number;
   updated_at: string;
+  stage?: Stage | null;
 };
+
+// Cores por estágio do fluxo de entrega
+const STAGE_COLORS: Record<Stage, string> = {
+  livre: "#00D492",           // verde neon — sem pedido
+  indo_coletar: "#3B82F6",    // azul — aceitou, indo coletar
+  chegou_coleta: "#F59E0B",   // âmbar — chegou na coleta
+  em_rota_entrega: "#A855F7", // roxo — em rota de entrega
+};
+
+const STAGE_LABELS: Record<Stage, string> = {
+  livre: "Livre",
+  indo_coletar: "Indo coletar",
+  chegou_coleta: "Na coleta",
+  em_rota_entrega: "Em entrega",
+};
+
 
 const MAPS_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 const TRACKING_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string | undefined;
