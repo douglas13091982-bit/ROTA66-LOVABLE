@@ -1424,11 +1424,11 @@ html.light .panel-premium [data-nav-badge] * {
 html.light {
   --rota-red: #EF4444;
   --rota-red-dark: #DC2626;
-  --background: #FFFFFF;
+  --background: #EFE5D3;
   --foreground: #0F172A;
-  --card: #FFFFFF;
+  --card: #EFE5D3;
   --card-foreground: #0F172A;
-  --popover: #FFFFFF;
+  --popover: #EFE5D3;
   --popover-foreground: #0F172A;
   --primary: #EF4444;
   --primary-foreground: #FFFFFF;
@@ -1444,8 +1444,8 @@ html.light {
   --input: #E5E7EB;
   --ring: #EF4444;
 
-  --panel-bg: #FFFFFF;
-  --panel-bg-elev: #FFFFFF;
+  --panel-bg: #EFE5D3;
+  --panel-bg-elev: #EFE5D3;
   --panel-text: #0F172A;
   --panel-text-dim: #374151;
   --panel-text-muted: #374151;
@@ -1459,11 +1459,11 @@ html.light {
 
 html.light body,
 html.light .panel-premium {
-  background: #FFFFFF !important;
+  background: #EFE5D3 !important;
   color: #0F172A;
 }
 
-/* Cards translúcidos brancos/pretos → cinza muito claro */
+/* Cards translúcidos brancos/pretos → bege sutil */
 html.light .panel-premium .bg-white\/5,
 html.light .panel-premium .bg-white\/8,
 html.light .panel-premium .bg-white\/10,
@@ -1479,15 +1479,15 @@ html.light .panel-premium .bg-black\/30,
 html.light .panel-premium .bg-black\/40,
 html.light .panel-premium .bg-black\/60,
 html.light .panel-premium .bg-black\/70 {
-  background-color: #F2F3F5 !important;
-  border-color: #E5E7EB !important;
+  background-color: #E5DAC4 !important;
+  border-color: #D6C9AF !important;
 }
 
 html.light .panel-premium [class*="rounded-2xl"][class*="bg-card"],
 html.light .panel-premium .glass,
 html.light .panel-premium .glass-strong {
-  background: #FFFFFF !important;
-  border: 1px solid #E5E7EB !important;
+  background: #EFE5D3 !important;
+  border: 1px solid #D6C9AF !important;
   backdrop-filter: none !important;
   box-shadow: var(--shadow-card) !important;
 }
@@ -1555,10 +1555,10 @@ html.light .panel-premium .text-rose-500 {
   color: #DC2626 !important;
 }
 
-/* Bottom nav: branca com sombra superior */
+/* Bottom nav: bege com sombra superior */
 html.light nav[data-entregador-nav] {
-  background: #FFFFFF !important;
-  border-top: 1px solid #E5E7EB !important;
+  background: #EFE5D3 !important;
+  border-top: 1px solid #D6C9AF !important;
   box-shadow: 0 -8px 24px -12px rgba(15,23,42,0.10) !important;
 }
 html.light nav[data-entregador-nav] a[data-nav-link] {
