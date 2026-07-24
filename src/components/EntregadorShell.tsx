@@ -120,9 +120,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
     return (
       <div className="entregador-theme panel-premium min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
-          <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
-            style={{ background: "linear-gradient(135deg, #AE0000, #6D0000)" }}
-          >
+          <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6 bg-gradient-to-br from-[var(--rota-red)] to-[var(--rota-red-dark)]">
+          
             <Smartphone className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight mb-3">Acesse pelo celular</h1>
