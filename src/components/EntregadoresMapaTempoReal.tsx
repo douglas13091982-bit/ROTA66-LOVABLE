@@ -45,9 +45,9 @@ function pulseIcon(g: any, phase: number) {
   const haloR = 10 + phase * 18; // 10 -> 28
   const haloOpacity = 0.75 * (1 - phase); // 0.75 -> 0
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
-    <circle cx="30" cy="30" r="${haloR.toFixed(1)}" fill="#22ff88" fill-opacity="${haloOpacity.toFixed(2)}"/>
-    <circle cx="30" cy="30" r="${(haloR - 3).toFixed(1)}" fill="none" stroke="#22ff88" stroke-opacity="${(haloOpacity * 0.6).toFixed(2)}" stroke-width="1"/>
-    <circle cx="30" cy="30" r="9" fill="#107037" stroke="#22ff88" stroke-width="1.5"/>
+    <circle cx="30" cy="30" r="${haloR.toFixed(1)}" fill="#00D492" fill-opacity="${haloOpacity.toFixed(2)}"/>
+    <circle cx="30" cy="30" r="${(haloR - 3).toFixed(1)}" fill="none" stroke="#00D492" stroke-opacity="${(haloOpacity * 0.6).toFixed(2)}" stroke-width="1"/>
+    <circle cx="30" cy="30" r="9" fill="#00D492" stroke="#00D492" stroke-width="1.5"/>
   </svg>`;
   return {
     url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
