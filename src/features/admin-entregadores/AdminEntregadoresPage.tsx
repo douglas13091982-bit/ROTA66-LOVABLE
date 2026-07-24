@@ -7,6 +7,7 @@ import { ToolbarBusca, type ViewMode } from "./components/ToolbarBusca";
 import { StatusFilterTabs } from "./components/StatusFilterTabs";
 import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { EntregadoresTabela } from "./components/EntregadoresTabela";
+import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 
 export function AdminEntregadoresPage() {
   const { data, isLoading, setStatus, remove } = useAdminEntregadores();
