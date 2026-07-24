@@ -85,7 +85,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Maior Valor"
         subtitle="Ver maior valor"
         icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
+        activeClasses="bg-gradient-to-br from-[#0F304D] to-[#0a2338] shadow-md shadow-[#0F304D]/50 ring-2 ring-[#1e6fd9]/60"
       />
     </div>
   );
