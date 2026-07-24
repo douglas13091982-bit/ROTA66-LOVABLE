@@ -3,7 +3,7 @@ import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 import { useEntregadoresVinculados } from "@/features/loja-dashboard/hooks/use-entregadores-vinculados";
-import { Bike, Search, Phone, Radio, PowerOff, Users } from "lucide-react";
+import { Bike, Search, Phone, Radio, Truck, PowerOff, Users } from "lucide-react";
 
 export function MapaEntregadoresLojaPage() {
   const { data: loja } = useMinhaLoja();
