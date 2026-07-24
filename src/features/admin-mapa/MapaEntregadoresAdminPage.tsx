@@ -49,7 +49,7 @@ export function MapaEntregadoresAdminPage() {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col max-h-[720px]">
+        <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col h-full min-h-0">
           <div className="px-4 py-3 border-b border-border">
             <h3 className="font-display tracking-wide text-lg mb-2">Entregadores</h3>
             <div className="relative">
