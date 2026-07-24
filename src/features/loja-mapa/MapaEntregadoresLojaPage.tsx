@@ -145,33 +145,44 @@ function ListaEntregadores({
 
 function MiniDashboard({
   online,
+  emEntrega,
   offline,
   total,
 }: {
   online: number;
+  emEntrega: number;
   offline: number;
   total: number;
 }) {
   const cards = [
-    { label: "Online", value: online, icon: Radio, color: "text-emerald-500", bar: "bg-emerald-500" },
-    { label: "Offline", value: offline, icon: PowerOff, color: "text-gray-400", bar: "bg-gray-400" },
-    { label: "Total", value: total, icon: Users, color: "text-primary", bar: "bg-primary" },
+    { label: "Online", value: online, icon: Radio, color: "#10b981" },
+    { label: "Em entrega", value: emEntrega, icon: Truck, color: "#f59e0b" },
+    { label: "Offline", value: offline, icon: PowerOff, color: "#6b7280" },
+    { label: "Total", value: total, icon: Users, color: "#3b82f6" },
   ];
   return (
-    <div className="mt-4 grid grid-cols-3 gap-3">
+    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
       {cards.map((c) => (
-        <div key={c.label} className="bg-card border border-border rounded-lg p-4 shadow-card">
-          <div className="flex items-center justify-between">
-            <div className="text-3xl font-black tabular-nums">{c.value}</div>
-            <c.icon className={`h-5 w-5 ${c.color}`} />
-          </div>
-          <div className="mt-1 text-xs text-muted-foreground">{c.label}</div>
-          <div className="mt-2 h-1 rounded-full bg-muted overflow-hidden">
+        <div key={c.label} className="rounded-xl px-4 py-3 bg-[#1a1f26] border border-white/5">
+          <div className="flex items-center gap-2">
+            <div className="text-2xl font-black tabular-nums text-white">{c.value}</div>
             <div
-              className={`h-full ${c.bar}`}
-              style={{ width: total > 0 ? `${Math.round((c.value / total) * 100)}%` : "0%" }}
+              className="h-6 w-6 rounded-full flex items-center justify-center shrink-0"
+              style={{ backgroundColor: `${c.color}25` }}
+            >
+              <c.icon className="h-3.5 w-3.5" style={{ color: c.color }} />
+            </div>
+          </div>
+          <div className="mt-2 h-1 rounded-full bg-white/5 overflow-hidden">
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: total > 0 ? `${Math.round((c.value / total) * 100)}%` : "0%",
+                backgroundColor: c.color,
+              }}
             />
           </div>
+          <div className="mt-1.5 text-xs text-muted-foreground">{c.label}</div>
         </div>
       ))}
     </div>
