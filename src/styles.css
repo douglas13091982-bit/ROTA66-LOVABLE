@@ -1613,14 +1613,14 @@ html.light .panel-premium .bg-gradient-radial-red {
 
 /* Card de pedido na lista (Disponíveis) */
 .pedido-list-card {
-  background: oklch(0.13 0.012 260);
+  background: transparent;
   border: 1px solid oklch(1 0 0 / 0.06);
-  box-shadow: 0 8px 24px -16px oklch(0 0 0 / 0.6);
+  box-shadow: none;
 }
 html.light .pedido-list-card {
-  background: #d8dde5;
+  background: transparent;
   border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 4px 14px -8px rgba(15, 23, 42, 0.12);
+  box-shadow: none;
 }
 html.light .pedido-list-card .text-white,
 html.light .pedido-list-card .text-white\/85,
