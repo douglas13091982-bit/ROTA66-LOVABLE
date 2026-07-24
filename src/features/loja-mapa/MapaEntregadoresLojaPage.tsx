@@ -3,6 +3,7 @@ import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 import { useEntregadoresVinculados } from "@/features/loja-dashboard/hooks/use-entregadores-vinculados";
+import { useCidadeEntregadoresCount } from "@/hooks/use-cidade-entregadores-count";
 import { Bike, Search, Phone, Radio, Truck, PowerOff, Users } from "lucide-react";
 
 export function MapaEntregadoresLojaPage() {
