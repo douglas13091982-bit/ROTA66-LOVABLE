@@ -51,10 +51,12 @@ export function SignupWizard(props: Props) {
           required
           autoFocus
           value={form.fullName}
-          onChange={(e) => update("fullName", sanitizeName(e.target.value, 120))}
+          onChange={(e) => update("fullName", sanitizeName(e.target.value, 120).toUpperCase())}
           maxLength={120}
           autoComplete="name"
+          style={{ textTransform: "uppercase" }}
         />
+
       ),
       validate: () => (form.fullName.trim().length < 3 ? "Informe seu nome completo" : null),
     };
