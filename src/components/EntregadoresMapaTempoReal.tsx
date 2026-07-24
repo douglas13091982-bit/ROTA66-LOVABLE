@@ -240,18 +240,12 @@ export function EntregadoresMapaTempoReal({
             url:
               "data:image/svg+xml;charset=UTF-8," +
               encodeURIComponent(
-                `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-                  <circle cx="20" cy="20" r="16" fill="#107037"/>
-                  <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(8 8)">
-                    <circle cx="18.5" cy="17.5" r="3.5"/>
-                    <circle cx="5.5" cy="17.5" r="3.5"/>
-                    <circle cx="15" cy="5" r="1"/>
-                    <path d="M12 17.5V14l-3-3 4-3 2 3h2"/>
-                  </g>
+                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="7" fill="#107037"/>
                 </svg>`
               ),
-            scaledSize: new g.maps.Size(40, 40),
-            anchor: new g.maps.Point(20, 20),
+            scaledSize: new g.maps.Size(20, 20),
+            anchor: new g.maps.Point(10, 10),
           },
         });
         const buildContent = (address: string | null, loadingAddr: boolean) => {
