@@ -403,7 +403,7 @@ function mostrarNotificacaoLocalNovoPedido(
   })();
 }
 
-function criarCalculadorTaxaExibida(
+export function criarCalculadorTaxaExibida(
   tarifasGlobais: TarifaFaixa[] | undefined,
 ) {
   return (p: PedidoDisponivel): number => {
