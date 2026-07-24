@@ -85,31 +85,3 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
     </div>
   );
 }
-
-
-export function OrdenacaoToggle({ value, onChange }: Props) {
-  return (
-    <div
-      className="mb-4 flex gap-2"
-      role="tablist"
-      aria-label="Ordenar pedidos"
-    >
-      <OrdenacaoCard
-        active={value === "proximos"}
-        ariaSelected={value === "proximos"}
-        onClick={() => onChange("proximos")}
-        title="Mais Próximos"
-        subtitle="Ver pedidos próximos"
-        icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
-      />
-      <OrdenacaoCard
-        active={value === "valor"}
-        ariaSelected={value === "valor"}
-        onClick={() => onChange("valor")}
-        title="Maior Valor"
-        subtitle="Ver maior valor"
-        icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
-      />
-    </div>
-  );
-}
