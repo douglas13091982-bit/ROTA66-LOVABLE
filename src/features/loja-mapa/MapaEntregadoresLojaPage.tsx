@@ -96,34 +96,32 @@ function ListaEntregadores({
           />
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      <div className="flex-1 overflow-y-auto divide-y divide-border">
         {isLoading ? (
           <div className="p-4 text-sm text-muted-foreground">Carregando…</div>
         ) : list.length === 0 ? (
           <div className="p-4 text-sm text-muted-foreground">Nenhum entregador.</div>
         ) : (
-          list.map((e, idx) => {
+          list.map((e) => {
             const status = e.em_entrega ? "Em entrega" : e.online ? "Online" : "Offline";
+            const iconClass = e.em_entrega
+              ? "bg-amber-500/15 text-amber-500"
+              : e.online
+                ? "bg-emerald-500/15 text-emerald-500"
+                : "bg-muted text-muted-foreground";
             const dot = e.em_entrega
               ? "bg-amber-500"
               : e.online
                 ? "bg-emerald-500"
                 : "bg-gray-400";
-            const color = "#107037";
             return (
-              <div
-                key={e.id}
-                className="flex items-center gap-3 rounded-xl px-3 py-2.5 bg-[#1a1f26] border border-white/5 hover:border-white/10 transition-colors"
-              >
-                <div
-                  className="h-10 w-10 rounded-full flex items-center justify-center shrink-0 text-white shadow"
-                  style={{ backgroundColor: color }}
-                >
-                  <Bike className="h-5 w-5" />
+              <div key={e.id} className="flex items-center gap-3 px-4 py-2.5">
+                <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${iconClass}`}>
+                  <Bike className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold truncate text-white">{e.full_name ?? "Sem nome"}</div>
-                  <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                  <div className="text-sm font-medium truncate">{e.full_name ?? "Sem nome"}</div>
+                  <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                     <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
                     {status}
                     {e.phone && (
