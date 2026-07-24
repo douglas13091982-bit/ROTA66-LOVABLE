@@ -1,40 +1,18 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
-export type Theme = "light" | "dark";
-const KEY = "rota-theme";
+export type Theme = "dark";
 
-function readInitial(): Theme {
-  if (typeof window === "undefined") return "dark";
-  try {
-    const v = window.localStorage.getItem(KEY);
-    return v === "light" ? "light" : "dark";
-  } catch {
-    return "dark";
-  }
-}
-
-function apply(theme: Theme) {
-  if (typeof document === "undefined") return;
-  const root = document.documentElement;
-  if (theme === "light") root.classList.add("light");
-  else root.classList.remove("light");
-}
-
+// Tema light foi removido. Mantemos o hook apenas por compatibilidade
+// para componentes que ainda importam `useTheme`.
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(readInitial);
-
   useEffect(() => {
-    apply(theme);
+    if (typeof document === "undefined") return;
+    document.documentElement.classList.remove("light");
     try {
-      window.localStorage.setItem(KEY, theme);
+      window.localStorage.removeItem("rota-theme");
     } catch {}
-  }, [theme]);
+  }, []);
 
-  const setTheme = useCallback((t: Theme) => setThemeState(t), []);
-  const toggle = useCallback(
-    () => setThemeState((t) => (t === "light" ? "dark" : "light")),
-    [],
-  );
-
-  return { theme, setTheme, toggle };
+  const noop = useCallback(() => {}, []);
+  return { theme: "dark" as Theme, setTheme: noop, toggle: noop };
 }

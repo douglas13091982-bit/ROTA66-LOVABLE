@@ -101,9 +101,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('rota-theme');if(t==='light'){document.documentElement.classList.add('light');}}catch(e){}`,
+            __html: `try{document.documentElement.classList.remove('light');localStorage.removeItem('rota-theme');}catch(e){}`,
           }}
         />
+
         <HeadContent />
       </head>
       <body>

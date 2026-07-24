@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Package, History, User, CalendarClock, Power, Smartphone } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
+
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
@@ -142,10 +142,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
         <main className="flex-1 px-4 py-4 pb-24 relative">
-          <div className="fixed top-3 right-3 z-50">
-            <ThemeToggle />
-          </div>
           <div className="pp-reveal">
+
             {path.startsWith("/entregador/disponiveis") ? (
               <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
                 <div className="flex flex-col items-center justify-center gap-2 mb-4">
