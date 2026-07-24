@@ -445,8 +445,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <div
             className="rounded-2xl border p-5 space-y-3"
             style={{
-              borderColor: "rgba(255,255,255,0.12)",
-              background: "rgba(255,255,255,0.03)",
+              borderColor: SUBTLE_BORDER,
+              background: SUBTLE_BG,
             }}
           >
             <div className="text-center">
@@ -455,7 +455,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               </div>
               <p className="text-xs" style={{ color: MUTED }}>
                 Confirme a entrega pelo link do iFood e depois toque em{" "}
-                <b className="text-white">Finalizar entrega</b>.
+                <b style={{ color: TEXT }}>Finalizar entrega</b>.
               </p>
             </div>
             <a
