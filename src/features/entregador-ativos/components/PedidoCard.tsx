@@ -209,10 +209,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             pedidoNumero={Number(p.numero)}
             senderRole="entregador"
             contraparteNome="Loja"
-            variant="ghost"
-            className="!h-auto !p-0 !bg-transparent hover:!bg-transparent flex-col gap-1"
-            icon={<MessageCircle className="h-6 w-6 text-emerald-400" />}
-            label={<span className="text-emerald-400 font-bold text-sm tracking-wider">CHAT</span>}
           />
         </div>
       </div>
