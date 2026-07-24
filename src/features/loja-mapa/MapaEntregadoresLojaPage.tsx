@@ -22,8 +22,9 @@ export function MapaEntregadoresLojaPage() {
     return arr;
   }, [data, q]);
 
-  const online = data.filter((e) => e.online).length;
-  const offline = data.length - online;
+  const emEntrega = data.filter((e) => e.em_entrega).length;
+  const online = data.filter((e) => e.online && !e.em_entrega).length;
+  const offline = data.length - online - emEntrega;
 
   if (!loja) {
     return (
