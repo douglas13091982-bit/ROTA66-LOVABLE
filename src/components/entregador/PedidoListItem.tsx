@@ -261,7 +261,7 @@ function BotaoAceitarPress({
       onContextMenu={(e) => e.preventDefault()}
       className="relative w-full h-14 !text-white text-[13px] font-bold uppercase tracking-[0.18em] rounded-lg active:scale-95 transition-all duration-200 overflow-hidden select-none [&_*]:!text-white"
       style={{
-        background: "linear-gradient(135deg, #dd0008, #b00006)",
+        background: "linear-gradient(135deg, #AE0000, #8A0000)",
         boxShadow: "0 6px 18px -6px rgba(221, 0, 8, 0.7)",
       }}
     >

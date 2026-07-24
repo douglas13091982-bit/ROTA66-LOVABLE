@@ -86,7 +86,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
               rel="noopener noreferrer"
               href={mapsUrl}
               aria-label="Abrir rota no mapa"
-              className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-[#da161a] text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
+              className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-[#AE0000] text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
             >
               <Navigation className="h-6 w-6" />
               <span className="text-[9px] font-bold uppercase tracking-[0.16em] mt-0.5">Mapa</span>
@@ -109,7 +109,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
                 _pedido_id: ref.id,
               } as never);
             }}
-            className="w-full px-5 py-4 bg-[#da161a] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full px-5 py-4 bg-[#AE0000] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
           >
             Cheguei na coleta
           </button>
@@ -138,7 +138,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
                     <span className="text-[9px] uppercase tracking-[0.18em] text-white/50 font-bold">
                       Coleta
                     </span>
-                    <span className="font-display text-3xl md:text-4xl tracking-[0.3em] text-[#da161a] select-all leading-none">
+                    <span className="font-display text-3xl md:text-4xl tracking-[0.3em] text-[#AE0000] select-all leading-none">
                       {p.codigo_coleta ?? codigo}
                     </span>
                   </div>
