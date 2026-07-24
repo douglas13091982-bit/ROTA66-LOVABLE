@@ -1424,11 +1424,11 @@ html.light .panel-premium [data-nav-badge] * {
 html.light {
   --rota-red: #EF4444;
   --rota-red-dark: #DC2626;
-  --background: #FFFFFF;
+  --background: #EFE5D3;
   --foreground: #0F172A;
-  --card: #FFFFFF;
+  --card: #EFE5D3;
   --card-foreground: #0F172A;
-  --popover: #FFFFFF;
+  --popover: #EFE5D3;
   --popover-foreground: #0F172A;
   --primary: #EF4444;
   --primary-foreground: #FFFFFF;
