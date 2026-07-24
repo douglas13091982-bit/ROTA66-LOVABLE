@@ -3,6 +3,7 @@ import { LojaShell } from "@/components/LojaShell";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { EntregadoresMapaTempoReal } from "@/components/EntregadoresMapaTempoReal";
 import { useEntregadoresVinculados } from "@/features/loja-dashboard/hooks/use-entregadores-vinculados";
+import { useCidadeEntregadoresCount } from "@/hooks/use-cidade-entregadores-count";
 import { Bike, Search, Phone, Radio, Truck, PowerOff, Users } from "lucide-react";
 
 export function MapaEntregadoresLojaPage() {
@@ -23,8 +24,10 @@ export function MapaEntregadoresLojaPage() {
   }, [data, q]);
 
   const emEntrega = data.filter((e) => e.em_entrega).length;
-  const online = data.filter((e) => e.online && !e.em_entrega).length;
-  const offline = data.length - online - emEntrega;
+  const { data: cidadeCount } = useCidadeEntregadoresCount((loja as any)?.city_id);
+  const online = cidadeCount?.online ?? 0;
+  const offline = cidadeCount?.offline ?? 0;
+  const total = cidadeCount?.total ?? 0;
 
   if (!loja) {
     return (
@@ -54,7 +57,7 @@ export function MapaEntregadoresLojaPage() {
         />
       </div>
 
-      <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={data.length} />
+      <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={total} />
     </LojaShell>
   );
 }
