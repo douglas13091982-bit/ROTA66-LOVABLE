@@ -113,6 +113,7 @@ export function EntregadoresMapaTempoReal({
   const mapDivRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
+  const stageRef = useRef<Map<string, Stage>>(new Map());
   const infoRef = useRef<any>(null);
   const addressCacheRef = useRef<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
