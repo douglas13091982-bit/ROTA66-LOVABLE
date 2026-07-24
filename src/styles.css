@@ -1479,8 +1479,8 @@ html.light .panel-premium .bg-black\/30,
 html.light .panel-premium .bg-black\/40,
 html.light .panel-premium .bg-black\/60,
 html.light .panel-premium .bg-black\/70 {
-  background-color: #E5DAC4 !important;
-  border-color: #D6C9AF !important;
+  background-color: #EFE5D3 !important;
+  border-color: #EFE5D3 !important;
 }
 
 html.light .panel-premium [class*="rounded-2xl"][class*="bg-card"],
