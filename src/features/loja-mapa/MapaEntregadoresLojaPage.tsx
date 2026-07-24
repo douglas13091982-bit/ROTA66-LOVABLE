@@ -164,7 +164,7 @@ function MiniDashboard({
   return (
     <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
       {cards.map((c) => (
-        <div key={c.label} className="rounded-xl px-4 py-3 bg-[#1a1f26] border border-white/5">
+        <div key={c.label} className="rounded-lg px-4 py-3 bg-card border border-border shadow-card">
           <div className="flex items-center gap-2">
             <div className="text-2xl font-black tabular-nums text-white">{c.value}</div>
             <div
