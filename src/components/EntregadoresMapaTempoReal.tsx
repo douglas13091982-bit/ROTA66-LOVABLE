@@ -305,19 +305,19 @@ export function EntregadoresMapaTempoReal({
   }, [entregadores]);
 
   return (
-    <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <Bike className="h-4 w-4 text-primary" />
-          <h3 className="font-display tracking-wide text-lg">{title}</h3>
+          <Bike className="h-4 w-4 text-emerald-400" />
+          <h3 className="font-display tracking-wide text-lg text-white">{title}</h3>
         </div>
-        <span className="text-xs font-mono text-muted-foreground flex items-center gap-1">
+        <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           {entregadores.length} online
         </span>
       </div>
       <div className="relative">
-        <div ref={mapDivRef} className="w-full h-[420px] bg-muted" />
+        <div ref={mapDivRef} className="w-full h-[420px] bg-[#0b1220]" />
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
