@@ -1727,4 +1727,69 @@ html.light .entregador-sticky-top {
   --color-fuchsia-900: #500000;
 }
 
+/* ==========================================================================
+   LIGHT + ENTREGADOR — paleta alinhada à página pública de cálculo de frete
+   (NAVY #0F2341 · RED #D8232A · CREAM #F5EFE6)
+   ========================================================================== */
+html.light .entregador-theme {
+  --entregador-nav-bg: #0F2341;
+
+  --rota-red: #D8232A;
+  --rota-red-dark: #a81920;
+  --primary: #D8232A;
+  --accent: #0F2341;
+  --destructive: #D8232A;
+  --ring: #D8232A;
+
+  --color-red-500: #D8232A;
+  --color-red-600: #c41f26;
+  --color-red-700: #a81920;
+  --color-orange-500: #D8232A;
+  --color-orange-600: #c41f26;
+  --color-orange-700: #a81920;
+  --color-pink-500: #D8232A;
+  --color-pink-600: #c41f26;
+  --color-pink-700: #a81920;
+  --color-rose-500: #D8232A;
+  --color-rose-600: #c41f26;
+  --color-rose-700: #a81920;
+  --color-fuchsia-500: #D8232A;
+  --color-fuchsia-600: #c41f26;
+  --color-fuchsia-700: #a81920;
+}
+
+/* Fundo cream + texto navy para o app do entregador em light */
+html.light .entregador-theme.panel-premium,
+html.light .entregador-theme .panel-premium {
+  background: #F5EFE6 !important;
+  color: #0F2341;
+}
+html.light .entregador-theme.panel-premium .pp-grid-overlay,
+html.light .entregador-theme .panel-premium .pp-grid-overlay {
+  background-image:
+    linear-gradient(rgb(15 35 65 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(15 35 65 / 0.05) 1px, transparent 1px);
+}
+html.light .entregador-theme .entregador-sticky-top {
+  background: #F5EFE6 !important;
+}
+
+/* Textos que eram brancos passam a navy no light */
+html.light .entregador-theme .text-white,
+html.light .entregador-theme .text-white\/95,
+html.light .entregador-theme .text-white\/90,
+html.light .entregador-theme .text-white\/80,
+html.light .entregador-theme .text-white\/70,
+html.light .entregador-theme .text-white\/60,
+html.light .entregador-theme .text-white\/55,
+html.light .entregador-theme .text-white\/50,
+html.light .entregador-theme .text-white\/40 {
+  color: #0F2341 !important;
+}
+/* No nav inferior (fundo navy), o texto branco continua branco */
+html.light .entregador-theme nav[data-entregador-nav] .text-white {
+  color: #ffffff !important;
+}
+
+
 
