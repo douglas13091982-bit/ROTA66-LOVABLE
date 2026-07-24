@@ -105,8 +105,7 @@ function ListaEntregadores({
               : e.online
                 ? "bg-emerald-500"
                 : "bg-gray-400";
-            const palette = ["#ef4444", "#f59e0b", "#3b82f6", "#a855f7", "#107037", "#ec4899", "#f97316", "#14b8a6"];
-            const color = palette[idx % palette.length];
+            const color = "#107037";
             return (
               <div
                 key={e.id}
