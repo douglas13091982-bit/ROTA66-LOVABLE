@@ -104,9 +104,9 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         </span>
         <span
           className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-white/70"
+            online ? "text-white" : "text-[#0F304D]/70"
           }`}
-          style={online ? { background: "#1e6fd9", boxShadow: "0 6px 18px -6px rgba(30,111,217,0.65)" } : undefined}
+          style={online ? { background: "#0F304D", boxShadow: "0 6px 18px -6px rgba(15,48,77,0.65)" } : undefined}
         >
           ON
         </span>
