@@ -22,9 +22,31 @@ export function MapaEntregadoresAdminPage() {
 
   return (
     <AdminShell title="Mapa">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <div className="lg:col-span-2 flex flex-col gap-4">
           <EntregadoresMapaTempoReal source="admin" title="Localização em tempo real" />
+
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: "Online", value: onlineCount, icon: Radio, color: "text-emerald-500", bar: "bg-emerald-500" },
+              { label: "Offline", value: offline, icon: PowerOff, color: "text-gray-400", bar: "bg-gray-400" },
+              { label: "Total", value: total, icon: Users, color: "text-primary", bar: "bg-primary" },
+            ].map((c) => (
+              <div key={c.label} className="bg-card border border-border rounded-lg p-4 shadow-card">
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-black tabular-nums">{c.value}</div>
+                  <c.icon className={`h-5 w-5 ${c.color}`} />
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">{c.label}</div>
+                <div className="mt-2 h-1 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className={`h-full ${c.bar}`}
+                    style={{ width: total > 0 ? `${Math.round((c.value / total) * 100)}%` : "0%" }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col max-h-[720px]">
@@ -80,28 +102,6 @@ export function MapaEntregadoresAdminPage() {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="mt-4 grid grid-cols-3 gap-3">
-        {[
-          { label: "Online", value: onlineCount, icon: Radio, color: "text-emerald-500", bar: "bg-emerald-500" },
-          { label: "Offline", value: offline, icon: PowerOff, color: "text-gray-400", bar: "bg-gray-400" },
-          { label: "Total", value: total, icon: Users, color: "text-primary", bar: "bg-primary" },
-        ].map((c) => (
-          <div key={c.label} className="bg-card border border-border rounded-lg p-4 shadow-card">
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-black tabular-nums">{c.value}</div>
-              <c.icon className={`h-5 w-5 ${c.color}`} />
-            </div>
-            <div className="mt-1 text-xs text-muted-foreground">{c.label}</div>
-            <div className="mt-2 h-1 rounded-full bg-muted overflow-hidden">
-              <div
-                className={`h-full ${c.bar}`}
-                style={{ width: total > 0 ? `${Math.round((c.value / total) * 100)}%` : "0%" }}
-              />
-            </div>
-          </div>
-        ))}
       </div>
     </AdminShell>
   );
