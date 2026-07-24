@@ -74,10 +74,14 @@ export function EntregadoresMapaTempoReal({
   const mapDivRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
+  const infoRef = useRef<any>(null);
+  const addressCacheRef = useRef<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [entregadores, setEntregadores] = useState<Entregador[]>([]);
   const [diag, setDiag] = useState<{ vinculados: number; onlineSemGps: number } | null>(null);
+  const runReverseGeocode = useServerFn(reverseGeocode);
+
 
   // Carrega o Google Maps
   useEffect(() => {
