@@ -84,7 +84,7 @@ function ListaEntregadores({
   setQ: (v: string) => void;
 }) {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col h-full min-h-0">
+    <div className="bg-card border border-border rounded-lg shadow-card overflow-hidden flex flex-col lg:absolute lg:inset-0 h-full min-h-0">
       <div className="px-4 py-3 border-b border-border">
         <h3 className="font-display tracking-wide text-lg mb-2">{title}</h3>
         <div className="relative">
