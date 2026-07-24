@@ -255,11 +255,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div className="flex items-start gap-4">
           <div
             className="h-12 w-12 rounded-full border flex items-center justify-center shrink-0"
-            style={{ borderColor: "rgba(255,255,255,0.15)" }}
+            style={{ borderColor: SUBTLE_BORDER, background: ICON_CIRCLE_BG }}
           >
             <MapPin className="h-5 w-5" style={{ color: RED }} />
           </div>
-          <div className="flex-1 min-w-0 text-white text-[15px] leading-snug font-medium">
+          <div className="flex-1 min-w-0 text-[15px] leading-snug font-medium" style={{ color: TEXT }}>
             {endereco}
             {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
           </div>
@@ -271,16 +271,17 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               aria-label="Abrir rota no mapa"
               className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-2xl border transition-all active:scale-95"
               style={{
-                borderColor: "rgba(255,255,255,0.12)",
+                borderColor: SUBTLE_BORDER,
                 color: MUTED,
               }}
             >
               <MapIcon className="h-5 w-5" style={{ color: RED }} />
-              <span className="text-[10px] font-bold tracking-[0.14em] mt-1 text-white/80">
+              <span className="text-[10px] font-bold tracking-[0.14em] mt-1" style={{ color: TEXT, opacity: 0.8 }}>
                 MAPA
               </span>
             </a>
           )}
+
         </div>
       </div>
 
