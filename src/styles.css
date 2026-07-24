@@ -503,36 +503,46 @@
    Mantém a identidade Rota 66 (vermelho/dourado) sobre fundo claro
    =========================================================== */
 html.light {
-  --background: #f6f7f9;
-  --foreground: #0f1b2d;
-  --card: #ffffff;
-  --card-foreground: #0f1b2d;
-  --popover: #ffffff;
-  --popover-foreground: #0f1b2d;
-  --primary: var(--rota-red);
-  --primary-foreground: #ffffff;
-  --secondary: #eef0f4;
-  --secondary-foreground: #0f1b2d;
-  --muted: #eef0f4;
-  --muted-foreground: #5b6677;
-  --accent: var(--rota-gold);
-  --accent-foreground: #1a1305;
-  --destructive: oklch(0.55 0.26 25);
-  --destructive-foreground: #ffffff;
-  --border: #e3e6ec;
-  --input: #e3e6ec;
-  --ring: var(--rota-red);
+  /* Paleta alinhada à página pública de cálculo de frete:
+     NAVY #0F2341 · RED #D8232A · CREAM #F5EFE6 */
+  --rota-frete-navy: #0F2341;
+  --rota-frete-red: #D8232A;
+  --rota-frete-cream: #F5EFE6;
 
-  --shadow-red: 0 10px 30px -10px oklch(0.55 0.26 25 / 0.35);
+  --background: #F5EFE6;
+  --foreground: #0F2341;
+  --card: #ffffff;
+  --card-foreground: #0F2341;
+  --popover: #ffffff;
+  --popover-foreground: #0F2341;
+  --primary: #D8232A;
+  --primary-foreground: #ffffff;
+  --secondary: #ece4d5;
+  --secondary-foreground: #0F2341;
+  --muted: #ece4d5;
+  --muted-foreground: #4a5a75;
+  --accent: #0F2341;
+  --accent-foreground: #F5EFE6;
+  --destructive: #D8232A;
+  --destructive-foreground: #ffffff;
+  --border: #ddd3c1;
+  --input: #ddd3c1;
+  --ring: #D8232A;
+
+  --rota-red: #D8232A;
+  --rota-navy: #0F2341;
+
+  --shadow-red: 0 10px 30px -10px rgb(216 35 42 / 0.35);
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -16px oklch(0 0 0 / 0.18);
-  --gradient-hero: linear-gradient(180deg, #ffffff 0%, #f6f7f9 60%, oklch(0.55 0.26 25 / 0.08) 100%);
+  --gradient-hero: linear-gradient(180deg, #ffffff 0%, #F5EFE6 60%, rgb(216 35 42 / 0.10) 100%);
+  --gradient-red: linear-gradient(135deg, #D8232A 0%, #a81920 100%);
 
   /* Painel premium (entregador shell) no claro */
-  --panel-bg: #f6f7f9;
+  --panel-bg: #F5EFE6;
   --panel-bg-elev: #ffffff;
-  --panel-text: #0f1b2d;
-  --panel-text-dim: #3a4658;
-  --panel-text-muted: #5b6677;
+  --panel-text: #0F2341;
+  --panel-text-dim: #2a3a5a;
+  --panel-text-muted: #4a5a75;
 }
 
 html.light .panel-premium {
