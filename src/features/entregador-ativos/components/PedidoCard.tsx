@@ -543,32 +543,39 @@ function Stat({
   label,
   value,
   withBorder,
+  textColor,
+  mutedColor,
+  borderColor,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   withBorder?: boolean;
+  textColor?: string;
+  mutedColor?: string;
+  borderColor?: string;
 }) {
   return (
     <div
       className={`flex flex-col items-center justify-center py-4 px-2 ${
         withBorder ? "border-l" : ""
       }`}
-      style={{ borderColor: "rgba(255,255,255,0.08)" }}
+      style={{ borderColor: borderColor ?? "rgba(255,255,255,0.08)" }}
     >
       {icon}
       <div
         className="text-[10px] font-semibold uppercase tracking-[0.18em] mt-2"
-        style={{ color: "#8FA3B8" }}
+        style={{ color: mutedColor ?? "#8FA3B8" }}
       >
         {label}
       </div>
-      <div className="text-white font-semibold text-[15px] mt-1 truncate max-w-full">
+      <div className="font-semibold text-[15px] mt-1 truncate max-w-full" style={{ color: textColor ?? "#FFFFFF" }}>
         {value}
       </div>
     </div>
   );
 }
+
 
 function CtaButton({
   onClick,
