@@ -17,6 +17,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { useTheme } from "@/hooks/use-theme";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
