@@ -6,7 +6,6 @@ import {
   Loader2,
   Map as MapIcon,
   MapPin,
-  MessageCircle,
   Phone,
   User,
   Wallet,
