@@ -40,6 +40,17 @@ export function useEntregadoresVinculados(lojaId: string) {
         .select("entregador_id, online, lat, lng, updated_at")
         .in("entregador_id", ids);
 
+      const { data: pedidosAtivos } = await supabase
+        .from("pedidos")
+        .select("entregador_id")
+        .eq("loja_id", lojaId)
+        .not("entregador_id", "is", null)
+        .not("status", "in", "(entregue,cancelado)");
+
+      const emEntregaSet = new Set<string>(
+        (pedidosAtivos ?? []).map((p: any) => p.entregador_id),
+      );
+
       const mapStatus = new Map<string, any>();
       for (const s of statusList ?? []) mapStatus.set(s.entregador_id, s);
 
@@ -49,7 +60,9 @@ export function useEntregadoresVinculados(lojaId: string) {
           id: v.entregador_id,
           full_name: v.full_name,
           phone: v.phone,
+          avatar_url: v.avatar_url ?? null,
           online: st?.online ?? false,
+          em_entrega: emEntregaSet.has(v.entregador_id),
           lat: st?.lat ?? null,
           lng: st?.lng ?? null,
           updated_at: st?.updated_at ?? null,
@@ -60,10 +73,15 @@ export function useEntregadoresVinculados(lojaId: string) {
   });
 
   // Aplica TTL: entregadores sem heartbeat recente viram offline sozinhos.
+  // Mas quem está em entrega ativa dessa loja permanece "online" na UI.
   void tick;
   const data = (raw ?? [])
-    .map((e) => ({ ...e, online: isEffectivelyOnline(e.online, e.updated_at, ttlMin) }))
+    .map((e) => ({
+      ...e,
+      online: e.em_entrega || isEffectivelyOnline(e.online, e.updated_at, ttlMin),
+    }))
     .sort((a, b) => Number(b.online) - Number(a.online));
+
 
   return { data, isLoading };
 }
