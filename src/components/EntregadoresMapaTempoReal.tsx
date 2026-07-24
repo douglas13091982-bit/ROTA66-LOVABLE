@@ -83,6 +83,24 @@ export function EntregadoresMapaTempoReal({
   const runReverseGeocode = useServerFn(reverseGeocode);
 
 
+  // Injeta estilo dark do InfoWindow (remove barras brancas)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (document.getElementById("gm-iw-dark-style")) return;
+    const style = document.createElement("style");
+    style.id = "gm-iw-dark-style";
+    style.textContent = `
+      .gm-style .gm-style-iw-c { background:#0f172a !important; box-shadow:0 4px 20px rgba(0,0,0,0.5) !important; border-radius:10px !important; padding:10px 12px !important; }
+      .gm-style .gm-style-iw-d { background:#0f172a !important; overflow:hidden !important; max-height:none !important; }
+      .gm-style .gm-style-iw-d::-webkit-scrollbar { display:none !important; }
+      .gm-style .gm-style-iw-tc::after { background:#0f172a !important; }
+      .gm-style .gm-style-iw-chr { background:#0f172a !important; margin:0 !important; padding:0 !important; height:0 !important; }
+      .gm-style .gm-style-iw-chr button { top:4px !important; right:4px !important; opacity:0.7 !important; }
+      .gm-style .gm-style-iw-chr button > span { background:#cbd5e1 !important; }
+    `;
+    document.head.appendChild(style);
+  }, []);
+
   // Carrega o Google Maps
   useEffect(() => {
     let cancel = false;
