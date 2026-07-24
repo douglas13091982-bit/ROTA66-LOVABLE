@@ -416,8 +416,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <div
               className="rounded-2xl border p-5 text-center"
               style={{
-                borderColor: "rgba(255,255,255,0.12)",
-                background: "rgba(255,255,255,0.03)",
+                borderColor: SUBTLE_BORDER,
+                background: SUBTLE_BG,
               }}
             >
               <div
