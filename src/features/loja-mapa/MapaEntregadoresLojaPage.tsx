@@ -39,13 +39,14 @@ export function MapaEntregadoresLojaPage() {
 
   return (
     <LojaShell title="Mapa">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <div className="lg:col-span-2 flex flex-col gap-4">
           <EntregadoresMapaTempoReal
             source="loja"
             lojaId={loja.id}
             title="Localização em tempo real"
           />
+          <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={total} />
         </div>
 
         <ListaEntregadores
@@ -56,8 +57,6 @@ export function MapaEntregadoresLojaPage() {
           setQ={setQ}
         />
       </div>
-
-      <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={total} />
     </LojaShell>
   );
 }
@@ -162,7 +161,7 @@ function MiniDashboard({
     { label: "Total", value: total, icon: Users, color: "#3b82f6" },
   ];
   return (
-    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {cards.map((c) => (
         <div key={c.label} className="rounded-lg px-4 py-3 bg-card border border-border shadow-card">
           <div className="flex items-center gap-2">
