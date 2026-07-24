@@ -359,17 +359,17 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div
           className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
           style={{
-            borderColor: "rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.02)",
+            borderColor: SUBTLE_BORDER,
+            background: SUBTLE_BG,
           }}
         >
           <div
             className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: "rgba(255,255,255,0.1)" }}
+            style={{ background: isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.1)" }}
           >
-            <Info className="h-4 w-4 text-white/80" />
+            <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
-          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+          <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
             Assim que você chegar ao local, clique em{" "}
             <b style={{ color: "#F5B301" }}>CHEGUEI NA COLETA.</b>
           </p>
@@ -380,22 +380,23 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         <div
           className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
           style={{
-            borderColor: "rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.02)",
+            borderColor: SUBTLE_BORDER,
+            background: SUBTLE_BG,
           }}
         >
           <div
             className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
-            style={{ background: "rgba(255,255,255,0.1)" }}
+            style={{ background: isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.1)" }}
           >
-            <Info className="h-4 w-4 text-white/80" />
+            <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
-          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+          <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
             Ao chegar no cliente, clique em{" "}
-            <b style={{ color: "#7DD3FC" }}>CHEGUEI NA ENTREGA.</b>
+            <b style={{ color: isLight ? "#0EA5E9" : "#7DD3FC" }}>CHEGUEI NA ENTREGA.</b>
           </p>
         </div>
       )}
+
 
       {/* CTA / Estados */}
       <div className="mt-5">
