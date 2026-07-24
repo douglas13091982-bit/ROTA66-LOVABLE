@@ -161,7 +161,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             Pedido
           </div>
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none text-white mt-1 truncate">
+          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none mt-1 truncate" style={{ color: TEXT }}>
             #{p.numero}
           </div>
           <div className="text-[11px] mt-2" style={{ color: MUTED }}>
