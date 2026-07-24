@@ -70,6 +70,8 @@ export function EntregadoresMapaTempoReal({
           disableDefaultUI: false,
           streetViewControl: false,
           mapTypeControl: false,
+          backgroundColor: "#0b1220",
+          styles: DARK_MAP_STYLE,
         });
         // Centraliza na localização do navegador da loja/admin se houver permissão
         if (typeof navigator !== "undefined" && navigator.geolocation) {
