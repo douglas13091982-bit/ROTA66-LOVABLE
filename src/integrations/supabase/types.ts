@@ -2260,6 +2260,7 @@ export type Database = {
           arquivado: boolean
           atribuido_automaticamente: boolean
           bonus_entregador: number
+          chegou_coleta_at: string | null
           cidade: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -2311,6 +2312,7 @@ export type Database = {
           arquivado?: boolean
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
+          chegou_coleta_at?: string | null
           cidade?: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -2362,6 +2364,7 @@ export type Database = {
           arquivado?: boolean
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
+          chegou_coleta_at?: string | null
           cidade?: string | null
           cliente_nome?: string
           cliente_telefone?: string
@@ -3534,6 +3537,7 @@ export type Database = {
           arquivado: boolean
           atribuido_automaticamente: boolean
           bonus_entregador: number
+          chegou_coleta_at: string | null
           cidade: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -3840,6 +3844,7 @@ export type Database = {
           lat: number
           lng: number
           phone: string
+          stage: string
           updated_at: string
         }[]
       }
@@ -3851,6 +3856,7 @@ export type Database = {
           lat: number
           lng: number
           phone: string
+          stage: string
           updated_at: string
         }[]
       }
