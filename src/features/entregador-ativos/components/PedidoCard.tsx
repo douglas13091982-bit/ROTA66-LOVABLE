@@ -297,11 +297,14 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               Você recebe
             </div>
-            <div className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums break-all">
+            <div
+              className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 tabular-nums break-all"
+              style={{ color: isLight ? "#10B981" : "#34D399" }}
+            >
               R$ {liquido.toFixed(2).replace(".", ",")}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
-              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
                 <TrendingUp className="h-4 w-4" />
                 +R$ {Number(p.bonus_entregador).toFixed(2)} bônus
               </div>
@@ -312,20 +315,26 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <div
             className="mt-5 rounded-2xl border grid grid-cols-3"
             style={{
-              borderColor: "rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.02)",
+              borderColor: SUBTLE_BORDER,
+              background: SUBTLE_BG,
             }}
           >
             <Stat
               icon={<Wallet className="h-5 w-5" style={{ color: RED }} />}
               label="Pagamento"
               value={formaPagamentoLabel(p.forma_pagamento)}
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
             <Stat
               icon={<RouteIcon className="h-5 w-5" style={{ color: RED }} />}
               label="Distância"
               value={distanciaKm != null ? `${distanciaKm.toFixed(1)} km` : "—"}
               withBorder
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
             <Stat
               icon={<DollarSign className="h-5 w-5" style={{ color: RED }} />}
@@ -336,8 +345,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                   : "—"
               }
               withBorder
+              textColor={TEXT}
+              mutedColor={MUTED}
+              borderColor={SUBTLE_BORDER}
             />
           </div>
+
         </>
       )}
 
