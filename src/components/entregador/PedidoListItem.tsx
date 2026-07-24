@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, Store, MapPin, ArrowRight, CreditCard } from "lucide-react";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { resumirEnderecoEntrega } from "@/lib/endereco";
-import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 
