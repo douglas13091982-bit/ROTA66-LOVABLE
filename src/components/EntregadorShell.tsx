@@ -181,12 +181,12 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 data-nav-link
                 data-active={active ? "true" : "false"}
                 className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[#da161a]" : "text-white hover:text-[#da161a]"
+                  active ? "text-[#AE0000]" : "text-white hover:text-[#AE0000]"
                 }`}
               >
                 {active && (
                   <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#da161a]"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#AE0000]"
                     style={{
                       boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.55)",
                     }}
@@ -195,7 +195,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 <div className="relative">
                   <Icon
                     className={`h-5 w-5 transition-all duration-300 ${
-                      active ? "scale-110 text-[#da161a]" : "text-white group-hover:text-[#da161a]"
+                      active ? "scale-110 text-[#AE0000]" : "text-white group-hover:text-[#AE0000]"
                     }`}
                   />
                   {badge > 0 && (
@@ -203,7 +203,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                       data-nav-badge
                       className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f304d]"
                       style={{
-                        background: "linear-gradient(135deg, #da161a, #8a0d10)",
+                        background: "linear-gradient(135deg, #AE0000, #6D0000)",
                         boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
                       }}
                       aria-label={`${badge} oportunidades`}
