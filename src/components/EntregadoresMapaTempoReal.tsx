@@ -237,14 +237,14 @@ export function EntregadoresMapaTempoReal({
           const nome = (e.full_name ?? "Entregador").replace(/</g, "&lt;");
           const fone = e.phone ? e.phone.replace(/</g, "&lt;") : "";
           const enderecoHtml = loadingAddr
-            ? `<div style="font-size:12px;color:#64748b;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #94a3b8;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
+            ? `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #cbd5e1;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
             : address
-              ? `<div style="font-size:12px;color:#0f172a;margin-top:6px;max-width:240px;"><span style="color:#107037;font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
-              : `<div style="font-size:12px;color:#94a3b8;margin-top:6px;">Endereço indisponível</div>`;
-          return `<div style="font-family:sans-serif;padding:4px 6px;">
-            <div style="font-weight:600;">${nome}</div>
-            ${fone ? `<div style="font-size:12px;color:#555;">${fone}</div>` : ""}
-            <div style="font-size:11px;color:#888;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
+              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:#22c55e;font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
+              : `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;">Endereço indisponível</div>`;
+          return `<div style="font-family:sans-serif;padding:4px 6px;color:#f8fafc;">
+            <div style="font-weight:600;color:#ffffff;">${nome}</div>
+            ${fone ? `<div style="font-size:12px;color:#cbd5e1;">${fone}</div>` : ""}
+            <div style="font-size:11px;color:#94a3b8;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
             ${enderecoHtml}
           </div>`;
         };
