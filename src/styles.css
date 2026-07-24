@@ -1558,7 +1558,7 @@ html.light .panel-premium .text-rose-500 {
 /* Bottom nav: bege com sombra superior */
 html.light nav[data-entregador-nav] {
   background: #EFE5D3 !important;
-  border-top: 1px solid #D6C9AF !important;
+  border-top: 1px solid #EFE5D3 !important;
   box-shadow: 0 -8px 24px -12px rgba(15,23,42,0.10) !important;
 }
 html.light nav[data-entregador-nav] a[data-nav-link] {
