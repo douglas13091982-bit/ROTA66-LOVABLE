@@ -24,8 +24,10 @@ export function MapaEntregadoresLojaPage() {
   }, [data, q]);
 
   const emEntrega = data.filter((e) => e.em_entrega).length;
-  const online = data.filter((e) => e.online && !e.em_entrega).length;
-  const offline = data.length - online - emEntrega;
+  const { data: cidadeCount } = useCidadeEntregadoresCount((loja as any)?.city_id);
+  const online = cidadeCount?.online ?? 0;
+  const offline = cidadeCount?.offline ?? 0;
+  const total = cidadeCount?.total ?? 0;
 
   if (!loja) {
     return (
