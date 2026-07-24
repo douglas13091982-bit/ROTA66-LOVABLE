@@ -87,16 +87,18 @@ export function useEntregadorStatus() {
         },
         (err) => {
           if (sessionRef.current !== mySession) return;
-          const msg =
-            err.code === err.PERMISSION_DENIED
-              ? "Permissão de localização negada. Ative para aparecer no mapa."
-              : err.code === err.POSITION_UNAVAILABLE
-                ? "Localização indisponível no momento."
-                : "Não foi possível obter sua localização.";
-          setGeoError(msg);
-          if (!warned) {
-            toast.error(msg);
-            warned = true;
+          // Só avisamos o entregador quando o problema é acionável
+          // (permissão negada). Timeout / posição indisponível são comuns
+          // em preview/iframe e quando o app está em background — barulho
+          // demais para virar toast a cada 30s.
+          if (err.code === err.PERMISSION_DENIED) {
+            setGeoError("Permissão de localização negada. Ative para aparecer no mapa.");
+            if (!warned) {
+              toast.error("Permissão de localização negada. Ative para aparecer no mapa.");
+              warned = true;
+            }
+          } else {
+            setGeoError(null);
           }
         },
         { enableHighAccuracy: true, maximumAge: 30000, timeout: 10000 }
@@ -187,12 +189,15 @@ export function useEntregadorStatus() {
       return;
     }
 
-    // Captura a sessão atual para o callback do GPS — se o usuário clicar
-    // offline antes do GPS responder, o upsert é descartado.
-    const sessaoCaptura = sessionRef.current + 1; // o efeito de heartbeat vai incrementar para esse valor
+    // Se o entregador clicar em offline antes do GPS responder, `onlineRef`
+    // já vira false e descartamos o upsert. Não tentamos prever o próximo
+    // `sessionRef` — em Android o navegador às vezes responde SÍNCRONO
+    // (posição em cache) antes do effect do heartbeat rodar, e a versão
+    // antiga (`sessaoCaptura = sessionRef.current + 1`) descartava
+    // silenciosamente a 1ª gravação de coords.
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        if (sessionRef.current !== sessaoCaptura) return;
+        if (!onlineRef.current) return;
         setGeoError(null);
         const { error } = await supabase.from("entregador_status").upsert(
           {
@@ -207,15 +212,15 @@ export function useEntregadorStatus() {
         if (error) console.error("[status] falha ao gravar coords:", error);
       },
       (err) => {
-        if (sessionRef.current !== sessaoCaptura) return;
-        const msg =
-          err.code === err.PERMISSION_DENIED
-            ? "Permissão de localização negada. Ative no navegador para aparecer no mapa."
-            : err.code === err.POSITION_UNAVAILABLE
-              ? "Localização indisponível. Verifique se o GPS está ativo."
-              : "Não foi possível obter sua localização (timeout).";
-        setGeoError(msg);
-        toast.error(msg);
+        if (!onlineRef.current) return;
+        // Só alertamos quando é permissão negada (acionável). Timeout e
+        // "posição indisponível" são ruído em preview/iframe.
+        if (err.code === err.PERMISSION_DENIED) {
+          setGeoError("Permissão de localização negada. Ative no navegador para aparecer no mapa.");
+          toast.error("Permissão de localização negada. Ative no navegador para aparecer no mapa.");
+        } else {
+          setGeoError(null);
+        }
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );

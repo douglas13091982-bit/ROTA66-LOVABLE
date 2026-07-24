@@ -120,94 +120,10 @@ async function aceitarPedidosExternos(items: PedidoDisponivel[]): Promise<string
   return null;
 }
 
-async function aceitarRotaVinculada(
-  items: PedidoDisponivel[],
-  entregadorId: string,
-): Promise<string | null> {
-  const rotaIdCompartilhado =
-    items.find((p) => p.rota_id)?.rota_id ?? novoRotaId();
-  const codigoColetaCompartilhado =
-    items.find((p) => p.codigo_coleta)?.codigo_coleta ?? novoCodigoColeta();
-
-  const coletaRef: LatLng | null =
-    items[0]?.endereco_coleta_lat != null && items[0]?.endereco_coleta_lng != null
-      ? {
-          lat: Number(items[0].endereco_coleta_lat),
-          lng: Number(items[0].endereco_coleta_lng),
-        }
-      : null;
-
-  const sorted = [...items].sort((a, b) => {
-    const aLat = a.endereco_entrega_lat != null ? Number(a.endereco_entrega_lat) : null;
-    const aLng = a.endereco_entrega_lng != null ? Number(a.endereco_entrega_lng) : null;
-    const bLat = b.endereco_entrega_lat != null ? Number(b.endereco_entrega_lat) : null;
-    const bLng = b.endereco_entrega_lng != null ? Number(b.endereco_entrega_lng) : null;
-
-    if (!coletaRef) {
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    }
-
-    const aHasCoords = aLat != null && aLng != null;
-    const bHasCoords = bLat != null && bLng != null;
-
-    if (!aHasCoords && !bHasCoords) {
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    }
-    if (!aHasCoords) return 1;
-    if (!bHasCoords) return -1;
-
-    const distA = haversineKm(coletaRef, { lat: aLat, lng: aLng });
-    const distB = haversineKm(coletaRef, { lat: bLat, lng: bLng });
-    return distA - distB;
-  });
-
-  // UPDATE atômico no aceite (guard permite definir codigo_coleta neste instante).
-  const results = await Promise.all(
-    sorted.map((p, idx) =>
-      supabase
-        .from("pedidos")
-        .update({
-          status: "em_rota" as const,
-          entregador_id: entregadorId,
-          codigo_coleta: codigoColetaCompartilhado,
-          rota_id: rotaIdCompartilhado,
-          rota_ordem: idx + 1,
-        })
-        .eq("id", p.id)
-        .is("entregador_id", null),
-    ),
-  );
-  const failed = results.find((r) => r.error);
-  if (failed?.error) return failed.error.message;
-
-  // Garante consistência caso algum UPDATE não tenha propagado o código.
-  // Pedidos já aceitos — falha aqui não é fatal (não bloqueia a navegação).
-  void unificarLoteColeta(
-    sorted.map((p) => p.id),
-    rotaIdCompartilhado,
-    codigoColetaCompartilhado,
-  ).then((erroUnif) => {
-    if (erroUnif) {
-      console.error("Falha ao unificar lote de coleta (não fatal):", erroUnif);
-    }
-  });
-  return null;
-}
-
-async function aceitarPedidoUnico(
-  items: PedidoDisponivel[],
-  entregadorId: string,
-): Promise<string | null> {
-  const { error } = await supabase
-    .from("pedidos")
-    .update({ status: "em_rota", entregador_id: entregadorId })
-    .in(
-      "id",
-      items.map((p) => p.id),
-    )
-    .is("entregador_id", null);
-  return error?.message ?? null;
-}
+// Nota: `aceitarRotaVinculada` e `aceitarPedidoUnico` foram removidos —
+// todo aceite passa pela RPC `aceitar_pedido_externo` (trava atômica no
+// banco). Se um dia voltarmos a aceitar via UPDATE direto, o guard do
+// codigo_coleta obriga a usar `unificar_lote_coleta` também.
 
 export function useAcoesPedido() {
   const { user } = useAuth();

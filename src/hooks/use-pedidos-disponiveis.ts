@@ -16,10 +16,7 @@ import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { haversineKm } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
-import {
-  agruparPedidosPorRota,
-  mesclarPedidosDisponiveis,
-} from "@/lib/pedido-agrupador";
+import { agruparPedidosPorRota } from "@/lib/pedido-agrupador";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
 import type { Database } from "@/integrations/supabase/types";
@@ -199,9 +196,6 @@ export function usePedidosDisponiveis(
       return (data ?? []).map((p) => ({ ...p, _externo: true }));
     },
   });
-  // Vinculados deixa de ser consultado separadamente.
-  const pedidosVinculados: PedidoDisponivel[] = [];
-  const loadingVinc = false;
 
   const { data: ganhoHoje } = useQuery({
     queryKey: ["ganho-hoje", userId],
@@ -259,62 +253,84 @@ export function usePedidosDisponiveis(
     );
   }, [userId, qc]);
 
-  // Realtime — qualquer pedido novo invalida o pool unificado
+  // Realtime — pool aberto (status=pronto sem entregador) + meus pedidos.
+  // Antes o canal escutava TODA a tabela `pedidos` sem filtro, o que em
+  // cidades com volume alto derruba o cliente. Agora usamos DOIS canais
+  // com `filter` server-side: um para o pool (status=pronto) e outro para
+  // os meus (entregador_id=eq.uid), cada um só entregando o que interessa.
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(
+    const stopPool = subscribeLazy(
       () =>
         supabase
-          .channel(`entregador-pedidos-${userId}`)
+          .channel(`pool-pronto-${userId}`)
           .on(
             "postgres_changes",
-            { event: "*", schema: "public", table: "pedidos" },
+            { event: "*", schema: "public", table: "pedidos", filter: "status=eq.pronto" },
             (payload) => {
               if (!estouOnlineRef.current) return;
               qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
 
-            const novo = payload.new as {
-              id?: string;
-              numero?: number | string | null;
-              status?: string;
-              entregador_id?: string | null;
-            } | null;
-            const anterior = payload.old as {
-              status?: string;
-              entregador_id?: string | null;
-            } | null;
-            const ficouPronto =
-              (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
-              novo?.status === "pronto" &&
-              !novo?.entregador_id;
-            if (ficouPronto) {
-              toast.success("🚨 Novo pedido pronto para retirar!");
-              mostrarNotificacaoLocalNovoPedido(novo, userId);
-            }
-            // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
-            const pedidoMeu =
-              novo?.entregador_id === userId || anterior?.entregador_id === userId;
-            if (pedidoMeu) {
-              qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
-            }
-          },
-        )
-        .subscribe() as never,
+              const novo = payload.new as {
+                id?: string;
+                numero?: number | string | null;
+                status?: string;
+                entregador_id?: string | null;
+              } | null;
+              const ficouPronto =
+                (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
+                novo?.status === "pronto" &&
+                !novo?.entregador_id;
+              if (ficouPronto) {
+                toast.success("🚨 Novo pedido pronto para retirar!");
+                mostrarNotificacaoLocalNovoPedido(novo, userId);
+              }
+            },
+          )
+          .subscribe() as never,
       () => {
-        // Resync ao voltar de background: eventos perdidos enquanto o WS estava suspenso.
         qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+      },
+    );
+
+    const stopMeus = subscribeLazy(
+      () =>
+        supabase
+          .channel(`meus-pedidos-${userId}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "pedidos",
+              filter: `entregador_id=eq.${userId}`,
+            },
+            () => {
+              // Qualquer mudança em pedido meu (aceitou / entregou / cancelou)
+              // afeta ganho do dia e rota ativa.
+              qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
+              qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
+            },
+          )
+          .subscribe() as never,
+      () => {
         qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
         qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
         qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
       },
     );
+
+    return () => {
+      stopPool();
+      stopMeus();
+    };
   }, [userId, qc]);
 
 
 
   const pedidos = useMemo(
-    () => mesclarPedidosDisponiveis(pedidosVinculados, pedidosExternos),
-    [pedidosVinculados, pedidosExternos],
+    () => pedidosExternos ?? [],
+    [pedidosExternos],
   );
 
   const grupos = useMemo(
@@ -331,7 +347,7 @@ export function usePedidosDisponiveis(
 
   return {
     grupos,
-    isLoading: loadingVinc || loadingExt,
+    isLoading: loadingExt,
     temRotaAtiva,
     rotaAtivaResolvida,
     semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !aceitaPedidosExternos,
@@ -391,47 +407,54 @@ function criarCalculadorTaxaExibida(
   tarifasGlobais: TarifaFaixa[] | undefined,
 ) {
   return (p: PedidoDisponivel): number => {
-    // A taxa por pedido do plano é sempre somada à tarifa do cliente e
-    // depois descontada do líquido do entregador — o plano mensal pode
-    // cobrar mensalidade E taxa por pedido. Manter em paridade com
-    // liquidoEntregador() para não mostrar valor menor que o real.
+    // ⚠️ PARIDADE OBRIGATÓRIA com liquidoEntregador():
+    //   - subtrai a taxa por pedido do plano (retida com a loja)
+    //   - dobra o frete quando o pagamento é em cartão (compensa o retorno
+    //     à loja com a maquininha)
+    // O card DEVE mostrar exatamente o que o entregador vai receber,
+    // não o valor que o cliente paga — senão a promessa do pool não bate
+    // com o crédito na carteira.
     const taxaPlano = Number(p.loja_taxa_por_pedido ?? 0) || 0;
-    const tarifaClienteAPartirDoFrete = (freteEntregador: number) => {
-      return Number((freteEntregador + taxaPlano).toFixed(2));
-    };
 
-    // FONTE DA VERDADE: o valor que o cliente já pagou/vai pagar está em
-    // `taxa_entrega`. Se existir, usa direto — não recalcula por km, senão
-    // o card do pool promete um valor maior do que o entregador vai receber
-    // de fato ao finalizar a corrida.
+    // FONTE DA VERDADE: `taxa_entrega` já salvo no pedido (o que o cliente
+    // pagou). liquidoEntregador extrai o frete líquido dali.
     const taxaSalva = Number(p.taxa_entrega);
     if (Number.isFinite(taxaSalva) && taxaSalva > 0) {
-      return Number(taxaSalva.toFixed(2));
+      return liquidoEntregador(
+        taxaSalva,
+        taxaPlano,
+        p.loja_plano_mensal_ativo,
+        p.forma_pagamento,
+      );
     }
 
-    const freteSnapshot = liquidoEntregador(
-      p.taxa_entrega,
+    // Fallback: pedido sem taxa_entrega salva (raro). Estima pela faixa
+    // global mais próxima; ainda passa por liquidoEntregador para dobrar
+    // em cartão.
+    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []) ?? 0;
+    let frete = freteGlobalMinimo;
+    if (
+      p.endereco_coleta_lat != null &&
+      p.endereco_coleta_lng != null &&
+      p.endereco_entrega_lat != null &&
+      p.endereco_entrega_lng != null
+    ) {
+      const km = haversineKm(
+        Number(p.endereco_coleta_lat),
+        Number(p.endereco_coleta_lng),
+        Number(p.endereco_entrega_lat),
+        Number(p.endereco_entrega_lng),
+      );
+      frete = calcularTarifaPorFaixa(km, tarifasGlobais ?? []) ?? freteGlobalMinimo;
+    }
+    // Reconstroi o `taxa_entrega` estimado (frete + taxaPlano) para
+    // reusar a mesma função — a subtração de taxaPlano ainda acontece.
+    return liquidoEntregador(
+      frete + taxaPlano,
       taxaPlano,
       p.loja_plano_mensal_ativo,
+      p.forma_pagamento,
     );
-    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []);
-
-    if (
-      p.endereco_coleta_lat == null ||
-      p.endereco_coleta_lng == null ||
-      p.endereco_entrega_lat == null ||
-      p.endereco_entrega_lng == null
-    ) {
-      return tarifaClienteAPartirDoFrete(freteGlobalMinimo ?? freteSnapshot);
-    }
-    const km = haversineKm(
-      Number(p.endereco_coleta_lat),
-      Number(p.endereco_coleta_lng),
-      Number(p.endereco_entrega_lat),
-      Number(p.endereco_entrega_lng),
-    );
-    const t = calcularTarifaPorFaixa(km, tarifasGlobais ?? []);
-    return tarifaClienteAPartirDoFrete(t ?? freteGlobalMinimo ?? freteSnapshot);
   };
 }
 
