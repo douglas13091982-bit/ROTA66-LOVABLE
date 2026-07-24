@@ -199,9 +199,6 @@ export function usePedidosDisponiveis(
       return (data ?? []).map((p) => ({ ...p, _externo: true }));
     },
   });
-  // Vinculados deixa de ser consultado separadamente.
-  const pedidosVinculados: PedidoDisponivel[] = [];
-  const loadingVinc = false;
 
   const { data: ganhoHoje } = useQuery({
     queryKey: ["ganho-hoje", userId],
