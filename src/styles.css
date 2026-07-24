@@ -1643,3 +1643,36 @@ html.light .entregador-sticky-top {
   background: #ffffff;
 }
 
+/* ==========================================================================
+   ENTREGADOR — vermelho customizado (#AE0000)
+   Escopa o override apenas ao app do entregador (EntregadorShell root).
+   Reescreve os tokens semânticos e a paleta red-* do Tailwind v4 usada
+   por classes utilitárias (bg-red-*, text-red-*, border-red-*).
+   ========================================================================== */
+.entregador-theme {
+  --rota-red: #AE0000;
+  --rota-red-dark: #8A0000;
+  --primary: #AE0000;
+  --accent: #AE0000;
+  --destructive: #AE0000;
+  --ring: #AE0000;
+
+  --color-red-50: #fdecec;
+  --color-red-100: #f9c9c9;
+  --color-red-200: #f19a9a;
+  --color-red-300: #e46a6a;
+  --color-red-400: #cc3535;
+  --color-red-500: #AE0000;
+  --color-red-600: #AE0000;
+  --color-red-700: #8A0000;
+  --color-red-800: #6d0000;
+  --color-red-900: #500000;
+  --color-red-950: #350000;
+}
+.entregador-theme .bg-gradient-to-br,
+.entregador-theme [style*="#EF4444"],
+.entregador-theme [style*="#DC2626"] {
+  /* Gradientes/inline styles com o vermelho antigo não são atingidos pelas
+     variáveis; mantidos aqui como referência — ajustar caso a caso. */
+}
+
