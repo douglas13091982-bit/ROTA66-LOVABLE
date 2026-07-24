@@ -16,6 +16,7 @@ import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { haversineKm } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { criarCalculadorTaxaExibida } from "@/lib/taxa-exibida";
 import { agruparPedidosPorRota } from "@/lib/pedido-agrupador";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
