@@ -92,22 +92,22 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <button
         onClick={toggle}
         data-status-toggle
-        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300"
-        style={{ background: "#e5e7eb" }}
+        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300 border border-white/10"
+        style={{ background: "#0f304d", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.4)" }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
         <span
           className={`grid place-items-center h-9 w-14 rounded-full transition-all duration-300 ${
-            !online ? "bg-white shadow text-[#374151]" : "text-[#374151]/60"
+            !online ? "bg-white shadow text-[#0f304d]" : "text-white/60"
           }`}
         >
           <Power className="h-4 w-4" />
         </span>
         <span
           className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-[#374151]/70"
+            online ? "text-white" : "text-white/70"
           }`}
-          style={online ? { background: "#22c55e", boxShadow: "0 6px 18px -6px rgba(34,197,94,0.55)" } : undefined}
+          style={online ? { background: "#1e6fd9", boxShadow: "0 6px 18px -6px rgba(30,111,217,0.65)" } : undefined}
         >
           ON
         </span>
