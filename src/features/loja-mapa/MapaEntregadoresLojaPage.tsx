@@ -25,9 +25,14 @@ export function MapaEntregadoresLojaPage() {
 
   const emEntrega = data.filter((e) => e.em_entrega).length;
   const { data: cidadeCount } = useCidadeEntregadoresCount((loja as any)?.city_id);
-  const online = cidadeCount?.online ?? 0;
-  const offline = cidadeCount?.offline ?? 0;
-  const total = cidadeCount?.total ?? 0;
+  // Une contagem por cidade (via RLS de profiles) com a lista de vinculados desta loja.
+  // Sem isso, um entregador recém-vinculado sem city_id aparece na lista/mapa
+  // mas fica de fora do card "Online".
+  const onlineVinculados = data.filter((e) => e.online && !e.em_entrega).length;
+  const offlineVinculados = data.filter((e) => !e.online && !e.em_entrega).length;
+  const online = Math.max(cidadeCount?.online ?? 0, onlineVinculados);
+  const offline = Math.max(cidadeCount?.offline ?? 0, offlineVinculados);
+  const total = Math.max(cidadeCount?.total ?? 0, data.length);
 
   if (!loja) {
     return (
