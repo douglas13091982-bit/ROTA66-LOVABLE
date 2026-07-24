@@ -109,7 +109,7 @@ function PedidoListItemBase({
       {/* Header: status + valor */}
       <div
         className="px-5 py-4 flex items-center justify-between"
-        style={{ background: atrasado ? BRAND.red : BRAND.navy }}
+        style={{ background: BRAND.red }}
       >
         <div className="flex items-center gap-3 min-w-0">
           {atrasado ? (
