@@ -22,6 +22,10 @@ export function EntregadoresPage() {
 
   return (
     <LojaShell title="Entregadores">
+      <div className="mb-6">
+        <EntregadoresMapaTempoReal source="loja" lojaId={loja.id} title="Entregadores em tempo real" />
+      </div>
+
       {planoAtivo ? (
         <VincularEntregadorForm lojaId={loja.id} onDone={invalidate} />
       ) : (
