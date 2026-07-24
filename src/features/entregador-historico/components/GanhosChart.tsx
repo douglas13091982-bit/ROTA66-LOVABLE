@@ -32,7 +32,7 @@ export function GanhosChart({
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="barGanho" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ef4444" stopOpacity={0.95} />
+                <stop offset="0%" stopColor="#AE0000" stopOpacity={0.95} />
                 <stop offset="100%" stopColor="#b91c1c" stopOpacity={0.75} />
               </linearGradient>
             </defs>

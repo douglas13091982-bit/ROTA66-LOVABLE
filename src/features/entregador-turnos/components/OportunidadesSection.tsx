@@ -22,7 +22,7 @@ export function OportunidadesSection({ loading, disponiveis, onAceitar }: Props)
       ) : disponiveis.length === 0 ? (
         <div
           className="rounded-lg p-8 text-center shadow-card"
-          style={{ background: "#ef4444", border: "1px solid #ef4444" }}
+          style={{ background: "#AE0000", border: "1px solid #AE0000" }}
         >
           <p className="text-sm font-medium" style={{ color: "#ffffff" }}>
             Nenhum turno disponível no momento. Quando uma loja publicar, você verá aqui em tempo
