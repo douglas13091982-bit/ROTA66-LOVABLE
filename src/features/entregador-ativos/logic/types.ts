@@ -9,6 +9,8 @@ export type PedidoAtivo = {
   endereco_coleta_lat?: number | null;
   endereco_coleta_lng?: number | null;
   endereco_entrega: string | null;
+  endereco_entrega_lat?: number | null;
+  endereco_entrega_lng?: number | null;
   complemento?: string | null;
   codigo_coleta: string | null;
   taxa_entrega: number;
