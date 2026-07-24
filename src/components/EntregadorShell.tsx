@@ -120,8 +120,9 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
     return (
       <div className="entregador-theme panel-premium min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
-          <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6 bg-gradient-to-br from-[var(--rota-red)] to-[var(--rota-red-dark)]">
-          
+          <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
+            style={{ background: "linear-gradient(135deg, #AE0000, #6D0000)" }}
+          >
             <Smartphone className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight mb-3">Acesse pelo celular</h1>
@@ -165,7 +166,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)] bg-[var(--entregador-nav-bg,#0f304d)]"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)]"
+        style={{ background: "#0f304d" }}
       >
         <div className="grid grid-cols-4">
           {NAV.map((item) => {
@@ -179,29 +181,30 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 data-nav-link
                 data-active={active ? "true" : "false"}
                 className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[var(--rota-red)]" : "text-white hover:text-[var(--rota-red)]"
+                  active ? "text-[#AE0000]" : "text-white hover:text-[#AE0000]"
                 }`}
               >
                 {active && (
                   <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[var(--rota-red)]"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#AE0000]"
                     style={{
-                      boxShadow: "0 4px 22px -2px color-mix(in oklab, var(--rota-red) 55%, transparent)",
+                      boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.55)",
                     }}
                   />
                 )}
                 <div className="relative">
                   <Icon
                     className={`h-5 w-5 transition-all duration-300 ${
-                      active ? "scale-110 text-[var(--rota-red)]" : "text-white group-hover:text-[var(--rota-red)]"
+                      active ? "scale-110 text-[#AE0000]" : "text-white group-hover:text-[#AE0000]"
                     }`}
                   />
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[var(--entregador-nav-bg,#0f304d)] bg-gradient-to-br from-[var(--rota-red)] to-[var(--rota-red-dark)]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f304d]"
                       style={{
-                        boxShadow: "0 0 10px -1px color-mix(in oklab, var(--rota-red) 90%, transparent)",
+                        background: "linear-gradient(135deg, #AE0000, #6D0000)",
+                        boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
                       }}
                       aria-label={`${badge} oportunidades`}
                     >
