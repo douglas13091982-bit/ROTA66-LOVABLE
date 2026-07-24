@@ -205,6 +205,10 @@ export function EntregadoresMapaTempoReal({
       bounds.extend(pos);
       const existing = markersRef.current.get(e.entregador_id);
       if (existing) {
+        const prev = existing.getPosition?.();
+        if (!prev || Math.abs(prev.lat() - pos.lat) > 0.0002 || Math.abs(prev.lng() - pos.lng) > 0.0002) {
+          addressCacheRef.current.delete(e.entregador_id);
+        }
         existing.setPosition(pos);
       } else {
         const marker = new g.maps.Marker({
