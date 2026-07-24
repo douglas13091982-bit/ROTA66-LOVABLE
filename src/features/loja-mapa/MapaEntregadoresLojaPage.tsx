@@ -67,7 +67,14 @@ function ListaEntregadores({
 }: {
   title: string;
   isLoading: boolean;
-  list: Array<{ id: string; full_name: string | null; phone: string | null; online: boolean }>;
+  list: Array<{
+    id: string;
+    full_name: string | null;
+    phone: string | null;
+    avatar_url?: string | null;
+    online: boolean;
+    em_entrega?: boolean;
+  }>;
   q: string;
   setQ: (v: string) => void;
 }) {
@@ -91,40 +98,56 @@ function ListaEntregadores({
         ) : list.length === 0 ? (
           <div className="p-4 text-sm text-muted-foreground">Nenhum entregador.</div>
         ) : (
-          list.map((e) => (
-            <div key={e.id} className="flex items-center gap-3 px-4 py-2.5">
-              <div
-                className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${
-                  e.online ? "bg-emerald-500/15 text-emerald-500" : "bg-muted text-muted-foreground"
-                }`}
-              >
-                <Bike className="h-4 w-4" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium truncate">{e.full_name ?? "Sem nome"}</div>
-                <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      e.online ? "bg-emerald-500" : "bg-gray-400"
-                    }`}
+          list.map((e) => {
+            const status = e.em_entrega ? "Em entrega" : e.online ? "Online" : "Offline";
+            const dot = e.em_entrega
+              ? "bg-amber-500"
+              : e.online
+                ? "bg-emerald-500"
+                : "bg-gray-400";
+            const ring = e.em_entrega
+              ? "bg-amber-500/15 text-amber-500"
+              : e.online
+                ? "bg-emerald-500/15 text-emerald-500"
+                : "bg-muted text-muted-foreground";
+            return (
+              <div key={e.id} className="flex items-center gap-3 px-4 py-2.5">
+                {e.avatar_url ? (
+                  <img
+                    src={e.avatar_url}
+                    alt={e.full_name ?? "Entregador"}
+                    className="h-9 w-9 rounded-full object-cover shrink-0"
                   />
-                  {e.online ? "Online" : "Offline"}
-                  {e.phone && (
-                    <>
-                      <span className="opacity-40">•</span>
-                      <Phone className="h-2.5 w-2.5" />
-                      {e.phone}
-                    </>
-                  )}
+                ) : (
+                  <div
+                    className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${ring}`}
+                  >
+                    <Bike className="h-4 w-4" />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate">{e.full_name ?? "Sem nome"}</div>
+                  <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                    <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+                    {status}
+                    {e.phone && (
+                      <>
+                        <span className="opacity-40">•</span>
+                        <Phone className="h-2.5 w-2.5" />
+                        {e.phone}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
   );
 }
+
 
 function MiniDashboard({
   online,
