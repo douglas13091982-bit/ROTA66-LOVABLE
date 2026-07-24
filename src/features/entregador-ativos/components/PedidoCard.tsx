@@ -210,14 +210,15 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       <div className="flex items-center gap-3">
         <div
           className="h-11 w-11 rounded-full border flex items-center justify-center shrink-0"
-          style={{ borderColor: "rgba(255,255,255,0.15)" }}
+          style={{ borderColor: SUBTLE_BORDER, background: ICON_CIRCLE_BG }}
         >
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-white font-bold text-base truncate">
+          <div className="font-bold text-base truncate" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
+
           {p.cliente_telefone && (
             <a
               href={`tel:${p.cliente_telefone}`}
