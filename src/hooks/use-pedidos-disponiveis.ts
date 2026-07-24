@@ -253,55 +253,77 @@ export function usePedidosDisponiveis(
     );
   }, [userId, qc]);
 
-  // Realtime — qualquer pedido novo invalida o pool unificado
+  // Realtime — pool aberto (status=pronto sem entregador) + meus pedidos.
+  // Antes o canal escutava TODA a tabela `pedidos` sem filtro, o que em
+  // cidades com volume alto derruba o cliente. Agora usamos DOIS canais
+  // com `filter` server-side: um para o pool (status=pronto) e outro para
+  // os meus (entregador_id=eq.uid), cada um só entregando o que interessa.
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(
+    const stopPool = subscribeLazy(
       () =>
         supabase
-          .channel(`entregador-pedidos-${userId}`)
+          .channel(`pool-pronto-${userId}`)
           .on(
             "postgres_changes",
-            { event: "*", schema: "public", table: "pedidos" },
+            { event: "*", schema: "public", table: "pedidos", filter: "status=eq.pronto" },
             (payload) => {
               if (!estouOnlineRef.current) return;
               qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
 
-            const novo = payload.new as {
-              id?: string;
-              numero?: number | string | null;
-              status?: string;
-              entregador_id?: string | null;
-            } | null;
-            const anterior = payload.old as {
-              status?: string;
-              entregador_id?: string | null;
-            } | null;
-            const ficouPronto =
-              (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
-              novo?.status === "pronto" &&
-              !novo?.entregador_id;
-            if (ficouPronto) {
-              toast.success("🚨 Novo pedido pronto para retirar!");
-              mostrarNotificacaoLocalNovoPedido(novo, userId);
-            }
-            // Se um pedido meu mudou (ex.: virou "entregue"), atualiza ganhos do dia.
-            const pedidoMeu =
-              novo?.entregador_id === userId || anterior?.entregador_id === userId;
-            if (pedidoMeu) {
-              qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
-            }
-          },
-        )
-        .subscribe() as never,
+              const novo = payload.new as {
+                id?: string;
+                numero?: number | string | null;
+                status?: string;
+                entregador_id?: string | null;
+              } | null;
+              const ficouPronto =
+                (payload.eventType === "INSERT" || payload.eventType === "UPDATE") &&
+                novo?.status === "pronto" &&
+                !novo?.entregador_id;
+              if (ficouPronto) {
+                toast.success("🚨 Novo pedido pronto para retirar!");
+                mostrarNotificacaoLocalNovoPedido(novo, userId);
+              }
+            },
+          )
+          .subscribe() as never,
       () => {
-        // Resync ao voltar de background: eventos perdidos enquanto o WS estava suspenso.
         qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+      },
+    );
+
+    const stopMeus = subscribeLazy(
+      () =>
+        supabase
+          .channel(`meus-pedidos-${userId}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "pedidos",
+              filter: `entregador_id=eq.${userId}`,
+            },
+            () => {
+              // Qualquer mudança em pedido meu (aceitou / entregou / cancelou)
+              // afeta ganho do dia e rota ativa.
+              qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
+              qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
+            },
+          )
+          .subscribe() as never,
+      () => {
         qc.invalidateQueries({ queryKey: ["entregador-rota-ativa", userId] });
         qc.invalidateQueries({ queryKey: ["ganho-hoje", userId] });
         qc.invalidateQueries({ queryKey: ["entregador-self-status", userId] });
       },
     );
+
+    return () => {
+      stopPool();
+      stopMeus();
+    };
   }, [userId, qc]);
 
 
