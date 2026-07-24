@@ -1,5 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { KeyRound, Loader2, MapPin, Navigation, Phone, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  Info,
+  KeyRound,
+  Loader2,
+  Map as MapIcon,
+  MapPin,
+  MessageCircle,
+  Phone,
+  User,
+  Wallet,
+  Route as RouteIcon,
+  DollarSign,
+  TrendingUp,
+} from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
@@ -7,16 +21,39 @@ import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
-import { PagamentoBadge } from "./PagamentoBadge";
 import { abrirRetornoLoja } from "./RetornoLojaDialog";
-import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
-
 
 type Props = {
   pedido: PedidoAtivo;
   destaque?: string;
   agrupado?: boolean;
 };
+
+// Countdown mm:ss até o deadline; retorna null quando não há deadline
+function useCountdown(deadline?: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!deadline) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [deadline]);
+  if (!deadline) return { text: null as string | null, late: false };
+  const diff = new Date(deadline).getTime() - now;
+  const late = diff <= 0;
+  const s = Math.max(0, Math.floor(diff / 1000));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return { text: `${m.toString().padStart(2, "0")}:${r.toString().padStart(2, "0")}`, late };
+}
+
+function formaPagamentoLabel(f?: string | null) {
+  const v = (f ?? "").toLowerCase();
+  if (v === "dinheiro") return "Dinheiro";
+  if (v === "pix") return "PIX";
+  if (v.startsWith("cartao")) return "Cartão";
+  if (v === "online" || v === "mercadopago" || v === "mp") return "Online";
+  return f ?? "—";
+}
 
 export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
@@ -28,12 +65,24 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const isColeta = p.status === "em_rota";
   const endereco = isColeta ? p.endereco_coleta : p.endereco_entrega;
   const codigoColeta = p.codigo_coleta;
-  const badgeLabel = isColeta ? "Indo buscar" : "Em entrega";
   const isDestaque = destaque === p.id;
   const cardRef = useRef<HTMLDivElement>(null);
   const isCartao = ["cartao", "cartao_credito", "cartao_debito"].includes(
     (p.forma_pagamento ?? "").toLowerCase(),
   );
+
+  const liquido = liquidoEntregador(
+    p.taxa_entrega,
+    taxaLoja,
+    p.loja_plano_mensal_ativo,
+    p.forma_pagamento,
+  );
+  const distanciaKm =
+    p.distancia_metros != null ? p.distancia_metros / 1000 : null;
+  const valorPorKm =
+    distanciaKm && distanciaKm > 0 ? liquido / distanciaKm : null;
+
+  const countdown = useCountdown(isColeta ? p.deadline_coleta_at : null);
 
   useEffect(() => {
     if (isDestaque && cardRef.current) {
@@ -56,173 +105,324 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     }
   }
 
+  // Paleta fixa Rota 66
+  const RED = "#C91C1C";
+  const NAVY = "#0D2B45";
+  const MUTED = "#8FA3B8";
+  const DIVIDER = "rgba(255,255,255,0.08)";
+
+  const stagePillLabel = isColeta ? "INDO BUSCAR" : "EM ENTREGA";
+  const stagePillColor = isColeta ? "#F5B301" : "#7DD3FC";
 
   return (
     <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-2xl glass shadow-elevated p-5 md:p-6 transition-all duration-500 ease-premium ${
-        isDestaque
-          ? "border-2 border-primary ring-4 ring-primary/30 animate-pulse-once"
-          : "border border-border/40"
+      className={`relative overflow-hidden rounded-[22px] p-6 md:p-7 transition-all duration-500 ${
+        isDestaque ? "ring-4 ring-white/20" : ""
       }`}
+      style={{
+        background: NAVY,
+        boxShadow: "0 20px 60px -20px rgba(0,0,0,0.6)",
+      }}
     >
-      <div
-        className={`absolute -top-24 -right-24 h-56 w-56 rounded-full blur-3xl pointer-events-none ${
-          isColeta ? "bg-amber-500/15" : "bg-indigo-500/15"
-        }`}
-      />
-      <div className="relative">
-        <div className="flex items-start justify-between mb-4 gap-3">
-          <div>
-            <div className="font-display text-4xl md:text-5xl tracking-[0.06em] leading-none">
-              #{p.numero}
-            </div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1.5">
-              {formatDateTime(p.updated_at)}
-            </div>
-            {p.duracao_estimada_seg != null && (
-              <div className="mt-2 inline-flex items-center px-2.5 py-1 bg-indigo-500/15 backdrop-blur-sm border border-indigo-400/30 text-indigo-300 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full">
-                ETA {Math.max(1, Math.round(p.duracao_estimada_seg / 60))} min
-                {p.distancia_metros != null && ` · ${(p.distancia_metros / 1000).toFixed(1)} km`}
-              </div>
-            )}
+      {/* Header: número + timer */}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div
+            className="text-[11px] font-semibold uppercase tracking-[0.22em]"
+            style={{ color: MUTED }}
+          >
+            Pedido
           </div>
-          <div className="flex flex-col items-end gap-1.5">
-            <span
-              className={`px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em] rounded-full text-white backdrop-blur-sm border shadow-soft ${
-                isColeta
-                  ? "bg-amber-500/90 text-black border-amber-300/40"
-                  : "bg-indigo-600/90 border-indigo-400/40"
-              }`}
-            >
-              {badgeLabel}
-            </span>
-            {isColeta && p.deadline_coleta_at && (
-              <ColetaDeadlineBadge deadline={p.deadline_coleta_at} />
-            )}
-            {p.entrega_paga && (
-              <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full bg-emerald-500/90 text-white border border-emerald-300/40 shadow-[0_4px_16px_-4px_oklch(0.7_0.18_155_/_0.5)]">
-                Pago
-              </span>
-            )}
+          <div className="font-display text-5xl md:text-6xl leading-none text-white mt-1">
+            #{p.numero}
+          </div>
+          <div
+            className="text-[12px] mt-2"
+            style={{ color: MUTED }}
+          >
+            {formatDateTime(p.updated_at)}
           </div>
         </div>
 
-        <div className="space-y-2 text-sm mb-4">
-          <div className="font-bold text-base">{p.cliente_nome}</div>
-          <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-col items-end gap-2">
+          {isColeta && countdown.text ? (
+            <>
+              <div
+                className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                style={{ color: MUTED }}
+              >
+                Tempo para chegar
+              </div>
+              <div
+                className="font-display text-4xl md:text-5xl leading-none tabular-nums"
+                style={{ color: countdown.late ? RED : RED }}
+              >
+                {countdown.late ? "ATRASADO" : countdown.text}
+              </div>
+            </>
+          ) : (
+            <div
+              className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+              style={{ color: MUTED }}
+            >
+              {isColeta ? "Coleta" : "Entrega"}
+            </div>
+          )}
+          <span
+            className="mt-1 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full border"
+            style={{ color: stagePillColor, borderColor: stagePillColor }}
+          >
+            {stagePillLabel}
+          </span>
+        </div>
+      </div>
+
+      <div className="my-5 h-px" style={{ background: DIVIDER }} />
+
+      {/* Cliente / Loja */}
+      <div className="flex items-center gap-4">
+        <div
+          className="h-12 w-12 rounded-full border flex items-center justify-center shrink-0"
+          style={{ borderColor: "rgba(255,255,255,0.15)" }}
+        >
+          <User className="h-5 w-5" style={{ color: RED }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-white font-bold text-lg truncate">
+            {p.cliente_nome}
+          </div>
+          {p.cliente_telefone && (
             <a
               href={`tel:${p.cliente_telefone}`}
-              className="inline-flex items-center gap-2 text-primary hover:underline font-semibold"
+              className="inline-flex items-center gap-2 font-semibold text-sm mt-0.5"
+              style={{ color: RED }}
             >
-              <Phone className="h-4 w-4" /> {p.cliente_telefone}
+              <Phone className="h-4 w-4" />
+              {p.cliente_telefone}
             </a>
-            <ChatPedidoButton
-              pedidoId={p.id}
-              pedidoNumero={Number(p.numero)}
-              senderRole="entregador"
-              contraparteNome="Loja"
-            />
+          )}
+        </div>
+        <div className="pl-3 border-l" style={{ borderColor: DIVIDER }}>
+          <ChatPedidoButton
+            pedidoId={p.id}
+            pedidoNumero={Number(p.numero)}
+            senderRole="entregador"
+            contraparteNome="Loja"
+            variant="ghost"
+            className="!h-auto !p-0 !bg-transparent hover:!bg-transparent flex-col gap-1"
+            icon={<MessageCircle className="h-6 w-6 text-emerald-400" />}
+            label={<span className="text-emerald-400 font-bold text-sm tracking-wider">CHAT</span>}
+          />
+        </div>
+      </div>
+
+      <div className="my-5 h-px" style={{ background: DIVIDER }} />
+
+      {/* Endereço */}
+      <div>
+        <div
+          className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
+          style={{ color: MUTED }}
+        >
+          {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
+        </div>
+        <div className="flex items-start gap-4">
+          <div
+            className="h-12 w-12 rounded-full border flex items-center justify-center shrink-0"
+            style={{ borderColor: "rgba(255,255,255,0.15)" }}
+          >
+            <MapPin className="h-5 w-5" style={{ color: RED }} />
           </div>
-          <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mt-3 font-bold">
-            {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
+          <div className="flex-1 min-w-0 text-white text-[15px] leading-snug font-medium">
+            {endereco}
+            {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
           </div>
-          <div className="flex items-start gap-3">
-            <div className="flex items-start gap-2 flex-1 min-w-0 bg-background/40 backdrop-blur-sm border border-border/40 rounded-lg px-3 py-2.5">
-              <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-              <span className="font-semibold">
-                {endereco}
-                {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
+          {endereco && (
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`}
+              aria-label="Abrir rota no mapa"
+              className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-2xl border transition-all active:scale-95"
+              style={{
+                borderColor: "rgba(255,255,255,0.12)",
+                color: MUTED,
+              }}
+            >
+              <MapIcon className="h-5 w-5" style={{ color: RED }} />
+              <span className="text-[10px] font-bold tracking-[0.14em] mt-1 text-white/80">
+                MAPA
               </span>
+            </a>
+          )}
+        </div>
+      </div>
+
+      {!agrupado && (
+        <>
+          <div className="my-5 h-px" style={{ background: DIVIDER }} />
+
+          {/* Você recebe */}
+          <div className="text-center py-2">
+            <div
+              className="text-[11px] font-semibold uppercase tracking-[0.24em]"
+              style={{ color: MUTED }}
+            >
+              Você recebe
             </div>
-            {endereco && (
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`}
-                aria-label="Abrir rota no mapa"
-                className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-gradient-red shadow-red text-primary-foreground hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-95 transition-all duration-300 ease-premium"
-              >
-                <Navigation className="h-6 w-6" />
-                <span className="text-[9px] font-bold uppercase tracking-[0.16em] mt-0.5">
-                  Mapa
-                </span>
-              </a>
+            <div className="font-display text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums">
+              R$ {liquido.toFixed(2).replace(".", ",")}
+            </div>
+            {Number(p.bonus_entregador ?? 0) > 0 && (
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
+                <TrendingUp className="h-4 w-4" />
+                +R$ {Number(p.bonus_entregador).toFixed(2)} bônus
+              </div>
             )}
           </div>
-        </div>
 
-        <PagamentoBadge forma={p.forma_pagamento} troco={p.troco_para} />
-
-        {!agrupado && (
-          <div className="border-y border-border/50 py-5 mb-4 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-2">
-                Você recebe
-              </div>
-              <div className="font-display text-5xl md:text-6xl text-emerald-400 leading-none drop-shadow-[0_4px_24px_oklch(0.7_0.18_155_/_0.45)]">
-                R$ {liquidoEntregador(p.taxa_entrega, taxaLoja, p.loja_plano_mensal_ativo, p.forma_pagamento).toFixed(2)}
-              </div>
-              {Number(p.bonus_entregador ?? 0) > 0 && (
-                <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/90 text-white text-sm font-bold uppercase tracking-[0.14em] rounded-full shadow-[0_8px_24px_-6px_oklch(0.7_0.18_155_/_0.5)] backdrop-blur-sm border border-emerald-300/40">
-                  <TrendingUp className="h-4 w-4" />+ R$ {Number(p.bonus_entregador).toFixed(2)} de
-                  bônus
-                </div>
-              )}
-            </div>
+          {/* Stats card */}
+          <div
+            className="mt-5 rounded-2xl border grid grid-cols-3"
+            style={{
+              borderColor: "rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.02)",
+            }}
+          >
+            <Stat
+              icon={<Wallet className="h-5 w-5" style={{ color: RED }} />}
+              label="Pagamento"
+              value={formaPagamentoLabel(p.forma_pagamento)}
+            />
+            <Stat
+              icon={<RouteIcon className="h-5 w-5" style={{ color: RED }} />}
+              label="Distância"
+              value={distanciaKm != null ? `${distanciaKm.toFixed(1)} km` : "—"}
+              withBorder
+            />
+            <Stat
+              icon={<DollarSign className="h-5 w-5" style={{ color: RED }} />}
+              label="Valor/km"
+              value={
+                valorPorKm != null
+                  ? `R$ ${valorPorKm.toFixed(2).replace(".", ",")}`
+                  : "—"
+              }
+              withBorder
+            />
           </div>
-        )}
+        </>
+      )}
 
+      {/* Info banner */}
+      {isColeta && !revealedColeta && (
+        <div
+          className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
+          style={{
+            borderColor: "rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.02)",
+          }}
+        >
+          <div
+            className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: "rgba(255,255,255,0.1)" }}
+          >
+            <Info className="h-4 w-4 text-white/80" />
+          </div>
+          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+            Assim que você chegar ao local, clique em{" "}
+            <b style={{ color: "#F5B301" }}>CHEGUEI NA COLETA.</b>
+          </p>
+        </div>
+      )}
+
+      {!isColeta && !revealedEntrega && (
+        <div
+          className="mt-5 rounded-2xl border px-4 py-3 flex items-start gap-3"
+          style={{
+            borderColor: "rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.02)",
+          }}
+        >
+          <div
+            className="h-7 w-7 rounded-full flex items-center justify-center shrink-0"
+            style={{ background: "rgba(255,255,255,0.1)" }}
+          >
+            <Info className="h-4 w-4 text-white/80" />
+          </div>
+          <p className="text-sm leading-snug" style={{ color: "#CBD5E1" }}>
+            Ao chegar no cliente, clique em{" "}
+            <b style={{ color: "#7DD3FC" }}>CHEGUEI NA ENTREGA.</b>
+          </p>
+        </div>
+      )}
+
+      {/* CTA / Estados */}
+      <div className="mt-5">
         {isColeta ? (
           !revealedColeta ? (
-            <button
+            <CtaButton
               onClick={() => {
                 setRevealedColeta(true);
                 void supabase.rpc("entregador_chegou_coleta" as never, {
                   _pedido_id: p.id,
                 } as never);
               }}
-              className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-[0.98] transition-all duration-300 ease-premium flex items-center justify-center gap-2"
             >
               Cheguei na coleta
-            </button>
-
+            </CtaButton>
           ) : (
-            <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 text-center shadow-soft">
-              <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-2 font-bold">
+            <div
+              className="rounded-2xl border p-5 text-center"
+              style={{
+                borderColor: "rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.03)",
+              }}
+            >
+              <div
+                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.22em] mb-2 font-bold"
+                style={{ color: MUTED }}
+              >
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta
               </div>
-              <div className="font-display text-5xl md:text-6xl tracking-[0.4em] text-primary mb-2 select-all drop-shadow-[0_4px_20px_oklch(0.55_0.21_27_/_0.5)]">
+              <div
+                className="font-display text-6xl tracking-[0.4em] mb-2 select-all"
+                style={{ color: RED }}
+              >
                 {codigoColeta}
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-[12px]" style={{ color: MUTED }}>
                 Mostre este código para a loja confirmar a coleta.
               </p>
             </div>
           )
         ) : !revealedEntrega ? (
-          <button
-            onClick={() => setRevealedEntrega(true)}
-            className="w-full px-5 py-4 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-8px_oklch(0.55_0.21_27_/_0.6)] active:scale-[0.98] transition-all duration-300 ease-premium flex items-center justify-center gap-2"
-          >
+          <CtaButton onClick={() => setRevealedEntrega(true)}>
             Cheguei na entrega
-          </button>
+          </CtaButton>
         ) : p.origem === "ifood" ? (
-          <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 space-y-3 shadow-soft">
+          <div
+            className="rounded-2xl border p-5 space-y-3"
+            style={{
+              borderColor: "rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.03)",
+            }}
+          >
             <div className="text-center">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-600 text-white text-[10px] font-bold uppercase tracking-[0.18em] mb-2">
                 Pedido iFood
               </div>
-              <p className="text-xs text-muted-foreground">
-                Confirme a entrega pelo link oficial do iFood e depois toque em
-                <b className="text-foreground"> Finalizar entrega</b>.
+              <p className="text-xs" style={{ color: MUTED }}>
+                Confirme a entrega pelo link do iFood e depois toque em{" "}
+                <b className="text-white">Finalizar entrega</b>.
               </p>
             </div>
             <a
               href="https://confirmacao-entrega-propria.ifood.com.br"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-lg"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-xl"
             >
               Abrir confirmação iFood
             </a>
@@ -236,7 +436,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 }
                 refresh();
               }}
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-lg disabled:opacity-60"
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-xs tracking-[0.18em] rounded-xl disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -248,8 +448,17 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             </button>
           </div>
         ) : (
-          <div className="rounded-xl border-2 border-primary/60 bg-primary/10 backdrop-blur-sm p-5 space-y-3 shadow-soft">
-            <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold">
+          <div
+            className="rounded-2xl border p-5 space-y-3"
+            style={{
+              borderColor: "rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.03)",
+            }}
+          >
+            <div
+              className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.22em] font-bold"
+              style={{ color: MUTED }}
+            >
               <KeyRound className="h-3.5 w-3.5" /> Digite o código do cliente
             </div>
             <div className="flex justify-center">
@@ -270,17 +479,76 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               </InputOTP>
             </div>
             {loading && (
-              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <div
+                className="flex items-center justify-center gap-2 text-xs"
+                style={{ color: MUTED }}
+              >
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Confirmando...
               </div>
             )}
-            <p className="text-[11px] text-muted-foreground text-center">
-              Peça ao cliente o código de 4 dígitos que aparece na página de rastreio.
+            <p
+              className="text-[12px] text-center"
+              style={{ color: MUTED }}
+            >
+              Peça ao cliente o código de 4 dígitos da página de rastreio.
             </p>
           </div>
         )}
       </div>
     </div>
+  );
+}
 
+function Stat({
+  icon,
+  label,
+  value,
+  withBorder,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  withBorder?: boolean;
+}) {
+  return (
+    <div
+      className={`flex flex-col items-center justify-center py-4 px-2 ${
+        withBorder ? "border-l" : ""
+      }`}
+      style={{ borderColor: "rgba(255,255,255,0.08)" }}
+    >
+      {icon}
+      <div
+        className="text-[10px] font-semibold uppercase tracking-[0.18em] mt-2"
+        style={{ color: "#8FA3B8" }}
+      >
+        {label}
+      </div>
+      <div className="text-white font-semibold text-[15px] mt-1 truncate max-w-full">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function CtaButton({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="group w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold uppercase text-[15px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
+      style={{
+        background: "#C91C1C",
+        boxShadow: "0 14px 32px -10px rgba(201,28,28,0.55)",
+      }}
+    >
+      <span>{children}</span>
+      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+    </button>
   );
 }
