@@ -125,7 +125,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const { theme } = useTheme();
   const isLight = theme === "light";
   const RED = "#C91C1C";
-  const BG = isLight ? "#FFFFFF" : "#0D2B45";
+  const BG = isLight ? "#DECDB4" : "#0D2B45";
   const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
   const MUTED = isLight ? "#8A94A6" : "#8FA3B8";
   const DIVIDER = isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.08)";
