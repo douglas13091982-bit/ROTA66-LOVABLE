@@ -1487,7 +1487,7 @@ html.light .panel-premium [class*="rounded-2xl"][class*="bg-card"],
 html.light .panel-premium .glass,
 html.light .panel-premium .glass-strong {
   background: #EFE5D3 !important;
-  border: 1px solid #D6C9AF !important;
+  border: 1px solid #EFE5D3 !important;
   backdrop-filter: none !important;
   box-shadow: var(--shadow-card) !important;
 }
