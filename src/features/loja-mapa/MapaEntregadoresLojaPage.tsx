@@ -112,19 +112,11 @@ function ListaEntregadores({
                 : "bg-muted text-muted-foreground";
             return (
               <div key={e.id} className="flex items-center gap-3 px-4 py-2.5">
-                {e.avatar_url ? (
-                  <img
-                    src={e.avatar_url}
-                    alt={e.full_name ?? "Entregador"}
-                    className="h-9 w-9 rounded-full object-cover shrink-0"
-                  />
-                ) : (
-                  <div
-                    className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${ring}`}
-                  >
-                    <Bike className="h-4 w-4" />
-                  </div>
-                )}
+                <div
+                  className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${ring}`}
+                >
+                  <Bike className="h-4 w-4" />
+                </div>
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">{e.full_name ?? "Sem nome"}</div>
                   <div className="text-[11px] text-muted-foreground flex items-center gap-1.5">
