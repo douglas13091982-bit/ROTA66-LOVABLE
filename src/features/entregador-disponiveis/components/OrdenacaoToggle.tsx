@@ -25,7 +25,9 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected, a
       onClick={onClick}
       className={[
         "flex-1 min-w-0 flex items-center gap-2 rounded-xl px-2.5 py-2 transition-all duration-300 text-left",
-        active ? activeClasses : "bg-transparent hover:bg-white/5",
+        active
+          ? activeClasses
+          : "bg-gradient-to-br from-[#1e6fd9] to-[#0f4a99] shadow-md shadow-[#1e6fd9]/30 ring-1 ring-[#4a90e2]/30 hover:brightness-110",
       ].join(" ")}
     >
       <span
