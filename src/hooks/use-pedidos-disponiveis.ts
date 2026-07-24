@@ -407,47 +407,54 @@ function criarCalculadorTaxaExibida(
   tarifasGlobais: TarifaFaixa[] | undefined,
 ) {
   return (p: PedidoDisponivel): number => {
-    // A taxa por pedido do plano é sempre somada à tarifa do cliente e
-    // depois descontada do líquido do entregador — o plano mensal pode
-    // cobrar mensalidade E taxa por pedido. Manter em paridade com
-    // liquidoEntregador() para não mostrar valor menor que o real.
+    // ⚠️ PARIDADE OBRIGATÓRIA com liquidoEntregador():
+    //   - subtrai a taxa por pedido do plano (retida com a loja)
+    //   - dobra o frete quando o pagamento é em cartão (compensa o retorno
+    //     à loja com a maquininha)
+    // O card DEVE mostrar exatamente o que o entregador vai receber,
+    // não o valor que o cliente paga — senão a promessa do pool não bate
+    // com o crédito na carteira.
     const taxaPlano = Number(p.loja_taxa_por_pedido ?? 0) || 0;
-    const tarifaClienteAPartirDoFrete = (freteEntregador: number) => {
-      return Number((freteEntregador + taxaPlano).toFixed(2));
-    };
 
-    // FONTE DA VERDADE: o valor que o cliente já pagou/vai pagar está em
-    // `taxa_entrega`. Se existir, usa direto — não recalcula por km, senão
-    // o card do pool promete um valor maior do que o entregador vai receber
-    // de fato ao finalizar a corrida.
+    // FONTE DA VERDADE: `taxa_entrega` já salvo no pedido (o que o cliente
+    // pagou). liquidoEntregador extrai o frete líquido dali.
     const taxaSalva = Number(p.taxa_entrega);
     if (Number.isFinite(taxaSalva) && taxaSalva > 0) {
-      return Number(taxaSalva.toFixed(2));
+      return liquidoEntregador(
+        taxaSalva,
+        taxaPlano,
+        p.loja_plano_mensal_ativo,
+        p.forma_pagamento,
+      );
     }
 
-    const freteSnapshot = liquidoEntregador(
-      p.taxa_entrega,
+    // Fallback: pedido sem taxa_entrega salva (raro). Estima pela faixa
+    // global mais próxima; ainda passa por liquidoEntregador para dobrar
+    // em cartão.
+    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []) ?? 0;
+    let frete = freteGlobalMinimo;
+    if (
+      p.endereco_coleta_lat != null &&
+      p.endereco_coleta_lng != null &&
+      p.endereco_entrega_lat != null &&
+      p.endereco_entrega_lng != null
+    ) {
+      const km = haversineKm(
+        Number(p.endereco_coleta_lat),
+        Number(p.endereco_coleta_lng),
+        Number(p.endereco_entrega_lat),
+        Number(p.endereco_entrega_lng),
+      );
+      frete = calcularTarifaPorFaixa(km, tarifasGlobais ?? []) ?? freteGlobalMinimo;
+    }
+    // Reconstroi o `taxa_entrega` estimado (frete + taxaPlano) para
+    // reusar a mesma função — a subtração de taxaPlano ainda acontece.
+    return liquidoEntregador(
+      frete + taxaPlano,
       taxaPlano,
       p.loja_plano_mensal_ativo,
+      p.forma_pagamento,
     );
-    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []);
-
-    if (
-      p.endereco_coleta_lat == null ||
-      p.endereco_coleta_lng == null ||
-      p.endereco_entrega_lat == null ||
-      p.endereco_entrega_lng == null
-    ) {
-      return tarifaClienteAPartirDoFrete(freteGlobalMinimo ?? freteSnapshot);
-    }
-    const km = haversineKm(
-      Number(p.endereco_coleta_lat),
-      Number(p.endereco_coleta_lng),
-      Number(p.endereco_entrega_lat),
-      Number(p.endereco_entrega_lng),
-    );
-    const t = calcularTarifaPorFaixa(km, tarifasGlobais ?? []);
-    return tarifaClienteAPartirDoFrete(t ?? freteGlobalMinimo ?? freteSnapshot);
   };
 }
 
