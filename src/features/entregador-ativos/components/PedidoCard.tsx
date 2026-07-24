@@ -121,24 +121,35 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     }
   }
 
-  // Paleta fixa Rota 66
+  // Paleta Rota 66 (theme-aware)
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const RED = "#C91C1C";
-  const NAVY = "#0D2B45";
-  const MUTED = "#8FA3B8";
-  const DIVIDER = "rgba(255,255,255,0.08)";
+  const BG = isLight ? "#FFFFFF" : "#0D2B45";
+  const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
+  const MUTED = isLight ? "#8A94A6" : "#8FA3B8";
+  const DIVIDER = isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.08)";
+  const SUBTLE_BORDER = isLight ? "rgba(13,43,69,0.12)" : "rgba(255,255,255,0.15)";
+  const SUBTLE_BG = isLight ? "rgba(13,43,69,0.03)" : "rgba(255,255,255,0.02)";
+  const ICON_CIRCLE_BG = isLight ? "#FDECEC" : "transparent";
+  const RING_CLASS = isDestaque
+    ? isLight
+      ? "ring-4 ring-black/10"
+      : "ring-4 ring-white/20"
+    : "";
 
   const stagePillLabel = isColeta ? "INDO BUSCAR" : "EM ENTREGA";
-  const stagePillColor = isColeta ? "#F5B301" : "#7DD3FC";
+  const stagePillColor = isColeta ? (isLight ? RED : "#F5B301") : (isLight ? "#0EA5E9" : "#7DD3FC");
 
   return (
     <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${
-        isDestaque ? "ring-4 ring-white/20" : ""
-      }`}
+      className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${RING_CLASS}`}
       style={{
-        background: NAVY,
-        boxShadow: "0 20px 60px -20px rgba(0,0,0,0.6)",
+        background: BG,
+        boxShadow: isLight
+          ? "0 20px 60px -20px rgba(13,43,69,0.15)"
+          : "0 20px 60px -20px rgba(0,0,0,0.6)",
       }}
     >
       {/* Header: número + timer */}
