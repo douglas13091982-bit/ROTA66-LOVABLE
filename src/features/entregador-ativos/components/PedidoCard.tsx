@@ -116,7 +116,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   return (
     <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-[22px] p-6 md:p-7 transition-all duration-500 ${
+      className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${
         isDestaque ? "ring-4 ring-white/20" : ""
       }`}
       style={{
@@ -125,51 +125,50 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       }}
     >
       {/* Header: número + timer */}
-      <div className="flex items-start justify-between gap-3">
-        <div>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+        <div className="min-w-0">
           <div
-            className="text-[11px] font-semibold uppercase tracking-[0.22em]"
+            className="text-[10px] font-semibold uppercase tracking-[0.22em]"
             style={{ color: MUTED }}
           >
             Pedido
           </div>
-          <div className="font-display text-5xl md:text-6xl leading-none text-white mt-1">
+          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none text-white mt-1 truncate">
             #{p.numero}
           </div>
-          <div
-            className="text-[12px] mt-2"
-            style={{ color: MUTED }}
-          >
+          <div className="text-[11px] mt-2" style={{ color: MUTED }}>
             {formatDateTime(p.updated_at)}
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-1.5 min-w-0 max-w-[45%]">
           {isColeta && countdown.text ? (
             <>
               <div
-                className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+                className="text-[9px] font-semibold uppercase tracking-[0.16em] truncate max-w-full"
                 style={{ color: MUTED }}
               >
                 Tempo para chegar
               </div>
               <div
-                className="font-display text-4xl md:text-5xl leading-none tabular-nums"
-                style={{ color: countdown.late ? RED : RED }}
+                className={`font-display leading-none tabular-nums truncate max-w-full ${
+                  countdown.late ? "text-xl sm:text-2xl" : "text-3xl sm:text-4xl md:text-5xl"
+                }`}
+                style={{ color: RED }}
               >
                 {countdown.late ? "ATRASADO" : countdown.text}
               </div>
             </>
           ) : (
             <div
-              className="text-[10px] font-semibold uppercase tracking-[0.2em]"
+              className="text-[10px] font-semibold uppercase tracking-[0.18em]"
               style={{ color: MUTED }}
             >
               {isColeta ? "Coleta" : "Entrega"}
             </div>
           )}
           <span
-            className="mt-1 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] rounded-full border"
+            className="mt-1 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] rounded-full border whitespace-nowrap"
             style={{ color: stagePillColor, borderColor: stagePillColor }}
           >
             {stagePillLabel}
@@ -177,32 +176,32 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         </div>
       </div>
 
-      <div className="my-5 h-px" style={{ background: DIVIDER }} />
+      <div className="my-4 sm:my-5 h-px" style={{ background: DIVIDER }} />
 
       {/* Cliente / Loja */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div
-          className="h-12 w-12 rounded-full border flex items-center justify-center shrink-0"
+          className="h-11 w-11 rounded-full border flex items-center justify-center shrink-0"
           style={{ borderColor: "rgba(255,255,255,0.15)" }}
         >
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-white font-bold text-lg truncate">
+          <div className="text-white font-bold text-base truncate">
             {p.cliente_nome}
           </div>
           {p.cliente_telefone && (
             <a
               href={`tel:${p.cliente_telefone}`}
-              className="inline-flex items-center gap-2 font-semibold text-sm mt-0.5"
+              className="inline-flex items-center gap-1.5 font-semibold text-[13px] mt-0.5 truncate max-w-full"
               style={{ color: RED }}
             >
-              <Phone className="h-4 w-4" />
-              {p.cliente_telefone}
+              <Phone className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{p.cliente_telefone}</span>
             </a>
           )}
         </div>
-        <div className="pl-3 border-l" style={{ borderColor: DIVIDER }}>
+        <div className="shrink-0">
           <ChatPedidoButton
             pedidoId={p.id}
             pedidoNumero={Number(p.numero)}
@@ -211,6 +210,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           />
         </div>
       </div>
+
+
 
       <div className="my-5 h-px" style={{ background: DIVIDER }} />
 
@@ -266,7 +267,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             >
               Você recebe
             </div>
-            <div className="font-display text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums">
+            <div className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 text-emerald-400 tabular-nums break-all">
               R$ {liquido.toFixed(2).replace(".", ",")}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
