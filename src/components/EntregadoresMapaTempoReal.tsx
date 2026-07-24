@@ -309,6 +309,25 @@ export function EntregadoresMapaTempoReal({
     }
   }, [entregadores]);
 
+  // Pulso neon animado nos marcadores
+  useEffect(() => {
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const g = window.google;
+      if (g?.maps) {
+        const phase = ((now - start) % 1600) / 1600; // 1.6s por ciclo
+        for (const marker of markersRef.current.values()) {
+          marker.setIcon(pulseIcon(g, phase));
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+
   return (
     <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
