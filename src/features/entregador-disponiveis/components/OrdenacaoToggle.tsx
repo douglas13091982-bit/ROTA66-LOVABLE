@@ -1,4 +1,4 @@
-import { MapPin, Trophy } from "lucide-react";
+import { MapPin, Trophy, ChevronRight } from "lucide-react";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
 
 interface Props {
@@ -23,27 +23,22 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected }:
       aria-selected={ariaSelected}
       onClick={onClick}
       className={[
-        "flex-1 flex items-center gap-2 rounded-2xl px-3 py-3 transition-all duration-300 text-left",
+        "flex-1 flex items-center gap-2.5 rounded-2xl px-3 py-3 transition-all duration-300 text-left",
         active
-          ? "bg-[#AE0000] shadow-lg shadow-[#AE0000]/30 ring-1 ring-[#cc3535]/40"
-          : "bg-transparent border border-white/15 hover:border-white/25",
+          ? "bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-lg shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
+          : "bg-[#0b2540]/60 border border-white/12 hover:border-white/25",
       ].join(" ")}
     >
       <span
         className={[
-          "grid place-items-center h-8 w-8 rounded-full shrink-0",
-          active ? "text-white" : "text-white/85",
+          "grid place-items-center h-9 w-9 rounded-full shrink-0",
+          active ? "bg-white/15 text-white" : "bg-white/8 text-white/85",
         ].join(" ")}
       >
         {icon}
       </span>
-      <span className="flex flex-col leading-tight min-w-0">
-        <span
-          className={[
-            "text-[11px] font-extrabold tracking-[0.14em] uppercase",
-            active ? "text-white" : "text-white",
-          ].join(" ")}
-        >
+      <span className="flex flex-col leading-tight min-w-0 flex-1">
+        <span className="text-[11px] font-extrabold tracking-[0.12em] uppercase text-white">
           {title}
         </span>
         <span
@@ -55,6 +50,13 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected }:
           {subtitle}
         </span>
       </span>
+      <ChevronRight
+        className={[
+          "h-4 w-4 shrink-0 transition-colors",
+          active ? "text-white" : "text-white/40",
+        ].join(" ")}
+        strokeWidth={2.5}
+      />
     </button>
   );
 }
