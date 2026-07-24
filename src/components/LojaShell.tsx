@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight, ChevronLeft, LifeBuoy, Store, History, ShieldCheck, GraduationCap, Megaphone, PanelLeft } from "lucide-react";
+import { LayoutDashboard, ClipboardList, Users, Settings, LogOut, Menu, PlusCircle, Wallet, X, Package, CalendarClock, ChevronRight, ChevronLeft, LifeBuoy, Store, History, ShieldCheck, GraduationCap, Megaphone, PanelLeft, Map as MapIcon } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
@@ -25,6 +25,7 @@ const NAV_ALL = [
   { to: "/loja/produtos", label: "Catálogo", icon: Package, ownerOnly: false },
   { to: "/loja/promocoes", label: "Promoções", icon: Megaphone, ownerOnly: false },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users, ownerOnly: false },
+  { to: "/loja/mapa", label: "Mapa", icon: MapIcon, ownerOnly: false },
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet, ownerOnly: true },
   { to: "/loja/funcionarios", label: "Funcionários", icon: Users, ownerOnly: true },
   { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy, ownerOnly: false },

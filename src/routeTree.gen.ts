@@ -49,6 +49,7 @@ import { Route as AuthenticatedLojaPromocoesRouteImport } from './routes/_authen
 import { Route as AuthenticatedLojaProdutosRouteImport } from './routes/_authenticated/loja/produtos'
 import { Route as AuthenticatedLojaPedidosRouteImport } from './routes/_authenticated/loja/pedidos'
 import { Route as AuthenticatedLojaNovoPedidoRouteImport } from './routes/_authenticated/loja/novo-pedido'
+import { Route as AuthenticatedLojaMapaRouteImport } from './routes/_authenticated/loja/mapa'
 import { Route as AuthenticatedLojaHistoricoRouteImport } from './routes/_authenticated/loja/historico'
 import { Route as AuthenticatedLojaFuncionariosRouteImport } from './routes/_authenticated/loja/funcionarios'
 import { Route as AuthenticatedLojaFinanceiroRouteImport } from './routes/_authenticated/loja/financeiro'
@@ -78,6 +79,7 @@ import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
 import { Route as AuthenticatedAdminNotificacoesRouteImport } from './routes/_authenticated/admin/notificacoes'
 import { Route as AuthenticatedAdminMinhaFranquiaRouteImport } from './routes/_authenticated/admin/minha-franquia'
+import { Route as AuthenticatedAdminMapaRouteImport } from './routes/_authenticated/admin/mapa'
 import { Route as AuthenticatedAdminLojasRouteImport } from './routes/_authenticated/admin/lojas'
 import { Route as AuthenticatedAdminFranqueadosRouteImport } from './routes/_authenticated/admin/franqueados'
 import { Route as AuthenticatedAdminFinanceiroRouteImport } from './routes/_authenticated/admin/financeiro'
@@ -319,6 +321,11 @@ const AuthenticatedLojaNovoPedidoRoute =
     path: '/novo-pedido',
     getParentRoute: () => AuthenticatedLojaRouteRoute,
   } as any)
+const AuthenticatedLojaMapaRoute = AuthenticatedLojaMapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => AuthenticatedLojaRouteRoute,
+} as any)
 const AuthenticatedLojaHistoricoRoute =
   AuthenticatedLojaHistoricoRouteImport.update({
     id: '/historico',
@@ -493,6 +500,11 @@ const AuthenticatedAdminMinhaFranquiaRoute =
     path: '/minha-franquia',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminMapaRoute = AuthenticatedAdminMapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminLojasRoute = AuthenticatedAdminLojasRouteImport.update({
   id: '/lojas',
   path: '/lojas',
@@ -658,6 +670,7 @@ export interface FileRoutesByFullPath {
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/admin/mapa': typeof AuthenticatedAdminMapaRoute
   '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -687,6 +700,7 @@ export interface FileRoutesByFullPath {
   '/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
   '/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/loja/historico': typeof AuthenticatedLojaHistoricoRoute
+  '/loja/mapa': typeof AuthenticatedLojaMapaRoute
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
@@ -745,6 +759,7 @@ export interface FileRoutesByTo {
   '/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/admin/mapa': typeof AuthenticatedAdminMapaRoute
   '/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -774,6 +789,7 @@ export interface FileRoutesByTo {
   '/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
   '/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/loja/historico': typeof AuthenticatedLojaHistoricoRoute
+  '/loja/mapa': typeof AuthenticatedLojaMapaRoute
   '/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/loja/produtos': typeof AuthenticatedLojaProdutosRoute
@@ -838,6 +854,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/financeiro': typeof AuthenticatedAdminFinanceiroRoute
   '/_authenticated/admin/franqueados': typeof AuthenticatedAdminFranqueadosRoute
   '/_authenticated/admin/lojas': typeof AuthenticatedAdminLojasRoute
+  '/_authenticated/admin/mapa': typeof AuthenticatedAdminMapaRoute
   '/_authenticated/admin/minha-franquia': typeof AuthenticatedAdminMinhaFranquiaRoute
   '/_authenticated/admin/notificacoes': typeof AuthenticatedAdminNotificacoesRoute
   '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
@@ -867,6 +884,7 @@ export interface FileRoutesById {
   '/_authenticated/loja/financeiro': typeof AuthenticatedLojaFinanceiroRoute
   '/_authenticated/loja/funcionarios': typeof AuthenticatedLojaFuncionariosRoute
   '/_authenticated/loja/historico': typeof AuthenticatedLojaHistoricoRoute
+  '/_authenticated/loja/mapa': typeof AuthenticatedLojaMapaRoute
   '/_authenticated/loja/novo-pedido': typeof AuthenticatedLojaNovoPedidoRoute
   '/_authenticated/loja/pedidos': typeof AuthenticatedLojaPedidosRoute
   '/_authenticated/loja/produtos': typeof AuthenticatedLojaProdutosRoute
@@ -931,6 +949,7 @@ export interface FileRouteTypes {
     | '/admin/financeiro'
     | '/admin/franqueados'
     | '/admin/lojas'
+    | '/admin/mapa'
     | '/admin/minha-franquia'
     | '/admin/notificacoes'
     | '/admin/password-reset'
@@ -960,6 +979,7 @@ export interface FileRouteTypes {
     | '/loja/financeiro'
     | '/loja/funcionarios'
     | '/loja/historico'
+    | '/loja/mapa'
     | '/loja/novo-pedido'
     | '/loja/pedidos'
     | '/loja/produtos'
@@ -1018,6 +1038,7 @@ export interface FileRouteTypes {
     | '/admin/financeiro'
     | '/admin/franqueados'
     | '/admin/lojas'
+    | '/admin/mapa'
     | '/admin/minha-franquia'
     | '/admin/notificacoes'
     | '/admin/password-reset'
@@ -1047,6 +1068,7 @@ export interface FileRouteTypes {
     | '/loja/financeiro'
     | '/loja/funcionarios'
     | '/loja/historico'
+    | '/loja/mapa'
     | '/loja/novo-pedido'
     | '/loja/pedidos'
     | '/loja/produtos'
@@ -1110,6 +1132,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/financeiro'
     | '/_authenticated/admin/franqueados'
     | '/_authenticated/admin/lojas'
+    | '/_authenticated/admin/mapa'
     | '/_authenticated/admin/minha-franquia'
     | '/_authenticated/admin/notificacoes'
     | '/_authenticated/admin/password-reset'
@@ -1139,6 +1162,7 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/financeiro'
     | '/_authenticated/loja/funcionarios'
     | '/_authenticated/loja/historico'
+    | '/_authenticated/loja/mapa'
     | '/_authenticated/loja/novo-pedido'
     | '/_authenticated/loja/pedidos'
     | '/_authenticated/loja/produtos'
@@ -1472,6 +1496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLojaNovoPedidoRouteImport
       parentRoute: typeof AuthenticatedLojaRouteRoute
     }
+    '/_authenticated/loja/mapa': {
+      id: '/_authenticated/loja/mapa'
+      path: '/mapa'
+      fullPath: '/loja/mapa'
+      preLoaderRoute: typeof AuthenticatedLojaMapaRouteImport
+      parentRoute: typeof AuthenticatedLojaRouteRoute
+    }
     '/_authenticated/loja/historico': {
       id: '/_authenticated/loja/historico'
       path: '/historico'
@@ -1675,6 +1706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMinhaFranquiaRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/mapa': {
+      id: '/_authenticated/admin/mapa'
+      path: '/mapa'
+      fullPath: '/admin/mapa'
+      preLoaderRoute: typeof AuthenticatedAdminMapaRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/lojas': {
       id: '/_authenticated/admin/lojas'
       path: '/lojas'
@@ -1844,6 +1882,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminFinanceiroRoute: typeof AuthenticatedAdminFinanceiroRoute
   AuthenticatedAdminFranqueadosRoute: typeof AuthenticatedAdminFranqueadosRoute
   AuthenticatedAdminLojasRoute: typeof AuthenticatedAdminLojasRoute
+  AuthenticatedAdminMapaRoute: typeof AuthenticatedAdminMapaRoute
   AuthenticatedAdminMinhaFranquiaRoute: typeof AuthenticatedAdminMinhaFranquiaRoute
   AuthenticatedAdminNotificacoesRoute: typeof AuthenticatedAdminNotificacoesRoute
   AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
@@ -1883,6 +1922,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminFinanceiroRoute: AuthenticatedAdminFinanceiroRoute,
     AuthenticatedAdminFranqueadosRoute: AuthenticatedAdminFranqueadosRoute,
     AuthenticatedAdminLojasRoute: AuthenticatedAdminLojasRoute,
+    AuthenticatedAdminMapaRoute: AuthenticatedAdminMapaRoute,
     AuthenticatedAdminMinhaFranquiaRoute: AuthenticatedAdminMinhaFranquiaRoute,
     AuthenticatedAdminNotificacoesRoute: AuthenticatedAdminNotificacoesRoute,
     AuthenticatedAdminPasswordResetRoute: AuthenticatedAdminPasswordResetRoute,
@@ -1949,6 +1989,7 @@ interface AuthenticatedLojaRouteRouteChildren {
   AuthenticatedLojaFinanceiroRoute: typeof AuthenticatedLojaFinanceiroRoute
   AuthenticatedLojaFuncionariosRoute: typeof AuthenticatedLojaFuncionariosRoute
   AuthenticatedLojaHistoricoRoute: typeof AuthenticatedLojaHistoricoRoute
+  AuthenticatedLojaMapaRoute: typeof AuthenticatedLojaMapaRoute
   AuthenticatedLojaNovoPedidoRoute: typeof AuthenticatedLojaNovoPedidoRoute
   AuthenticatedLojaPedidosRoute: typeof AuthenticatedLojaPedidosRoute
   AuthenticatedLojaProdutosRoute: typeof AuthenticatedLojaProdutosRoute
@@ -1967,6 +2008,7 @@ const AuthenticatedLojaRouteRouteChildren: AuthenticatedLojaRouteRouteChildren =
     AuthenticatedLojaFinanceiroRoute: AuthenticatedLojaFinanceiroRoute,
     AuthenticatedLojaFuncionariosRoute: AuthenticatedLojaFuncionariosRoute,
     AuthenticatedLojaHistoricoRoute: AuthenticatedLojaHistoricoRoute,
+    AuthenticatedLojaMapaRoute: AuthenticatedLojaMapaRoute,
     AuthenticatedLojaNovoPedidoRoute: AuthenticatedLojaNovoPedidoRoute,
     AuthenticatedLojaPedidosRoute: AuthenticatedLojaPedidosRoute,
     AuthenticatedLojaProdutosRoute: AuthenticatedLojaProdutosRoute,
