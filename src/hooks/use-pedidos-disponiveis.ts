@@ -16,6 +16,7 @@ import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
 import { haversineKm } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { criarCalculadorTaxaExibida } from "@/lib/taxa-exibida";
 import { agruparPedidosPorRota } from "@/lib/pedido-agrupador";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
@@ -403,59 +404,7 @@ function mostrarNotificacaoLocalNovoPedido(
   })();
 }
 
-function criarCalculadorTaxaExibida(
-  tarifasGlobais: TarifaFaixa[] | undefined,
-) {
-  return (p: PedidoDisponivel): number => {
-    // ⚠️ PARIDADE OBRIGATÓRIA com liquidoEntregador():
-    //   - subtrai a taxa por pedido do plano (retida com a loja)
-    //   - dobra o frete quando o pagamento é em cartão (compensa o retorno
-    //     à loja com a maquininha)
-    // O card DEVE mostrar exatamente o que o entregador vai receber,
-    // não o valor que o cliente paga — senão a promessa do pool não bate
-    // com o crédito na carteira.
-    const taxaPlano = Number(p.loja_taxa_por_pedido ?? 0) || 0;
+export { criarCalculadorTaxaExibida } from "@/lib/taxa-exibida";
 
-    // FONTE DA VERDADE: `taxa_entrega` já salvo no pedido (o que o cliente
-    // pagou). liquidoEntregador extrai o frete líquido dali.
-    const taxaSalva = Number(p.taxa_entrega);
-    if (Number.isFinite(taxaSalva) && taxaSalva > 0) {
-      return liquidoEntregador(
-        taxaSalva,
-        taxaPlano,
-        p.loja_plano_mensal_ativo,
-        p.forma_pagamento,
-      );
-    }
-
-    // Fallback: pedido sem taxa_entrega salva (raro). Estima pela faixa
-    // global mais próxima; ainda passa por liquidoEntregador para dobrar
-    // em cartão.
-    const freteGlobalMinimo = calcularTarifaPorFaixa(0, tarifasGlobais ?? []) ?? 0;
-    let frete = freteGlobalMinimo;
-    if (
-      p.endereco_coleta_lat != null &&
-      p.endereco_coleta_lng != null &&
-      p.endereco_entrega_lat != null &&
-      p.endereco_entrega_lng != null
-    ) {
-      const km = haversineKm(
-        Number(p.endereco_coleta_lat),
-        Number(p.endereco_coleta_lng),
-        Number(p.endereco_entrega_lat),
-        Number(p.endereco_entrega_lng),
-      );
-      frete = calcularTarifaPorFaixa(km, tarifasGlobais ?? []) ?? freteGlobalMinimo;
-    }
-    // Reconstroi o `taxa_entrega` estimado (frete + taxaPlano) para
-    // reusar a mesma função — a subtração de taxaPlano ainda acontece.
-    return liquidoEntregador(
-      frete + taxaPlano,
-      taxaPlano,
-      p.loja_plano_mensal_ativo,
-      p.forma_pagamento,
-    );
-  };
-}
 
 
