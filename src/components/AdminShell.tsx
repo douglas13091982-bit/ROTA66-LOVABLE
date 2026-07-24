@@ -23,6 +23,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/cidades", label: "Cidades", icon: MapPin, area: null, ownerOnly: true },
   { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas", ownerOnly: true },
   { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
+  { to: "/admin/mapa", label: "Mapa", icon: MapPin, area: "entregadores" },
   { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
   { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
   { to: "/admin/faturamento-sistema", label: "Faturamento do sistema", icon: TrendingUp, area: null },
