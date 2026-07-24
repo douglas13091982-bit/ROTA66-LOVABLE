@@ -137,7 +137,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
 
   return (
-    <div className="panel-premium flex flex-col min-h-screen">
+    <div className="entregador-theme panel-premium flex flex-col min-h-screen">
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
