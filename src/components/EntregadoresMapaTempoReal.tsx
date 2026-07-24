@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { Bike, Loader2, MapPin } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { reverseGeocode } from "@/lib/reverse-geocode.functions";
 
 type Entregador = {
   entregador_id: string;
