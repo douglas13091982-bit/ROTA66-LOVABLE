@@ -112,9 +112,7 @@ function ListaEntregadores({
                 : "bg-muted text-muted-foreground";
             return (
               <div key={e.id} className="flex items-center gap-3 px-4 py-2.5">
-                <div
-                  className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${ring}`}
-                >
+                <div className="h-9 w-9 rounded-full flex items-center justify-center shrink-0 bg-emerald-500 text-white ring-2 ring-white shadow">
                   <Bike className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
