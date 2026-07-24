@@ -17,7 +17,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
-import { useTheme } from "@/hooks/use-theme";
+
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
@@ -122,8 +122,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   }
 
   // Paleta Rota 66 (theme-aware)
-  const { theme } = useTheme();
-  const isLight = theme === "light";
+  const isLight = false;
   const RED = "#C91C1C";
   const BG = isLight ? "#EFE5D3" : "#0D2B45";
   const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
