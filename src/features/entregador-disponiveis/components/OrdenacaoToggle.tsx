@@ -26,7 +26,7 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected }:
         "flex-1 min-w-0 flex items-center gap-2 rounded-xl px-2.5 py-2 transition-all duration-300 text-left",
         active
           ? "bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
-          : "bg-[#0b2540]/60 border border-white/12 hover:border-white/25",
+          : "bg-transparent border border-white/12 hover:border-white/25",
       ].join(" ")}
     >
       <span
