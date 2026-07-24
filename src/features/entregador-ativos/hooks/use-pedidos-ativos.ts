@@ -67,7 +67,7 @@ export function usePedidosAtivos(userId: string | undefined) {
 
 export function usePedidosLoteFinalizado(userId: string | undefined, loteIds: string[]) {
   return useQuery({
-    queryKey: ["pedidos-lote-finalizado", userId, loteIds.join(",")],
+    queryKey: ["pedidos-lote-finalizado", userId, [...loteIds].sort().join(",")],
     enabled: !!userId && loteIds.length > 0,
     queryFn: async () => {
       const { data, error } = await supabase
