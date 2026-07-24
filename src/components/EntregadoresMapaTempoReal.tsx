@@ -338,15 +338,16 @@ export function EntregadoresMapaTempoReal({
     }
   }, [entregadores]);
 
-  // Pulso neon animado nos marcadores
+  // Pulso neon animado nos marcadores (cor por estágio)
   useEffect(() => {
     const start = performance.now();
     const id = setInterval(() => {
       const g = window.google;
       if (!g?.maps) return;
       const phase = ((performance.now() - start) % 1600) / 1600;
-      for (const marker of markersRef.current.values()) {
-        marker.setIcon(pulseIcon(g, phase));
+      for (const [entregadorId, marker] of markersRef.current.entries()) {
+        const stage = stageRef.current.get(entregadorId) ?? "livre";
+        marker.setIcon(pulseIcon(g, phase, STAGE_COLORS[stage]));
       }
     }, 80); // ~12fps
     return () => clearInterval(id);
