@@ -394,6 +394,18 @@ export function EntregadoresMapaTempoReal({
           </div>
         )}
       </div>
+      {/* Legenda dos estágios */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 border-t border-white/10 bg-[#0b1220]">
+        {(Object.keys(STAGE_COLORS) as Stage[]).map((s) => (
+          <div key={s} className="flex items-center gap-1.5 text-[11px] text-slate-300">
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: STAGE_COLORS[s], boxShadow: `0 0 6px ${STAGE_COLORS[s]}` }}
+            />
+            {STAGE_LABELS[s]}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
