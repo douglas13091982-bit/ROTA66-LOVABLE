@@ -74,7 +74,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         onClick={() => onChange("proximos")}
         title="Mais Próximos"
         subtitle="Ver pedidos próximos"
-        icon={<MapPin className="h-4 w-4" strokeWidth={2.5} />}
+        icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
       />
       <OrdenacaoCard
         active={value === "valor"}
