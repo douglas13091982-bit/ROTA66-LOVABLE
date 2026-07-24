@@ -71,19 +71,10 @@ function PedidoListItemBase({
   );
   const total = useMemo(
     () =>
-      grupo.items.reduce(
-        (s, p) =>
-          s +
-          liquidoEntregador(
-            taxaParaExibir(p),
-            Number(p.loja_taxa_por_pedido ?? 0),
-            p.loja_plano_mensal_ativo,
-            p.forma_pagamento,
-          ),
-        0,
-      ) + totalBonus,
+      grupo.items.reduce((s, p) => s + taxaParaExibir(p), 0) + totalBonus,
     [grupo.items, taxaParaExibir, totalBonus],
   );
+
   const kmLoja = kmAteLoja(principal, minhaPos);
   const distEntrega = kmEntrega(principal);
   const nomeLoja = principal.loja_nome || "Loja";
