@@ -240,12 +240,23 @@ export function EntregadoresMapaTempoReal({
             url:
               "data:image/svg+xml;charset=UTF-8," +
               encodeURIComponent(
-                `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                  <circle cx="10" cy="10" r="7" fill="#107037"/>
+                `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+                  <defs>
+                    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#22ff88" stop-opacity="0.9"/>
+                      <stop offset="60%" stop-color="#10b981" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#107037" stop-opacity="0"/>
+                    </radialGradient>
+                  </defs>
+                  <circle cx="30" cy="30" r="26" fill="url(#glow)">
+                    <animate attributeName="r" values="14;26;14" dur="1.6s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.9;0.15;0.9" dur="1.6s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="30" cy="30" r="9" fill="#107037" stroke="#22ff88" stroke-width="1.5"/>
                 </svg>`
               ),
-            scaledSize: new g.maps.Size(20, 20),
-            anchor: new g.maps.Point(10, 10),
+            scaledSize: new g.maps.Size(60, 60),
+            anchor: new g.maps.Point(30, 30),
           },
         });
         const buildContent = (address: string | null, loadingAddr: boolean) => {
