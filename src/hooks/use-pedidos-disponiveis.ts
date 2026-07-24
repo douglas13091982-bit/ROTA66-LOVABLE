@@ -310,8 +310,8 @@ export function usePedidosDisponiveis(
 
 
   const pedidos = useMemo(
-    () => mesclarPedidosDisponiveis(pedidosVinculados, pedidosExternos),
-    [pedidosVinculados, pedidosExternos],
+    () => pedidosExternos ?? [],
+    [pedidosExternos],
   );
 
   const grupos = useMemo(
@@ -328,7 +328,7 @@ export function usePedidosDisponiveis(
 
   return {
     grupos,
-    isLoading: loadingVinc || loadingExt,
+    isLoading: loadingExt,
     temRotaAtiva,
     rotaAtivaResolvida,
     semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !aceitaPedidosExternos,
