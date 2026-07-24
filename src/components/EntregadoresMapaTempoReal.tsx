@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { Bike, Loader2, MapPin } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { reverseGeocode } from "@/lib/reverse-geocode.functions";
 
 type Entregador = {
   entregador_id: string;
@@ -72,10 +74,14 @@ export function EntregadoresMapaTempoReal({
   const mapDivRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
+  const infoRef = useRef<any>(null);
+  const addressCacheRef = useRef<Map<string, string>>(new Map());
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const [entregadores, setEntregadores] = useState<Entregador[]>([]);
   const [diag, setDiag] = useState<{ vinculados: number; onlineSemGps: number } | null>(null);
+  const runReverseGeocode = useServerFn(reverseGeocode);
+
 
   // Carrega o Google Maps
   useEffect(() => {
@@ -199,6 +205,10 @@ export function EntregadoresMapaTempoReal({
       bounds.extend(pos);
       const existing = markersRef.current.get(e.entregador_id);
       if (existing) {
+        const prev = existing.getPosition?.();
+        if (!prev || Math.abs(prev.lat() - pos.lat) > 0.0002 || Math.abs(prev.lng() - pos.lng) > 0.0002) {
+          addressCacheRef.current.delete(e.entregador_id);
+        }
         existing.setPosition(pos);
       } else {
         const marker = new g.maps.Marker({
@@ -223,14 +233,39 @@ export function EntregadoresMapaTempoReal({
             anchor: new g.maps.Point(20, 20),
           },
         });
-        const info = new g.maps.InfoWindow({
-          content: `<div style="font-family:sans-serif;padding:4px 6px;">
-            <div style="font-weight:600;">${(e.full_name ?? "Entregador").replace(/</g, "&lt;")}</div>
-            ${e.phone ? `<div style="font-size:12px;color:#555;">${e.phone.replace(/</g, "&lt;")}</div>` : ""}
+        const buildContent = (address: string | null, loadingAddr: boolean) => {
+          const nome = (e.full_name ?? "Entregador").replace(/</g, "&lt;");
+          const fone = e.phone ? e.phone.replace(/</g, "&lt;") : "";
+          const enderecoHtml = loadingAddr
+            ? `<div style="font-size:12px;color:#64748b;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #94a3b8;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
+            : address
+              ? `<div style="font-size:12px;color:#0f172a;margin-top:6px;max-width:240px;"><span style="color:#107037;font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
+              : `<div style="font-size:12px;color:#94a3b8;margin-top:6px;">Endereço indisponível</div>`;
+          return `<div style="font-family:sans-serif;padding:4px 6px;">
+            <div style="font-weight:600;">${nome}</div>
+            ${fone ? `<div style="font-size:12px;color:#555;">${fone}</div>` : ""}
             <div style="font-size:11px;color:#888;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
-          </div>`,
+            ${enderecoHtml}
+          </div>`;
+        };
+        marker.addListener("click", async () => {
+          if (infoRef.current) infoRef.current.close();
+          const info = new g.maps.InfoWindow();
+          infoRef.current = info;
+          const cached = addressCacheRef.current.get(e.entregador_id);
+          info.setContent(buildContent(cached ?? null, !cached));
+          info.open({ anchor: marker, map: mapRef.current });
+          if (!cached) {
+            try {
+              const res: any = await runReverseGeocode({ data: { lat: Number(e.lat), lng: Number(e.lng) } });
+              const addr = res?.address ?? null;
+              if (addr) addressCacheRef.current.set(e.entregador_id, addr);
+              info.setContent(buildContent(addr, false));
+            } catch {
+              info.setContent(buildContent(null, false));
+            }
+          }
         });
-        marker.addListener("click", () => info.open({ anchor: marker, map: mapRef.current }));
         markersRef.current.set(e.entregador_id, marker);
       }
     }
