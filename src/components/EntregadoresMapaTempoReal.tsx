@@ -261,6 +261,9 @@ export function EntregadoresMapaTempoReal({
       seen.add(e.entregador_id);
       const pos = { lat: Number(e.lat), lng: Number(e.lng) };
       bounds.extend(pos);
+      const stage: Stage = (e.stage as Stage) ?? "livre";
+      stageRef.current.set(e.entregador_id, stage);
+      const color = STAGE_COLORS[stage];
       const existing = markersRef.current.get(e.entregador_id);
       if (existing) {
         const prev = existing.getPosition?.();
@@ -273,20 +276,25 @@ export function EntregadoresMapaTempoReal({
           position: pos,
           map: mapRef.current,
           title: e.full_name ?? "Entregador",
-          icon: pulseIcon(g, 0),
-
+          icon: pulseIcon(g, 0, color),
         });
         const buildContent = (address: string | null, loadingAddr: boolean) => {
+          const curStage = stageRef.current.get(e.entregador_id) ?? "livre";
+          const curColor = STAGE_COLORS[curStage];
+          const curLabel = STAGE_LABELS[curStage];
           const nome = (e.full_name ?? "Entregador").replace(/</g, "&lt;");
           const fone = e.phone ? e.phone.replace(/</g, "&lt;") : "";
           const enderecoHtml = loadingAddr
             ? `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #cbd5e1;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
             : address
-              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:#22c55e;font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
+              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:${curColor};font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
               : `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;">Endereço indisponível</div>`;
           return `<div style="font-family:sans-serif;padding:4px 6px;color:#f8fafc;">
             <div style="font-weight:600;color:#ffffff;">${nome}</div>
-            ${fone ? `<div style="font-size:12px;color:#cbd5e1;">${fone}</div>` : ""}
+            <div style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:2px 8px;border-radius:999px;background:${curColor}22;border:1px solid ${curColor}66;font-size:11px;color:${curColor};font-weight:600;">
+              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${curColor};"></span>${curLabel}
+            </div>
+            ${fone ? `<div style="font-size:12px;color:#cbd5e1;margin-top:4px;">${fone}</div>` : ""}
             <div style="font-size:11px;color:#94a3b8;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
             ${enderecoHtml}
           </div>`;
@@ -318,6 +326,7 @@ export function EntregadoresMapaTempoReal({
       if (!seen.has(id)) {
         marker.setMap(null);
         markersRef.current.delete(id);
+        stageRef.current.delete(id);
       }
     }
 
