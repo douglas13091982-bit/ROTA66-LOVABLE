@@ -161,7 +161,7 @@ function MiniDashboard({
     { label: "Total", value: total, icon: Users, color: "#3b82f6" },
   ];
   return (
-    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {cards.map((c) => (
         <div key={c.label} className="rounded-lg px-4 py-3 bg-card border border-border shadow-card">
           <div className="flex items-center gap-2">
