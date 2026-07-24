@@ -141,18 +141,18 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-1.5 min-w-0 max-w-[45%]">
+        <div className="flex flex-col items-end gap-1.5 shrink-0">
           {isColeta && countdown.text ? (
             <>
               <div
-                className="text-[9px] font-semibold uppercase tracking-[0.16em] truncate max-w-full"
+                className="text-[9px] font-semibold uppercase tracking-[0.16em] whitespace-nowrap"
                 style={{ color: MUTED }}
               >
-                Tempo para chegar
+                Tempo p/ chegar
               </div>
               <div
-                className={`font-display leading-none tabular-nums truncate max-w-full ${
-                  countdown.late ? "text-xl sm:text-2xl" : "text-3xl sm:text-4xl md:text-5xl"
+                className={`font-display leading-none tabular-nums whitespace-nowrap ${
+                  countdown.late ? "text-lg sm:text-xl" : "text-3xl sm:text-4xl md:text-5xl"
                 }`}
                 style={{ color: RED }}
               >
