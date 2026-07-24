@@ -49,13 +49,15 @@ export function MapaEntregadoresLojaPage() {
           <MiniDashboard online={online} emEntrega={emEntrega} offline={offline} total={total} />
         </div>
 
-        <ListaEntregadores
-          title="Entregadores"
-          isLoading={isLoading}
-          list={list}
-          q={q}
-          setQ={setQ}
-        />
+        <div className="relative min-h-0">
+          <ListaEntregadores
+            title="Entregadores"
+            isLoading={isLoading}
+            list={list}
+            q={q}
+            setQ={setQ}
+          />
+        </div>
       </div>
     </LojaShell>
   );
