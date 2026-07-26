@@ -1,29 +1,16 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHost } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 
 /**
- * Envia uma notificação push de teste para o próprio usuário autenticado,
- * reutilizando o endpoint /api/public/send-push (que já contém toda a
- * lógica de VAPID + criptografia RFC 8291).
+ * Envia uma notificação push de teste para o próprio usuário autenticado.
+ * Usa direto a lógica de VAPID + RFC 8291 em src/lib/web-push.server.ts.
  */
 export const enviarPushTeste = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    // Recupera o segredo compartilhado usado pelo endpoint público.
-    const { data: cfgRow } = await supabaseAdmin
-      .from("private_config" as any)
-      .select("value")
-      .eq("key", "push_trigger_secret")
-      .maybeSingle();
-    const secret = (cfgRow as any)?.value as string | undefined;
-    if (!secret) {
-      throw new Error("push_trigger_secret não configurado");
-    }
 
     // Verifica se o usuário tem alguma inscrição push ativa.
     const { data: subs } = await supabaseAdmin
@@ -34,29 +21,16 @@ export const enviarPushTeste = createServerFn({ method: "POST" })
       return { sent: 0, subscriptions: 0 };
     }
 
-    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
-    const url = `https://${host}/api/public/send-push`;
-
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-push-secret": secret,
-      },
-      body: JSON.stringify({
-        user_id: context.userId,
-        title: "Rota 66 — Teste de notificação",
-        body: "Se você recebeu esta mensagem, as notificações estão funcionando!",
-        url: "/entregador/disponiveis",
-      }),
+    const { enviarPushParaUsuario } = await import("@/lib/web-push.server");
+    const { sent } = await enviarPushParaUsuario({
+      user_id: context.userId,
+      title: "Rota 66 — Teste de notificação",
+      body: "Se você recebeu esta mensagem, as notificações estão funcionando!",
+      url: "/entregador/disponiveis",
     });
-
-    if (!res.ok) {
-      throw new Error(`Falha ao enviar push (${res.status})`);
-    }
-    const json = (await res.json()) as { sent: number };
-    return { sent: json.sent ?? 0, subscriptions: subs.length };
+    return { sent, subscriptions: subs.length };
   });
+
 
 /**
  * Notifica todos os entregadores externos aprovados sobre um novo turno
@@ -113,16 +87,8 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
     const alvos = Array.from(new Set((ofertas ?? []).map((o: any) => o.entregador_id).filter(Boolean)));
     if (alvos.length === 0) return { sent: 0, destinatarios: 0 };
 
-    const { data: cfgRow } = await supabaseAdmin
-      .from("private_config" as any)
-      .select("value")
-      .eq("key", "push_trigger_secret")
-      .maybeSingle();
-    const secret = (cfgRow as any)?.value as string | undefined;
-    if (!secret) throw new Error("push_trigger_secret não configurado");
 
-    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
-    const url = `https://${host}/api/public/send-push`;
+
 
     const dataFmt = (() => {
       try {
@@ -167,28 +133,14 @@ export const notificarTurnoPublicado = createServerFn({ method: "POST" })
       JSON.stringify({ turno_id: (turno as any).id, tag, destinatarios: alvos.length }),
     );
 
-    let sent = 0;
-    const CONC = 10;
-    for (let i = 0; i < alvos.length; i += CONC) {
-      const batch = alvos.slice(i, i + CONC);
-      const results = await Promise.all(
-        batch.map(async (uid) => {
-          try {
-            const res = await fetch(url, {
-              method: "POST",
-              headers: { "content-type": "application/json", "x-push-secret": secret },
-              body: JSON.stringify({ user_id: uid, title, body, url: linkFinal, tag }),
-            });
-            if (!res.ok) return 0;
-            const j = (await res.json()) as { sent?: number };
-            return j.sent ?? 0;
-          } catch {
-            return 0;
-          }
-        }),
-      );
-      sent += results.reduce((a, b) => a + b, 0);
-    }
+    const { enviarPushEmLote } = await import("@/lib/web-push.server");
+    const sent = await enviarPushEmLote(alvos as string[], {
+      title,
+      body,
+      url: linkFinal,
+      tag,
+    });
+
 
     return { sent, destinatarios: alvos.length };
   });
@@ -237,16 +189,8 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
       .eq("user_id", data.entregador_id);
     if (!subs || subs.length === 0) return { sent: 0, destinatarios: 0 };
 
-    const { data: cfgRow } = await supabaseAdmin
-      .from("private_config" as any)
-      .select("value")
-      .eq("key", "push_trigger_secret")
-      .maybeSingle();
-    const secret = (cfgRow as any)?.value as string | undefined;
-    if (!secret) throw new Error("push_trigger_secret não configurado");
 
-    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
-    const url = `https://${host}/api/public/send-push`;
+
 
     const { data: prof } = await supabaseAdmin
       .from("profiles")
@@ -271,17 +215,19 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
     });
 
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-push-secret": secret },
-        body: JSON.stringify({ user_id: data.entregador_id, title, body, url: linkFinal, tag }),
+      const { enviarPushParaUsuario } = await import("@/lib/web-push.server");
+      const r = await enviarPushParaUsuario({
+        user_id: data.entregador_id,
+        title,
+        body,
+        url: linkFinal,
+        tag,
       });
-      if (!res.ok) return { sent: 0, destinatarios: 1 };
-      const j = (await res.json()) as { sent?: number };
-      return { sent: j.sent ?? 0, destinatarios: 1 };
+      return { sent: r.sent, destinatarios: 1 };
     } catch {
       return { sent: 0, destinatarios: 1 };
     }
   });
+
 
 

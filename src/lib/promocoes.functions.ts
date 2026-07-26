@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHost } from "@tanstack/react-start/server";
+
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
@@ -178,48 +178,17 @@ export const enviarPromocaoLoja = createServerFn({ method: "POST" })
       return { promo_id: promoId, destinatarios: 0, sent: 0 };
     }
 
-    // 6. Dispara pushes
-    const { data: cfgRow } = await supabaseAdmin
-      .from("private_config" as any)
-      .select("value")
-      .eq("key", "push_trigger_secret")
-      .maybeSingle();
-    const secret = (cfgRow as any)?.value as string | undefined;
-    if (!secret) throw new Error("push_trigger_secret não configurado");
-
-    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
-    const url = `https://${host}/api/public/send-push`;
+    // 6. Dispara pushes (direto em processo — sem round-trip HTTP)
     const tag = `promo-${promoId}`;
+    const { enviarPushEmLote } = await import("@/lib/web-push.server");
+    const sent = await enviarPushEmLote(alvos as string[], {
+      title: data.title.trim(),
+      body: data.body.trim(),
+      url: linkFinal,
+      image: data.image_url?.trim() || undefined,
+      tag,
+    });
 
-    let sent = 0;
-    const CONC = 10;
-    for (let i = 0; i < alvos.length; i += CONC) {
-      const batch = alvos.slice(i, i + CONC);
-      const results = await Promise.all(
-        batch.map(async (uid) => {
-          try {
-            const res = await fetch(url, {
-              method: "POST",
-              headers: { "content-type": "application/json", "x-push-secret": secret },
-              body: JSON.stringify({
-                user_id: uid,
-                title: data.title.trim(),
-                body: data.body.trim(),
-                url: linkFinal,
-                image: data.image_url?.trim() || undefined,
-                tag,
-              }),
-            });
-            if (!res.ok) return 0;
-            const j = (await res.json()) as { sent?: number };
-            return j.sent ?? 0;
-          } catch {
-            return 0;
-          }
-        }),
-      );
-      sent += results.reduce((a, b) => a + b, 0);
-    }
 
     await supabaseAdmin
       .from("promocoes_lojas" as any)
