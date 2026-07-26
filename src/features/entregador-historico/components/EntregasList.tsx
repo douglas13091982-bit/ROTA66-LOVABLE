@@ -1,4 +1,5 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { agruparPorDia } from "../logic/helpers";
 import type { PedidoHistorico } from "../logic/types";
@@ -8,12 +9,14 @@ const VIRTUALIZE_THRESHOLD = 30;
 const ESTIMATED_ROW = 88;
 const ESTIMATED_HEADER = 36;
 const OVERSCAN = 6;
+const PREVIEW_COUNT = 3;
 
 type FlatItem =
   | { kind: "header"; label: string; key: string }
   | { kind: "row"; pedido: PedidoHistorico; key: string };
 
 export function EntregasList({ listagem }: { listagem: PedidoHistorico[] }) {
+  const [expandido, setExpandido] = useState(false);
   const groups = useMemo(() => agruparPorDia(listagem), [listagem]);
 
   const flat = useMemo<FlatItem[]>(() => {
@@ -25,39 +28,56 @@ export function EntregasList({ listagem }: { listagem: PedidoHistorico[] }) {
     return out;
   }, [groups]);
 
-  const header = (
-    <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between">
-      <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold">
-        Entregas concluídas
-      </span>
-      <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-        {listagem.length} {listagem.length === 1 ? "registro" : "registros"}
-      </span>
-    </div>
-  );
-
-  if (flat.length <= VIRTUALIZE_THRESHOLD) {
-    return (
-      <div className="overflow-hidden">
-        {header}
-        {groups.map((g) => (
-          <div key={g.label}>
-            <div className="px-4 pt-4 pb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold">
-              {g.label}
-            </div>
-            {g.items.map((p) => (
-              <EntregaRow key={p.id} pedido={p} />
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const podeExpandir = listagem.length > PREVIEW_COUNT;
 
   return (
-    <div className="overflow-hidden">
-      {header}
-      <VirtualBody flat={flat} />
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <span className="text-[15px] font-bold uppercase tracking-[0.04em] text-white">
+          Entregas concluídas
+        </span>
+        <span
+          className="text-[13px] font-bold uppercase tracking-[0.04em]"
+          style={{ color: "#E01818" }}
+        >
+          {listagem.length} {listagem.length === 1 ? "registro" : "registros"}
+        </span>
+      </div>
+
+      {!expandido ? (
+        <div className="space-y-2.5">
+          {listagem.slice(0, PREVIEW_COUNT).map((p) => (
+            <EntregaRow key={p.id} pedido={p} />
+          ))}
+        </div>
+      ) : flat.length <= VIRTUALIZE_THRESHOLD ? (
+        <div className="space-y-3">
+          {groups.map((g) => (
+            <div key={g.label} className="space-y-2.5">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-white/45 font-bold">
+                {g.label}
+              </div>
+              {g.items.map((p) => (
+                <EntregaRow key={p.id} pedido={p} />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <VirtualBody flat={flat} />
+      )}
+
+      {podeExpandir && (
+        <button
+          type="button"
+          onClick={() => setExpandido((v) => !v)}
+          className="mt-4 w-full flex items-center justify-center gap-2 py-2 text-[15px] font-bold"
+          style={{ color: "#E01818" }}
+        >
+          {expandido ? "Ver menos" : "Ver todos os registros"}
+          <ChevronRight className={`h-4 w-4 ${expandido ? "-rotate-90" : ""}`} />
+        </button>
+      )}
     </div>
   );
 }
@@ -74,18 +94,8 @@ function VirtualBody({ flat }: { flat: FlatItem[] }) {
   });
 
   return (
-    <div
-      ref={parentRef}
-      className="overflow-y-auto"
-      style={{ maxHeight: "calc(100dvh - 240px)" }}
-    >
-      <div
-        style={{
-          height: virtualizer.getTotalSize(),
-          width: "100%",
-          position: "relative",
-        }}
-      >
+    <div ref={parentRef} className="overflow-y-auto" style={{ maxHeight: "calc(100dvh - 280px)" }}>
+      <div style={{ height: virtualizer.getTotalSize(), width: "100%", position: "relative" }}>
         {virtualizer.getVirtualItems().map((vi) => {
           const item = flat[vi.index];
           return (
@@ -102,11 +112,13 @@ function VirtualBody({ flat }: { flat: FlatItem[] }) {
               }}
             >
               {item.kind === "header" ? (
-                <div className="px-4 pt-4 pb-2 text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold">
+                <div className="pt-4 pb-2 text-[11px] uppercase tracking-[0.2em] text-white/45 font-bold">
                   {item.label}
                 </div>
               ) : (
-                <EntregaRow pedido={item.pedido} />
+                <div className="pb-2.5">
+                  <EntregaRow pedido={item.pedido} />
+                </div>
               )}
             </div>
           );
