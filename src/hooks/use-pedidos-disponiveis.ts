@@ -360,6 +360,7 @@ export function usePedidosDisponiveis(
 
     return () => {
       stopPool();
+      stopSaidas();
       stopMeus();
     };
   }, [userId, qc]);
