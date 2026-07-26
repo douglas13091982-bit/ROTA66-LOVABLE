@@ -11,13 +11,11 @@ export function LogoutButton({ loading, onClick }: Props) {
       type="button"
       onClick={onClick}
       disabled={loading}
-      className="mt-3 w-full flex items-center gap-4 px-2 py-4 text-left active:bg-white/[0.03] transition-colors disabled:opacity-60"
-      style={{ color: "oklch(0.72 0.18 27)" }}
+      className="mt-4 w-full flex items-center justify-center gap-3 px-4 py-5 rounded-2xl border border-white/10 bg-white/[0.03] active:bg-white/[0.06] transition-colors disabled:opacity-60"
+      style={{ color: "#E01818" }}
     >
-      <LogOut className="h-5 w-5 shrink-0" strokeWidth={1.8} />
-      <span className="flex-1 text-[15px] font-bold">
-        {loading ? "Saindo..." : "Encerrar Sessão"}
-      </span>
+      <LogOut className="h-5 w-5 shrink-0" strokeWidth={2} />
+      <span className="text-[17px] font-bold">{loading ? "Saindo..." : "Sair da conta"}</span>
     </button>
   );
 }
