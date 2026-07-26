@@ -190,14 +190,9 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 }`}
               >
                 {active && (
-                  <>
-                    <span className="absolute inset-x-1 inset-y-0 rounded-[22px] bg-white/[0.04]" />
-                    <span
-                      className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-[4px] rounded-full bg-[#E01818]"
-                      style={{ boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.6)" }}
-                    />
-                  </>
+                  <span className="absolute inset-x-1 inset-y-0 rounded-[22px] bg-white/[0.04]" />
                 )}
+
                 <div className="relative z-10">
                   <Icon
                     className={`h-6 w-6 transition-all duration-300 ${
