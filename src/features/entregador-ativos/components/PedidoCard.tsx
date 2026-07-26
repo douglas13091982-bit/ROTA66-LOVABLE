@@ -491,11 +491,9 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <CtaButton
             onClick={() => {
               setRevealedEntrega(true);
-              void supabase
-                .rpc("entregador_chegou_entrega" as never, {
-                  _pedido_id: p.id,
-                } as never)
-                .then(() => qc.invalidateQueries({ queryKey: ["rastreio", p.id] }));
+              void supabase.rpc("entregador_chegou_entrega" as never, {
+                _pedido_id: p.id,
+              } as never);
             }}
           >
             Cheguei na entrega
