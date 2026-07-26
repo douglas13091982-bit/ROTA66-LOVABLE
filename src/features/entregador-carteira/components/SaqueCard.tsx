@@ -89,11 +89,12 @@ export function SaqueCard() {
       <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-4">
         <div className="flex items-start gap-3">
           <div className="flex-1 min-w-0 flex items-start gap-3">
-            <WalletCards className="h-7 w-7 text-emerald-400 shrink-0" />
+            <WalletCards className="h-6 w-6 text-emerald-400 shrink-0" />
             <div className="min-w-0">
-              <h3 className="text-lg font-bold text-white leading-tight truncate">Saque das corridas</h3>
-              <p className="text-xs text-white/50 truncate">Retire seus ganhos quando quiser</p>
+              <h3 className="text-sm sm:text-base font-bold text-white leading-tight">Saque das corridas</h3>
+              <p className="text-[10px] sm:text-xs text-white/50">Retire seus ganhos quando quiser</p>
             </div>
+
           </div>
           <div className="shrink-0 rounded-xl border border-emerald-500/25 bg-emerald-500/[0.07] px-3 py-2 flex items-center gap-2">
             <div className="leading-tight">
