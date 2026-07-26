@@ -18,7 +18,7 @@ export function TurnosEntregadorPage() {
           <div className="flex items-center justify-between gap-3">
             <h1 className="flex items-center gap-2.5 font-display text-2xl tracking-tight text-foreground">
               <CalendarClock className="h-6 w-6 text-primary" />
-              Agendar turnos
+              Turnos Disponíveis
             </h1>
             <Bell className="h-5 w-5 text-muted-foreground" />
           </div>
