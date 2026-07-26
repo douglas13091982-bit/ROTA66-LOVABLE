@@ -1,6 +1,7 @@
-import { Ban, Bike, Car, Check, Phone, Trash2 } from "lucide-react";
+import { Ban, Bike, Check, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
 import { onlyDigits } from "../logic/filters";
+import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 
 export function EntregadoresTabela({
