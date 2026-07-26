@@ -1,5 +1,6 @@
 import { useBranding } from "@/hooks/use-branding";
 import { useRastreio } from "./hooks/use-rastreio";
+import { useSomChegada } from "./hooks/use-som-chegada";
 import { RastreioHeader } from "./components/RastreioHeader";
 import { CodigoEntregaCard } from "./components/CodigoEntregaCard";
 import { EntregueCard, CanceladoCard } from "./components/StatusCards";
@@ -9,6 +10,9 @@ import { EnderecoEntregaCard } from "./components/EnderecoEntregaCard";
 export function RastreioPage({ pedidoId }: { pedidoId: string }) {
   const { logoUrl, nomeSistema } = useBranding();
   const { data, isLoading, error } = useRastreio(pedidoId);
+  // Alerta sonoro no instante em que o entregador chega no local.
+  useSomChegada(data?.chegou_entrega_at);
+
 
   if (isLoading) {
     return (
