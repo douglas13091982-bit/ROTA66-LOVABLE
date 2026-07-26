@@ -17,7 +17,7 @@ type Props = {
 
 // Paleta de marca Rota 66
 const BRAND = {
-  red: "#C91C1C",
+  red: "#AE0000",
   navy: "#0D2B45",
   navySoft: "#1C2633",
   gray: "#B8C2CC",
@@ -180,7 +180,7 @@ function PedidoListItemBase({
           <div className="flex items-start gap-4 relative">
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: "rgba(201,28,28,0.10)", border: "1px solid rgba(201,28,28,0.25)" }}
+              style={{ background: "rgba(174,0,0,0.10)", border: "1px solid rgba(174,0,0,0.25)" }}
             >
               <MapPin className="h-5 w-5" style={{ color: BRAND.red }} />
             </div>
@@ -242,7 +242,7 @@ function PedidoListItemBase({
             {totalBonus > 0 && (
               <span
                 className="text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg"
-                style={{ background: "rgba(201,28,28,0.14)", color: "#fff" }}
+                style={{ background: "rgba(174,0,0,0.14)", color: "#fff" }}
               >
                 + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
               </span>
@@ -325,7 +325,7 @@ function BotaoAceitarPress({
       style={{
         background: BRAND.red,
         borderRadius: 18,
-        boxShadow: "0 12px 28px -12px rgba(201,28,28,0.55)",
+        boxShadow: "0 12px 28px -12px rgba(174,0,0,0.55)",
       }}
     >
       <span className="relative z-10">{progresso > 0 ? "Segure..." : label}</span>
