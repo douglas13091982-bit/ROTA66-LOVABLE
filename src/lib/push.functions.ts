@@ -194,14 +194,22 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
 
     const { data: prof } = await supabaseAdmin
       .from("profiles")
-      .select("full_name")
+      .select("full_name, created_at")
       .eq("id", data.entregador_id)
       .maybeSingle();
 
+    // Entregadores cadastrados antes de 19/07 precisam atualizar o APK e enviar documentos
+    const CORTE_APK = Date.parse("2025-07-19T00:00:00Z");
+    const criadoEm = Date.parse(((prof as any)?.created_at as string) ?? "");
+    const legado = Number.isFinite(criadoEm) && criadoEm < CORTE_APK;
+
     const title = "🎉 Conta aprovada!";
-    const body = "Sua conta foi liberada. Você já pode receber pedidos agora mesmo.";
-    const linkFinal = "/entregador/disponiveis";
+    const body = legado
+      ? "Sua conta foi liberada! Para continuar recebendo pedidos, baixe e instale a nova versão do aplicativo e envie sua documentação em Perfil > Documentação."
+      : "Sua conta foi liberada. Você já pode receber pedidos agora mesmo.";
+    const linkFinal = legado ? "/entregador/documentos" : "/entregador/disponiveis";
     const tag = `aprovado-${data.entregador_id}`;
+
 
     await supabaseAdmin.from("push_admin_logs" as any).insert({
       sender_user_id: userId,
