@@ -23,8 +23,8 @@ import {
   ArrowDown,
   ChevronRight,
   WalletCards,
-  Diamond,
 } from "lucide-react";
+import { PixIcon } from "@/components/icons/PixIcon";
 import { DIAS_SEMANA, useSaqueEntregador, type SaqueRow } from "../hooks/use-saque";
 
 function brl(v: number) {
@@ -144,7 +144,7 @@ export function SaqueCard() {
             <span className="text-emerald-400">•</span>
             <span>Pagamento via PIX após aprovação</span>
           </div>
-          <Diamond className="absolute right-3 top-1/2 -translate-y-1/2 h-6 w-6 text-emerald-400/70" />
+          <PixIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 text-emerald-400/80" />
         </div>
 
         {temPendente && (
