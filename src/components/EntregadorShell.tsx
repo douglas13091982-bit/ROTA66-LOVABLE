@@ -169,10 +169,12 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/8 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_oklch(0_0_0_/_0.6)]"
-        style={{ background: "#0f304d" }}
+        className="fixed bottom-0 inset-x-0 z-40 px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]"
       >
-        <div className="grid grid-cols-4">
+        <div
+          className="grid grid-cols-4 rounded-[28px] border border-white/[0.06] shadow-[0_18px_40px_-12px_oklch(0_0_0_/_0.7)] overflow-hidden"
+          style={{ background: "#0f2438" }}
+        >
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
@@ -183,30 +185,32 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 to={item.to}
                 data-nav-link
                 data-active={active ? "true" : "false"}
-                className={`group relative flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[#AE0000]" : "text-white hover:text-[#AE0000]"
+                className={`group relative flex flex-col items-center justify-center gap-2 py-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ${
+                  active ? "text-[#E01818]" : "text-white/75 hover:text-white"
                 }`}
               >
                 {active && (
-                  <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[3px] rounded-b-full bg-[#AE0000]"
-                    style={{
-                      boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.55)",
-                    }}
-                  />
+                  <>
+                    <span className="absolute inset-x-1 inset-y-0 rounded-[22px] bg-white/[0.04]" />
+                    <span
+                      className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-[4px] rounded-full bg-[#E01818]"
+                      style={{ boxShadow: "0 4px 22px -2px oklch(0.55 0.26 25 / 0.6)" }}
+                    />
+                  </>
                 )}
-                <div className="relative">
+                <div className="relative z-10">
                   <Icon
-                    className={`h-5 w-5 transition-all duration-300 ${
-                      active ? "scale-110 text-[#AE0000]" : "text-white group-hover:text-[#AE0000]"
+                    className={`h-6 w-6 transition-all duration-300 ${
+                      active ? "text-[#E01818]" : "text-white/75 group-hover:text-white"
                     }`}
+                    strokeWidth={1.75}
                   />
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f304d]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f2438]"
                       style={{
-                        background: "linear-gradient(135deg, #AE0000, #6D0000)",
+                        background: "linear-gradient(135deg, #E01818, #6D0000)",
                         boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
                       }}
                       aria-label={`${badge} oportunidades`}
@@ -215,12 +219,13 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     </span>
                   )}
                 </div>
-                {item.label}
+                <span className="relative z-10">{item.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
+
     </div>
   );
 }
