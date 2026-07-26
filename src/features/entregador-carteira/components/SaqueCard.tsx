@@ -11,7 +11,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, AlertCircle, CheckCircle2, Clock, XCircle } from "lucide-react";
+import {
+  Wallet,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  ShieldCheck,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  ArrowDown,
+  ChevronRight,
+  WalletCards,
+  Diamond,
+} from "lucide-react";
 import { DIAS_SEMANA, useSaqueEntregador, type SaqueRow } from "../hooks/use-saque";
 
 function brl(v: number) {
