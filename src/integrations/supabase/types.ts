@@ -3808,6 +3808,10 @@ export type Database = {
         Args: { _agendamento_id: string }
         Returns: undefined
       }
+      desvincular_pedidos_turno_encerrado: {
+        Args: { _agendamento_id: string }
+        Returns: number
+      }
       entregador_chegou_coleta: {
         Args: { _pedido_id: string }
         Returns: number

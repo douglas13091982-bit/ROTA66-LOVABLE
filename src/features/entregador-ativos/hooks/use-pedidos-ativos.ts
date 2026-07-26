@@ -60,6 +60,10 @@ export function usePedidosAtivos(userId: string | undefined) {
         .in("status", ["em_rota", "coletado"])
         .order("created_at", { ascending: true });
       if (error) throw error;
+      // Mantém o contador de "rota ativa" (usado na aba Disponíveis para
+      // redirecionar) em sincronia com a realidade. Sem isso, um valor
+      // antigo em cache prende o entregador na tela de entregas vazias.
+      qc.setQueryData(["entregador-rota-ativa", userId], data?.length ?? 0);
       return (data ?? []).map(mapPedido);
     },
   });
