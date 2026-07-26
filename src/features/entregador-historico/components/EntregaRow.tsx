@@ -1,3 +1,4 @@
+import { ChevronRight, PackageCheck } from "lucide-react";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { PedidoHistorico } from "../logic/types";
 
@@ -17,25 +18,36 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   const lojaNome = pedido.lojas?.nome ?? pedido.cliente_nome ?? "Loja";
 
   return (
-    <div className="group flex items-start justify-between gap-3 px-4 py-3 border-b border-border/30 last:border-b-0 transition-colors duration-200 hover:bg-white/[0.02]">
-      <div className="min-w-0 flex-1">
-        <div className="font-bold text-white truncate">
-          {lojaNome} <span className="text-white">#{pedido.numero}</span>
-        </div>
+    <div className="flex items-center gap-3 px-3 py-3 rounded-2xl border border-white/10 bg-white/[0.03] transition-colors duration-200 active:bg-white/[0.06]">
+      <div
+        className="h-11 w-11 shrink-0 rounded-full grid place-items-center"
+        style={{ background: "rgba(224,24,24,0.12)", border: "1px solid rgba(224,24,24,0.30)" }}
+      >
+        <PackageCheck className="h-5 w-5" style={{ color: "#E01818" }} />
+      </div>
 
+      <div className="min-w-0 flex-1">
+        <div className="font-bold text-white truncate uppercase text-[15px]">
+          {lojaNome} #{pedido.numero}
+        </div>
         <div className="flex items-center gap-2 mt-1">
-          <span className="text-[11px] text-muted-foreground">{hora}</span>
-          <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#AE0000]/15 text-[#AE0000]">
+          <span className="text-[12px] text-white/55">{hora}</span>
+          <span
+            className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md"
+            style={{ background: "rgba(224,24,24,0.15)", color: "#E01818" }}
+          >
             Concluído
           </span>
         </div>
       </div>
+
       <div className="text-right shrink-0">
-        <div className="font-bold text-lg text-white whitespace-nowrap">
+        <div className="font-bold text-[17px] text-white whitespace-nowrap">
           R$ {valor.toFixed(2).replace(".", ",")}
         </div>
-        <div className="text-[10px] text-muted-foreground mt-0.5">Taxa de entrega</div>
+        <div className="text-[11px] text-white/50 mt-0.5">Taxa de entrega</div>
       </div>
+      <ChevronRight className="h-5 w-5 text-white/35 shrink-0" />
     </div>
   );
 }
