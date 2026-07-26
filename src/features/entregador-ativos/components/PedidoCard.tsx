@@ -477,8 +477,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 onClick={sairDoLocal}
                 className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
                 style={{
-                  background: "#0F304D",
-                  boxShadow: "0 14px 32px -10px rgba(15,48,77,0.55)",
+                  background: "#AE0000",
+                  boxShadow: "0 14px 32px -10px rgba(174,0,0,0.55)",
                 }}
               >
                 <span>Sair do local</span>
