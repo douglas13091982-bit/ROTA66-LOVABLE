@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 import { brl, tipoCls } from "../logic/helpers";
 import type { TransacaoCredito } from "../logic/types";
