@@ -13,6 +13,8 @@ export function mapMeuTurno(r: MeuTurnoRow): MeuTurno {
     status: r.status,
     vagas_total: r.vagas_total,
     vagas_preenchidas: r.vagas_preenchidas,
+    entregas_no_turno: Number(r.entregas_no_turno ?? 0) || 0,
+    ganho_entregas: Number(r.ganho_entregas ?? 0) || 0,
     lojas: {
       nome: r.loja_nome,
       endereco: r.loja_endereco,
