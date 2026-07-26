@@ -23,8 +23,8 @@ import {
   ArrowDown,
   ChevronRight,
   WalletCards,
-  Diamond,
 } from "lucide-react";
+import { PixIcon } from "@/components/icons/PixIcon";
 import { DIAS_SEMANA, useSaqueEntregador, type SaqueRow } from "../hooks/use-saque";
 
 function brl(v: number) {
