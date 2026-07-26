@@ -132,8 +132,21 @@ export function NovoTurnoForm({
             R$ {(Number(taxaEntrega) || 0).toFixed(2)}
           </strong>{" "}
           por cada entrega realizada durante o turno.
+          <br />
+          Para publicar, sua carteira precisa ter no mínimo{" "}
+          <strong className="text-foreground">
+            R${" "}
+            {(
+              (Number(valorHora) || 0) *
+              (Number(duracao) || 0) *
+              Math.max(1, Number(vagas) || 1)
+            ).toFixed(2)}
+          </strong>{" "}
+          de saldo (garantido de {Math.max(1, Number(vagas) || 1)} vaga
+          {Math.max(1, Number(vagas) || 1) > 1 ? "s" : ""}).
         </span>
       </div>
+
 
       <button
         type="submit"
