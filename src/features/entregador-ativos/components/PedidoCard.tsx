@@ -62,6 +62,25 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
+  // "Coletar pedido": revela o código, avisa o sistema (chegada + coleta
+  // confirmada) e recarrega para já exibir os dados da entrega.
+  async function coletarPedido() {
+    setRevealedColeta(true);
+    await supabase.rpc("entregador_chegou_coleta" as never, {
+      _pedido_id: p.id,
+    } as never);
+    const { error } = await supabase.rpc("entregador_confirmar_coleta" as never, {
+      _pedido_id: p.id,
+    } as never);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
+    refresh();
+  }
+
+
   const isColeta = p.status === "em_rota";
   const endereco = isColeta ? p.endereco_coleta : p.endereco_entrega;
   const codigoColeta = p.codigo_coleta;
