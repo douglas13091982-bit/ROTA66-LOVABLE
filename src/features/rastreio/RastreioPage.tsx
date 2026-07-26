@@ -41,7 +41,12 @@ export function RastreioPage({ pedidoId }: { pedidoId: string }) {
 
         {isEntregue && <EntregueCard confirmadaEm={data.entrega_confirmada_em} />}
 
-        {!isCancelado && <StatusTimeline status={data.status} />}
+        {!isCancelado && (
+          <StatusTimeline
+            status={data.status}
+            chegouEntrega={!!data.chegou_entrega_at}
+          />
+        )}
 
         {isCancelado && <CanceladoCard />}
 
