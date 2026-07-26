@@ -229,35 +229,14 @@ export const enviarPushEntregadores = createServerFn({ method: "POST" })
       })
     );
 
-    let sent = 0;
+    const { enviarPushEmLote } = await import("@/lib/web-push.server");
+    const sent = await enviarPushEmLote(alvos as string[], {
+      title: data.title,
+      body: data.body,
+      url: linkFinal,
+      tag,
+    });
 
-    const CONC = 10;
-    for (let i = 0; i < alvos.length; i += CONC) {
-      const batch = alvos.slice(i, i + CONC);
-      const results = await Promise.all(
-        batch.map(async (uid) => {
-          try {
-            const res = await fetch(url, {
-              method: "POST",
-              headers: { "content-type": "application/json", "x-push-secret": secret },
-              body: JSON.stringify({
-                user_id: uid,
-                title: data.title,
-                body: data.body,
-                url: linkFinal,
-                tag,
-              }),
-            });
-            if (!res.ok) return 0;
-            const j = (await res.json()) as { sent?: number };
-            return j.sent ?? 0;
-          } catch {
-            return 0;
-          }
-        })
-      );
-      sent += results.reduce((a, b) => a + b, 0);
-    }
 
     return { sent, destinatarios: alvos.length, tag };
   });
