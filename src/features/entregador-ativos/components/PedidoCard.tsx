@@ -87,8 +87,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
   }
 
-  function seguirParaEntrega() {
-    if (!coletaFixada) return;
+  function sairDoLocal() {
     setColetaFixada(false);
     refresh();
   }
