@@ -28,6 +28,9 @@ const ITEMS: Item[] = [
   { key: "config", icon: Settings, label: "Configurações do App" },
 ];
 
+const ROW_CLS =
+  "w-full flex items-center gap-4 px-4 py-4 text-left rounded-2xl border border-white/10 bg-white/[0.03] active:bg-white/[0.06] transition-colors";
+
 type Props = {
   openSection: SectionKey;
   setOpenSection: (s: SectionKey) => void;
@@ -36,46 +39,41 @@ type Props = {
 
 export function MenuList({ openSection, setOpenSection, renderSection }: Props) {
   return (
-    <div className="mt-2">
-      {ITEMS.map((m, idx) => {
+    <div className="mt-5 space-y-2.5">
+      <p className="text-[15px] text-white/40 px-1 pb-0.5">Conta</p>
+      {ITEMS.map((m) => {
         const Icon = m.icon;
         const isOpen = openSection === m.key;
         const isLink = !!m.to;
         return (
-          <div key={m.key} className={idx > 0 ? "border-t border-white/8" : ""}>
+          <div key={m.key}>
             {isLink ? (
-              <Link
-                to={m.to!}
-                className="w-full flex items-center gap-4 px-2 py-4 text-left active:bg-white/[0.03] transition-colors"
-              >
-                <Icon className="h-5 w-5 text-white/70 shrink-0" strokeWidth={1.8} />
-                <span className="flex-1 text-[15px] font-semibold text-white">{m.label}</span>
-                <ChevronRight className="h-4 w-4 text-white/40" />
+              <Link to={m.to!} className={ROW_CLS}>
+                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#E01818" }} />
+                <span className="flex-1 text-[17px] text-white">{m.label}</span>
+                <ChevronRight className="h-5 w-5 text-white/45" />
               </Link>
             ) : (
               <button
                 type="button"
                 onClick={() => setOpenSection(isOpen ? null : (m.key as SectionKey))}
-                className="w-full flex items-center gap-4 px-2 py-4 text-left active:bg-white/[0.03] transition-colors"
+                className={ROW_CLS}
               >
-                <Icon className="h-5 w-5 text-white/70 shrink-0" strokeWidth={1.8} />
-                <span className="flex-1 text-[15px] font-semibold text-white">{m.label}</span>
+                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#E01818" }} />
+                <span className="flex-1 text-[17px] text-white">{m.label}</span>
                 <ChevronRight
-                  className={`h-4 w-4 text-white/40 transition-transform ${
-                    isOpen ? "rotate-90" : ""
-                  }`}
+                  className={`h-5 w-5 text-white/45 transition-transform ${isOpen ? "rotate-90" : ""}`}
                 />
               </button>
             )}
             {isOpen && !isLink && (
-              <div className="px-2 pb-5 -mt-1 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="px-1 pt-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
                 {renderSection(m.key as Exclude<MenuKey, "carteira" | "mensalidade">)}
               </div>
             )}
           </div>
         );
       })}
-      <div className="border-t border-white/8" />
     </div>
   );
 }
