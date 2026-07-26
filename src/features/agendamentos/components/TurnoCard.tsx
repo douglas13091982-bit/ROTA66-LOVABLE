@@ -72,7 +72,9 @@ export function TurnoCard({ t, onChange }: { t: TurnoRow; onChange: () => void }
         aceites={t.aceites ?? []}
         vagasPreenchidas={t.vagas_preenchidas}
         vagasTotal={t.vagas_total}
+        turnoConcluido={t.status === "concluido"}
       />
+
 
       {t.status === "publicado" && vagasRestantes > 0 && (
         <div className="flex items-center gap-2 text-xs text-amber-300 bg-amber-500/10 px-3 py-2 rounded-md">
