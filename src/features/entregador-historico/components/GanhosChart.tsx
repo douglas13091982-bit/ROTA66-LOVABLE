@@ -23,11 +23,17 @@ export function GanhosChart({
   periodo: Periodo;
 }) {
   return (
-    <div className="p-5 mb-6">
-      <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-3">
-        Ganhos por {periodo === "semanal" ? "dia" : "mês"}
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 mb-4">
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="text-[15px] font-bold uppercase tracking-[0.04em] text-white">
+          Ganhos por {periodo === "semanal" ? "dia" : "mês"}
+        </div>
+        <span className="px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.04] text-[13px] text-white/70">
+          {periodo === "semanal" ? "Últimos 7 dias" : "Últimos 6 meses"}
+        </span>
       </div>
       <div className="h-56 w-full">
+
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
             <defs>
