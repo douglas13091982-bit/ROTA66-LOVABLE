@@ -371,9 +371,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
           <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
-            Assim que você chegar ao local, clique em{" "}
-            <b style={{ color: "#F5B301" }}>CHEGUEI NA COLETA.</b>
+            Ao chegar na loja, clique em{" "}
+            <b style={{ color: "#F5B301" }}>COLETAR PEDIDO</b> para ver o código
+            e liberar os dados da entrega.
           </p>
+
         </div>
       )}
 
