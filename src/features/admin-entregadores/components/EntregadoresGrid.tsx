@@ -1,5 +1,23 @@
+import { Component, type ReactNode } from "react";
 import { EntregadorCard } from "./EntregadorCard";
 import type { EntregadorRow, StatusEntregador } from "../logic/types";
+
+class CardBoundary extends Component<{ children: ReactNode }, { erro: boolean }> {
+  state = { erro: false };
+  static getDerivedStateFromError() {
+    return { erro: true };
+  }
+  render() {
+    if (this.state.erro) {
+      return (
+        <div className="bg-card border border-border rounded-lg p-5 text-sm text-muted-foreground">
+          Não foi possível exibir este entregador.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export function EntregadoresGrid({
   list,
