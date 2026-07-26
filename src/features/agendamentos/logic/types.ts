@@ -2,6 +2,10 @@ export type EntregadorAceito = {
   full_name: string | null;
   avatar_url: string | null;
   aceito_em: string;
+  horas_pagas?: boolean;
+  motivo_nao_pagamento?: string | null;
+  entregas_finalizadas?: number;
+  entregas_pendentes?: number;
 };
 
 export type TurnoRow = {
