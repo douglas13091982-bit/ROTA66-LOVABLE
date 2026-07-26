@@ -1,25 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Ban, Bike, Car, Check, FileSearch, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
-import { supabase } from "@/integrations/supabase/client";
 import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 import { DocumentosReviewDialog } from "./DocumentosReviewDialog";
 
 export function EntregadorCard({
   p,
+  doc,
+  onDocsChange,
   onSetStatus,
   onRemove,
 }: {
   p: EntregadorRow;
+  doc?: { status: string | null; tipo: string | null } | null;
+  onDocsChange?: () => void;
   onSetStatus: (id: string, status: StatusEntregador) => void;
   onRemove: (id: string, nome: string) => void;
 }) {
   const st = STATUS_LABEL[p.status] ?? STATUS_LABEL.pendente;
   const wa = p.phone ? waLink(p.phone) : null;
 
-  const [docStatus, setDocStatus] = useState<string | null>(null);
-  const [docTipo, setDocTipo] = useState<string | null>(null);
+  const docStatus = doc?.status ?? null;
+  const docTipo = doc?.tipo ?? null;
   const [showDocs, setShowDocs] = useState(false);
   const waAprovacao =
     p.phone && p.status === "aprovado"
@@ -28,21 +31,7 @@ export function EntregadorCard({
           mensagemAprovacao(p.full_name, p.created_at, docStatus !== "aprovado"),
         )
       : null;
-  useEffect(() => {
-    let ativo = true;
-    (async () => {
-      const { data } = await (supabase as any)
-        .from("entregador_documentos")
-        .select("status, tipo_veiculo")
-        .eq("entregador_id", p.id)
-        .maybeSingle();
-      if (ativo) {
-        setDocStatus(data?.status ?? null);
-        setDocTipo(data?.tipo_veiculo ?? null);
-      }
-    })();
-    return () => { ativo = false; };
-  }, [p.id, showDocs]);
+
 
   const docLabel: Record<string, { label: string; cls: string }> = {
     pendente: { label: "Docs pendentes", cls: "bg-slate-600/20 text-slate-400" },
