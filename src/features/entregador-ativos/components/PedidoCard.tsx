@@ -488,7 +488,16 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           )
 
         ) : !revealedEntrega ? (
-          <CtaButton onClick={() => setRevealedEntrega(true)}>
+          <CtaButton
+            onClick={() => {
+              setRevealedEntrega(true);
+              void supabase
+                .rpc("entregador_chegou_entrega" as never, {
+                  _pedido_id: p.id,
+                } as never)
+                .then(() => qc.invalidateQueries({ queryKey: ["rastreio", p.id] }));
+            }}
+          >
             Cheguei na entrega
           </CtaButton>
         ) : p.origem === "ifood" ? (
