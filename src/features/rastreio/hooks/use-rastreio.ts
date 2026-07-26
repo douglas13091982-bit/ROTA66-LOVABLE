@@ -10,7 +10,8 @@ export function useRastreio(pedidoId: string) {
 
   const query = useQuery({
     queryKey: ["rastreio", pedidoId],
-    refetchInterval: 5000,
+    // Fallback lento: o tempo real (broadcast) é o caminho principal.
+    refetchInterval: 30000,
     queryFn: async () => {
       const { data, error } = await supabase.rpc("rastrear_pedido", { _pedido_id: pedidoId });
       if (error) throw error;
@@ -20,19 +21,21 @@ export function useRastreio(pedidoId: string) {
   });
 
   useEffect(() => {
+    const invalidate = () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] });
     return subscribeLazy(
       () =>
         supabase
-          .channel(`rastreio-${pedidoId}`)
-          .on(
-            "postgres_changes",
-            { event: "UPDATE", schema: "public", table: "pedidos", filter: `id=eq.${pedidoId}` },
-            () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
-          )
+          // Canal público de broadcast: o trigger `trg_rastreio_broadcast`
+          // envia um ping a cada mudança de etapa/chegada. O cliente do
+          // rastreio não está autenticado, então `postgres_changes` (que
+          // depende de RLS) nunca chegaria até ele.
+          .channel(`rastreio:${pedidoId}`, { config: { private: false } })
+          .on("broadcast", { event: "rastreio_update" }, invalidate)
           .subscribe(),
-      () => qc.invalidateQueries({ queryKey: ["rastreio", pedidoId] }),
+      invalidate,
     );
   }, [pedidoId, qc]);
+
 
 
   return query;
