@@ -434,10 +434,25 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja confirmar a coleta.
+                Mostre este código para a loja conferir. Depois toque em{" "}
+                <b style={{ color: TEXT }}>Coletado</b>.
               </p>
+              <button
+                disabled={loadingColeta}
+                onClick={() => void confirmarColeta(p.id)}
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl disabled:opacity-60 active:scale-[0.98] transition-all"
+              >
+                {loadingColeta ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" /> Confirmando...
+                  </>
+                ) : (
+                  "Coletado"
+                )}
+              </button>
             </div>
           )
+
         ) : !revealedEntrega ? (
           <CtaButton onClick={() => setRevealedEntrega(true)}>
             Cheguei na entrega
