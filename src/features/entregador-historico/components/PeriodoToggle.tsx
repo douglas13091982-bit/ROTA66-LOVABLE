@@ -8,16 +8,22 @@ export function PeriodoToggle({
   onChange: (p: Periodo) => void;
 }) {
   return (
-    <div className="flex gap-2 mb-5 p-1.5">
+    <div className="flex gap-1 mb-4 p-1 rounded-full border border-white/10 bg-white/[0.03]">
       {(["semanal", "mensal"] as Periodo[]).map((p) => (
         <button
           key={p}
           onClick={() => onChange(p)}
-          className={`flex-1 px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.18em] transition-all duration-300 ease-premium ${
-            periodo === p
-              ? "bg-gradient-red text-primary-foreground shadow-red"
-              : "text-muted-foreground hover:text-foreground"
+          className={`flex-1 px-4 py-2.5 rounded-full text-[13px] font-bold uppercase tracking-[0.12em] transition-all duration-300 ${
+            periodo === p ? "text-white" : "text-white/55"
           }`}
+          style={
+            periodo === p
+              ? {
+                  background: "linear-gradient(100deg, #E01818 0%, #AE0000 100%)",
+                  boxShadow: "0 8px 20px -10px rgba(224,24,24,0.8)",
+                }
+              : undefined
+          }
         >
           {p === "semanal" ? "Semanal" : "Mensal"}
         </button>
