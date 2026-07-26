@@ -21,6 +21,8 @@ import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
+import { useConfirmarColeta } from "../hooks/use-confirmar-coleta";
+
 import { abrirRetornoLoja } from "./RetornoLojaDialog";
 
 type Props = {
