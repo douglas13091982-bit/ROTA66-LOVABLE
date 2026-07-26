@@ -30,4 +30,6 @@ export type PedidoAtivo = {
   deadline_coleta_at?: string | null;
   origem?: string | null;
   codigo_entrega?: string | null;
+  agendamento_id?: string | null;
+  taxa_turno_entregador?: number | string | null;
 };

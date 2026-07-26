@@ -2257,6 +2257,7 @@ export type Database = {
       }
       pedidos: {
         Row: {
+          agendamento_id: string | null
           arquivado: boolean
           atribuido_automaticamente: boolean
           bonus_entregador: number
@@ -2303,12 +2304,14 @@ export type Database = {
           taxa_marketplace: number
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
+          taxa_turno_entregador: number | null
           troco_para: number | null
           updated_at: string
           valor_produtos: number
           valor_total: number
         }
         Insert: {
+          agendamento_id?: string | null
           arquivado?: boolean
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
@@ -2355,12 +2358,14 @@ export type Database = {
           taxa_marketplace?: number
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
+          taxa_turno_entregador?: number | null
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
           valor_total?: number
         }
         Update: {
+          agendamento_id?: string | null
           arquivado?: boolean
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
@@ -2407,12 +2412,20 @@ export type Database = {
           taxa_marketplace?: number
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
+          taxa_turno_entregador?: number | null
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
           valor_total?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "pedidos_agendamento_id_fkey"
+            columns: ["agendamento_id"]
+            isOneToOne: false
+            referencedRelation: "agendamentos"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pedidos_loja_id_fkey"
             columns: ["loja_id"]
@@ -3534,6 +3547,7 @@ export type Database = {
       aceitar_pedido_externo: {
         Args: { _pedido_id: string }
         Returns: {
+          agendamento_id: string | null
           arquivado: boolean
           atribuido_automaticamente: boolean
           bonus_entregador: number
@@ -3580,6 +3594,7 @@ export type Database = {
           taxa_marketplace: number
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
+          taxa_turno_entregador: number | null
           troco_para: number | null
           updated_at: string
           valor_produtos: number
@@ -4009,6 +4024,8 @@ export type Database = {
           aceito_em: string
           data_turno: string
           duracao_horas: number
+          entregas_no_turno: number
+          ganho_entregas: number
           hora_inicio: string
           id: string
           loja_endereco: string
