@@ -13,7 +13,9 @@ import {
   DollarSign,
   TrendingUp,
 } from "lucide-react";
+import { toast } from "sonner";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
@@ -61,6 +63,25 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [codigoInput, setCodigoInput] = useState("");
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
+
+  // "Coletar pedido": revela o código, avisa o sistema (chegada + coleta
+  // confirmada) e recarrega para já exibir os dados da entrega.
+  async function coletarPedido() {
+    setRevealedColeta(true);
+    await supabase.rpc("entregador_chegou_coleta" as never, {
+      _pedido_id: p.id,
+    } as never);
+    const { error } = await supabase.rpc("entregador_confirmar_coleta" as never, {
+      _pedido_id: p.id,
+    } as never);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
+    refresh();
+  }
+
 
   const isColeta = p.status === "em_rota";
   const endereco = isColeta ? p.endereco_coleta : p.endereco_entrega;
@@ -371,9 +392,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <Info className="h-4 w-4" style={{ color: isLight ? "#64748B" : "rgba(255,255,255,0.8)" }} />
           </div>
           <p className="text-sm leading-snug" style={{ color: isLight ? "#475569" : "#CBD5E1" }}>
-            Assim que você chegar ao local, clique em{" "}
-            <b style={{ color: "#F5B301" }}>CHEGUEI NA COLETA.</b>
+            Ao chegar na loja, clique em{" "}
+            <b style={{ color: "#F5B301" }}>COLETAR PEDIDO</b> para ver o código
+            e liberar os dados da entrega.
           </p>
+
         </div>
       )}
 
@@ -405,13 +428,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           !revealedColeta ? (
             <CtaButton
               onClick={() => {
-                setRevealedColeta(true);
-                void supabase.rpc("entregador_chegou_coleta" as never, {
-                  _pedido_id: p.id,
-                } as never);
+                void coletarPedido();
               }}
             >
-              Cheguei na coleta
+              Coletar pedido
             </CtaButton>
           ) : (
             <div
@@ -434,10 +454,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja confirmar a coleta.
+                Mostre este código para a loja conferir. A coleta já foi
+                registrada — carregando os dados da entrega…
               </p>
             </div>
           )
+
         ) : !revealedEntrega ? (
           <CtaButton onClick={() => setRevealedEntrega(true)}>
             Cheguei na entrega
