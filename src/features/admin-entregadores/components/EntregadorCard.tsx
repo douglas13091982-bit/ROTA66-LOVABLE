@@ -3,6 +3,7 @@ import { Ban, Bike, Car, Check, FileSearch, MessageCircle, PartyPopper, Phone, T
 import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
+import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 import { DocumentosReviewDialog } from "./DocumentosReviewDialog";
 
