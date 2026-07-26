@@ -470,9 +470,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja conferir. A coleta já foi
-                registrada — carregando os dados da entrega…
+                Mostre este código para a loja conferir. Quando sair para a
+                entrega, toque no ícone <b style={{ color: TEXT }}>MAPA</b> para
+                ver os dados do cliente.
               </p>
+
             </div>
           )
 
