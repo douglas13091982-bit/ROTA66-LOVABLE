@@ -4226,6 +4226,11 @@ export type Database = {
           status: Database["public"]["Enums"]["pedido_status"]
         }[]
       }
+      redespachar_pedido_turno: {
+        Args: { _pedido_id: string }
+        Returns: boolean
+      }
+      redespachar_pedidos_loja: { Args: { _loja_id: string }; Returns: number }
       rejeitar_reset_senha: {
         Args: { _motivo?: string; _request_id: string }
         Returns: Json
