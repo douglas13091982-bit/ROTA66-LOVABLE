@@ -157,7 +157,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
   // Paleta Rota 66 (theme-aware)
   const isLight = false;
-  const RED = "#C91C1C";
+  const RED = "#AE0000";
   const BG = isLight ? "#EFE5D3" : "#0D2B45";
   const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
   const MUTED = isLight ? "#8A94A6" : "#8FA3B8";
@@ -640,8 +640,8 @@ function CtaButton({
       onClick={onClick}
       className="group w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold uppercase text-[15px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
       style={{
-        background: "#C91C1C",
-        boxShadow: "0 14px 32px -10px rgba(201,28,28,0.55)",
+        background: "#AE0000",
+        boxShadow: "0 14px 32px -10px rgba(174,0,0,0.55)",
       }}
     >
       <span>{children}</span>
