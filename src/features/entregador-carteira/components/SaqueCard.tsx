@@ -53,6 +53,7 @@ export function SaqueCard() {
   const [open, setOpen] = useState(false);
   const [valor, setValor] = useState("");
   const [pix, setPix] = useState("");
+  const [verTodos, setVerTodos] = useState(false);
 
   const resumo = resumoQ.data;
   const saldo = resumo?.saldo ?? 0;
