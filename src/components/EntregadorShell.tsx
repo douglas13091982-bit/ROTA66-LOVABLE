@@ -202,7 +202,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f2438]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#091421]"
                       style={{
                         background: "linear-gradient(135deg, #E01818, #6D0000)",
                         boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
