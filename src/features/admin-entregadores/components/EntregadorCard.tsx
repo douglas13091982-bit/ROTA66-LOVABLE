@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Ban, Bike, Car, Check, FileSearch, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
+import { Ban, Bike, Check, FileSearch, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
