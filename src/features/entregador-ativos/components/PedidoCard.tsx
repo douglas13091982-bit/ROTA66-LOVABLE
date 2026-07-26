@@ -59,7 +59,10 @@ function formaPagamentoLabel(f?: string | null) {
 
 export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
-  const [revealedEntrega, setRevealedEntrega] = useState(false);
+  const [revealedEntregaLocal, setRevealedEntrega] = useState(false);
+  // A chegada é persistida no banco (chegou_entrega_at) — assim o estado
+  // sobrevive a recarregar o app e o rastreio do cliente fica em sincronia.
+  const revealedEntrega = revealedEntregaLocal || !!p.chegou_entrega_at;
   // Mantém a tela de coleta (com o código) fixa até o entregador tocar no
   // ícone de MAPA, sinalizando que já está indo para a entrega.
   const [coletaFixada, setColetaFixada] = useState(false);
@@ -490,14 +493,23 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         ) : !revealedEntrega ? (
           <CtaButton
             onClick={() => {
-              setRevealedEntrega(true);
-              void supabase.rpc("entregador_chegou_entrega" as never, {
-                _pedido_id: p.id,
-              } as never);
+              void (async () => {
+                setRevealedEntrega(true);
+                const { error } = await supabase.rpc(
+                  "entregador_chegou_entrega" as never,
+                  { _pedido_id: p.id } as never,
+                );
+                if (error) {
+                  toast.error(error.message);
+                  return;
+                }
+                refresh();
+              })();
             }}
           >
             Cheguei na entrega
           </CtaButton>
+
         ) : p.origem === "ifood" ? (
           <div
             className="rounded-2xl border p-5 space-y-3"

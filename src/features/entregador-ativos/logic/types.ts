@@ -24,6 +24,7 @@ export type PedidoAtivo = {
   duracao_estimada_seg?: number | null;
   distancia_metros?: number | null;
   entrega_confirmada_em?: string | null;
+  chegou_entrega_at?: string | null;
   bonus_entregador?: number | null;
   loja_plano_mensal_ativo?: boolean | null;
   loja_taxa_por_pedido?: number | string | null;
