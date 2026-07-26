@@ -21,8 +21,6 @@ import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
 import { useConfirmarEntrega } from "../hooks/use-confirmar-entrega";
-import { useConfirmarColeta } from "../hooks/use-confirmar-coleta";
-
 import { abrirRetornoLoja } from "./RetornoLojaDialog";
 
 type Props = {
@@ -62,8 +60,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedEntrega, setRevealedEntrega] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
-  const { confirmarColeta, loading: loadingColeta } = useConfirmarColeta();
-
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
   const isColeta = p.status === "em_rota";
@@ -438,25 +434,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja conferir. Depois toque em{" "}
-                <b style={{ color: TEXT }}>Coletado</b>.
+                Mostre este código para a loja confirmar a coleta.
               </p>
-              <button
-                disabled={loadingColeta}
-                onClick={() => void confirmarColeta(p.id)}
-                className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl disabled:opacity-60 active:scale-[0.98] transition-all"
-              >
-                {loadingColeta ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Confirmando...
-                  </>
-                ) : (
-                  "Coletado"
-                )}
-              </button>
             </div>
           )
-
         ) : !revealedEntrega ? (
           <CtaButton onClick={() => setRevealedEntrega(true)}>
             Cheguei na entrega

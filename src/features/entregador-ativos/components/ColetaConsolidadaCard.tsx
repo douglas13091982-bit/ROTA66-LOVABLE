@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { KeyRound, Loader2, MapPin, Navigation } from "lucide-react";
+import { KeyRound, MapPin, Navigation } from "lucide-react";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { supabase } from "@/integrations/supabase/client";
 import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
-import { useConfirmarColeta } from "../hooks/use-confirmar-coleta";
 import type { PedidoAtivo } from "../logic/types";
 
 
@@ -14,7 +13,6 @@ type Props = {
 
 export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
   const [revealed, setRevealed] = useState(false);
-  const { confirmarColeta, loading: loadingColeta } = useConfirmarColeta();
   const ref = pedidos[0];
   const codigo = ref.codigo_coleta;
   const endereco = ref.endereco_coleta;
@@ -142,22 +140,8 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
                 </div>
               ))}
             <p className="text-[11px] text-white/50 text-center pt-1">
-              Mostre estes códigos para a loja conferir os {pedidos.length} pedidos e
-              depois toque em <b className="text-white">Coletado</b>.
+              Mostre estes códigos para a loja confirmar os {pedidos.length} pedidos.
             </p>
-            <button
-              disabled={loadingColeta}
-              onClick={() => void confirmarColeta(ref.id)}
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl disabled:opacity-60 active:scale-[0.98] transition-all"
-            >
-              {loadingColeta ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Confirmando...
-                </>
-              ) : (
-                "Coletado"
-              )}
-            </button>
           </div>
         )}
       </div>

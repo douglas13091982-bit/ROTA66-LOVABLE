@@ -3805,10 +3805,6 @@ export type Database = {
         Args: { _pedido_id: string }
         Returns: number
       }
-      entregador_confirmar_coleta: {
-        Args: { _pedido_id: string }
-        Returns: boolean
-      }
       entregador_pagar_mensalidade_com_saldo: {
         Args: { _valor: number }
         Returns: {
