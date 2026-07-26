@@ -13,7 +13,7 @@ export function waLink(phone: string, message?: string) {
 }
 
 /** Cadastros anteriores a esta data precisam atualizar o APK e enviar documentos. */
-const CORTE_APK = Date.parse("2025-07-19T00:00:00Z");
+const CORTE_APK = Date.parse("2026-07-19T00:00:00Z");
 
 export function precisaAtualizarApp(createdAt?: string | null) {
   const t = Date.parse(createdAt ?? "");

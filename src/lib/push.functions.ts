@@ -199,7 +199,7 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
       .maybeSingle();
 
     // Entregadores cadastrados antes de 19/07 precisam atualizar o APK e enviar documentos
-    const CORTE_APK = Date.parse("2025-07-19T00:00:00Z");
+    const CORTE_APK = Date.parse("2026-07-19T00:00:00Z");
     const criadoEm = Date.parse(((prof as any)?.created_at as string) ?? "");
     const legado = Number.isFinite(criadoEm) && criadoEm < CORTE_APK;
 
