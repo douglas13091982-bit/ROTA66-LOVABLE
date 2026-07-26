@@ -294,6 +294,43 @@ export function usePedidosDisponiveis(
       },
     );
 
+    // Pedido SAIU do pool (outro entregador aceitou, loja cancelou ou
+    // finalizou). O canal acima filtra `status=eq.pronto`, e o Postgres
+    // aplica o filtro à LINHA NOVA — quando o status vira `em_rota` o
+    // evento simplesmente não chega, então o card só sumia no polling de
+    // 5s. Aqui escutamos os status de saída e removemos o pedido do cache
+    // na hora, antes mesmo do refetch.
+    const removerDoPool = (id?: string | null) => {
+      if (!id) return;
+      qc.setQueryData(
+        ["pedidos-pool-externo", userId],
+        (prev: PedidoDisponivel[] | undefined) =>
+          prev ? prev.filter((p) => p.id !== id) : prev,
+      );
+      qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+    };
+
+    const stopSaidas = subscribeLazy(
+      () => {
+        let ch = supabase.channel(`pool-saidas-${userId}`);
+        for (const st of ["em_rota", "coletado", "entregue", "cancelado"]) {
+          ch = ch.on(
+            "postgres_changes",
+            { event: "UPDATE", schema: "public", table: "pedidos", filter: `status=eq.${st}` },
+            (payload) => {
+              const novo = payload.new as { id?: string } | null;
+              removerDoPool(novo?.id);
+            },
+          );
+        }
+        return ch.subscribe() as never;
+      },
+      () => {
+        qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+      },
+    );
+
+
     const stopMeus = subscribeLazy(
       () =>
         supabase
