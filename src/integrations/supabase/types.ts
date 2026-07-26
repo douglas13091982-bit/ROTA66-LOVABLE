@@ -4144,8 +4144,8 @@ export type Database = {
       marcar_ticket_lido: { Args: { _ticket_id: string }; Returns: undefined }
       materializar_pedido_pendente: {
         Args: {
-          _mp_payment_id: string
-          _mp_status: string
+          _mp_payment_id?: string
+          _mp_status?: string
           _pendente_id: string
         }
         Returns: string
