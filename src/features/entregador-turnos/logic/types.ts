@@ -30,6 +30,8 @@ export type MeuTurnoRow = {
   loja_endereco_lat: number | null;
   loja_endereco_lng: number | null;
   loja_telefone: string | null;
+  entregas_no_turno?: number | null;
+  ganho_entregas?: number | string | null;
 };
 
 export type MeuTurno = {
@@ -44,6 +46,8 @@ export type MeuTurno = {
   status: string;
   vagas_total: number;
   vagas_preenchidas: number;
+  entregas_no_turno: number;
+  ganho_entregas: number;
   lojas: {
     nome: string | null;
     endereco: string | null;
