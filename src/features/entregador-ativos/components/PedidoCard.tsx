@@ -60,14 +60,19 @@ function formaPagamentoLabel(f?: string | null) {
 export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
   const [revealedEntrega, setRevealedEntrega] = useState(false);
+  // Mantém a tela de coleta (com o código) fixa até o entregador tocar no
+  // ícone de MAPA, sinalizando que já está indo para a entrega.
+  const [coletaFixada, setColetaFixada] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
   // "Coletar pedido": revela o código, avisa o sistema (chegada + coleta
-  // confirmada) e recarrega para já exibir os dados da entrega.
+  // confirmada) e mantém o código na tela até o entregador seguir para a
+  // entrega (clique no ícone de mapa).
   async function coletarPedido() {
     setRevealedColeta(true);
+    setColetaFixada(true);
     await supabase.rpc("entregador_chegou_coleta" as never, {
       _pedido_id: p.id,
     } as never);
@@ -76,14 +81,20 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     } as never);
     if (error) {
       toast.error(error.message);
+      setColetaFixada(false);
       return;
     }
     toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
+  }
+
+  function seguirParaEntrega() {
+    if (!coletaFixada) return;
+    setColetaFixada(false);
     refresh();
   }
 
 
-  const isColeta = p.status === "em_rota";
+  const isColeta = p.status === "em_rota" || coletaFixada;
   const endereco = isColeta ? p.endereco_coleta : p.endereco_entrega;
   const codigoColeta = p.codigo_coleta;
   const isDestaque = destaque === p.id;
@@ -91,6 +102,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const isCartao = ["cartao", "cartao_credito", "cartao_debito"].includes(
     (p.forma_pagamento ?? "").toLowerCase(),
   );
+
 
   const liquido = ganhoPedidoEntregador({
     taxa_entrega: p.taxa_entrega,
@@ -289,7 +301,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`}
+              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                coletaFixada ? (p.endereco_entrega ?? endereco) : endereco,
+              )}`}
+              onClick={seguirParaEntrega}
               aria-label="Abrir rota no mapa"
               className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-2xl border transition-all active:scale-95"
               style={{
@@ -303,6 +318,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               </span>
             </a>
           )}
+
 
         </div>
       </div>
@@ -454,9 +470,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja conferir. A coleta já foi
-                registrada — carregando os dados da entrega…
+                Mostre este código para a loja conferir. Quando sair para a
+                entrega, toque no ícone <b style={{ color: TEXT }}>MAPA</b> para
+                ver os dados do cliente.
               </p>
+
             </div>
           )
 
