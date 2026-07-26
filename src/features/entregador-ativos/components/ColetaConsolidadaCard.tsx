@@ -83,6 +83,11 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               href={mapsUrl}
+              onClick={() => {
+                if (revealed) {
+                  qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+                }
+              }}
               aria-label="Abrir rota no mapa"
               className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-[#AE0000] text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
             >
@@ -90,6 +95,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
               <span className="text-[9px] font-bold uppercase tracking-[0.16em] mt-0.5">Mapa</span>
             </a>
           )}
+
         </div>
 
         <div className="text-[11px] text-white/50 mb-4 px-1">
