@@ -169,12 +169,11 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.06] pb-[env(safe-area-inset-bottom)]"
+        style={{ background: "#091421" }}
       >
-        <div
-          className="grid grid-cols-4 rounded-[28px] border border-white/[0.06] shadow-[0_18px_40px_-12px_oklch(0_0_0_/_0.7)] overflow-hidden"
-          style={{ background: "#0f2438" }}
-        >
+        <div className="grid grid-cols-4">
+
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
@@ -203,7 +202,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0f2438]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#091421]"
                       style={{
                         background: "linear-gradient(135deg, #E01818, #6D0000)",
                         boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
