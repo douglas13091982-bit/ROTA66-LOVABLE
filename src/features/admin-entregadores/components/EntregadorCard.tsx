@@ -102,16 +102,17 @@ export function EntregadorCard({
         >
           {st.label}
         </span>
-        <span
-          className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
-            p.tipo_veiculo === "carro"
-              ? "bg-blue-600/20 text-blue-400"
-              : "bg-muted text-muted-foreground"
-          }`}
-        >
-          {p.tipo_veiculo === "carro" ? <Car className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
-          {p.tipo_veiculo === "carro" ? "Carro" : "Moto"}
-        </span>
+        {(() => {
+          const v = veiculoInfo(p.tipo_veiculo ?? docTipo);
+          return (
+            <span
+              className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${v.cls}`}
+            >
+              <v.Icon className="h-3 w-3" />
+              {v.label}
+            </span>
+          );
+        })()}
         {dl && docTipo !== "bike_eletrica" && (
           <span className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${dl.cls}`}>
             {dl.label}
