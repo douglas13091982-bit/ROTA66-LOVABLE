@@ -20,13 +20,17 @@ export function precisaAtualizarApp(createdAt?: string | null) {
   return Number.isFinite(t) && t < CORTE_APK;
 }
 
-export function mensagemAprovacao(nome: string | null, createdAt?: string | null) {
+export function mensagemAprovacao(
+  nome: string | null,
+  createdAt?: string | null,
+  docsPendentes?: boolean,
+) {
   const primeiro = (nome ?? "").trim().split(/\s+/)[0] || "Entregador";
   const base =
     `🎉 Parabéns, ${primeiro}! ` +
     `Seu cadastro na Rota 66 foi *APROVADO*! ✅\n\n`;
 
-  if (precisaAtualizarApp(createdAt)) {
+  if (docsPendentes || precisaAtualizarApp(createdAt)) {
     return (
       base +
       `⚠️ *Atenção:* como você se cadastrou antes da atualização, faça estes 2 passos para liberar seus pedidos:\n\n` +
