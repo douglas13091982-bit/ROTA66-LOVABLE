@@ -17,15 +17,17 @@ export function EntregadorCard({
 }) {
   const st = STATUS_LABEL[p.status] ?? STATUS_LABEL.pendente;
   const wa = p.phone ? waLink(p.phone) : null;
-  const waAprovacao =
-    p.phone && p.status === "aprovado"
-      ? waLink(p.phone, mensagemAprovacao(p.full_name, p.created_at))
-      : null;
-
 
   const [docStatus, setDocStatus] = useState<string | null>(null);
   const [docTipo, setDocTipo] = useState<string | null>(null);
   const [showDocs, setShowDocs] = useState(false);
+  const waAprovacao =
+    p.phone && p.status === "aprovado"
+      ? waLink(
+          p.phone,
+          mensagemAprovacao(p.full_name, p.created_at, docStatus !== "aprovado"),
+        )
+      : null;
   useEffect(() => {
     let ativo = true;
     (async () => {
