@@ -1,7 +1,18 @@
 import { STATUS_STEPS } from "../logic/types";
 
-export function StatusTimeline({ status }: { status: string }) {
-  const currentStepIdx = STATUS_STEPS.findIndex((s) => (s.matches as readonly string[]).includes(status));
+export function StatusTimeline({
+  status,
+  chegouEntrega,
+}: {
+  status: string;
+  chegouEntrega?: boolean;
+}) {
+  let currentStepIdx = STATUS_STEPS.findIndex((s) =>
+    (s.matches as readonly string[]).includes(status),
+  );
+  const chegouIdx = STATUS_STEPS.findIndex((s) => s.key === "chegou");
+  if (status === "entregue") currentStepIdx = STATUS_STEPS.length - 1;
+  else if (chegouEntrega) currentStepIdx = chegouIdx;
   return (
     <div className="bg-card border border-border rounded-lg p-5 shadow-card">
       <p className="text-xs uppercase tracking-wider text-muted-foreground mb-4">Status do pedido</p>

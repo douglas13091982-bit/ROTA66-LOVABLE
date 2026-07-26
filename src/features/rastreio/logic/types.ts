@@ -1,4 +1,4 @@
-import { ChefHat, Package, Truck, CheckCircle2 } from "lucide-react";
+import { ChefHat, Package, Truck, MapPin, CheckCircle2 } from "lucide-react";
 
 /**
  * Etapas do rastreio do cliente — mesmo agrupamento do Kanban da loja
@@ -26,6 +26,12 @@ export const STATUS_STEPS = [
     matches: ["em_rota", "coletado"],
   },
   {
+    key: "chegou",
+    label: "Entregador chegou no local",
+    icon: MapPin,
+    matches: [] as string[],
+  },
+  {
     key: "entregue",
     label: "Entregue",
     icon: CheckCircle2,
@@ -40,6 +46,7 @@ export type RastreioData = {
   cliente_nome: string;
   codigo_entrega: string | null;
   entrega_confirmada_em: string | null;
+  chegou_entrega_at: string | null;
   endereco_entrega: string;
   complemento: string | null;
 };
