@@ -31,7 +31,7 @@ export function MeusTurnosSection({ meus, cancelando, onDesmarcar }: Props) {
   const monthLabel = MONTH_NAMES[today.getMonth()].toUpperCase();
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-4">
       <CalendarioSemana
         weekDays={weekDays}
         today={today}
@@ -39,11 +39,7 @@ export function MeusTurnosSection({ meus, cancelando, onDesmarcar }: Props) {
         turnosByDate={turnosByDate(meus)}
       />
 
-      <div className="h-px bg-border/40" />
-
       <ProximoTurno proximo={proximo} now={now} />
-
-      <div className="h-px bg-border/40" />
 
       <AgendaSemanal restantes={restantes} cancelando={cancelando} onDesmarcar={onDesmarcar} />
     </section>

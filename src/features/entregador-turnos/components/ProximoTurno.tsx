@@ -5,14 +5,20 @@ import type { MeuTurno } from "../logic/types";
 export function ProximoTurno({ proximo, now }: { proximo: MeuTurno | undefined; now: Date }) {
   if (!proximo) {
     return (
-      <div className="py-6 text-center text-sm text-muted-foreground">
-        Nenhum turno agendado.
+      <div className="rounded-xl border border-border/50 bg-card/30 py-12 px-6 text-center">
+        <div className="h-20 w-20 mx-auto rounded-full grid place-items-center bg-muted/20 mb-5">
+          <CalendarClock className="h-9 w-9 text-muted-foreground/70" />
+        </div>
+        <p className="font-display text-xl text-foreground">Nenhum turno agendado</p>
+        <p className="text-sm text-muted-foreground mt-2 leading-snug">
+          Você ainda não tem nenhum turno marcado.
+        </p>
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="rounded-xl border border-border/50 bg-card/30 p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs uppercase tracking-[0.2em] text-primary font-mono">
           Próximo turno

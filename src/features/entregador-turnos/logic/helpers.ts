@@ -54,7 +54,7 @@ export function computeWeekDays(today: Date) {
   const day = weekStart.getDay();
   const diffToMonday = day === 0 ? -6 : 1 - day;
   weekStart.setDate(weekStart.getDate() + diffToMonday);
-  return Array.from({ length: 6 }, (_, i) => {
+  return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekStart);
     d.setDate(weekStart.getDate() + i);
     return d;

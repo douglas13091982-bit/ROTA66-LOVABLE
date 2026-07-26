@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CalendarClock, ChevronRight } from "lucide-react";
 import { DOW_LONG, MONTH_NAMES } from "../logic/constants";
 import { endTime } from "../logic/helpers";
 import type { MeuTurno } from "../logic/types";
@@ -14,13 +15,17 @@ export function AgendaSemanal({ restantes, cancelando, onDesmarcar }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
-    <div>
-      <h3 className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono mb-3">
-        Agenda semanal
-      </h3>
+    <div className="rounded-xl border border-border/50 bg-card/30 p-4">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <h3 className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground font-mono">
+          <CalendarClock className="h-4 w-4 text-primary" /> Agenda semanal
+        </h3>
+        <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
+      </div>
       {restantes.length === 0 ? (
         <p className="text-sm text-muted-foreground">Sem outros turnos esta semana.</p>
       ) : (
+
         <ul className="divide-y divide-border/40">
           {restantes.map((m) => {
             const d = new Date(`${m.data_turno}T${m.hora_inicio}`);
