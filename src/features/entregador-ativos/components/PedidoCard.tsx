@@ -407,13 +407,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           !revealedColeta ? (
             <CtaButton
               onClick={() => {
-                setRevealedColeta(true);
-                void supabase.rpc("entregador_chegou_coleta" as never, {
-                  _pedido_id: p.id,
-                } as never);
+                void coletarPedido();
               }}
             >
-              Cheguei na coleta
+              Coletar pedido
             </CtaButton>
           ) : (
             <div
@@ -436,10 +433,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja confirmar a coleta.
+                Mostre este código para a loja conferir. A coleta já foi
+                registrada — carregando os dados da entrega…
               </p>
             </div>
           )
+
         ) : !revealedEntrega ? (
           <CtaButton onClick={() => setRevealedEntrega(true)}>
             Cheguei na entrega
