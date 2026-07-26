@@ -468,11 +468,22 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 {codigoColeta}
               </div>
               <p className="text-[12px]" style={{ color: MUTED }}>
-                Mostre este código para a loja conferir. Quando sair para a
-                entrega, toque no ícone <b style={{ color: TEXT }}>MAPA</b> para
-                ver os dados do cliente.
+                Mostre este código para a loja conferir. Ao sair da loja, toque
+                em <b style={{ color: TEXT }}>SAIR DO LOCAL</b> para ver os
+                dados da entrega.
               </p>
 
+              <button
+                onClick={sairDoLocal}
+                className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
+                style={{
+                  background: "#0F304D",
+                  boxShadow: "0 14px 32px -10px rgba(15,48,77,0.55)",
+                }}
+              >
+                <span>Sair do local</span>
+                <ArrowRight className="h-5 w-5" />
+              </button>
             </div>
           )
 
