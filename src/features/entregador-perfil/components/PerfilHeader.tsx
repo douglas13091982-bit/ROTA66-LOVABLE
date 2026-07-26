@@ -15,13 +15,13 @@ export function PerfilHeader({ fullName, idCurto, avatarUrl, uploading, onPickFi
   const cameraRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="flex flex-col items-center pt-2 pb-6">
+    <div className="flex flex-col items-center pt-4 pb-6">
       <div className="relative">
         <button
           type="button"
           onClick={() => galleryRef.current?.click()}
           disabled={uploading}
-          className="h-28 w-28 rounded-3xl overflow-hidden bg-white/[0.04] border border-white/10 flex items-center justify-center disabled:opacity-60"
+          className="h-32 w-32 rounded-full overflow-hidden bg-white/[0.04] border border-white/10 flex items-center justify-center disabled:opacity-60"
           aria-label="Trocar foto"
         >
           {avatarUrl ? (
@@ -36,20 +36,16 @@ export function PerfilHeader({ fullName, idCurto, avatarUrl, uploading, onPickFi
           )}
         </button>
         <div
-          className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full flex items-center justify-center shadow-[0_6px_18px_-6px_oklch(0.55_0.22_27_/_0.7)]"
-          style={{
-            background: "linear-gradient(135deg, oklch(0.72 0.18 27), oklch(0.55 0.22 27))",
-          }}
+          className="absolute bottom-0 right-0 h-11 w-11 rounded-full flex items-center justify-center border-4 border-[color:var(--background)]"
+          style={{ background: "#E01818" }}
         >
-          <BadgeCheck className="h-4 w-4 text-white" strokeWidth={2.5} />
+          <BadgeCheck className="h-5 w-5 text-white" strokeWidth={2.5} />
         </div>
       </div>
-      <h1 className="mt-4 text-2xl font-extrabold text-white tracking-tight text-center">
+      <h1 className="mt-4 text-[26px] font-extrabold text-white uppercase tracking-tight text-center leading-tight">
         {fullName || "Entregador"}
       </h1>
-      <p className="mt-1 text-[11px] font-mono uppercase tracking-[0.18em] text-white/45">
-        ID: {idCurto}
-      </p>
+      <p className="mt-1 text-[15px] text-white/50">ID: {idCurto}</p>
 
       <input
         ref={cameraRef}
