@@ -2262,6 +2262,7 @@ export type Database = {
           atribuido_automaticamente: boolean
           bonus_entregador: number
           chegou_coleta_at: string | null
+          chegou_entrega_at: string | null
           cidade: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -2316,6 +2317,7 @@ export type Database = {
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
           chegou_coleta_at?: string | null
+          chegou_entrega_at?: string | null
           cidade?: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -2370,6 +2372,7 @@ export type Database = {
           atribuido_automaticamente?: boolean
           bonus_entregador?: number
           chegou_coleta_at?: string | null
+          chegou_entrega_at?: string | null
           cidade?: string | null
           cliente_nome?: string
           cliente_telefone?: string
@@ -3552,6 +3555,7 @@ export type Database = {
           atribuido_automaticamente: boolean
           bonus_entregador: number
           chegou_coleta_at: string | null
+          chegou_entrega_at: string | null
           cidade: string | null
           cliente_nome: string
           cliente_telefone: string
@@ -3802,6 +3806,10 @@ export type Database = {
         Returns: undefined
       }
       entregador_chegou_coleta: {
+        Args: { _pedido_id: string }
+        Returns: number
+      }
+      entregador_chegou_entrega: {
         Args: { _pedido_id: string }
         Returns: number
       }
@@ -4213,6 +4221,7 @@ export type Database = {
       rastrear_pedido: {
         Args: { _pedido_id: string }
         Returns: {
+          chegou_entrega_at: string
           cliente_nome: string
           codigo_entrega: string
           coleta_confirmada_em: string
