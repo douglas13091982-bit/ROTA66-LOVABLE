@@ -3,6 +3,7 @@ import { LojaShell } from "@/components/LojaShell";
 
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { CatalogoLayoutPicker } from "./components/CatalogoLayoutPicker";
+import { CatalogoStatusInicialPicker } from "./components/CatalogoStatusInicialPicker";
 import { CategoriaSelect } from "./components/CategoriaSelect";
 import { CidadeSelect } from "./components/CidadeSelect";
 import { EnderecoMatriz } from "./components/EnderecoMatriz";
@@ -91,6 +92,11 @@ export function ConfigPage() {
         <CatalogoLayoutPicker
           value={form.catalogo_layout}
           onChange={(v) => setForm({ ...form, catalogo_layout: v })}
+        />
+
+        <CatalogoStatusInicialPicker
+          value={form.catalogo_status_inicial}
+          onChange={(v) => setForm({ ...form, catalogo_status_inicial: v })}
         />
 
         <UrlPublica slug={slug} />

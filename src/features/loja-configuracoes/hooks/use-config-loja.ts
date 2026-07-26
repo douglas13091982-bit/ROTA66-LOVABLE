@@ -31,6 +31,8 @@ export function useConfigLoja(loja: any | undefined) {
       bairro: loja.bairro ?? "",
       ativa: loja.ativa,
       catalogo_layout: loja.catalogo_layout ?? "cards",
+      catalogo_status_inicial:
+        loja.catalogo_status_inicial === "pronto" ? "pronto" : "em_preparo",
       categoria: (loja.categoria ?? "") as LojaCategoria | "",
       usar_horario_automatico: !!loja.usar_horario_automatico,
       city_id: loja.city_id ?? "",
@@ -98,6 +100,7 @@ export function useConfigLoja(loja: any | undefined) {
         endereco_lng: coords.lng,
         logo_url: logoUrl,
         catalogo_layout: form.catalogo_layout,
+        catalogo_status_inicial: form.catalogo_status_inicial,
         categoria: form.categoria || null,
         usar_horario_automatico: true,
         horario_funcionamento: horario,

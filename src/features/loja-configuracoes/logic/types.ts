@@ -9,6 +9,7 @@ export type ConfigForm = {
   bairro: string;
   ativa: boolean;
   catalogo_layout: "cards" | "lista";
+  catalogo_status_inicial: "em_preparo" | "pronto";
   categoria: LojaCategoria | "";
   usar_horario_automatico: boolean;
   city_id: string;
@@ -21,6 +22,7 @@ export const DEFAULT_FORM: ConfigForm = {
   bairro: "",
   ativa: true,
   catalogo_layout: "cards",
+  catalogo_status_inicial: "em_preparo",
   categoria: "",
   usar_horario_automatico: false,
   city_id: "",
