@@ -1,4 +1,4 @@
-import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { Bucket, PedidoHistorico, Periodo } from "./types";
 
 export function startOfDay(d: Date) {
@@ -15,8 +15,15 @@ export function calcularInicioJanela() {
   return d;
 }
 
-function taxaLoja(p: PedidoHistorico): number {
-  return Number(p.loja_taxa_por_pedido ?? 0);
+function ganho(p: PedidoHistorico): number {
+  return ganhoPedidoEntregador({
+    taxa_entrega: p.taxa_entrega,
+    loja_taxa_por_pedido: p.loja_taxa_por_pedido,
+    loja_plano_mensal_ativo: p.loja_plano_mensal_ativo,
+    forma_pagamento: p.forma_pagamento,
+    agendamento_id: p.agendamento_id,
+    taxa_turno_entregador: p.taxa_turno_entregador,
+  });
 }
 
 export function agregar(
@@ -51,11 +58,11 @@ export function agregar(
     for (const p of dentro) {
       const k = new Date(p.updated_at).toISOString().slice(0, 10);
       const b = buckets.find((x) => x.key === k);
-      if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento);
+      if (b) b.valor += ganho(p);
     }
 
     const total = dentro.reduce(
-      (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento),
+      (s, p) => s + ganho(p),
       0
     );
     return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
@@ -82,11 +89,11 @@ export function agregar(
     const d = new Date(p.updated_at);
     const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     const b = buckets.find((x) => x.key === k);
-    if (b) b.valor += liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento);
+    if (b) b.valor += ganho(p);
   }
 
   const total = dentro.reduce(
-    (s, p) => s + liquidoEntregador(p.taxa_entrega, taxaLoja(p), p.loja_plano_mensal_ativo, p.forma_pagamento),
+    (s, p) => s + ganho(p),
     0
   );
   return { chartData: buckets, totalPeriodo: total, totalEntregas: dentro.length, listagem: dentro };
