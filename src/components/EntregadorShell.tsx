@@ -15,6 +15,8 @@ import { RetornoLojaDialog } from "@/features/entregador-ativos/components/Retor
 
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
+import { instalarLimpezaBadge } from "@/lib/app-badge";
+
 
 
 const NAV = [
@@ -35,6 +37,10 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const push = usePushNotifications();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
+
+  // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
+  useEffect(() => instalarLimpezaBadge(), []);
+
 
   // Pede permissão de push automaticamente na 1ª vez (somente quando há usuário e estado === "default")
   useEffect(() => {
