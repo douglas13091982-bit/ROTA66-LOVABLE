@@ -39,6 +39,10 @@ export function useTurnosLoja(lojaId: string | undefined) {
                 full_name: string | null;
                 avatar_url: string | null;
                 aceito_em: string;
+                horas_pagas?: boolean;
+                motivo_nao_pagamento?: string | null;
+                entregas_finalizadas?: number;
+                entregas_pendentes?: number;
               }[]
             | null;
         }>
@@ -46,7 +50,15 @@ export function useTurnosLoja(lojaId: string | undefined) {
       const byTurno = new Map<string, EntregadorAceito[]>();
       (profs ?? []).forEach((p) => {
         const arr = byTurno.get(p.agendamento_id) ?? [];
-        arr.push({ full_name: p.full_name, avatar_url: p.avatar_url, aceito_em: p.aceito_em });
+        arr.push({
+          full_name: p.full_name,
+          avatar_url: p.avatar_url,
+          aceito_em: p.aceito_em,
+          horas_pagas: p.horas_pagas,
+          motivo_nao_pagamento: p.motivo_nao_pagamento ?? null,
+          entregas_finalizadas: p.entregas_finalizadas ?? 0,
+          entregas_pendentes: p.entregas_pendentes ?? 0,
+        });
         byTurno.set(p.agendamento_id, arr);
       });
       rows.forEach((r) => {

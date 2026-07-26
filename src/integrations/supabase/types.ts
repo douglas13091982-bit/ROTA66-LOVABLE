@@ -47,21 +47,33 @@ export type Database = {
           agendamento_id: string
           created_at: string
           entregador_id: string
+          entregas_finalizadas: number
+          entregas_pendentes: number
+          horas_pagas: boolean
           id: string
+          motivo_nao_pagamento: string | null
         }
         Insert: {
           aceito_em?: string
           agendamento_id: string
           created_at?: string
           entregador_id: string
+          entregas_finalizadas?: number
+          entregas_pendentes?: number
+          horas_pagas?: boolean
           id?: string
+          motivo_nao_pagamento?: string | null
         }
         Update: {
           aceito_em?: string
           agendamento_id?: string
           created_at?: string
           entregador_id?: string
+          entregas_finalizadas?: number
+          entregas_pendentes?: number
+          horas_pagas?: boolean
           id?: string
+          motivo_nao_pagamento?: string | null
         }
         Relationships: [
           {
@@ -3948,7 +3960,11 @@ export type Database = {
           agendamento_id: string
           avatar_url: string
           entregador_id: string
+          entregas_finalizadas: number
+          entregas_pendentes: number
           full_name: string
+          horas_pagas: boolean
+          motivo_nao_pagamento: string
         }[]
       }
       get_ganho_hoje: { Args: { _entregador_id: string }; Returns: number }
