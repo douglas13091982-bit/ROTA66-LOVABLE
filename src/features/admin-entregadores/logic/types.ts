@@ -1,5 +1,6 @@
 export type StatusEntregador = "pendente" | "aprovado" | "bloqueado";
 export type StatusFilter = "todas" | StatusEntregador;
+export type VeiculoFilter = "todos" | "moto" | "bike_eletrica" | "carro" | "caminhonete";
 
 export type EntregadorRow = {
   id: string;
