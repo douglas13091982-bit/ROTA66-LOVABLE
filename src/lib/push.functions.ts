@@ -237,16 +237,8 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
       .eq("user_id", data.entregador_id);
     if (!subs || subs.length === 0) return { sent: 0, destinatarios: 0 };
 
-    const { data: cfgRow } = await supabaseAdmin
-      .from("private_config" as any)
-      .select("value")
-      .eq("key", "push_trigger_secret")
-      .maybeSingle();
-    const secret = (cfgRow as any)?.value as string | undefined;
-    if (!secret) throw new Error("push_trigger_secret não configurado");
 
-    const host = process.env.PUBLIC_HOST?.trim() || getRequestHost();
-    const url = `https://${host}/api/public/send-push`;
+
 
     const { data: prof } = await supabaseAdmin
       .from("profiles")
