@@ -1555,6 +1555,7 @@ export type Database = {
           catalogo_ativo: boolean
           catalogo_layout: string
           catalogo_slug: string | null
+          catalogo_status_inicial: string
           categoria: string | null
           cidade: string | null
           city_id: string | null
@@ -1595,6 +1596,7 @@ export type Database = {
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
+          catalogo_status_inicial?: string
           categoria?: string | null
           cidade?: string | null
           city_id?: string | null
@@ -1635,6 +1637,7 @@ export type Database = {
           catalogo_ativo?: boolean
           catalogo_layout?: string
           catalogo_slug?: string | null
+          catalogo_status_inicial?: string
           categoria?: string | null
           cidade?: string | null
           city_id?: string | null
