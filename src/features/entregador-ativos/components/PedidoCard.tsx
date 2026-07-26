@@ -301,7 +301,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`}
+              href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                coletaFixada ? (p.endereco_entrega ?? endereco) : endereco,
+              )}`}
+              onClick={seguirParaEntrega}
               aria-label="Abrir rota no mapa"
               className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-2xl border transition-all active:scale-95"
               style={{
@@ -315,6 +318,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               </span>
             </a>
           )}
+
 
         </div>
       </div>
