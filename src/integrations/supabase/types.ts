@@ -4334,6 +4334,10 @@ export type Database = {
         Args: { _motivo: string; _saque_id: string }
         Returns: undefined
       }
+      turnos_valor_comprometido: {
+        Args: { _excluir_id?: string; _loja_id: string }
+        Returns: number
+      }
       unificar_lote_coleta: {
         Args: {
           _codigo_coleta?: string
