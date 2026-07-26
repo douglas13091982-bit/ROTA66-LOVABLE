@@ -167,6 +167,28 @@ export function PedidoDrawer({
               <span className="text-[var(--panel-text-muted)]">↳ Taxa por pedido da loja</span>
               <span className="pp-num text-[var(--panel-text-muted)]">R$ {taxaPorPedido.toFixed(2)}</span>
             </div>
+            {ehCartao && (
+              <div className="rounded-lg border border-[oklch(0.78_0.16_75_/_0.3)] bg-[oklch(0.16_0.015_260_/_0.6)] p-3 space-y-1.5 text-xs">
+                <div className="pp-eyebrow">Cartão na entrega · frete 2x</div>
+                <p className="text-[var(--panel-text-muted)] leading-relaxed">
+                  O entregador volta à loja para devolver a maquininha, por isso
+                  recebe o frete dobrado. O cliente continua pagando o frete
+                  normal — a diferença sai do saldo da loja.
+                </p>
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-[var(--panel-text-muted)]">Cliente paga (frete)</span>
+                  <span className="pp-num text-[var(--panel-text)]">R$ {taxaGlobal.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[var(--panel-text-muted)]">Entregador recebe (2x)</span>
+                  <span className="pp-num text-[var(--rota-gold)]">R$ {freteEntregador.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[var(--panel-text-muted)]">Custo extra da loja</span>
+                  <span className="pp-num text-[var(--panel-text)]">R$ {extraCartao.toFixed(2)}</span>
+                </div>
+              </div>
+            )}
             {bonus > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-[var(--panel-text-muted)]">Bônus ao entregador</span>
