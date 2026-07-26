@@ -118,7 +118,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
                   }
                 }
                 toast.success("Coleta registrada! Siga para a entrega.");
-                qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+
               })();
             }}
             className="w-full px-5 py-4 bg-[#AE0000] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
