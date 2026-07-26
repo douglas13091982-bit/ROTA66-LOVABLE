@@ -169,12 +169,11 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.06] pb-[env(safe-area-inset-bottom)]"
+        style={{ background: "#091421" }}
       >
-        <div
-          className="grid grid-cols-4 rounded-[28px] border border-white/[0.06] shadow-[0_18px_40px_-12px_oklch(0_0_0_/_0.7)] overflow-hidden"
-          style={{ background: "#0f2438" }}
-        >
+        <div className="grid grid-cols-4">
+
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
