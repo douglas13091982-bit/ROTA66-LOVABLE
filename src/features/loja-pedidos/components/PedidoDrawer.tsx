@@ -293,17 +293,6 @@ export function PedidoDrawer({
                 {detalhe.arquivado ? "Desarquivar" : "Arquivar"}
               </button>
             )}
-            {detalhe.status === "em_rota" && (
-              <button
-                onClick={() => {
-                  onConfirmarColeta(detalhe);
-                  onClose();
-                }}
-                className="inline-flex items-center gap-1.5 px-3 py-2 bg-[oklch(0.40_0.06_265)] hover:bg-[oklch(0.45_0.06_265)] text-white font-bold uppercase text-xs tracking-wider rounded-md"
-              >
-                <KeyRound className="h-3.5 w-3.5" /> Confirmar coleta
-              </button>
-            )}
           </div>
         </div>
       </SheetContent>
