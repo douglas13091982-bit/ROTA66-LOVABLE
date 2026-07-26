@@ -21,5 +21,7 @@ export type PedidoHistorico = {
   loja_plano_mensal_ativo?: boolean | null;
   loja_taxa_por_pedido?: number | string | null;
   forma_pagamento?: string | null;
+  agendamento_id?: string | null;
+  taxa_turno_entregador?: number | string | null;
   [key: string]: any;
 };
