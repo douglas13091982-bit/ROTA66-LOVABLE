@@ -1,4 +1,27 @@
-import type { EntregadorRow, StatusFilter } from "./types";
+import type { EntregadorRow, StatusFilter, VeiculoFilter } from "./types";
+
+const VEICULOS_VALIDOS = ["moto", "bike_eletrica", "carro", "caminhonete"] as const;
+
+export function veiculoKey(tipo: any): Exclude<VeiculoFilter, "todos"> {
+  const t = String(tipo ?? "").toLowerCase();
+  return (VEICULOS_VALIDOS as readonly string[]).includes(t)
+    ? (t as Exclude<VeiculoFilter, "todos">)
+    : "moto";
+}
+
+export function contarPorVeiculo(list: EntregadorRow[]): Record<VeiculoFilter, number> {
+  const counts: Record<VeiculoFilter, number> = {
+    todos: list.length,
+    moto: 0,
+    bike_eletrica: 0,
+    carro: 0,
+    caminhonete: 0,
+  };
+  list.forEach((p) => {
+    counts[veiculoKey(p.tipo_veiculo)] += 1;
+  });
+  return counts;
+}
 
 export function onlyDigits(s: string) {
   return (s ?? "").replace(/\D/g, "");
@@ -25,7 +48,8 @@ export function mensagemAprovacao(nome: string | null) {
 export function filtrarEntregadores(
   list: EntregadorRow[],
   filter: StatusFilter,
-  search: string
+  search: string,
+  veiculo: VeiculoFilter = "todos"
 ): EntregadorRow[] {
   const normalize = (s: any) => String(s ?? "").toLowerCase();
   const normalizeDigits = (s: any) => String(s ?? "").replace(/\D/g, "");
@@ -34,6 +58,7 @@ export function filtrarEntregadores(
 
   return list.filter((p) => {
     if (filter !== "todas" && p.status !== filter) return false;
+    if (veiculo !== "todos" && veiculoKey(p.tipo_veiculo) !== veiculo) return false;
     if (!q) return true;
     const textMatch =
       normalize(p.full_name).includes(q) ||
