@@ -6,7 +6,7 @@
 // - Precache de ícones e recursos críticos no install para reduzir tempo
 //   até o primeiro pixel quando o TWA abre offline/lento.
 
-const CACHE = "rota66-runtime-v2";
+const CACHE = "rota66-runtime-v3";
 const PRECACHE_URLS = [
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -86,8 +86,31 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Assets estáticos com hash (build): stale-while-revalidate leve
-  if (/\.(js|css|woff2?|png|jpg|jpeg|svg|webp|ico)$/i.test(url.pathname)) {
+  // JS/CSS do build: SEMPRE rede primeiro. Cache-first aqui fazia o app
+  // (principalmente o TWA) abrir com o bundle antigo — telas antigas
+  // "voltando" depois de um deploy. O cache fica só como fallback offline.
+  if (/\.(js|css)$/i.test(url.pathname)) {
+    event.respondWith(
+      (async () => {
+        try {
+          const res = await fetch(req);
+          if (res.ok) {
+            const cache = await caches.open(CACHE);
+            cache.put(req, res.clone());
+          }
+          return res;
+        } catch {
+          const cached = await caches.match(req);
+          if (cached) return cached;
+          throw new Error("offline");
+        }
+      })()
+    );
+    return;
+  }
+
+  // Imagens/fontes: stale-while-revalidate (não afetam a versão do app)
+  if (/\.(woff2?|png|jpg|jpeg|svg|webp|ico)$/i.test(url.pathname)) {
     event.respondWith(
       caches.open(CACHE).then(async (cache) => {
         const cached = await cache.match(req);
