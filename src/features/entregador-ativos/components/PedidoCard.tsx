@@ -16,7 +16,7 @@ import {
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { ChatPedidoButton } from "@/components/ChatPedido";
 import { formatDateTime } from "@/lib/format";
-import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 
 import { supabase } from "@/integrations/supabase/client";
 import type { PedidoAtivo } from "../logic/types";
@@ -71,12 +71,14 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     (p.forma_pagamento ?? "").toLowerCase(),
   );
 
-  const liquido = liquidoEntregador(
-    p.taxa_entrega,
-    taxaLoja,
-    p.loja_plano_mensal_ativo,
-    p.forma_pagamento,
-  );
+  const liquido = ganhoPedidoEntregador({
+    taxa_entrega: p.taxa_entrega,
+    loja_taxa_por_pedido: taxaLoja,
+    loja_plano_mensal_ativo: p.loja_plano_mensal_ativo,
+    forma_pagamento: p.forma_pagamento,
+    agendamento_id: p.agendamento_id,
+    taxa_turno_entregador: p.taxa_turno_entregador,
+  });
   // Distância: usa distancia_metros; senão calcula haversine coleta→entrega
   const haversineKm = (() => {
     const la1 = p.endereco_coleta_lat;

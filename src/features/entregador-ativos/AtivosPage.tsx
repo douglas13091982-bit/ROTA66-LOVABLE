@@ -1,6 +1,6 @@
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { useAuth } from "@/hooks/use-auth";
-import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { FinalizadoBanner } from "./components/FinalizadoBanner";
 import { RotaBlock } from "./components/RotaBlock";
 import { VazioBanner } from "./components/VazioBanner";
@@ -37,12 +37,7 @@ export function AtivosPage({ destaque }: Props) {
   const totalGanhoLote = (recentesEntregues ?? []).reduce(
     (s, p) =>
       s +
-      liquidoEntregador(
-        p.taxa_entrega,
-        Number(p.loja_taxa_por_pedido ?? 0),
-        p.loja_plano_mensal_ativo,
-        p.forma_pagamento,
-      ),
+      ganhoPedidoEntregador(p),
     0,
   );
 

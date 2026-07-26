@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { KeyRound, MapPin, Navigation } from "lucide-react";
-import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
+import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { supabase } from "@/integrations/supabase/client";
 import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
 import type { PedidoAtivo } from "../logic/types";
@@ -29,12 +29,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
     const liquido = pedidos.reduce(
       (s, p) =>
         s +
-        liquidoEntregador(
-          Number(p.taxa_entrega ?? 0),
-          Number(p.loja_taxa_por_pedido ?? 0),
-          p.loja_plano_mensal_ativo,
-          p.forma_pagamento,
-        ),
+        ganhoPedidoEntregador(p),
       0,
     );
     return { total: liquido + bonus, bonus };
