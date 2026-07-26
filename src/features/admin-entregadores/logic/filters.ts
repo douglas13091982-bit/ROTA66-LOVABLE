@@ -12,42 +12,15 @@ export function waLink(phone: string, message?: string) {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
-/** Cadastros anteriores a esta data precisam atualizar o APK e enviar documentos. */
-const CORTE_APK = Date.parse("2026-07-19T00:00:00Z");
-
-export function precisaAtualizarApp(createdAt?: string | null) {
-  const t = Date.parse(createdAt ?? "");
-  return Number.isFinite(t) && t < CORTE_APK;
-}
-
-export function mensagemAprovacao(
-  nome: string | null,
-  createdAt?: string | null,
-  docsPendentes?: boolean,
-) {
+export function mensagemAprovacao(nome: string | null) {
   const primeiro = (nome ?? "").trim().split(/\s+/)[0] || "Entregador";
-  const base =
-    `🎉 Parabéns, ${primeiro}! ` +
-    `Seu cadastro na Rota 66 foi *APROVADO*! ✅\n\n`;
-
-  if (docsPendentes || precisaAtualizarApp(createdAt)) {
-    return (
-      base +
-      `⚠️ *Atenção:* como você se cadastrou antes da atualização, faça estes 2 passos para liberar seus pedidos:\n\n` +
-      `1️⃣ Baixe e instale a *nova versão do aplicativo* em: https://rotas66.lovable.app/baixar-app\n` +
-      `2️⃣ No app, vá em *Perfil > Documentação* e envie seus documentos para aprovação.\n\n` +
-      `Assim que a documentação for aprovada você já começa a receber pedidos. ` +
-      `Qualquer dúvida é só chamar por aqui. Boas entregas! 🛵💨`
-    );
-  }
-
   return (
-    base +
+    `🎉 Parabéns, ${primeiro}! ` +
+    `Seu cadastro na Rota 66 foi *APROVADO*! ✅\n\n` +
     `Já pode abrir o app e começar a receber pedidos. ` +
     `Qualquer dúvida é só chamar por aqui. Boas entregas! 🛵💨`
   );
 }
-
 
 export function filtrarEntregadores(
   list: EntregadorRow[],
