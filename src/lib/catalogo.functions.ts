@@ -45,7 +45,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const clienteUserId = context.userId;
 
     // 1. Loja precisa estar ativa, aprovada e com catálogo ativo
-    const lojaCols = "id, nome, ativa, status, catalogo_ativo, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
+    const lojaCols = "id, nome, ativa, status, catalogo_ativo, catalogo_status_inicial, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
     let { data: loja, error: lojaErr } = await supabaseAdmin
       .from("lojas")
       .select(lojaCols)
@@ -235,7 +235,8 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         taxa_entrega,
         taxa_por_pedido_aplicada: taxaPlano,
         valor_total,
-        status: "em_preparo",
+        status:
+          (loja as any).catalogo_status_inicial === "pronto" ? "pronto" : "em_preparo",
       })
       .select("id, numero")
       .single();
