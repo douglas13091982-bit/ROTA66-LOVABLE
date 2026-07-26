@@ -271,17 +271,19 @@ export const notificarEntregadorAprovado = createServerFn({ method: "POST" })
     });
 
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-push-secret": secret },
-        body: JSON.stringify({ user_id: data.entregador_id, title, body, url: linkFinal, tag }),
+      const { enviarPushParaUsuario } = await import("@/lib/web-push.server");
+      const r = await enviarPushParaUsuario({
+        user_id: data.entregador_id,
+        title,
+        body,
+        url: linkFinal,
+        tag,
       });
-      if (!res.ok) return { sent: 0, destinatarios: 1 };
-      const j = (await res.json()) as { sent?: number };
-      return { sent: j.sent ?? 0, destinatarios: 1 };
+      return { sent: r.sent, destinatarios: 1 };
     } catch {
       return { sent: 0, destinatarios: 1 };
     }
   });
+
 
 
