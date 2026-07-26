@@ -60,14 +60,19 @@ function formaPagamentoLabel(f?: string | null) {
 export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedColeta, setRevealedColeta] = useState(false);
   const [revealedEntrega, setRevealedEntrega] = useState(false);
+  // Mantém a tela de coleta (com o código) fixa até o entregador tocar no
+  // ícone de MAPA, sinalizando que já está indo para a entrega.
+  const [coletaFixada, setColetaFixada] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
   // "Coletar pedido": revela o código, avisa o sistema (chegada + coleta
-  // confirmada) e recarrega para já exibir os dados da entrega.
+  // confirmada) e mantém o código na tela até o entregador seguir para a
+  // entrega (clique no ícone de mapa).
   async function coletarPedido() {
     setRevealedColeta(true);
+    setColetaFixada(true);
     await supabase.rpc("entregador_chegou_coleta" as never, {
       _pedido_id: p.id,
     } as never);
@@ -76,14 +81,20 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     } as never);
     if (error) {
       toast.error(error.message);
+      setColetaFixada(false);
       return;
     }
     toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
+  }
+
+  function seguirParaEntrega() {
+    if (!coletaFixada) return;
+    setColetaFixada(false);
     refresh();
   }
 
 
-  const isColeta = p.status === "em_rota";
+  const isColeta = p.status === "em_rota" || coletaFixada;
   const endereco = isColeta ? p.endereco_coleta : p.endereco_entrega;
   const codigoColeta = p.codigo_coleta;
   const isDestaque = destaque === p.id;
@@ -91,6 +102,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const isCartao = ["cartao", "cartao_credito", "cartao_debito"].includes(
     (p.forma_pagamento ?? "").toLowerCase(),
   );
+
 
   const liquido = ganhoPedidoEntregador({
     taxa_entrega: p.taxa_entrega,
