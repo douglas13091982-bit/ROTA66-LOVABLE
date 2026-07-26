@@ -48,7 +48,11 @@ export function EntregadorCard({
         <DocumentosReviewDialog
           entregadorId={p.id}
           nome={p.full_name ?? "entregador"}
-          onClose={() => setShowDocs(false)}
+          onClose={() => {
+            setShowDocs(false);
+            onDocsChange?.();
+          }}
+
         />
       )}
       <div className="flex items-center gap-3 mb-3">
