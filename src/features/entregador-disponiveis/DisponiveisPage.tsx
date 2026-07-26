@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
@@ -42,6 +42,17 @@ export function DisponiveisPage() {
   // no topo da lista. O hook também cuida do desbloqueio do áudio no Android
   // (gesto do usuário) e do pré-carregamento do MP3.
   usePopupNotificacao(aprovado ? grupos : []);
+
+  // Pedido de turno entra já atribuído ao entregador ("indo coletar"): em vez
+  // de mostrar a tela "Você já tem uma rota ativa", manda direto para os
+  // detalhes do pedido ativo.
+  useEffect(() => {
+    if (rotaAtivaResolvida && temRotaAtiva) {
+      void navigate({ to: "/entregador/ativos", replace: true });
+    }
+  }, [rotaAtivaResolvida, temRotaAtiva, navigate]);
+
+
 
 
 
