@@ -113,10 +113,6 @@ export async function imprimirPedido(
     <div class="codigo-num">${escapeHtml(p.codigo_coleta)}</div>
     <div class="muted" style="margin-top:4px">Confira com o entregador antes de liberar o pedido</div>
   </div>` : ""}
-  ${p.codigo_entrega && p.origem !== "ifood" ? `<div class="codigo-box">
-    <div class="codigo-label">Código de entrega (cliente)</div>
-    <div class="codigo-num">${escapeHtml(p.codigo_entrega)}</div>
-  </div>` : ""}
 
   <h2>Cliente</h2>
   <div>${escapeHtml(p.cliente_nome ?? "")}</div>
