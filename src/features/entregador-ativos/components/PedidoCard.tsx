@@ -60,6 +60,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const [revealedEntrega, setRevealedEntrega] = useState(false);
   const [codigoInput, setCodigoInput] = useState("");
   const { confirmar, loading, refresh } = useConfirmarEntrega(p.id);
+  const { confirmarColeta, loading: loadingColeta } = useConfirmarColeta();
+
   const taxaLoja = Number(p.loja_taxa_por_pedido ?? 0);
 
   const isColeta = p.status === "em_rota";
