@@ -1,6 +1,5 @@
-import { Bike, KeyRound, MapPin, Archive, ArchiveRestore, X } from "lucide-react";
-import { EntregadorNomeBadge } from "@/components/EntregadorNomeBadge";
-import { ChatPedidoButton, PedidoChatBadge } from "@/components/ChatPedido";
+import { Bike, KeyRound, X } from "lucide-react";
+import { PedidoChatBadge } from "@/components/ChatPedido";
 import { STATUS_LABEL, STATUS_COLOR, lojaControlaStatus } from "../logic/constants";
 import type { Pedido } from "../hooks/use-pedidos-loja";
 
