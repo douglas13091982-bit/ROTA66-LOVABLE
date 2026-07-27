@@ -204,6 +204,8 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
+        mp_status_detail: payment.status_detail ?? null,
+
         mp_pix_qr_code: qrCode,
         mp_pix_qr_base64: qrBase64,
         mp_pix_expira_em: expira.toISOString(),
