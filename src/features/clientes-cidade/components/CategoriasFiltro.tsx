@@ -76,8 +76,8 @@ export function CategoriasFiltro({ value, onChange }: Props) {
               }`}
             >
               <div
-                className={`h-[48px] w-[68px] rounded-lg flex items-center justify-center bg-white/95 overflow-hidden ${
-                  active ? "ring-2 ring-[var(--rota-red)]" : ""
+                className={`h-[64px] w-[68px] rounded-xl flex items-center justify-center bg-white overflow-hidden border transition ${
+                  active ? "border-[#cc2229] ring-2 ring-[#cc2229]/25" : "border-[rgba(13,44,84,0.10)]"
                 }`}
               >
                 {uploaded ? (
@@ -97,12 +97,12 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     className="h-[42px] w-[56px] object-contain"
                   />
                 ) : LucideIcon ? (
-                  <LucideIcon className="h-6 w-6 text-[var(--rota-red)]" />
+                  <LucideIcon className="h-6 w-6 text-[#cc2229]" />
                 ) : (
                   <span className="text-[22px]">🛍️</span>
                 )}
               </div>
-              <span className="text-[10px] font-semibold text-center leading-tight line-clamp-2">
+              <span className="text-[10px] font-semibold text-center leading-tight line-clamp-2 text-[#0d2c54]">
                 {c.label}
               </span>
             </button>

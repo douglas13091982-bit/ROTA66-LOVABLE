@@ -52,7 +52,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
   if (lojas.length === 0) {
     return (
       <div className="text-center py-20">
-        <div className="mx-auto h-14 w-14 rounded-2xl bg-white/5 flex items-center justify-center mb-3">
+        <div className="mx-auto h-14 w-14 rounded-2xl bg-[rgba(13,44,84,0.06)] flex items-center justify-center mb-3">
           <Store className="h-6 w-6 mp-muted" />
         </div>
         <p className="mp-muted text-sm">Nenhuma loja encontrada em {cidade}.</p>
