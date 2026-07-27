@@ -3,6 +3,7 @@ import { LojaShell } from "@/components/LojaShell";
 
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { CatalogoLayoutPicker } from "./components/CatalogoLayoutPicker";
+import { RetiradaBalcaoToggle } from "./components/RetiradaBalcaoToggle";
 import { CatalogoStatusInicialPicker } from "./components/CatalogoStatusInicialPicker";
 import { CategoriaSelect } from "./components/CategoriaSelect";
 import { CidadeSelect } from "./components/CidadeSelect";
@@ -97,6 +98,11 @@ export function ConfigPage() {
         <CatalogoStatusInicialPicker
           value={form.catalogo_status_inicial}
           onChange={(v) => setForm({ ...form, catalogo_status_inicial: v })}
+        />
+
+        <RetiradaBalcaoToggle
+          value={form.catalogo_retirada_ativa}
+          onChange={(v) => setForm({ ...form, catalogo_retirada_ativa: v })}
         />
 
         <UrlPublica slug={slug} />
