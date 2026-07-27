@@ -116,6 +116,7 @@ export function PedidosKanban({
             <ColumnBody
               items={items}
               lotes={lotes}
+              emptyText={col.emptyText}
               dragId={dragId}
               setDragId={setDragId}
               setDragOver={setDragOver}
@@ -131,9 +132,30 @@ export function PedidosKanban({
   );
 }
 
+function ColumnIcon({ columnKey }: { columnKey: string }) {
+  const cls = "h-5 w-5";
+  if (columnKey === "preparacao") return <CookingPot className={cls} />;
+  if (columnKey === "pronto") return <ShoppingBag className={cls} />;
+  if (columnKey === "coletado") return <Bike className={cls} />;
+  return <CheckCircle2 className={cls} />;
+}
+
+function ColumnVazio({ texto }: { texto: string }) {
+  return (
+    <div className="py-10 px-6 text-center">
+      <span className="mx-auto mb-4 h-16 w-16 rounded-full bg-muted/50 grid place-items-center">
+        <ClipboardList className="h-7 w-7 text-muted-foreground" />
+      </span>
+      <p className="font-bold text-sm mb-1">Nenhum pedido aqui</p>
+      <p className="text-xs text-muted-foreground leading-relaxed">{texto}</p>
+    </div>
+  );
+}
+
 interface ColumnBodyProps {
   items: Pedido[];
   lotes: LoteEmPreparo[];
+  emptyText?: string;
   dragId: string | null;
   setDragId: (id: string | null) => void;
   setDragOver: (k: string | null) => void;
@@ -144,7 +166,7 @@ interface ColumnBodyProps {
 }
 
 function ColumnBody(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
+  const { items, lotes, emptyText, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
 
   // Render padrão: comportamento idêntico ao original.
@@ -158,9 +180,8 @@ function ColumnBody(props: ColumnBodyProps) {
             onMarcarTodosProntos={actions.marcarLoteComoPronto}
           />
         ))}
-        {items.length === 0 && (
-          <p className="text-[10px] text-muted-foreground text-center py-4">Vazio</p>
-        )}
+        {items.length === 0 && <ColumnVazio texto={emptyText ?? "Nenhum pedido nesta etapa."} />}
+
         {items.map((p) => (
           <PedidoCard
             key={p.id}
