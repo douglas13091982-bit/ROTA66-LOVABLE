@@ -71,12 +71,12 @@ export function CategoriasFiltro({ value, onChange }: Props) {
             <button
               key={c.value}
               onClick={() => onChange(active ? "" : c.value)}
-              className={`shrink-0 snap-start flex flex-col items-center gap-2 w-[104px] px-2 py-1 ${
+              className={`shrink-0 snap-start flex flex-col items-center gap-1.5 w-[78px] px-1.5 py-1 ${
                 i > 0 ? "border-l border-[rgba(15,37,66,0.12)]" : ""
               }`}
             >
               <div
-                className={`h-[74px] w-[74px] rounded-full flex items-center justify-center overflow-hidden border transition ${
+                className={`h-[54px] w-[54px] rounded-full flex items-center justify-center overflow-hidden border transition ${
                   active
                     ? "border-[#c8a253] bg-[rgba(200,162,83,0.10)]"
                     : "border-[rgba(15,37,66,0.35)] bg-transparent"
@@ -87,7 +87,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     src={uploaded}
                     alt={c.label}
                     loading="lazy"
-                    className="h-[40px] w-[48px] object-contain"
+                    className="h-[30px] w-[34px] object-contain"
                   />
                 ) : icon ? (
                   <img
@@ -96,16 +96,16 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     loading="lazy"
                     width={68}
                     height={48}
-                    className="h-[40px] w-[48px] object-contain"
+                    className="h-[30px] w-[34px] object-contain"
                   />
                 ) : LucideIcon ? (
-                  <LucideIcon className="h-7 w-7 text-[#0f2542]" strokeWidth={1.2} />
+                  <LucideIcon className="h-5 w-5 text-[#0f2542]" strokeWidth={1.2} />
                 ) : (
                   <span className="text-[22px]">🛍️</span>
                 )}
               </div>
               <span
-                className={`mp-serif text-[13px] text-center leading-tight line-clamp-2 ${
+                className={`mp-serif text-[11px] text-center leading-tight line-clamp-2 ${
                   active ? "text-[#8a6d2f]" : "text-[#0f2542]"
                 }`}
               >
