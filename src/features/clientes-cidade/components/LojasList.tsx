@@ -62,13 +62,15 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
 
   return (
     <section className="pb-6">
-      <div className="flex items-center justify-between mb-1 px-1">
-        <h2 className="font-display text-[22px] tracking-wide">Lojas</h2>
-        <span className="mp-muted text-[11px] uppercase tracking-[0.16em]">
+      <div className="border-t border-[rgba(15,37,66,0.12)] pt-4 mb-3 flex items-center justify-between px-1">
+        <h2 className="mp-serif text-[15px] uppercase tracking-[0.16em]">
+          Restaurantes em destaque
+        </h2>
+        <span className="mp-serif mp-gold text-[14px]">
           {lojas.length} {lojas.length === 1 ? "loja" : "lojas"}
         </span>
       </div>
-      <div className="flex items-center gap-2 px-1 mb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 px-1 mb-3 overflow-x-auto">
         {OPCOES.map((op) => {
           const ativo = ordem === op.value;
           return (
@@ -76,19 +78,16 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
               key={op.value}
               type="button"
               onClick={() => setOrdem(op.value)}
-              className="px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition"
-              style={{
-                borderColor: ativo ? "#0d2c54" : "rgba(13,44,84,0.18)",
-                color: ativo ? "#ffffff" : "#0d2c54",
-                background: ativo ? "#0d2c54" : "#ffffff",
-              }}
-
+              className={`mp-serif px-3 py-1 text-[13px] border whitespace-nowrap transition ${
+                ativo ? "mp-chip mp-chip-active" : "mp-chip"
+              }`}
             >
               {op.label}
             </button>
           );
         })}
       </div>
+
       {!temEndereco && !carregando && (
         <p className="mp-muted text-[11px] px-1 mb-2">
           Cadastre seu endereço no perfil para ver o frete exato de cada loja.
