@@ -69,8 +69,8 @@ export function BottomNavCliente({ cidade, uf }: Props) {
   return (
     <>
       <nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/10 pb-[env(safe-area-inset-bottom)] shadow-[0_-12px_40px_-12px_rgba(0,0,0,0.6)]"
-        style={{ background: "#04274f" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_-18px_rgba(13,44,84,0.5)]"
+        style={{ background: "#ffffff", borderColor: "rgba(13,44,84,0.10)" }}
       >
         <div
           className="grid mx-auto max-w-2xl"
@@ -83,12 +83,15 @@ export function BottomNavCliente({ cidade, uf }: Props) {
                 key={item.label}
                 type="button"
                 onClick={item.onClick}
-                className={`group flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] transition-colors ${
-                  item.danger ? "text-white/80 hover:text-[#da161a]" : "text-white hover:text-[#da161a]"
+                className={`group relative flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors ${
+                  item.danger ? "text-[#cc2229]" : "text-[#0d2c54] hover:text-[#cc2229]"
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-6 w-6" strokeWidth={1.8} />
                 {item.label}
+                {item.label === "Início" && (
+                  <span className="absolute bottom-0 h-[3px] w-12 rounded-full bg-[#cc2229]" />
+                )}
               </button>
             );
           })}
