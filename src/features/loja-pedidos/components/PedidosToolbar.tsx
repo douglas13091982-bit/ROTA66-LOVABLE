@@ -99,7 +99,7 @@ export function PedidosToolbar({
 
       <button onClick={onToggleArquivados} className={CARD}>
         {mostrarArquivados ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-        {mostrarArquivados ? "Ocultar arquivados" : "Mostrar arquivados"}
+        Arquivados
       </button>
     </div>
   );
