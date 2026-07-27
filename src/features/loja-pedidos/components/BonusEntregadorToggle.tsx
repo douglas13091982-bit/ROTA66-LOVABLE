@@ -86,20 +86,40 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
       <div className="min-w-0 flex-1 md:flex md:flex-none md:items-center md:gap-2">
         <span className="block text-[11px] leading-tight md:inline md:text-xs">Bônus entregador</span>
         <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => ajustar(-1)}
+            disabled={saving}
+            aria-label="Diminuir bônus"
+            className="h-8 w-8 shrink-0 rounded-lg border border-border bg-background/60 text-foreground text-base leading-none md:h-6 md:w-6 md:text-sm"
+          >
+            −
+          </button>
           <span className="text-[11px] md:text-xs">R$</span>
           <input
             type="number"
+            inputMode="decimal"
             min={0}
             step="0.01"
             value={valorStr}
             onChange={(e) => setValorStr(e.target.value)}
             onBlur={onBlurValor}
             placeholder="0,00"
-            className="w-12 md:w-16 bg-background/60 border border-border rounded px-1 py-0.5 text-foreground text-[11px] md:text-xs"
+            className="w-14 md:w-16 h-8 md:h-auto bg-background/60 border border-border rounded-lg px-1.5 py-0.5 text-center text-foreground text-sm md:text-xs"
             disabled={saving}
           />
+          <button
+            type="button"
+            onClick={() => ajustar(1)}
+            disabled={saving}
+            aria-label="Aumentar bônus"
+            className="h-8 w-8 shrink-0 rounded-lg border border-border bg-background/60 text-foreground text-base leading-none md:h-6 md:w-6 md:text-sm"
+          >
+            +
+          </button>
         </div>
       </div>
+
 
       <button
         type="button"
