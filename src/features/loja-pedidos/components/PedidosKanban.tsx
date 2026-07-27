@@ -91,16 +91,28 @@ export function PedidosKanban({
             }}
             onDragLeave={() => setDragOver((v) => (v === col.key ? null : v))}
             onDrop={() => handleDrop(col.key)}
-            className={`bg-muted/30 border rounded-lg border-t-4 ${col.accent} flex flex-col min-h-[200px] transition-colors ${
+            className={`bg-muted/30 border rounded-xl overflow-hidden flex flex-col min-h-[160px] transition-colors ${
               isOver ? "border-primary bg-primary/5" : "border-border"
             }`}
           >
-            <div className="px-3 py-2 flex items-center justify-between border-b border-border">
-              <h3 className="font-display text-base tracking-wide">{col.title}</h3>
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-background border border-border rounded-full px-2 py-0.5">
+            <div className={`h-1.5 w-full ${col.tone}`} />
+            <div className="px-3 py-3 flex items-center gap-3 border-b border-border">
+              <span
+                className={`h-11 w-11 shrink-0 rounded-full grid place-items-center ${col.iconBg}`}
+              >
+                <ColumnIcon columnKey={col.key} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold uppercase tracking-wider text-sm truncate">{col.title}</h3>
+                <p className="text-xs text-muted-foreground truncate">{col.subtitle}</p>
+              </div>
+              <span
+                className={`shrink-0 min-w-9 text-center text-sm font-bold rounded-lg px-2.5 py-1.5 ${col.badge}`}
+              >
                 {items.length}
               </span>
             </div>
+
             <ColumnBody
               items={items}
               lotes={lotes}
