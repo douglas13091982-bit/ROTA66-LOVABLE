@@ -41,22 +41,23 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="mp-card flex w-full overflow-hidden rounded-sm active:scale-[0.995] transition"
+      className="mp-card flex w-full items-center overflow-hidden rounded-sm active:scale-[0.995] transition"
     >
       {loja.logo_url ? (
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="w-[32%] max-w-[120px] shrink-0 object-cover"
+          className="h-[96px] w-[96px] shrink-0 object-cover"
         />
       ) : (
         <div
-          className="w-[32%] max-w-[120px] shrink-0 flex items-center justify-center mp-serif text-2xl text-[#f5efe3]"
+          className="h-[96px] w-[96px] shrink-0 flex items-center justify-center mp-serif text-2xl text-[#f5efe3]"
           style={{ background: "linear-gradient(135deg,#0f2542,#1b3a5f)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
+
 
       <div className="flex-1 min-w-0 flex flex-col gap-1.5 p-3">
         <h3 className="mp-card-title text-[17px] leading-tight font-semibold truncate">
