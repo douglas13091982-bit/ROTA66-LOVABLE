@@ -50,10 +50,11 @@ export function PedidosToolbar({
     <div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap md:items-center md:gap-3">
       <Link
         to="/loja/novo-pedido"
-        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-red shadow-red px-4 py-3.5 text-primary-foreground font-bold uppercase text-sm tracking-wider hover:opacity-90 md:rounded-md md:py-2.5 md:text-xs"
+        className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-red shadow-red px-3 py-3.5 text-primary-foreground font-bold uppercase text-[11px] tracking-wide whitespace-nowrap hover:opacity-90 md:rounded-md md:py-2.5 md:text-xs md:tracking-wider"
       >
-        <PlusCircle className="h-5 w-5 md:h-4 md:w-4" /> Novo Pedido
+        <PlusCircle className="h-4 w-4 shrink-0" /> Novo Pedido
       </Link>
+
 
       {slug ? (
         <a
