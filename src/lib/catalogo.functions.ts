@@ -13,6 +13,7 @@ const ItemSchema = z.object({
 
 const InputSchema = z.object({
   loja_slug: z.string().min(1).max(120),
+  tipo_entrega: z.enum(["entrega", "retirada"]).optional().default("entrega"),
   cliente_nome: z.string().trim().min(2).max(120),
   cliente_telefone: z.string().trim().min(8).max(20),
   endereco_entrega: z.string().trim().min(5).max(300),
@@ -45,7 +46,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const clienteUserId = context.userId;
 
     // 1. Loja precisa estar ativa, aprovada e com catálogo ativo
-    const lojaCols = "id, nome, ativa, status, catalogo_ativo, catalogo_status_inicial, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
+    const lojaCols = "id, nome, ativa, status, catalogo_ativo, catalogo_status_inicial, catalogo_retirada_ativa, taxa_entrega_base, endereco, endereco_lat, endereco_lng, plano_mensal_ativo, taxa_por_pedido";
     let { data: loja, error: lojaErr } = await supabaseAdmin
       .from("lojas")
       .select(lojaCols)
@@ -146,6 +147,13 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     const entregaLat = data.endereco_entrega_lat ?? null;
     const entregaLng = data.endereco_entrega_lng ?? null;
 
+    // Retirada no balcão: sem frete e sem taxa por pedido (não usa entregador).
+    const isRetirada =
+      data.tipo_entrega === "retirada" && (loja as any).catalogo_retirada_ativa === true;
+    if (data.tipo_entrega === "retirada" && !isRetirada) {
+      throw new Error("Esta loja não aceita retirada no balcão");
+    }
+
     let taxa_entrega = Number(loja.taxa_entrega_base) || 0;
     if (coletaLat != null && coletaLng != null && entregaLat != null && entregaLng != null) {
       const km = haversineKm(coletaLat, coletaLng, entregaLat, entregaLng);
@@ -158,8 +166,11 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
     }
-    const taxaPlano = Number((loja as any).taxa_por_pedido ?? 0) || 0;
-    if (taxaPlano > 0) {
+    let taxaPlano = Number((loja as any).taxa_por_pedido ?? 0) || 0;
+    if (isRetirada) {
+      taxa_entrega = 0;
+      taxaPlano = 0;
+    } else if (taxaPlano > 0) {
       taxa_entrega = Number((taxa_entrega + taxaPlano).toFixed(2));
     }
     const valor_total = valor_produtos + taxa_entrega;
@@ -171,6 +182,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
       const snapshot = {
         cliente_nome: data.cliente_nome,
         cliente_telefone: data.cliente_telefone,
+        tipo_entrega: isRetirada ? "retirada" : "entrega",
         endereco_entrega: data.endereco_entrega,
         endereco_entrega_lat: entregaLat,
         endereco_entrega_lng: entregaLng,
@@ -219,6 +231,7 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         cliente_user_id: clienteUserId,
         cliente_nome: data.cliente_nome,
         cliente_telefone: data.cliente_telefone,
+        tipo_entrega: isRetirada ? "retirada" : "entrega",
         endereco_entrega: data.endereco_entrega,
         endereco_entrega_lat: entregaLat,
         endereco_entrega_lng: entregaLng,
