@@ -1566,6 +1566,7 @@ export type Database = {
           bonus_entregador_valor: number
           catalogo_ativo: boolean
           catalogo_layout: string
+          catalogo_retirada_ativa: boolean
           catalogo_slug: string | null
           catalogo_status_inicial: string
           categoria: string | null
@@ -1607,6 +1608,7 @@ export type Database = {
           bonus_entregador_valor?: number
           catalogo_ativo?: boolean
           catalogo_layout?: string
+          catalogo_retirada_ativa?: boolean
           catalogo_slug?: string | null
           catalogo_status_inicial?: string
           categoria?: string | null
@@ -1648,6 +1650,7 @@ export type Database = {
           bonus_entregador_valor?: number
           catalogo_ativo?: boolean
           catalogo_layout?: string
+          catalogo_retirada_ativa?: boolean
           catalogo_slug?: string | null
           catalogo_status_inicial?: string
           categoria?: string | null
@@ -2321,6 +2324,7 @@ export type Database = {
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           taxa_turno_entregador: number | null
+          tipo_entrega: string
           troco_para: number | null
           updated_at: string
           valor_produtos: number
@@ -2376,6 +2380,7 @@ export type Database = {
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           taxa_turno_entregador?: number | null
+          tipo_entrega?: string
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
@@ -2431,6 +2436,7 @@ export type Database = {
           taxa_mp?: number
           taxa_por_pedido_aplicada?: number | null
           taxa_turno_entregador?: number | null
+          tipo_entrega?: string
           troco_para?: number | null
           updated_at?: string
           valor_produtos?: number
@@ -3492,6 +3498,7 @@ export type Database = {
           ativa: boolean | null
           catalogo_ativo: boolean | null
           catalogo_layout: string | null
+          catalogo_retirada_ativa: boolean | null
           catalogo_slug: string | null
           categoria: string | null
           cidade: string | null
@@ -3515,6 +3522,7 @@ export type Database = {
           ativa?: never
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
+          catalogo_retirada_ativa?: boolean | null
           catalogo_slug?: string | null
           categoria?: string | null
           cidade?: string | null
@@ -3538,6 +3546,7 @@ export type Database = {
           ativa?: never
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
+          catalogo_retirada_ativa?: boolean | null
           catalogo_slug?: string | null
           categoria?: string | null
           cidade?: string | null
@@ -3614,6 +3623,7 @@ export type Database = {
           taxa_mp: number
           taxa_por_pedido_aplicada: number | null
           taxa_turno_entregador: number | null
+          tipo_entrega: string
           troco_para: number | null
           updated_at: string
           valor_produtos: number

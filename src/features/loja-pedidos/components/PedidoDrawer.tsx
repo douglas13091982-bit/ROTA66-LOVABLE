@@ -112,15 +112,21 @@ export function PedidoDrawer({
           </div>
 
           <div className="pp-card p-4 space-y-2">
-            <div className="pp-eyebrow">Endereço</div>
+            <div className="pp-eyebrow">
+              {(detalhe as any).tipo_entrega === "retirada"
+                ? "Retirada no balcão"
+                : "Endereço"}
+            </div>
             <div className="flex items-start gap-2 text-[var(--panel-text)]">
               <MapPin className="h-4 w-4 mt-0.5 text-[var(--rota-gold)] shrink-0" />
               <span>
-                {detalhe.endereco_entrega}
-                {detalhe.complemento ? `, ${detalhe.complemento}` : ""}
+                {(detalhe as any).tipo_entrega === "retirada"
+                  ? "Cliente retira o pedido na loja (sem entregador)"
+                  : `${detalhe.endereco_entrega}${detalhe.complemento ? `, ${detalhe.complemento}` : ""}`}
               </span>
             </div>
           </div>
+
 
           {detalhe.observacoes && (
             <div className="pp-card p-4 space-y-2">

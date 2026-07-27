@@ -165,6 +165,8 @@ export function CatalogoPage({ slug }: { slug: string }) {
           lojaId={loja.id}
           lojaCoords={{ lat: (loja as any).endereco_lat ?? null, lng: (loja as any).endereco_lng ?? null }}
           taxaBase={taxaBase}
+          retiradaDisponivel={(loja as any).catalogo_retirada_ativa === true}
+          enderecoLoja={(loja as any).endereco ?? null}
           cartItems={cartItems}
           subtotal={subtotal}
           onClose={() => setShowCheckout(false)}
