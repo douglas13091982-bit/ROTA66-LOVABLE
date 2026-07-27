@@ -68,34 +68,43 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
 
   return (
     <div
-      className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium border rounded-md transition-colors ${
+      className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs font-medium transition-colors md:inline-flex md:rounded-md md:py-1.5 ${
         ativo
           ? "border-[var(--rota-gold)]/50 bg-[var(--rota-gold)]/10 text-[var(--rota-gold)]"
-          : "border-border text-muted-foreground"
+          : "border-border bg-muted/30 text-muted-foreground md:bg-transparent"
       }`}
       title="Bônus fixo adicionado automaticamente a todo pedido novo"
     >
-      <Gift className="h-3.5 w-3.5" />
-      <span>Bônus entregador</span>
-      <div className="flex items-center gap-1">
-        <span>R$</span>
-        <input
-          type="number"
-          min={0}
-          step="0.01"
-          value={valorStr}
-          onChange={(e) => setValorStr(e.target.value)}
-          onBlur={onBlurValor}
-          placeholder="0,00"
-          className="w-16 bg-background/60 border border-border rounded px-1.5 py-0.5 text-foreground text-xs"
-          disabled={saving}
-        />
+      <span
+        className={`h-9 w-9 shrink-0 rounded-full grid place-items-center md:hidden ${
+          ativo ? "bg-[var(--rota-gold)] text-[#0e0f12]" : "bg-muted text-muted-foreground"
+        }`}
+      >
+        <Gift className="h-4 w-4" />
+      </span>
+      <Gift className="hidden h-3.5 w-3.5 md:block" />
+      <div className="min-w-0 flex-1 md:flex md:flex-none md:items-center md:gap-2">
+        <span className="block truncate md:inline">Bônus entregador</span>
+        <div className="flex items-center gap-1">
+          <span>R$</span>
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={valorStr}
+            onChange={(e) => setValorStr(e.target.value)}
+            onBlur={onBlurValor}
+            placeholder="0,00"
+            className="w-16 bg-background/60 border border-border rounded px-1.5 py-0.5 text-foreground text-xs"
+            disabled={saving}
+          />
+        </div>
       </div>
       <button
         type="button"
         onClick={onToggle}
         disabled={saving}
-        className={`ml-1 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+        className={`ml-1 shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
           ativo ? "bg-[var(--rota-gold)]" : "bg-muted"
         }`}
         aria-pressed={ativo}
@@ -108,4 +117,5 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
       </button>
     </div>
   );
+
 }
