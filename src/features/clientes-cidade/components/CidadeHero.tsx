@@ -90,7 +90,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
       <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
         <div className="flex items-center justify-between gap-2 mb-2">
           <Select value={cidades.some((c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey) ? selectedKey : undefined} onValueChange={handleCidadeChange}>
-            <SelectTrigger className="w-auto h-auto gap-1.5 px-2.5 py-1 rounded-full bg-transparent border border-white/15 text-[12px] font-medium text-white/80 hover:text-white hover:border-white/30 transition shadow-none focus:ring-0 focus:ring-offset-0">
+            <SelectTrigger className="w-auto h-auto gap-1.5 px-1 py-1 rounded-full bg-transparent border-0 text-[15px] font-bold text-[#0d2c54] transition shadow-none focus:ring-0 focus:ring-offset-0">
               <div className="flex items-center gap-1.5 min-w-0">
                 <MapPin className="h-3.5 w-3.5 opacity-70 shrink-0" />
                 <SelectValue placeholder={`${cidade}${uf ? ` - ${uf}` : ""}`}>
@@ -126,19 +126,12 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
         </div>
 
         <div className="flex justify-center mt-2 mb-1">
-          <img src={logoUrl} alt={nomeSistema} className="h-24 w-auto object-contain drop-shadow-[0_8px_24px_rgba(187,16,16,0.5)]" />
+          <img src={logoUrl} alt={nomeSistema} className="h-28 w-auto object-contain" />
         </div>
-        <p
-          className="text-center text-[12px] font-semibold uppercase tracking-[0.28em] mt-1 animate-fade-in bg-clip-text text-transparent"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, rgba(255,255,255,0.55) 0%, #ffffff 25%, var(--rota-gold,#d4a84c) 50%, #ffffff 75%, rgba(255,255,255,0.55) 100%)",
-            backgroundSize: "200% 100%",
-            animation: "fade-in 0.6s ease-out, mp-shimmer 3.5s linear infinite",
-          }}
-        >
+        <p className="text-center text-[12px] font-semibold uppercase tracking-[0.28em] mt-1 animate-fade-in text-[#0d2c54]">
           Peça seu delivery
         </p>
+
 
       </div>
       <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />

@@ -52,7 +52,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
   if (lojas.length === 0) {
     return (
       <div className="text-center py-20">
-        <div className="mx-auto h-14 w-14 rounded-2xl bg-white/5 flex items-center justify-center mb-3">
+        <div className="mx-auto h-14 w-14 rounded-2xl bg-[rgba(13,44,84,0.06)] flex items-center justify-center mb-3">
           <Store className="h-6 w-6 mp-muted" />
         </div>
         <p className="mp-muted text-sm">Nenhuma loja encontrada em {cidade}.</p>
@@ -76,12 +76,13 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
               key={op.value}
               type="button"
               onClick={() => setOrdem(op.value)}
-              className="px-3 py-1 rounded-full text-[11px] font-medium border whitespace-nowrap transition"
+              className="px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition"
               style={{
-                borderColor: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.30)",
-                color: ativo ? "#04274f" : "var(--rota-gold)",
-                background: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.08)",
+                borderColor: ativo ? "#0d2c54" : "rgba(13,44,84,0.18)",
+                color: ativo ? "#ffffff" : "#0d2c54",
+                background: ativo ? "#0d2c54" : "#ffffff",
               }}
+
             >
               {op.label}
             </button>
@@ -93,7 +94,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
           Cadastre seu endereço no perfil para ver o frete exato de cada loja.
         </p>
       )}
-      <div className="flex flex-col divide-y divide-white/5">
+      <div className="flex flex-col gap-3">
         {lojasOrdenadas.map((l) => (
           <LojaCard
             key={l.id}
