@@ -402,8 +402,13 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
           if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
             await supabaseAdmin
               .from("pedidos_pendentes_pagamento" as any)
-              .update({ status: "cancelado", mp_payment_status: payment.status } as any)
+              .update({
+                status: "cancelado",
+                mp_payment_status: payment.status,
+                mp_status_detail: (payment as any).status_detail ?? null,
+              } as any)
               .eq("id", p.id);
+
             return { aprovado: false, status: "cancelado", mp_status: payment.status, pedido_id: null, numero: null };
           }
           return { aprovado: false, status: p.status, mp_status: payment.status, pedido_id: null, numero: null };
