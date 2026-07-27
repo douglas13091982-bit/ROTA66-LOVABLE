@@ -66,6 +66,14 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
     await persistir({ valor });
   }
 
+  async function ajustar(delta: number) {
+    const atual = Number(valorStr) || 0;
+    const valor = Math.max(0, Math.round((atual + delta) * 100) / 100);
+    setValorStr(String(valor));
+    await persistir({ valor });
+  }
+
+
   return (
     <div
       className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs font-medium transition-colors md:inline-flex md:rounded-md md:py-1.5 ${
