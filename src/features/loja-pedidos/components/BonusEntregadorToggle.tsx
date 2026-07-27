@@ -76,7 +76,7 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
       title="Bônus fixo adicionado automaticamente a todo pedido novo"
     >
       <span
-        className={`h-9 w-9 shrink-0 rounded-full grid place-items-center md:hidden ${
+        className={`h-8 w-8 shrink-0 rounded-full grid place-items-center md:hidden ${
           ativo ? "bg-[var(--rota-gold)] text-[#0e0f12]" : "bg-muted text-muted-foreground"
         }`}
       >
@@ -84,9 +84,9 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
       </span>
       <Gift className="hidden h-3.5 w-3.5 md:block" />
       <div className="min-w-0 flex-1 md:flex md:flex-none md:items-center md:gap-2">
-        <span className="block truncate md:inline">Bônus entregador</span>
+        <span className="block text-[11px] leading-tight md:inline md:text-xs">Bônus entregador</span>
         <div className="flex items-center gap-1">
-          <span>R$</span>
+          <span className="text-[11px] md:text-xs">R$</span>
           <input
             type="number"
             min={0}
@@ -95,11 +95,12 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
             onChange={(e) => setValorStr(e.target.value)}
             onBlur={onBlurValor}
             placeholder="0,00"
-            className="w-16 bg-background/60 border border-border rounded px-1.5 py-0.5 text-foreground text-xs"
+            className="w-12 md:w-16 bg-background/60 border border-border rounded px-1 py-0.5 text-foreground text-[11px] md:text-xs"
             disabled={saving}
           />
         </div>
       </div>
+
       <button
         type="button"
         onClick={onToggle}
