@@ -20,7 +20,7 @@ const NAV_ALL = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard, ownerOnly: false },
   { to: "/loja/pedidos", label: "Pedidos", icon: ClipboardList, ownerOnly: false },
   { to: "/loja/historico", label: "Histórico", icon: History, ownerOnly: false },
-  { to: "/loja/novo-pedido", label: "Novo pedido", icon: PlusCircle, ownerOnly: false },
+  
   { to: "/loja/agendamentos", label: "Agendamentos", icon: CalendarClock, ownerOnly: false },
   { to: "/loja/produtos", label: "Catálogo", icon: Package, ownerOnly: false },
   { to: "/loja/promocoes", label: "Promoções", icon: Megaphone, ownerOnly: false },
