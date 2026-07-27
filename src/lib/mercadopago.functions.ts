@@ -291,8 +291,10 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
+        mp_status_detail: payment.status_detail ?? null,
       } as any)
       .eq("id", p.id);
+
 
     let pedido_id: string | null = null;
     let numero: number | null = null;
