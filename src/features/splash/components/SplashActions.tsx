@@ -12,14 +12,15 @@ export function SplashActions() {
         PEÇA AGORA
       </Link>
 
-      <Link
-        to="/cadastro"
-        search={{ role: "loja_admin" }}
+      <a
+        href="https://lojas.rotas66.com.br/"
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center justify-center gap-3 w-full text-center rounded-none py-4 text-base tracking-[0.16em] text-[#decdb4] border border-white/25 bg-[#003965]/70 hover:bg-[#003965]/95 hover:border-white/50 transition-all duration-300 ease-premium"
       >
         <Store className="h-5 w-5" />
         CADASTRAR MINHA LOJA
-      </Link>
+      </a>
 
       <Link
         to="/cadastro"
