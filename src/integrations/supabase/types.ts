@@ -2485,6 +2485,7 @@ export type Database = {
           mp_pix_expira_em: string | null
           mp_pix_qr_base64: string | null
           mp_pix_qr_code: string | null
+          mp_status_detail: string | null
           pedido_id: string | null
           status: string
           updated_at: string
@@ -2501,6 +2502,7 @@ export type Database = {
           mp_pix_expira_em?: string | null
           mp_pix_qr_base64?: string | null
           mp_pix_qr_code?: string | null
+          mp_status_detail?: string | null
           pedido_id?: string | null
           status?: string
           updated_at?: string
@@ -2517,6 +2519,7 @@ export type Database = {
           mp_pix_expira_em?: string | null
           mp_pix_qr_base64?: string | null
           mp_pix_qr_code?: string | null
+          mp_status_detail?: string | null
           pedido_id?: string | null
           status?: string
           updated_at?: string

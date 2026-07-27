@@ -1,0 +1,1 @@
+ALTER TABLE public.pedidos_pendentes_pagamento ADD COLUMN IF NOT EXISTS mp_status_detail text;
