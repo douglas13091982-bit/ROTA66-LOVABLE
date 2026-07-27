@@ -47,42 +47,43 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="w-[40%] max-w-[170px] shrink-0 object-cover"
+          className="w-[32%] max-w-[120px] shrink-0 object-cover"
         />
       ) : (
         <div
-          className="w-[40%] max-w-[170px] shrink-0 flex items-center justify-center mp-serif text-4xl text-[#f5efe3]"
+          className="w-[32%] max-w-[120px] shrink-0 flex items-center justify-center mp-serif text-2xl text-[#f5efe3]"
           style={{ background: "linear-gradient(135deg,#0f2542,#1b3a5f)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col gap-2 p-4">
-        <h3 className="mp-card-title text-[24px] leading-tight font-semibold truncate">
+      <div className="flex-1 min-w-0 flex flex-col gap-1.5 p-3">
+        <h3 className="mp-card-title text-[17px] leading-tight font-semibold truncate">
           {loja.nome}
         </h3>
 
-        <div className="flex items-center gap-2 text-[15px]">
-          <Star className="h-4 w-4 fill-[#c8a253] stroke-[#c8a253] shrink-0" />
+        <div className="flex items-center gap-1.5 text-[13px]">
+          <Star className="h-3.5 w-3.5 fill-[#c8a253] stroke-[#c8a253] shrink-0" />
           <span className="mp-serif">
             {avaliacao && avaliacao.total > 0 ? avaliacao.media.toFixed(1) : "5.0"}
           </span>
           {avaliacao && avaliacao.total > 0 && (
-            <span className="mp-muted text-[13px]">({avaliacao.total})</span>
+            <span className="mp-muted text-[11px]">({avaliacao.total})</span>
           )}
         </div>
 
-        <span className="block h-px w-10 bg-[rgba(200,162,83,0.7)]" />
+        <span className="block h-px w-8 bg-[rgba(200,162,83,0.7)]" />
 
-        <p className="mp-muted text-[15px] leading-snug line-clamp-2">
+        <p className="mp-muted text-[12px] leading-snug line-clamp-2">
           {categoriaLabel} · {freteLabel}
         </p>
 
-        <span className="mp-btn-catalogo mp-serif mt-1 self-start px-4 py-2 text-[12px] uppercase">
+        <span className="mp-btn-catalogo mp-serif mt-0.5 self-start px-3 py-1.5 text-[10px] uppercase">
           Ver catálogo
         </span>
       </div>
+
     </Link>
   );
 }
