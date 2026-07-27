@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Star, CheckCircle2 } from "lucide-react";
+import { Star } from "lucide-react";
 
 import { useLojaCategorias, labelCategoriaDinamico } from "@/hooks/use-loja-categorias";
 import type { LojaPublica } from "../logic/types";
@@ -20,7 +20,7 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
 
   let freteLabel: string;
   if (frete) {
-    freteLabel = `Frete R$ ${frete.valor.toFixed(2).replace(".", ",")}`;
+    freteLabel = `Frete R$ ${frete.valor.toFixed(2).replace(".", ",")} · ${frete.km.toFixed(1)} km`;
   } else if (freteCarregando) {
     freteLabel = "Calculando frete…";
   } else if (semEndereco) {
@@ -33,56 +33,56 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
       taxaBase > 0 ? `Frete R$ ${taxaBase.toFixed(2).replace(".", ",")}` : "Entrega disponível";
   }
 
+  const categoriaLabel = loja.categoria
+    ? labelCategoriaDinamico(loja.categoria, categorias)
+    : "Delivery";
+
   return (
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="mp-card flex items-center gap-3 w-full rounded-2xl p-3 active:scale-[0.99] transition"
+      className="mp-card flex w-full overflow-hidden rounded-sm active:scale-[0.995] transition"
     >
       {loja.logo_url ? (
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="h-[60px] w-[60px] rounded-2xl object-cover shrink-0"
+          className="w-[40%] max-w-[170px] shrink-0 object-cover"
         />
       ) : (
         <div
-          className="h-[60px] w-[60px] rounded-2xl shrink-0 flex items-center justify-center text-white font-display text-2xl"
-          style={{ background: "linear-gradient(135deg,#0d2c54,#123a6d)" }}
+          className="w-[40%] max-w-[170px] shrink-0 flex items-center justify-center mp-serif text-4xl text-[#f5efe3]"
+          style={{ background: "linear-gradient(135deg,#0f2542,#1b3a5f)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
-        <h3 className="mp-card-title text-[15px] font-bold leading-snug truncate">{loja.nome}</h3>
+      <div className="flex-1 min-w-0 flex flex-col gap-2 p-4">
+        <h3 className="mp-card-title text-[24px] leading-tight font-semibold truncate">
+          {loja.nome}
+        </h3>
 
-        <div className="flex items-center gap-1.5 text-[12px] mp-muted min-w-0">
-          <Star className="h-3.5 w-3.5 fill-[#f5b301] stroke-[#f5b301] shrink-0" />
-          <span className="font-semibold" style={{ color: "#0d2c54" }}>
+        <div className="flex items-center gap-2 text-[15px]">
+          <Star className="h-4 w-4 fill-[#c8a253] stroke-[#c8a253] shrink-0" />
+          <span className="mp-serif">
             {avaliacao && avaliacao.total > 0 ? avaliacao.media.toFixed(1) : "5.0"}
           </span>
           {avaliacao && avaliacao.total > 0 && (
-            <span className="opacity-60">({avaliacao.total})</span>
-          )}
-          {loja.categoria && (
-            <>
-              <span className="opacity-30">|</span>
-              <span className="truncate">{labelCategoriaDinamico(loja.categoria, categorias)}</span>
-            </>
+            <span className="mp-muted text-[13px]">({avaliacao.total})</span>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 text-[12px] mp-muted min-w-0">
-          <CheckCircle2 className="h-3.5 w-3.5 shrink-0" style={{ color: "#16a34a" }} />
-          <span className="truncate">{freteLabel}</span>
-          {frete && <span className="opacity-60 shrink-0">· {frete.km.toFixed(1)} km</span>}
-        </div>
+        <span className="block h-px w-10 bg-[rgba(200,162,83,0.7)]" />
+
+        <p className="mp-muted text-[15px] leading-snug line-clamp-2">
+          {categoriaLabel} · {freteLabel}
+        </p>
+
+        <span className="mp-btn-catalogo mp-serif mt-1 self-start px-4 py-2 text-[12px] uppercase">
+          Ver catálogo
+        </span>
       </div>
-
-      <span className="mp-btn-catalogo shrink-0 rounded-xl px-3 py-2.5 text-[12px] font-bold whitespace-nowrap">
-        Ver Catálogo
-      </span>
     </Link>
   );
 }
