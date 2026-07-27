@@ -4,7 +4,7 @@ import type { Pedido } from "../hooks/use-pedidos-loja";
 import type { PedidoActions } from "../hooks/use-pedido-actions";
 import { PedidoCard } from "./PedidoCard";
 import { LoteEmPreparoCard } from "./LoteEmPreparoCard";
-import { Package } from "lucide-react";
+import { Package, CookingPot, ShoppingBag, Bike, CheckCircle2, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -91,19 +91,32 @@ export function PedidosKanban({
             }}
             onDragLeave={() => setDragOver((v) => (v === col.key ? null : v))}
             onDrop={() => handleDrop(col.key)}
-            className={`bg-muted/30 border rounded-lg border-t-4 ${col.accent} flex flex-col min-h-[200px] transition-colors ${
+            className={`bg-muted/30 border rounded-xl overflow-hidden flex flex-col min-h-[160px] transition-colors ${
               isOver ? "border-primary bg-primary/5" : "border-border"
             }`}
           >
-            <div className="px-3 py-2 flex items-center justify-between border-b border-border">
-              <h3 className="font-display text-base tracking-wide">{col.title}</h3>
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-background border border-border rounded-full px-2 py-0.5">
+            <div className={`h-1.5 w-full ${col.tone}`} />
+            <div className="px-3 py-3 flex items-center gap-3 border-b border-border">
+              <span
+                className={`h-11 w-11 shrink-0 rounded-full grid place-items-center ${col.iconBg}`}
+              >
+                <ColumnIcon columnKey={col.key} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold uppercase tracking-wider text-sm truncate">{col.title}</h3>
+                <p className="text-xs text-muted-foreground truncate">{col.subtitle}</p>
+              </div>
+              <span
+                className={`shrink-0 min-w-9 text-center text-sm font-bold rounded-lg px-2.5 py-1.5 ${col.badge}`}
+              >
                 {items.length}
               </span>
             </div>
+
             <ColumnBody
               items={items}
               lotes={lotes}
+              emptyText={col.emptyText}
               dragId={dragId}
               setDragId={setDragId}
               setDragOver={setDragOver}
@@ -119,9 +132,30 @@ export function PedidosKanban({
   );
 }
 
+function ColumnIcon({ columnKey }: { columnKey: string }) {
+  const cls = "h-5 w-5";
+  if (columnKey === "preparacao") return <CookingPot className={cls} />;
+  if (columnKey === "pronto") return <ShoppingBag className={cls} />;
+  if (columnKey === "coletado") return <Bike className={cls} />;
+  return <CheckCircle2 className={cls} />;
+}
+
+function ColumnVazio({ texto }: { texto: string }) {
+  return (
+    <div className="py-10 px-6 text-center">
+      <span className="mx-auto mb-4 h-16 w-16 rounded-full bg-muted/50 grid place-items-center">
+        <ClipboardList className="h-7 w-7 text-muted-foreground" />
+      </span>
+      <p className="font-bold text-sm mb-1">Nenhum pedido aqui</p>
+      <p className="text-xs text-muted-foreground leading-relaxed">{texto}</p>
+    </div>
+  );
+}
+
 interface ColumnBodyProps {
   items: Pedido[];
   lotes: LoteEmPreparo[];
+  emptyText?: string;
   dragId: string | null;
   setDragId: (id: string | null) => void;
   setDragOver: (k: string | null) => void;
@@ -132,7 +166,7 @@ interface ColumnBodyProps {
 }
 
 function ColumnBody(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
+  const { items, lotes, emptyText, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
 
   // Render padrão: comportamento idêntico ao original.
@@ -146,9 +180,8 @@ function ColumnBody(props: ColumnBodyProps) {
             onMarcarTodosProntos={actions.marcarLoteComoPronto}
           />
         ))}
-        {items.length === 0 && (
-          <p className="text-[10px] text-muted-foreground text-center py-4">Vazio</p>
-        )}
+        {items.length === 0 && <ColumnVazio texto={emptyText ?? "Nenhum pedido nesta etapa."} />}
+
         {items.map((p) => (
           <PedidoCard
             key={p.id}
