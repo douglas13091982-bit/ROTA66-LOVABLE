@@ -204,6 +204,8 @@ export const criarPagamentoPix = createServerFn({ method: "POST" })
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
+        mp_status_detail: payment.status_detail ?? null,
+
         mp_pix_qr_code: qrCode,
         mp_pix_qr_base64: qrBase64,
         mp_pix_expira_em: expira.toISOString(),
@@ -291,8 +293,10 @@ export const criarPagamentoCartao = createServerFn({ method: "POST" })
       .update({
         mp_payment_id: String(payment.id),
         mp_payment_status: payment.status,
+        mp_status_detail: payment.status_detail ?? null,
       } as any)
       .eq("id", p.id);
+
 
     let pedido_id: string | null = null;
     let numero: number | null = null;
@@ -400,8 +404,13 @@ export const consultarStatusPagamento = createServerFn({ method: "POST" })
           if (["cancelled", "rejected", "refunded", "charged_back"].includes(payment.status)) {
             await supabaseAdmin
               .from("pedidos_pendentes_pagamento" as any)
-              .update({ status: "cancelado", mp_payment_status: payment.status } as any)
+              .update({
+                status: "cancelado",
+                mp_payment_status: payment.status,
+                mp_status_detail: (payment as any).status_detail ?? null,
+              } as any)
               .eq("id", p.id);
+
             return { aprovado: false, status: "cancelado", mp_status: payment.status, pedido_id: null, numero: null };
           }
           return { aprovado: false, status: p.status, mp_status: payment.status, pedido_id: null, numero: null };
