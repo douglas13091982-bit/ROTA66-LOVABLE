@@ -106,14 +106,14 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema }: Props) {
       </div>
 
       {/* Logo + tagline */}
-      <div className="max-w-2xl mx-auto px-6 pt-7 pb-2">
+      <div className="max-w-2xl mx-auto px-6 pt-4 pb-1">
         <div className="flex justify-center">
-          <img src={logoUrl} alt={nomeSistema} className="h-36 w-auto object-contain" />
+          <img src={logoUrl} alt={nomeSistema} className="h-20 w-auto object-contain" />
         </div>
-        <p className="mp-serif text-center text-[15px] uppercase tracking-[0.42em] mt-4">
+        <p className="mp-serif text-center text-[12px] uppercase tracking-[0.36em] mt-2">
           Peça seu delivery
         </p>
-        <div className="mp-divider-star mt-3 px-6">
+        <div className="mp-divider-star mt-2 px-6">
           <Star className="h-3.5 w-3.5 fill-current shrink-0" />
         </div>
       </div>
