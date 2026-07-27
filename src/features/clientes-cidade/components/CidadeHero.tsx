@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Search, UserRound, UserPlus, MapPin, LogOut, Menu, LogIn } from "lucide-react";
-import { toast } from "sonner";
+import { MapPin, Star } from "lucide-react";
 import { PerfilDialog } from "./PerfilDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useCidadesDisponiveis } from "../hooks/use-cidades-disponiveis";
@@ -12,13 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 
 interface Props {
   cidade: string;
@@ -29,10 +21,8 @@ interface Props {
   onBuscaChange: (v: string) => void;
 }
 
-export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaChange }: Props) {
-  const [nomeCliente, setNomeCliente] = useState<string>("");
+export function CidadeHero({ cidade, uf, logoUrl, nomeSistema }: Props) {
   const [logado, setLogado] = useState<boolean>(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
   const navigate = useNavigate();
   const { data: cidades = [] } = useCidadesDisponiveis();
@@ -41,24 +31,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     let cancelled = false;
     (async () => {
       const { data: auth } = await supabase.auth.getUser();
-      if (!auth.user) {
-        if (!cancelled) setLogado(false);
-        return;
-      }
-      if (!cancelled) setLogado(true);
-      const meta = (auth.user.user_metadata ?? {}) as Record<string, any>;
-      let full = "";
-      const { data } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", auth.user.id)
-        .maybeSingle();
-      full = ((data as any)?.full_name ?? "").trim();
-      if (!full) full = String(meta.full_name ?? meta.name ?? "").trim();
-      if (!full && auth.user.email) full = auth.user.email.split("@")[0];
-      if (cancelled) return;
-      const primeiro = full.split(/\s+/)[0] ?? "";
-      setNomeCliente(primeiro);
+      if (!cancelled) setLogado(!!auth.user);
     })();
     return () => {
       cancelled = true;
@@ -76,37 +49,44 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
     });
   };
 
-  const handleSair = async () => {
-    await supabase.auth.signOut();
-    toast.success("Você saiu da conta");
-    setLogado(false);
-    setNomeCliente("");
-    setMenuOpen(false);
-    navigate({ to: "/login" });
-  };
-
   return (
     <div>
-      <div className="max-w-2xl mx-auto px-4 pt-5 pb-3 relative">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <Select value={cidades.some((c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey) ? selectedKey : undefined} onValueChange={handleCidadeChange}>
-            <SelectTrigger className="w-auto h-auto gap-1.5 px-1 py-1 rounded-full bg-transparent border-0 text-[15px] font-bold text-[#0d2c54] transition shadow-none focus:ring-0 focus:ring-offset-0">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <MapPin className="h-3.5 w-3.5 opacity-70 shrink-0" />
+      {/* Barra superior navy */}
+      <div className="mp-topbar">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <Select
+            value={
+              cidades.some(
+                (c) => `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}` === selectedKey,
+              )
+                ? selectedKey
+                : undefined
+            }
+            onValueChange={handleCidadeChange}
+          >
+            <SelectTrigger className="w-auto h-auto gap-1.5 px-0 py-0 bg-transparent border-0 shadow-none focus:ring-0 focus:ring-offset-0 text-[#f5efe3]">
+              <div className="flex items-center gap-2 min-w-0">
+                <MapPin className="h-4 w-4 shrink-0 text-[#c8a253]" strokeWidth={1.6} />
                 <SelectValue placeholder={`${cidade}${uf ? ` - ${uf}` : ""}`}>
-                  <span className="truncate">{cidade}{uf ? ` - ${uf}` : ""}</span>
+                  <span className="mp-serif truncate text-[17px]">
+                    {cidade}
+                    {uf ? ` - ${uf}` : ""}
+                  </span>
                 </SelectValue>
               </div>
             </SelectTrigger>
             <SelectContent>
               {cidades.length === 0 && (
-                <div className="px-3 py-2 text-sm text-muted-foreground">Nenhuma cidade disponível</div>
+                <div className="px-3 py-2 text-sm text-muted-foreground">
+                  Nenhuma cidade disponível
+                </div>
               )}
               {cidades.map((c) => {
                 const key = `${c.cidade.toLowerCase()}|${(c.estado ?? "").toLowerCase()}`;
                 return (
                   <SelectItem key={key} value={`${c.cidade}|${c.estado ?? ""}`}>
-                    {c.cidade}{c.estado ? ` - ${c.estado}` : ""}
+                    {c.cidade}
+                    {c.estado ? ` - ${c.estado}` : ""}
                   </SelectItem>
                 );
               })}
@@ -117,23 +97,27 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema, busca, onBuscaCha
             <button
               type="button"
               onClick={() => navigate({ to: "/cadastro", search: { role: "cliente" } })}
-              className="mp-pill inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5"
+              className="mp-pill mp-serif rounded-none px-5 py-2 text-[12px] uppercase tracking-[0.22em]"
             >
-              <UserPlus className="h-3.5 w-3.5 shrink-0" />
-              <span>Cadastrar</span>
+              Cadastrar
             </button>
           )}
         </div>
+      </div>
 
-        <div className="flex justify-center mt-2 mb-1">
-          <img src={logoUrl} alt={nomeSistema} className="h-28 w-auto object-contain" />
+      {/* Logo + tagline */}
+      <div className="max-w-2xl mx-auto px-6 pt-7 pb-2">
+        <div className="flex justify-center">
+          <img src={logoUrl} alt={nomeSistema} className="h-36 w-auto object-contain" />
         </div>
-        <p className="text-center text-[12px] font-semibold uppercase tracking-[0.28em] mt-1 animate-fade-in text-[#0d2c54]">
+        <p className="mp-serif text-center text-[15px] uppercase tracking-[0.42em] mt-4">
           Peça seu delivery
         </p>
-
-
+        <div className="mp-divider-star mt-3 px-6">
+          <Star className="h-3.5 w-3.5 fill-current shrink-0" />
+        </div>
       </div>
+
       <PerfilDialog open={perfilOpen} onOpenChange={setPerfilOpen} />
     </div>
   );

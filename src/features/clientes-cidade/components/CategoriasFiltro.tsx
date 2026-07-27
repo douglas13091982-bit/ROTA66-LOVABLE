@@ -57,12 +57,12 @@ interface Props {
 export function CategoriasFiltro({ value, onChange }: Props) {
   const { categorias } = useLojaCategorias();
   return (
-    <div className="max-w-2xl mx-auto pb-3 pt-2 relative">
+    <div className="max-w-2xl mx-auto pb-4 pt-1 relative">
       <div
-        className="flex gap-3 overflow-x-auto px-4 pb-1 snap-x scroll-smooth"
+        className="flex overflow-x-auto px-4 snap-x scroll-smooth"
         style={{ scrollbarWidth: "none" }}
       >
-        {categorias.map((c) => {
+        {categorias.map((c, i) => {
           const uploaded = c.icone_url;
           const icon = ICONS[c.value];
           const LucideIcon = getCategoriaIcon(c.icone);
@@ -70,14 +70,16 @@ export function CategoriasFiltro({ value, onChange }: Props) {
           return (
             <button
               key={c.value}
-              onClick={() => onChange(c.value)}
-              className={`shrink-0 snap-start flex flex-col items-center gap-1 w-[68px] ${
-                active ? "opacity-100" : "opacity-90"
+              onClick={() => onChange(active ? "" : c.value)}
+              className={`shrink-0 snap-start flex flex-col items-center gap-2 w-[104px] px-2 py-1 ${
+                i > 0 ? "border-l border-[rgba(15,37,66,0.12)]" : ""
               }`}
             >
               <div
-                className={`h-[64px] w-[68px] rounded-xl flex items-center justify-center bg-white overflow-hidden border transition ${
-                  active ? "border-[#cc2229] ring-2 ring-[#cc2229]/25" : "border-[rgba(13,44,84,0.10)]"
+                className={`h-[74px] w-[74px] rounded-full flex items-center justify-center overflow-hidden border transition ${
+                  active
+                    ? "border-[#c8a253] bg-[rgba(200,162,83,0.10)]"
+                    : "border-[rgba(15,37,66,0.35)] bg-transparent"
                 }`}
               >
                 {uploaded ? (
@@ -85,7 +87,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     src={uploaded}
                     alt={c.label}
                     loading="lazy"
-                    className="h-[42px] w-[56px] object-contain"
+                    className="h-[40px] w-[48px] object-contain"
                   />
                 ) : icon ? (
                   <img
@@ -94,15 +96,19 @@ export function CategoriasFiltro({ value, onChange }: Props) {
                     loading="lazy"
                     width={68}
                     height={48}
-                    className="h-[42px] w-[56px] object-contain"
+                    className="h-[40px] w-[48px] object-contain"
                   />
                 ) : LucideIcon ? (
-                  <LucideIcon className="h-6 w-6 text-[#cc2229]" />
+                  <LucideIcon className="h-7 w-7 text-[#0f2542]" strokeWidth={1.2} />
                 ) : (
                   <span className="text-[22px]">🛍️</span>
                 )}
               </div>
-              <span className="text-[10px] font-semibold text-center leading-tight line-clamp-2 text-[#0d2c54]">
+              <span
+                className={`mp-serif text-[13px] text-center leading-tight line-clamp-2 ${
+                  active ? "text-[#8a6d2f]" : "text-[#0f2542]"
+                }`}
+              >
                 {c.label}
               </span>
             </button>
