@@ -64,16 +64,13 @@ export function PedidoCard({
         <div className="min-w-0 flex items-center gap-2">
           <span className="font-display text-lg leading-none tracking-wide shrink-0">#{p.numero}</span>
           <span
-            className={`shrink-0 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full ${STATUS_COLOR[p.status]}`}
+            className={`min-w-0 truncate px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full ${STATUS_COLOR[p.status]}`}
           >
             {STATUS_LABEL[p.status]}
           </span>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <PedidoChatBadge pedidoId={p.id} senderRole="loja" />
-          <span className="font-display text-base leading-none text-emerald-500">
-            R$ {Number(p.valor_total).toFixed(2)}
-          </span>
           {podeCancelar && (
             <button
               type="button"
@@ -91,20 +88,24 @@ export function PedidoCard({
         </div>
       </div>
 
-      <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground min-w-0">
-        <span className="truncate">{p.cliente_nome}</span>
-        {p.entregador_id && (
-          <span className="inline-flex items-center gap-1 shrink-0 text-emerald-500">
-            <Bike className="h-3 w-3" />
+      <div className="mt-1 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 text-[11px] text-muted-foreground">
+        <div className="min-w-0 flex items-center gap-1.5">
+          <span className="truncate">{p.cliente_nome}</span>
+          {p.entregador_id && <Bike className="h-3 w-3 shrink-0 text-emerald-500" />}
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {p.status === "em_rota" && p.codigo_coleta && (
+            <span className="inline-flex items-center gap-1 font-mono font-bold tracking-widest">
+              <KeyRound className="h-3 w-3" />
+              {p.codigo_coleta}
+            </span>
+          )}
+          <span className="font-display text-base leading-none text-emerald-500">
+            R$ {Number(p.valor_total).toFixed(2)}
           </span>
-        )}
-        {p.status === "em_rota" && p.codigo_coleta && (
-          <span className="ml-auto inline-flex items-center gap-1 shrink-0 font-mono font-bold tracking-widest">
-            <KeyRound className="h-3 w-3" />
-            {p.codigo_coleta}
-          </span>
-        )}
+        </div>
       </div>
+
     </div>
   );
 }
