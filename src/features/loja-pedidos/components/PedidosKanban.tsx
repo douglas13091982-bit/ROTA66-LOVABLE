@@ -4,7 +4,7 @@ import type { Pedido } from "../hooks/use-pedidos-loja";
 import type { PedidoActions } from "../hooks/use-pedido-actions";
 import { PedidoCard } from "./PedidoCard";
 import { LoteEmPreparoCard } from "./LoteEmPreparoCard";
-import { Package } from "lucide-react";
+import { Package, CookingPot, ShoppingBag, Bike, CheckCircle2, ClipboardList } from "lucide-react";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
