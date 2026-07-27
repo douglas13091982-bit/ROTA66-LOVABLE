@@ -91,8 +91,9 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
         <Gift className="h-4 w-4" />
       </span>
       <Gift className="hidden h-3.5 w-3.5 md:block" />
-      <div className="min-w-0 flex-1 md:flex md:flex-none md:items-center md:gap-2">
-        <span className="block text-[11px] leading-tight md:inline md:text-xs">Bônus entregador</span>
+      <div className="min-w-0 flex-1 flex items-center justify-between gap-2 md:flex-none md:justify-start md:gap-2">
+        <span className="text-[13px] leading-tight md:text-xs">Bônus entregador</span>
+
         <div className="flex items-center gap-1">
           <button
             type="button"
