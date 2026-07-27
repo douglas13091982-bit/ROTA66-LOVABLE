@@ -76,12 +76,13 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
               key={op.value}
               type="button"
               onClick={() => setOrdem(op.value)}
-              className="px-3 py-1 rounded-full text-[11px] font-medium border whitespace-nowrap transition"
+              className="px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap transition"
               style={{
-                borderColor: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.30)",
-                color: ativo ? "#04274f" : "var(--rota-gold)",
-                background: ativo ? "var(--rota-gold)" : "rgba(212,168,76,0.08)",
+                borderColor: ativo ? "#0d2c54" : "rgba(13,44,84,0.18)",
+                color: ativo ? "#ffffff" : "#0d2c54",
+                background: ativo ? "#0d2c54" : "#ffffff",
               }}
+
             >
               {op.label}
             </button>
