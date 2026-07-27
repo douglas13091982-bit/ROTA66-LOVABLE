@@ -77,16 +77,8 @@ export function PedidosToolbar({
         />
       )}
 
-      <span className="flex flex-col justify-center gap-0.5 rounded-xl border border-border bg-muted/30 px-3 py-2.5 md:order-last md:ml-auto md:border-0 md:bg-transparent md:px-0 md:py-0">
-        <span className="flex items-center gap-2 text-sm font-semibold md:text-xs md:font-normal md:text-muted-foreground">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[oklch(0.55_0.26_25)] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[oklch(0.55_0.26_25)]" />
-          </span>
-          Tempo real
-        </span>
-        <span className="text-xs text-muted-foreground md:hidden">Atualizado agora há pouco</span>
-      </span>
+
+
 
       <button
         onClick={toggleMute}
