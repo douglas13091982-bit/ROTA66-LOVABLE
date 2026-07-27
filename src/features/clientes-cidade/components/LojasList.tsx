@@ -93,7 +93,7 @@ export function LojasList({ lojas, isLoading, cidade }: Props) {
           Cadastre seu endereço no perfil para ver o frete exato de cada loja.
         </p>
       )}
-      <div className="flex flex-col divide-y divide-white/5">
+      <div className="flex flex-col gap-3">
         {lojasOrdenadas.map((l) => (
           <LojaCard
             key={l.id}
