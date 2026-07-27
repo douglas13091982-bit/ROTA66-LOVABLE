@@ -70,12 +70,15 @@ export function PedidosToolbar({
       )}
 
       {lojaId && (
-        <BonusEntregadorToggle
-          lojaId={lojaId}
-          initialAtivo={bonusAtivo}
-          initialValor={bonusValor}
-        />
+        <div className="col-span-2 md:col-auto">
+          <BonusEntregadorToggle
+            lojaId={lojaId}
+            initialAtivo={bonusAtivo}
+            initialValor={bonusValor}
+          />
+        </div>
       )}
+
 
 
 
