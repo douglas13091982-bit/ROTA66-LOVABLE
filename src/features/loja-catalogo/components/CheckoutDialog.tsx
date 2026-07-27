@@ -20,6 +20,8 @@ type Props = {
   lojaId: string;
   lojaCoords: { lat: number | null; lng: number | null };
   taxaBase: number;
+  retiradaDisponivel: boolean;
+  enderecoLoja?: string | null;
   cartItems: CartItem[];
   subtotal: number;
   onClose: () => void;
@@ -47,6 +49,8 @@ export function CheckoutDialog({
   lojaId,
   lojaCoords,
   taxaBase,
+  retiradaDisponivel,
+  enderecoLoja,
   cartItems,
   subtotal,
   onClose,
@@ -69,13 +73,15 @@ export function CheckoutDialog({
     observacoes: "",
     forma_pagamento: "pix",
     troco_para: "",
+    tipo_entrega: "entrega",
   });
   const [pendentePagar, setPendentePagar] = useState<{ pendente_id: string } | null>(null);
   const [entregaCoords, setEntregaCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
   const { taxa: taxaCalculada, info: taxaInfo } = useTarifaEntrega(lojaId, lojaCoords, entregaCoords);
   const temCoords =
     entregaCoords.lat != null && entregaCoords.lng != null && lojaCoords.lat != null && lojaCoords.lng != null;
-  const taxa = temCoords ? taxaCalculada : taxaBase;
+  const retirada = form.tipo_entrega === "retirada";
+  const taxa = retirada ? 0 : temCoords ? taxaCalculada : taxaBase;
   const total = subtotal + taxa;
   const [saving, setSaving] = useState(false);
   
@@ -167,12 +173,13 @@ export function CheckoutDialog({
       const res = await enviar({
         data: {
           loja_slug: slug,
+          tipo_entrega: form.tipo_entrega,
           cliente_nome: form.cliente_nome,
           cliente_telefone: form.cliente_telefone,
-          endereco_entrega: form.endereco_entrega,
-          endereco_entrega_lat: entregaCoords.lat,
-          endereco_entrega_lng: entregaCoords.lng,
-          complemento: form.complemento || null,
+          endereco_entrega: retirada ? "Retirada no balcão" : form.endereco_entrega,
+          endereco_entrega_lat: retirada ? null : entregaCoords.lat,
+          endereco_entrega_lng: retirada ? null : entregaCoords.lng,
+          complemento: retirada ? null : form.complemento || null,
           observacoes: form.observacoes || null,
           forma_pagamento: form.forma_pagamento,
           troco_para: form.forma_pagamento === "dinheiro" && form.troco_para ? Number(form.troco_para) : null,
@@ -197,7 +204,13 @@ export function CheckoutDialog({
   }
 
   const title =
-    step === "carrinho" ? "Seu carrinho" : step === "dados" ? "Dados de entrega" : "Pagamento";
+    step === "carrinho"
+      ? "Seu carrinho"
+      : step === "dados"
+        ? retirada
+          ? "Dados para retirada"
+          : "Dados de entrega"
+        : "Pagamento";
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-end md:items-center justify-center" onClick={onClose}>
@@ -247,6 +260,8 @@ export function CheckoutDialog({
               taxaInfo={taxaInfo}
               mpAtivo={mpAtivo}
               isOnline={isOnline}
+              retiradaDisponivel={retiradaDisponivel}
+              enderecoLoja={enderecoLoja}
               onSubmit={handleSubmit}
             />
           )}
@@ -313,7 +328,7 @@ export function CheckoutDialog({
                   <span>R$ {subtotal.toFixed(2)}</span>
                 </div>
                 <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Frete</span>
+                  <span>{retirada ? "Retirada no balcão" : "Frete"}</span>
                   <span>R$ {taxa.toFixed(2)}</span>
                 </div>
                 <button
