@@ -3498,6 +3498,7 @@ export type Database = {
           ativa: boolean | null
           catalogo_ativo: boolean | null
           catalogo_layout: string | null
+          catalogo_retirada_ativa: boolean | null
           catalogo_slug: string | null
           categoria: string | null
           cidade: string | null
@@ -3521,6 +3522,7 @@ export type Database = {
           ativa?: never
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
+          catalogo_retirada_ativa?: boolean | null
           catalogo_slug?: string | null
           categoria?: string | null
           cidade?: string | null
@@ -3544,6 +3546,7 @@ export type Database = {
           ativa?: never
           catalogo_ativo?: boolean | null
           catalogo_layout?: string | null
+          catalogo_retirada_ativa?: boolean | null
           catalogo_slug?: string | null
           categoria?: string | null
           cidade?: string | null
