@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Star } from "lucide-react";
+import { Star, CheckCircle2 } from "lucide-react";
 
 import { useLojaCategorias, labelCategoriaDinamico } from "@/hooks/use-loja-categorias";
 import type { LojaPublica } from "../logic/types";
@@ -20,83 +20,69 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
 
   let freteLabel: string;
   if (frete) {
-    freteLabel = `R$ ${frete.valor.toFixed(2).replace(".", ",")}`;
+    freteLabel = `Frete R$ ${frete.valor.toFixed(2).replace(".", ",")}`;
   } else if (freteCarregando) {
-    freteLabel = "calculando…";
+    freteLabel = "Calculando frete…";
   } else if (semEndereco) {
-    freteLabel = taxaBase > 0
-      ? `a partir de R$ ${taxaBase.toFixed(2).replace(".", ",")}`
-      : "informe seu endereço";
+    freteLabel =
+      taxaBase > 0
+        ? `Entrega a partir de R$ ${taxaBase.toFixed(2).replace(".", ",")}`
+        : "Entrega disponível";
   } else {
-    freteLabel = taxaBase > 0
-      ? `R$ ${taxaBase.toFixed(2).replace(".", ",")}`
-      : "A combinar";
+    freteLabel =
+      taxaBase > 0 ? `Frete R$ ${taxaBase.toFixed(2).replace(".", ",")}` : "Entrega disponível";
   }
 
   return (
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="flex items-center gap-4 w-full py-3 active:opacity-70 transition"
+      className="mp-card flex items-center gap-3.5 w-full rounded-2xl p-3.5 active:scale-[0.99] transition"
     >
       {loja.logo_url ? (
         <img
           src={loja.logo_url}
           alt={loja.nome}
-          className="h-16 w-16 rounded-2xl object-cover shrink-0"
-          style={{ border: "1px solid rgba(222,205,180,0.18)" }}
+          className="h-[70px] w-[70px] rounded-2xl object-cover shrink-0"
         />
       ) : (
         <div
-          className="h-16 w-16 rounded-2xl shrink-0 flex items-center justify-center text-[#decdb4] font-display text-2xl"
-          style={{ background: "linear-gradient(135deg,#bb1010,#7a0a0a)" }}
+          className="h-[70px] w-[70px] rounded-2xl shrink-0 flex items-center justify-center text-white font-display text-2xl"
+          style={{ background: "linear-gradient(135deg,#0d2c54,#123a6d)" }}
         >
           {loja.nome.charAt(0)}
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-        <h3
-          className="mp-card-title text-[15px] font-medium leading-tight truncate"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          {loja.nome}
-        </h3>
-        <div className="flex items-center gap-1.5 text-[13px] mp-muted flex-wrap font-normal">
-          <Star className="h-3 w-3 fill-[var(--rota-gold)] stroke-[var(--rota-gold)]" />
-          {avaliacao && avaliacao.total > 0 ? (
-            <span className="text-[var(--rota-gold)] font-medium">
-              {avaliacao.media.toFixed(1)}
-              <span className="opacity-60 font-normal"> ({avaliacao.total})</span>
-            </span>
-          ) : (
-            <span className="text-[var(--rota-gold)] font-medium">5.0</span>
-          )}
+      <div className="flex-1 min-w-0 flex flex-col gap-1">
+        <h3 className="mp-card-title text-[17px] font-bold leading-tight truncate">{loja.nome}</h3>
 
+        <div className="flex items-center gap-1.5 text-[13px] mp-muted min-w-0">
+          <Star className="h-3.5 w-3.5 fill-[#f5b301] stroke-[#f5b301] shrink-0" />
+          <span className="font-semibold" style={{ color: "#0d2c54" }}>
+            {avaliacao && avaliacao.total > 0 ? avaliacao.media.toFixed(1) : "5.0"}
+          </span>
+          {avaliacao && avaliacao.total > 0 && (
+            <span className="opacity-60">({avaliacao.total})</span>
+          )}
           {loja.categoria && (
             <>
-              <span className="opacity-50">•</span>
+              <span className="opacity-30">|</span>
               <span className="truncate">{labelCategoriaDinamico(loja.categoria, categorias)}</span>
             </>
           )}
-          <span
-            className="ml-1 px-2 py-0.5 rounded-full text-[11px] font-medium border"
-            style={{
-              borderColor: "rgba(212,168,76,0.45)",
-              color: "var(--rota-gold)",
-              background: "rgba(212,168,76,0.10)",
-            }}
-          >
-            Ver Catálogo
-          </span>
         </div>
-        <div className="text-[13px] mp-muted font-normal">
-          Frete <span>{freteLabel}</span>
-          {frete && (
-            <span className="opacity-60"> · {frete.km.toFixed(1)} km</span>
-          )}
+
+        <div className="flex items-center gap-1.5 text-[13px] mp-muted min-w-0">
+          <CheckCircle2 className="h-3.5 w-3.5 shrink-0" style={{ color: "#16a34a" }} />
+          <span className="truncate">{freteLabel}</span>
+          {frete && <span className="opacity-60 shrink-0">· {frete.km.toFixed(1)} km</span>}
         </div>
       </div>
+
+      <span className="mp-btn-catalogo shrink-0 rounded-xl px-4 py-3 text-[13px] font-bold whitespace-nowrap">
+        Ver Catálogo
+      </span>
     </Link>
   );
 }
