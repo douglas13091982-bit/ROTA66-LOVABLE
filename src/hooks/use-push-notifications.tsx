@@ -94,7 +94,11 @@ export function usePushNotifications() {
       }
 
       const reg = await navigator.serviceWorker.register("/sw-push.js");
-      await navigator.serviceWorker.ready;
+      // navigator.serviceWorker.ready pode resolver com OUTRA registration
+      // (ex.: /sw.js). Esperamos especificamente o /sw-push.js ficar ativo,
+      // senão pushManager.subscribe falha com InvalidStateError no TWA.
+      await waitForActive(reg);
+
 
 
       // O navegador mantém apenas uma assinatura Push por origem, não por
