@@ -1,6 +1,8 @@
 import { useEffect, useState, createContext, useContext, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { manterSessaoViva } from "@/lib/auth-session";
+
 
 export type AppRole = "super_admin" | "admin" | "loja_admin" | "entregador" | "cliente" | "revendedor";
 
