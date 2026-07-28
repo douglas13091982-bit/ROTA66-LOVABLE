@@ -23,7 +23,7 @@ export function useLojasVinculo(userId: string | undefined) {
     queryFn: async () => {
       const { data: vinc } = await supabase
         .from("loja_entregadores")
-        .select("loja_id, ativo")
+        .select("id, loja_id, ativo, status")
         .eq("entregador_id", userId!);
       if (!vinc || vinc.length === 0) return [];
       const ids = vinc.map((v) => v.loja_id);
@@ -32,10 +32,12 @@ export function useLojasVinculo(userId: string | undefined) {
         .select("id, nome")
         .in("id", ids);
       const lojas = (lojasRaw ?? []) as unknown as Array<{ id: string; nome: string | null }>;
-      return vinc.map((v) => ({
+      return vinc.map((v: any) => ({
         ...v,
+        status: (v.status ?? "aceito") as "pendente" | "aceito" | "recusado",
         loja: lojas.find((l) => l.id === v.loja_id),
       }));
     },
   });
 }
+
