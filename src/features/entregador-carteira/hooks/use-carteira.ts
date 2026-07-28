@@ -104,6 +104,7 @@ export function useCarteira() {
     return () => {
       cancelled = true;
       if (stop) stop();
+      if (cleanupExtra) cleanupExtra();
     };
   }, [qc]);
 
