@@ -42,6 +42,8 @@ export function useCarteira() {
   useEffect(() => {
     let cancelled = false;
     let stop: (() => void) | null = null;
+    let cleanupExtra: (() => void) | null = null;
+
     (async () => {
       const { data } = await supabase.auth.getUser();
       const uid = data.user?.id;
@@ -49,6 +51,8 @@ export function useCarteira() {
       const invalidarSaldo = () => {
         qc.invalidateQueries({ queryKey: ["entregador-saldo"] });
         qc.invalidateQueries({ queryKey: ["entregador-transacoes"] });
+        qc.invalidateQueries({ queryKey: ["entregador-saque-resumo"] });
+        qc.invalidateQueries({ queryKey: ["entregador-saques"] });
         qc.invalidateQueries({ queryKey: ["ganho-hoje", uid] });
       };
       stop = subscribeLazy(
@@ -75,14 +79,32 @@ export function useCarteira() {
               { event: "INSERT", schema: "public", table: "entregadores_saldo_saque_movimentos", filter: `entregador_id=eq.${uid}` },
               invalidarSaldo,
             )
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "entregador_saques", filter: `entregador_id=eq.${uid}` },
+              invalidarSaldo,
+            )
             .subscribe() as never,
         invalidarSaldo,
       );
+
+      // Fallback: revalida periodicamente caso o realtime caia
+      const timer = setInterval(invalidarSaldo, 20000);
+      const onFocus = () => invalidarSaldo();
+      window.addEventListener("focus", onFocus);
+      document.addEventListener("visibilitychange", onFocus);
+      cleanupExtra = () => {
+        clearInterval(timer);
+        window.removeEventListener("focus", onFocus);
+        document.removeEventListener("visibilitychange", onFocus);
+      };
+
 
     })();
     return () => {
       cancelled = true;
       if (stop) stop();
+      if (cleanupExtra) cleanupExtra();
     };
   }, [qc]);
 
