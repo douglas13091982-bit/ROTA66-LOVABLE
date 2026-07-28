@@ -456,9 +456,9 @@ function ItensSection({
         {itens.map((it, idx) => (
           <div
             key={idx}
-            className="grid grid-cols-[minmax(0,1fr)_4.5rem_6rem_2.25rem] gap-2 items-center"
+            className="grid grid-cols-[minmax(0,1fr)_6rem_2.25rem] gap-2 items-center sm:grid-cols-[minmax(0,1fr)_4.5rem_6rem_2.25rem]"
           >
-            <div className="relative min-w-0">
+            <div className="relative col-span-full min-w-0 sm:col-span-1">
               <FieldIcon>
                 <Package className="h-4 w-4" />
               </FieldIcon>
@@ -470,6 +470,7 @@ function ItensSection({
                 maxLength={120}
               />
             </div>
+
             <input
               className={INPUT_CLS + " text-center px-1"}
               type="number"
