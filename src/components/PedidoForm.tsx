@@ -521,9 +521,13 @@ function TaxaSection({
           <Calculator className="h-3 w-3" /> Automática
         </span>
       </div>
-      <div className={INPUT_CLS + " flex items-center"}>
-        R$ {(Number(taxa) || 0).toFixed(2)}
+      <div className="flex items-baseline gap-1 rounded-xl border border-primary/40 bg-primary/10 px-4 py-3">
+        <span className="text-base font-semibold text-primary/80">R$</span>
+        <span className="text-3xl font-extrabold tracking-tight text-primary tabular-nums">
+          {(Number(taxa) || 0).toFixed(2)}
+        </span>
       </div>
+
       <p className="text-[11px] text-muted-foreground mt-1.5">
         {taxaInfo
           ? `Calculada pelas tarifas do sistema · ${taxaInfo}`
