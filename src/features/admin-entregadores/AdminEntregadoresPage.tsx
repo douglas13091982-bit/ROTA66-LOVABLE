@@ -1,13 +1,16 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminEntregadores } from "./hooks/use-admin-entregadores";
 import { contarPorVeiculo, filtrarEntregadores } from "./logic/filters";
 import type { StatusFilter, VeiculoFilter } from "./logic/types";
-import { ToolbarBusca, type ViewMode } from "./components/ToolbarBusca";
+import { ToolbarBusca, ViewToggle, type ViewMode } from "./components/ToolbarBusca";
 import { StatusFilterTabs } from "./components/StatusFilterTabs";
 import { VeiculoFilterTabs } from "./components/VeiculoFilterTabs";
 import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { EntregadoresTabela } from "./components/EntregadoresTabela";
+import { Paginacao } from "./components/Paginacao";
+
+const PER_PAGE = 12;
 
 export function AdminEntregadoresPage() {
   const { data, isLoading, setStatus, remove } = useAdminEntregadores();
@@ -15,6 +18,7 @@ export function AdminEntregadoresPage() {
   const [view, setView] = useState<ViewMode>("card");
   const [search, setSearch] = useState("");
   const [veiculo, setVeiculo] = useState<VeiculoFilter>("todos");
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(
     () => filtrarEntregadores(data, filter, search, veiculo),
@@ -26,36 +30,71 @@ export function AdminEntregadoresPage() {
     [data, filter, search]
   );
 
+  const statusCounts = useMemo(() => {
+    const base = filtrarEntregadores(data, "todas", search, veiculo);
+    return {
+      todas: base.length,
+      pendente: base.filter((e) => e.status === "pendente").length,
+      aprovado: base.filter((e) => e.status === "aprovado").length,
+      bloqueado: base.filter((e) => e.status === "bloqueado").length,
+    } as Record<StatusFilter, number>;
+  }, [data, search, veiculo]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filter, search, veiculo, view]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
   return (
     <AdminShell title="Entregadores">
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Entregadores</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Gerencie e acompanhe todos os entregadores da plataforma.
+          </p>
+        </div>
+        <ViewToggle view={view} onViewChange={setView} />
+      </div>
 
+      <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-4">
+        <ToolbarBusca search={search} onSearchChange={setSearch} />
+        <div className="overflow-x-auto">
+          <StatusFilterTabs filter={filter} counts={statusCounts} onChange={setFilter} />
+        </div>
+      </div>
 
-      <ToolbarBusca
-        search={search}
-        onSearchChange={setSearch}
-        view={view}
-        onViewChange={setView}
-      />
-      <StatusFilterTabs filter={filter} onChange={setFilter} />
       <VeiculoFilterTabs filter={veiculo} counts={veiculoCounts} onChange={setVeiculo} />
 
       {isLoading && <p className="text-muted-foreground">Carregando...</p>}
 
       {view === "card" ? (
         <EntregadoresGrid
-          list={filtered}
+          list={pageItems}
           isLoading={isLoading}
           onSetStatus={setStatus}
           onRemove={remove}
         />
       ) : (
         <EntregadoresTabela
-          list={filtered}
+          list={pageItems}
           isLoading={isLoading}
           onSetStatus={setStatus}
           onRemove={remove}
         />
       )}
+
+      <Paginacao
+        page={currentPage}
+        totalPages={totalPages}
+        total={filtered.length}
+        from={(currentPage - 1) * PER_PAGE + 1}
+        to={Math.min(currentPage * PER_PAGE, filtered.length)}
+        onChange={setPage}
+      />
     </AdminShell>
   );
 }
