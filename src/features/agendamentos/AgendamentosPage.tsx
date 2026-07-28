@@ -19,11 +19,8 @@ export function AgendamentosPage() {
     );
   }
 
-  // Loja pode usar agendamentos se está em qualquer plano pago mensalmente
-  // (plano_mensal_ativo só fica true quando taxa_por_pedido = 0; planos híbridos
-  // como o "Pro" pagam mensalidade + taxa por pedido e também são "plano mensal").
-  const l = loja as { plano_mensal_ativo?: boolean; mensalidade_valor?: number | string | null; plano_id?: string | null };
-  const planoMensal = !!l.plano_mensal_ativo || Number(l.mensalidade_valor ?? 0) > 0 || !!l.plano_id;
+  // Regra única em @/lib/plano-mensal (planos híbridos também contam).
+  const planoMensal = temPlanoMensal(loja as LojaPlanoInput);
   if (!planoMensal) {
     return (
       <LojaShell title="Turnos de entregador">
