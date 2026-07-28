@@ -75,17 +75,36 @@ export function useTurnosLoja(lojaId: string | undefined) {
 
   useEffect(() => {
     if (!lojaId) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`turnos-loja-${lojaId}`)
-        .on(
-          "postgres_changes",
-          { event: "*", schema: "public", table: "agendamentos", filter: `loja_id=eq.${lojaId}` },
-          () => carregar(),
-        )
-        .subscribe()
+    const id = setInterval(() => carregar(), 20_000);
+    return () => clearInterval(id);
+  }, [lojaId, carregar]);
+
+  useEffect(() => {
+    if (!lojaId) return;
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`turnos-loja-${lojaId}`)
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "agendamentos", filter: `loja_id=eq.${lojaId}` },
+            () => carregar(),
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "agendamento_aceites" },
+            () => carregar(),
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "agendamento_ofertas" },
+            () => carregar(),
+          )
+          .subscribe(),
+      () => carregar(),
     );
   }, [lojaId, carregar]);
+
 
   return { turnos, loading, carregar };
 }
