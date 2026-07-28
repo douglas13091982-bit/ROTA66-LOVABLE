@@ -28,5 +28,22 @@ export const reverseGeocode = createServerFn({ method: "GET" })
     }
     const json: any = await res.json();
     const address = json?.results?.[0]?.formatted_address ?? null;
-    return { address, error: null };
+
+    let cidade: string | null = null;
+    let uf: string | null = null;
+    for (const r of (json?.results ?? []) as any[]) {
+      for (const comp of (r?.address_components ?? []) as any[]) {
+        const types: string[] = comp?.types ?? [];
+        if (!cidade && (types.includes("administrative_area_level_2") || types.includes("locality"))) {
+          cidade = comp.long_name ?? null;
+        }
+        if (!uf && types.includes("administrative_area_level_1")) {
+          uf = comp.short_name ?? null;
+        }
+      }
+      if (cidade && uf) break;
+    }
+
+    return { address, cidade, uf, error: null };
   });
+
