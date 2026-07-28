@@ -23,9 +23,31 @@ function bufToB64Url(buf: ArrayBuffer | null) {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
+async function waitForActive(reg: ServiceWorkerRegistration) {
+  if (reg.active) return;
+  const sw = reg.installing ?? reg.waiting;
+  if (!sw) {
+    await navigator.serviceWorker.ready;
+    return;
+  }
+  await new Promise<void>((resolve) => {
+    const done = () => {
+      if (sw.state === "activated" || sw.state === "redundant") {
+        sw.removeEventListener("statechange", done);
+        resolve();
+      }
+    };
+    sw.addEventListener("statechange", done);
+    setTimeout(resolve, 8000);
+    done();
+  });
+}
+
 async function getExistingPushSubscriptions() {
   const regs = await navigator.serviceWorker.getRegistrations();
   const subs: PushSubscription[] = [];
+
+
 
   for (const reg of regs) {
     try {
@@ -69,16 +91,37 @@ export function usePushNotifications() {
   }, [refresh]);
 
   const enable = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) throw new Error("Faça login novamente para ativar as notificações.");
+    if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+      setState("unsupported");
+      throw new Error("Este app/navegador não suporta notificações push.");
+    }
     setBusy(true);
     try {
-      const reg = await navigator.serviceWorker.register("/sw-push.js");
-      await navigator.serviceWorker.ready;
-      const perm = await Notification.requestPermission();
+      // IMPORTANTE (TWA/Android): o pedido de permissão precisa acontecer
+      // ainda dentro do gesto do usuário. Se registrarmos o service worker
+      // antes, o Chrome perde o "user activation" e o prompt é ignorado
+      // silenciosamente — que é o caso do APK TWA.
+      let perm: NotificationPermission = Notification.permission;
+      if (perm !== "granted") {
+        perm = await Notification.requestPermission();
+      }
       if (perm !== "granted") {
         setState(perm === "denied" ? "denied" : "default");
-        return;
+        throw new Error(
+          perm === "denied"
+            ? "Permissão negada. Abra Configurações do Android → Apps → ROTA 66 → Notificações e ative."
+            : "Permissão não concedida. Toque novamente e escolha Permitir."
+        );
       }
+
+      const reg = await navigator.serviceWorker.register("/sw-push.js");
+      // navigator.serviceWorker.ready pode resolver com OUTRA registration
+      // (ex.: /sw.js). Esperamos especificamente o /sw-push.js ficar ativo,
+      // senão pushManager.subscribe falha com InvalidStateError no TWA.
+      await waitForActive(reg);
+
+
 
       // O navegador mantém apenas uma assinatura Push por origem, não por
       // arquivo de service worker. Se existia assinatura antiga no sw.js ou
@@ -151,5 +194,46 @@ export function usePushNotifications() {
     }
   }, []);
 
-  return { state, busy, enable, disable, refresh };
+  const diagnose = useCallback(async () => {
+    const linhas: string[] = [];
+    const standalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia?.("(display-mode: standalone)").matches ||
+        (navigator as any).standalone === true);
+    linhas.push(`Modo app instalado: ${standalone ? "sim" : "não"}`);
+    linhas.push(`Suporte Notification: ${"Notification" in window ? "sim" : "NÃO"}`);
+    linhas.push(`Suporte PushManager: ${"PushManager" in window ? "sim" : "NÃO"}`);
+    linhas.push(
+      `Permissão: ${typeof Notification !== "undefined" ? Notification.permission : "indisponível"}`
+    );
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      linhas.push(`Service workers: ${regs.length}`);
+      for (const r of regs) {
+        const sub = await r.pushManager.getSubscription().catch(() => null);
+        linhas.push(
+          `• ${r.active?.scriptURL?.split("/").pop() ?? "?"} — ${
+            r.active ? "ativo" : "inativo"
+          } — assinatura: ${sub ? "sim" : "não"}`
+        );
+      }
+    } catch (e: any) {
+      linhas.push(`Erro ao ler service workers: ${e?.message ?? e}`);
+    }
+    if (user?.id) {
+      const { count, error } = await supabase
+        .from("push_subscriptions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      linhas.push(
+        error
+          ? `Assinaturas no servidor: erro (${error.message})`
+          : `Assinaturas no servidor: ${count ?? 0}`
+      );
+    }
+    return linhas.join("\n");
+  }, [user?.id]);
+
+  return { state, busy, enable, disable, refresh, diagnose };
 }
+

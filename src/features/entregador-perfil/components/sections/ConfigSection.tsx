@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { toast } from "sonner";
+
 import { Check, Trash2, X } from "lucide-react";
 import { SectionPanel } from "../ui-atoms";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
@@ -33,6 +35,8 @@ export function ConfigSection({
   const pushOn = push.state === "granted";
   const pushDisabled = push.busy || push.state === "loading" || push.state === "unsupported";
 
+  const [diag, setDiag] = useState<string | null>(null);
+
   async function togglePush() {
     try {
       if (pushOn) {
@@ -40,16 +44,22 @@ export function ConfigSection({
         toast.success("Notificações desativadas");
       } else {
         await push.enable();
-        if (push.state === "denied" || (typeof Notification !== "undefined" && Notification.permission === "denied")) {
-          toast.error("Permissão negada. Ative manualmente nas configurações do app/navegador.");
-        } else {
-          toast.success("Notificações ativadas");
-        }
+        toast.success("Notificações ativadas");
       }
     } catch (e: any) {
-      toast.error(e?.message || "Falha ao alterar notificações");
+      toast.error(e?.message || "Falha ao alterar notificações", { duration: 8000 });
     }
   }
+
+  async function rodarDiagnostico() {
+    try {
+      setDiag("Verificando...");
+      setDiag(await push.diagnose());
+    } catch (e: any) {
+      setDiag(`Erro: ${e?.message ?? e}`);
+    }
+  }
+
   return (
     <SectionPanel>
       <div className="flex items-start justify-between gap-3 py-1">
@@ -105,6 +115,23 @@ export function ConfigSection({
           />
         </button>
       </div>
+
+      <div className="pb-3 -mt-1">
+        <button
+          type="button"
+          onClick={rodarDiagnostico}
+          className="text-[11px] font-semibold text-white/60 underline underline-offset-2"
+        >
+          Diagnóstico de notificações
+        </button>
+        {diag && (
+          <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-black/30 border border-white/10 p-2.5 text-[10.5px] leading-relaxed text-white/70">
+            {diag}
+          </pre>
+        )}
+      </div>
+
+
 
       <div className="pt-3 border-t border-white/8">
         <p className="text-[10px] uppercase tracking-[0.22em] text-white/45 font-bold mb-2">
