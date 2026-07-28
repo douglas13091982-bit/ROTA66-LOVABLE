@@ -17,6 +17,7 @@ export function useEntregadoresLoja(lojaId: string | undefined) {
       return (data ?? []).map((v: any) => ({
         id: v.vinculo_id,
         ativo: v.ativo,
+        status: (v.status ?? "aceito") as Vinculo["status"],
         entregador_id: v.entregador_id,
         profile: {
           full_name: v.full_name,

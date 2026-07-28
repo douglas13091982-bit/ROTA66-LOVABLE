@@ -1463,6 +1463,7 @@ export type Database = {
           entregador_id: string
           id: string
           loja_id: string
+          status: string
         }
         Insert: {
           ativo?: boolean
@@ -1470,6 +1471,7 @@ export type Database = {
           entregador_id: string
           id?: string
           loja_id: string
+          status?: string
         }
         Update: {
           ativo?: boolean
@@ -1477,6 +1479,7 @@ export type Database = {
           entregador_id?: string
           id?: string
           loja_id?: string
+          status?: string
         }
         Relationships: [
           {
@@ -4070,6 +4073,7 @@ export type Database = {
           entregador_id: string
           full_name: string
           phone: string
+          status: string
           vinculo_id: string
         }[]
       }

@@ -46,16 +46,28 @@ export function EntregadorCard({
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <button
-          onClick={onToggleAtivo}
-          className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md ${
-            v.ativo
-              ? "bg-green-600/20 text-green-500"
-              : "bg-zinc-600/20 text-zinc-400"
-          }`}
-        >
-          {v.ativo ? "Ativo" : "Inativo"}
-        </button>
+        {v.status === "aceito" ? (
+          <button
+            onClick={onToggleAtivo}
+            className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md ${
+              v.ativo
+                ? "bg-green-600/20 text-green-500"
+                : "bg-zinc-600/20 text-zinc-400"
+            }`}
+          >
+            {v.ativo ? "Ativo" : "Inativo"}
+          </button>
+        ) : (
+          <span
+            className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md ${
+              v.status === "pendente"
+                ? "bg-amber-600/20 text-amber-500"
+                : "bg-red-600/20 text-red-400"
+            }`}
+          >
+            {v.status === "pendente" ? "Aguardando aceite" : "Recusado"}
+          </span>
+        )}
         <button
           onClick={onRemove}
           className="text-muted-foreground hover:text-destructive p-2"
