@@ -43,34 +43,50 @@ export function useTurnosEntregador(userId: string | undefined) {
     carregar();
   }, [carregar]);
 
+  // Fallback de polling: se o WebSocket cair (TWA/Android em background),
+  // os turnos continuam sincronizando com o painel da loja.
   useEffect(() => {
     if (!userId) return;
-    return subscribeLazy(() =>
-      supabase
-        .channel(`turnos-entregador-${userId}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "agendamento_ofertas",
-            filter: `entregador_id=eq.${userId}`,
-          },
-          (payload) => {
-            carregar();
-            if (payload.eventType === "INSERT") {
-              toast.success("🔔 Nova oportunidade de turno disponível!", { duration: 6000 });
-            }
-          },
-        )
-        .on(
-          "postgres_changes",
-          { event: "UPDATE", schema: "public", table: "agendamentos" },
-          () => carregar(),
-        )
-        .subscribe()
+    const id = setInterval(() => carregar(), 20_000);
+    return () => clearInterval(id);
+  }, [userId, carregar]);
+
+  useEffect(() => {
+    if (!userId) return;
+    return subscribeLazy(
+      () =>
+        supabase
+          .channel(`turnos-entregador-${userId}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "agendamento_ofertas",
+              filter: `entregador_id=eq.${userId}`,
+            },
+            (payload) => {
+              carregar();
+              if (payload.eventType === "INSERT") {
+                toast.success("🔔 Nova oportunidade de turno disponível!", { duration: 6000 });
+              }
+            },
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "agendamentos" },
+            () => carregar(),
+          )
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "agendamento_aceites" },
+            () => carregar(),
+          )
+          .subscribe(),
+      () => carregar(),
     );
   }, [userId, carregar]);
+
 
   return { disponiveis, meus, loading, carregar };
 }
