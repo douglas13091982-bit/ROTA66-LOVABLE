@@ -517,13 +517,13 @@ function TaxaSection({
     <div>
       <div className="flex items-center justify-between gap-2 mb-2">
         <span className={LABEL_CLS + " mb-0"}>Taxa de entrega (R$)</span>
-        <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+        <span className="flex shrink-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-taxa">
           <Calculator className="h-3 w-3" /> Automática
         </span>
       </div>
-      <div className="flex items-baseline gap-1 rounded-xl border border-primary/40 bg-primary/10 px-4 py-3">
-        <span className="text-base font-semibold text-primary/80">R$</span>
-        <span className="text-3xl font-extrabold tracking-tight text-primary tabular-nums">
+      <div className="flex items-baseline gap-1 rounded-xl border border-taxa/40 bg-taxa/10 px-4 py-3">
+        <span className="text-base font-semibold text-taxa/80">R$</span>
+        <span className="text-3xl font-extrabold tracking-tight text-taxa tabular-nums">
           {(Number(taxa) || 0).toFixed(2)}
         </span>
       </div>
