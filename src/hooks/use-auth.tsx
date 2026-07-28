@@ -84,10 +84,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       subscription.unsubscribe();
-      document.removeEventListener("visibilitychange", refrescar);
-      window.removeEventListener("focus", refrescar);
-      window.removeEventListener("pageshow", refrescar);
+      pararKeepAlive();
     };
+
   }, []);
 
   const signOut = async () => {
