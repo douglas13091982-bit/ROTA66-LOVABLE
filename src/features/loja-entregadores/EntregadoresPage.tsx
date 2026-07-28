@@ -4,6 +4,7 @@ import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { VincularEntregadorForm } from "./components/VincularEntregadorForm";
 import { useEntregadoresLoja } from "./hooks/use-entregadores-loja";
 import { Lock } from "lucide-react";
+import { temPlanoMensal, type LojaPlanoInput } from "@/lib/plano-mensal";
 
 export function EntregadoresPage() {
   const { data: loja } = useMinhaLoja();
