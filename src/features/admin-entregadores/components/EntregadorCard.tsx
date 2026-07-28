@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Ban, Bike, Check, FileSearch, MessageCircle, PartyPopper, Phone, Trash2 } from "lucide-react";
+import { Ban, Bike, Check, FileText, MessageCircle, PartyPopper, Phone, Trash2, Wallet } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
 import { supabase } from "@/integrations/supabase/client";
 import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
@@ -19,9 +19,7 @@ export function EntregadorCard({
   const st = STATUS_LABEL[p.status] ?? STATUS_LABEL.pendente;
   const wa = p.phone ? waLink(p.phone) : null;
   const waAprovacao =
-    p.phone && p.status === "aprovado"
-      ? waLink(p.phone, mensagemAprovacao(p.full_name))
-      : null;
+    p.phone && p.status === "aprovado" ? waLink(p.phone, mensagemAprovacao(p.full_name)) : null;
 
   const [docStatus, setDocStatus] = useState<string | null>(null);
   const [docTipo, setDocTipo] = useState<string | null>(null);
@@ -39,7 +37,9 @@ export function EntregadorCard({
         setDocTipo(data?.tipo_veiculo ?? null);
       }
     })();
-    return () => { ativo = false; };
+    return () => {
+      ativo = false;
+    };
   }, [p.id, showDocs]);
 
   const docLabel: Record<string, { label: string; cls: string }> = {
@@ -50,9 +50,10 @@ export function EntregadorCard({
   };
   const dl = docStatus ? docLabel[docStatus] : null;
   const precisaRevisar = docStatus === "enviado";
+  const v = veiculoInfo(p.tipo_veiculo ?? docTipo);
 
   return (
-    <div className="bg-card border border-border rounded-lg p-5 shadow-card">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
       {showDocs && (
         <DocumentosReviewDialog
           entregadorId={p.id}
@@ -60,122 +61,142 @@ export function EntregadorCard({
           onClose={() => setShowDocs(false)}
         />
       )}
-      <div className="flex items-center gap-3 mb-3">
-        <div className="h-12 w-12 rounded-full bg-gradient-red shadow-red flex items-center justify-center overflow-hidden">
-          {p.avatar_url ? (
-            <AvatarImg
-              src={p.avatar_url}
-              alt={p.full_name ?? "Entregador"}
-              className="h-full w-full object-cover"
-              fallback={<Bike className="h-6 w-6 text-primary-foreground" />}
-            />
-          ) : (
-            <Bike className="h-6 w-6 text-primary-foreground" />
-          )}
+
+      <div className="flex items-start gap-3">
+        <div className="relative shrink-0">
+          <div className="h-14 w-14 rounded-full bg-gradient-red flex items-center justify-center overflow-hidden ring-2 ring-white/10">
+            {p.avatar_url ? (
+              <AvatarImg
+                src={p.avatar_url}
+                alt={p.full_name ?? "Entregador"}
+                className="h-full w-full object-cover"
+                fallback={<Bike className="h-6 w-6 text-primary-foreground" />}
+              />
+            ) : (
+              <Bike className="h-6 w-6 text-primary-foreground" />
+            )}
+          </div>
+          <span
+            className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-[#0b1523] ${
+              p.status === "aprovado" ? "bg-green-500" : "bg-zinc-500"
+            }`}
+          />
         </div>
+
         <div className="min-w-0 flex-1">
-          <div className="font-bold truncate">{p.full_name ?? "Sem nome"}</div>
-          {p.phone ? (
-            <a
-              href={`tel:${onlyDigits(p.phone)}`}
-              className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-            >
-              <Phone className="h-3 w-3" /> {p.phone}
-            </a>
-          ) : (
-            <div className="text-xs text-muted-foreground">—</div>
-          )}
-          {wa && (
-            <a
-              href={wa}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-green-600/20 text-green-500 hover:bg-green-600/30"
-            >
-              <MessageCircle className="h-3 w-3" /> WhatsApp
-            </a>
-          )}
+          <div className="text-sm font-bold uppercase tracking-wide truncate">
+            {p.full_name ?? "Sem nome"}
+          </div>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            {p.phone ? (
+              <a
+                href={`tel:${onlyDigits(p.phone)}`}
+                className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5"
+              >
+                <Phone className="h-3.5 w-3.5" /> {p.phone}
+              </a>
+            ) : (
+              <span className="text-xs text-muted-foreground">—</span>
+            )}
+            {wa && (
+              <a
+                href={wa}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-green-600/15 text-green-400 hover:bg-green-600/25"
+              >
+                <MessageCircle className="h-3 w-3" /> WhatsApp
+              </a>
+            )}
+          </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-2 mb-3">
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <span
-          className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${st.cls}`}
+          className={`inline-block px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg ${st.cls}`}
         >
           {st.label}
         </span>
-        {(() => {
-          const v = veiculoInfo(p.tipo_veiculo ?? docTipo);
-          return (
-            <span
-              className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${v.cls}`}
-            >
-              <v.Icon className="h-3 w-3" />
-              {v.label}
-            </span>
-          );
-        })()}
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-white/[0.05] text-muted-foreground">
+          <v.Icon className="h-3.5 w-3.5" />
+          {v.label}
+        </span>
         {dl && docTipo !== "bike_eletrica" && (
-          <span className={`inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${dl.cls}`}>
+          <span
+            className={`inline-block px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg ${dl.cls}`}
+          >
             {dl.label}
           </span>
         )}
-        <span
-          className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
-            Number(p.saldo_carteira) > 0
-              ? "bg-green-600/20 text-green-500"
-              : "bg-muted text-muted-foreground"
-          }`}
-          title="Saldo disponível na carteira"
-        >
-          Carteira: {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-        </span>
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-white/5 flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2 min-w-0">
+          <Wallet className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+          <div className="min-w-0">
+            <div className="text-[11px] text-muted-foreground">Carteira</div>
+            <div className="text-sm font-semibold tabular-nums">
+              {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </div>
+          </div>
+        </div>
         {p.created_at && (
-          <span className="text-[10px] text-muted-foreground ml-auto">
-            Cadastro: {new Date(p.created_at).toLocaleDateString("pt-BR")}
-          </span>
+          <div className="text-right shrink-0">
+            <div className="text-[11px] text-muted-foreground">Cadastro</div>
+            <div className="text-sm font-semibold tabular-nums">
+              {new Date(p.created_at).toLocaleDateString("pt-BR")}
+            </div>
+          </div>
         )}
       </div>
+
       {docTipo && docTipo !== "bike_eletrica" && (
         <button
           onClick={() => setShowDocs(true)}
-          className={`w-full mb-2 flex items-center justify-center gap-1 px-3 py-2 text-xs font-bold uppercase rounded-md ${
+          className={`mt-4 w-full flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border transition ${
             precisaRevisar
-              ? "bg-amber-600 text-white hover:bg-amber-700 animate-pulse"
-              : "bg-muted text-foreground hover:bg-muted/70"
+              ? "bg-amber-600 text-white border-transparent hover:bg-amber-700 animate-pulse"
+              : "bg-white/[0.03] text-foreground border-white/10 hover:bg-white/[0.06]"
           }`}
         >
-          <FileSearch className="h-3.5 w-3.5" />
+          <FileText className="h-4 w-4" />
           {precisaRevisar ? "Revisar documentos" : "Ver documentos"}
         </button>
       )}
-      <div className="grid grid-cols-3 gap-2">
+
+      <div className="mt-3 grid grid-cols-3 gap-2">
         <button
           onClick={() => onSetStatus(p.id, "aprovado")}
           disabled={p.status === "aprovado"}
-          className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-bold uppercase rounded-md bg-green-600/20 text-green-500 hover:bg-green-600/30 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-green-500/40 text-green-400 hover:bg-green-500/10 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Check className="h-3.5 w-3.5" /> Aprovar
         </button>
         <button
           onClick={() => onSetStatus(p.id, "bloqueado")}
           disabled={p.status === "bloqueado"}
-          className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-bold uppercase rounded-md bg-amber-600/20 text-amber-400 hover:bg-amber-600/30 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-amber-500/40 text-amber-400 hover:bg-amber-500/10 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Ban className="h-3.5 w-3.5" /> Bloquear
         </button>
         <button
           onClick={() => onRemove(p.id, p.full_name ?? "entregador")}
-          className="flex items-center justify-center gap-1 px-2 py-2 text-xs font-bold uppercase rounded-md bg-red-600/20 text-red-400 hover:bg-red-600/30"
+          className="flex items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-red-500/40 text-red-400 hover:bg-red-500/10"
         >
           <Trash2 className="h-3.5 w-3.5" /> Excluir
         </button>
       </div>
+
       {waAprovacao && (
         <a
           href={waAprovacao}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-md bg-green-600 text-white hover:bg-green-700 transition"
+          className="mt-3 flex items-center justify-center gap-2 px-3 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-green-600 text-white hover:bg-green-700 transition"
         >
           <PartyPopper className="h-4 w-4" />
           Enviar parabéns pelo WhatsApp
