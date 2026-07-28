@@ -578,7 +578,7 @@ function ResumoTotal({
   valorTotal: number;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-background/40 p-4 space-y-1 text-sm">
+    <div className="rounded-2xl border border-border bg-card shadow-card p-4 space-y-1 text-sm">
       <div className="flex justify-between">
         <span className="text-muted-foreground">Produtos</span>
         <span>R$ {valorProdutos.toFixed(2)}</span>
