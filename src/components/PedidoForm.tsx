@@ -456,7 +456,7 @@ function ItensSection({
         {itens.map((it, idx) => (
           <div
             key={idx}
-            className="grid grid-cols-[minmax(0,1fr)_6rem_2.25rem] gap-2 items-center sm:grid-cols-[minmax(0,1fr)_4.5rem_6rem_2.25rem]"
+            className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.25rem] gap-2 items-center sm:grid-cols-[minmax(0,1fr)_6rem_6rem_2.25rem]"
           >
             <div className="relative col-span-full min-w-0 sm:col-span-1">
               <FieldIcon>
