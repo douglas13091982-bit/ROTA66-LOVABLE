@@ -69,16 +69,33 @@ export function usePushNotifications() {
   }, [refresh]);
 
   const enable = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) throw new Error("Faça login novamente para ativar as notificações.");
+    if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) {
+      setState("unsupported");
+      throw new Error("Este app/navegador não suporta notificações push.");
+    }
     setBusy(true);
     try {
-      const reg = await navigator.serviceWorker.register("/sw-push.js");
-      await navigator.serviceWorker.ready;
-      const perm = await Notification.requestPermission();
+      // IMPORTANTE (TWA/Android): o pedido de permissão precisa acontecer
+      // ainda dentro do gesto do usuário. Se registrarmos o service worker
+      // antes, o Chrome perde o "user activation" e o prompt é ignorado
+      // silenciosamente — que é o caso do APK TWA.
+      let perm: NotificationPermission = Notification.permission;
+      if (perm !== "granted") {
+        perm = await Notification.requestPermission();
+      }
       if (perm !== "granted") {
         setState(perm === "denied" ? "denied" : "default");
-        return;
+        throw new Error(
+          perm === "denied"
+            ? "Permissão negada. Abra Configurações do Android → Apps → ROTA 66 → Notificações e ative."
+            : "Permissão não concedida. Toque novamente e escolha Permitir."
+        );
       }
+
+      const reg = await navigator.serviceWorker.register("/sw-push.js");
+      await navigator.serviceWorker.ready;
+
 
       // O navegador mantém apenas uma assinatura Push por origem, não por
       // arquivo de service worker. Se existia assinatura antiga no sw.js ou
