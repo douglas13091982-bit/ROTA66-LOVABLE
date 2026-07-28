@@ -15,9 +15,10 @@ export function useVinculosLoja(userId: string | undefined) {
   };
 
   async function responder(id: string, status: "aceito" | "recusado") {
-    const patch: Record<string, unknown> = { status };
-    if (status === "aceito") patch.ativo = true;
-    const { error } = await supabase.from("loja_entregadores").update(patch).eq("id", id);
+    const { error } = await supabase
+      .from("loja_entregadores")
+      .update({ status, ativo: status === "aceito" })
+      .eq("id", id);
     if (error) return toast.error(error.message);
     toast.success(status === "aceito" ? "Vínculo aceito" : "Vínculo recusado");
     invalidate();
