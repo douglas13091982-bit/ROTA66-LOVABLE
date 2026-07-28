@@ -4,6 +4,7 @@ import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { VincularEntregadorForm } from "./components/VincularEntregadorForm";
 import { useEntregadoresLoja } from "./hooks/use-entregadores-loja";
 import { Lock } from "lucide-react";
+import { temPlanoMensal, type LojaPlanoInput } from "@/lib/plano-mensal";
 
 export function EntregadoresPage() {
   const { data: loja } = useMinhaLoja();
@@ -17,10 +18,7 @@ export function EntregadoresPage() {
     );
   }
 
-  // Planos híbridos (mensalidade + taxa por pedido) também são plano mensal:
-  // plano_mensal_ativo só fica true quando taxa_por_pedido = 0.
-  const l = loja as { plano_mensal_ativo?: boolean; mensalidade_valor?: number | string | null; plano_id?: string | null };
-  const planoAtivo = !!l.plano_mensal_ativo || Number(l.mensalidade_valor ?? 0) > 0 || !!l.plano_id;
+  const planoAtivo = temPlanoMensal(loja as LojaPlanoInput);
 
   return (
     <LojaShell title="Entregadores">
