@@ -5,6 +5,7 @@ import { NovoTurnoForm } from "./components/NovoTurnoForm";
 import { PlanoMensalLock } from "./components/PlanoMensalLock";
 import { TurnosList } from "./components/TurnosList";
 import { useTurnosLoja } from "./hooks/use-turnos-loja";
+import { temPlanoMensal, type LojaPlanoInput } from "@/lib/plano-mensal";
 
 export function AgendamentosPage() {
   const { data: loja } = useMinhaLoja();
