@@ -19,24 +19,24 @@ export function VeiculoFilterTabs({
   onChange: (v: VeiculoFilter) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2 mb-5">
+    <div className="flex flex-wrap gap-3 mb-6">
       {OPTS.map(({ value, label, Icon }) => {
         const active = filter === value;
         return (
           <button
             key={value}
             onClick={() => onChange(value)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md transition ${
+            className={`inline-flex items-center gap-2.5 px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl border transition ${
               active
-                ? "bg-primary text-primary-foreground"
-                : "bg-card text-muted-foreground border border-border hover:text-foreground"
+                ? "bg-primary text-primary-foreground border-transparent"
+                : "bg-white/[0.03] text-muted-foreground border-white/10 hover:text-foreground"
             }`}
           >
-            <Icon className="h-3.5 w-3.5" />
+            <Icon className="h-4 w-4" />
             {label}
             <span
-              className={`ml-0.5 px-1.5 py-0.5 rounded text-[10px] tabular-nums ${
-                active ? "bg-primary-foreground/20" : "bg-muted text-foreground"
+              className={`px-1.5 py-0.5 rounded text-[10px] tabular-nums ${
+                active ? "bg-black/20" : "bg-white/[0.06] text-foreground"
               }`}
             >
               {counts[value] ?? 0}
