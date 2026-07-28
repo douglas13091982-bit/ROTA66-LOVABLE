@@ -116,6 +116,23 @@ export function ConfigSection({
         </button>
       </div>
 
+      <div className="pb-3 -mt-1">
+        <button
+          type="button"
+          onClick={rodarDiagnostico}
+          className="text-[11px] font-semibold text-white/60 underline underline-offset-2"
+        >
+          Diagnóstico de notificações
+        </button>
+        {diag && (
+          <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-black/30 border border-white/10 p-2.5 text-[10.5px] leading-relaxed text-white/70">
+            {diag}
+          </pre>
+        )}
+      </div>
+
+
+
       <div className="pt-3 border-t border-white/8">
         <p className="text-[10px] uppercase tracking-[0.22em] text-white/45 font-bold mb-2">
           Lojas vinculadas
