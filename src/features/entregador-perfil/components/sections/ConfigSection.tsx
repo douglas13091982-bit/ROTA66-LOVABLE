@@ -113,27 +113,77 @@ export function ConfigSection({
         {!lojas || lojas.length === 0 ? (
           <p className="text-[12px] text-white/50">Nenhum vínculo ainda.</p>
         ) : (
-          <ul className="space-y-1.5">
-            {lojas.map((v) => (
-              <li
-                key={v.loja_id}
-                className="flex items-center justify-between text-[13px]"
-              >
-                <span className="text-white/85 font-medium truncate">
-                  {v.loja?.nome ?? "—"}
-                </span>
-                <span
-                  className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] rounded-full ${
-                    v.ativo
-                      ? "bg-emerald-500/15 text-emerald-400"
-                      : "bg-white/8 text-white/50"
-                  }`}
+          <ul className="space-y-2">
+            {lojas.map((v) => {
+              const status = v.status ?? "aceito";
+              return (
+                <li
+                  key={v.loja_id}
+                  className="rounded-xl bg-white/[0.03] border border-white/8 px-3 py-2.5"
                 >
-                  {v.ativo ? "Ativo" : "Inativo"}
-                </span>
-              </li>
-            ))}
+                  <div className="flex items-center justify-between gap-2 text-[13px]">
+                    <span className="text-white/85 font-medium truncate">
+                      {v.loja?.nome ?? "—"}
+                    </span>
+                    <span
+                      className={`px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.18em] rounded-full shrink-0 ${
+                        status === "pendente"
+                          ? "bg-amber-500/15 text-amber-400"
+                          : status === "recusado"
+                          ? "bg-red-500/15 text-red-400"
+                          : v.ativo
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-white/8 text-white/50"
+                      }`}
+                    >
+                      {status === "pendente"
+                        ? "Convite"
+                        : status === "recusado"
+                        ? "Recusado"
+                        : v.ativo
+                        ? "Ativo"
+                        : "Inativo"}
+                    </span>
+                  </div>
+
+                  {v.id && (
+                    <div className="mt-2 flex items-center gap-2">
+                      {status !== "aceito" && (
+                        <button
+                          type="button"
+                          onClick={() => responder(v.id!, "aceito")}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em]"
+                        >
+                          <Check className="h-3.5 w-3.5" /> Aceitar
+                        </button>
+                      )}
+                      {status !== "recusado" && (
+                        <button
+                          type="button"
+                          onClick={() => responder(v.id!, "recusado")}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-white/8 text-white/70 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em]"
+                        >
+                          <X className="h-3.5 w-3.5" /> Recusar
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm(`Excluir o vínculo com ${v.loja?.nome ?? "esta loja"}?`))
+                            excluir(v.id!);
+                        }}
+                        className="inline-flex items-center justify-center rounded-lg bg-red-500/12 text-red-400 px-2.5 py-1.5"
+                        aria-label="Excluir vínculo"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
+
         )}
       </div>
     </SectionPanel>
