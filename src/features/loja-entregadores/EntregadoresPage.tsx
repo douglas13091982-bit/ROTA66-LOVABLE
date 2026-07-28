@@ -17,7 +17,10 @@ export function EntregadoresPage() {
     );
   }
 
-  const planoAtivo = !!(loja as { plano_mensal_ativo?: boolean }).plano_mensal_ativo;
+  // Planos híbridos (mensalidade + taxa por pedido) também são plano mensal:
+  // plano_mensal_ativo só fica true quando taxa_por_pedido = 0.
+  const l = loja as { plano_mensal_ativo?: boolean; mensalidade_valor?: number | string | null; plano_id?: string | null };
+  const planoAtivo = !!l.plano_mensal_ativo || Number(l.mensalidade_valor ?? 0) > 0 || !!l.plano_id;
 
   return (
     <LojaShell title="Entregadores">
