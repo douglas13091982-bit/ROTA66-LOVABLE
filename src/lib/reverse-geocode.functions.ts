@@ -14,7 +14,7 @@ export const reverseGeocode = createServerFn({ method: "GET" })
       process.env.GOOGLE_MAPS_API_KEY_1 ??
       process.env.GOOGLE_MAPS_API_KEY_2;
     if (!apiKey || !connKey) {
-      return { address: null as string | null, error: "missing_credentials" };
+      return { address: null as string | null, cidade: null as string | null, uf: null as string | null, error: "missing_credentials" };
     }
     const url = `${GATEWAY_URL}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=pt-BR`;
     const res = await fetch(url, {
@@ -24,7 +24,7 @@ export const reverseGeocode = createServerFn({ method: "GET" })
       },
     });
     if (!res.ok) {
-      return { address: null, error: `http_${res.status}` };
+      return { address: null, cidade: null, uf: null, error: `http_${res.status}` };
     }
     const json: any = await res.json();
     const address = json?.results?.[0]?.formatted_address ?? null;
