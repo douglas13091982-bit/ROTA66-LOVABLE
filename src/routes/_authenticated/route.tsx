@@ -1,47 +1,50 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { garantirSessaoValida } from "@/lib/auth-session";
 import { GlobalErrorBoundary } from "@/components/GlobalErrorBoundary";
+
+/**
+ * Centraliza roles + flag de colaborador de franqueado para que TODOS os
+ * sub-layouts e componentes leiam a mesma fonte de verdade.
+ */
+async function carregarContexto(user: User) {
+  const [{ data: rolesData }, { data: colab }] = await Promise.all([
+    supabase.from("user_roles").select("role").eq("user_id", user.id),
+    (supabase as any)
+      .from("franqueado_colaboradores")
+      .select("id")
+      .eq("colaborador_user_id", user.id)
+      .eq("ativo", true)
+      .maybeSingle(),
+  ]);
+  const roles = (rolesData ?? []).map((r) => r.role as string);
+  const isFranqueadoColaborador = !!colab;
+  if (isFranqueadoColaborador && !roles.includes("franqueado_colaborador")) {
+    roles.push("franqueado_colaborador");
+  }
+  return { user, roles, isFranqueadoColaborador };
+}
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
-    // Usamos getSession() (local + auto-refresh via refresh_token) em vez de
-    // getUser() (chamada de rede a cada navegação). Isso evita que uma
-    // falha momentânea de rede — muito comum quando o app do entregador
-    // ficou em segundo plano e volta com o token vencido — derrube o
-    // usuário para a tela de login. Se não houver sessão local, tentamos
-    // refresh explicitamente antes de redirecionar.
-    let { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      const { data: refreshed } = await supabase.auth.refreshSession();
-      session = refreshed.session ?? null;
-    }
-    if (!session?.user) {
-      throw redirect({ to: "/login" });
+    // `garantirSessaoValida` renova o token proativamente e distingue
+    // "sem sessão" de "falha de rede". Antes, qualquer oscilação de rede
+    // na renovação derrubava o usuário para o login — era isso que fazia
+    // o painel da loja deslogar sozinho depois de um tempo aberto.
+    const resultado = await garantirSessaoValida();
+
+    if (resultado === "rede") {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session?.user) throw redirect({ to: "/login" });
+      return carregarContexto(data.session.user);
     }
 
-    // Centraliza roles + flag de colaborador de franqueado aqui para que
-    // TODOS os sub-layouts e componentes leiam a mesma fonte de verdade
-    // (evita UI escondida para colaboradores com acesso efetivo).
-    const [{ data: rolesData }, { data: colab }] = await Promise.all([
-      supabase.from("user_roles").select("role").eq("user_id", session.user.id),
-      (supabase as any)
-        .from("franqueado_colaboradores")
-        .select("id")
-        .eq("colaborador_user_id", session.user.id)
-        .eq("ativo", true)
-        .maybeSingle(),
-    ]);
-    const roles = (rolesData ?? []).map((r) => r.role as string);
-    const isFranqueadoColaborador = !!colab;
-    // Injeta role sintética para que checagens `roles.includes(...)` em
-    // componentes vejam o colaborador de franqueado sem query adicional.
-    if (isFranqueadoColaborador && !roles.includes("franqueado_colaborador")) {
-      roles.push("franqueado_colaborador");
-    }
-
-    return { user: session.user, roles, isFranqueadoColaborador };
+    if (!resultado?.user) throw redirect({ to: "/login" });
+    return carregarContexto(resultado.user);
   },
+
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
   notFoundComponent: () => <GlobalErrorBoundary statusCode={404} />,
   component: () => <Outlet />,

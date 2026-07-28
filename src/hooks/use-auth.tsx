@@ -1,6 +1,8 @@
 import { useEffect, useState, createContext, useContext, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { manterSessaoViva } from "@/lib/auth-session";
+
 
 export type AppRole = "super_admin" | "admin" | "loja_admin" | "entregador" | "cliente" | "revendedor";
 
@@ -76,28 +78,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
 
-    // Quando o usuário volta ao app depois de um tempo (tela bloqueada,
-    // troca de aba, PWA em segundo plano), o token pode ter vencido e o
-    // autoRefresh interno do supabase-js pode ter pausado. Forçamos um
-    // refresh sempre que a aba volta a ficar visível — se falhar, o
-    // onAuthStateChange abaixo cuida do SIGNED_OUT.
-    const refrescar = () => {
-      if (typeof document === "undefined") return;
-      if (document.visibilityState !== "visible") return;
-      supabase.auth.getSession().then(({ data }) => {
-        if (!data.session) supabase.auth.refreshSession();
-      });
-    };
-    document.addEventListener("visibilitychange", refrescar);
-    window.addEventListener("focus", refrescar);
-    window.addEventListener("pageshow", refrescar);
+    // Mantém o token sempre renovado enquanto o painel fica aberto. O timer
+    // interno do supabase-js é estrangulado pelo navegador em abas de
+    // segundo plano; sem isso o token vencia e o usuário deslogava sozinho.
+    const pararKeepAlive = manterSessaoViva();
+
 
     return () => {
       subscription.unsubscribe();
-      document.removeEventListener("visibilitychange", refrescar);
-      window.removeEventListener("focus", refrescar);
-      window.removeEventListener("pageshow", refrescar);
+      pararKeepAlive();
     };
+
   }, []);
 
   const signOut = async () => {
