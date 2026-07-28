@@ -270,8 +270,8 @@ export function PedidoForm({
         valorTotal={form.valorTotal}
       />
 
-      {/* Ação: fixa no mobile, inline no desktop */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:static md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+      {/* Ação */}
+      <div className="pb-[env(safe-area-inset-bottom)]">
         <button
           type="submit"
           disabled={form.loading}
