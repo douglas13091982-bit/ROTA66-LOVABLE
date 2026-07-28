@@ -26,6 +26,26 @@ function bufToB64Url(buf: ArrayBuffer | null) {
 async function getExistingPushSubscriptions() {
   const regs = await navigator.serviceWorker.getRegistrations();
   const subs: PushSubscription[] = [];
+async function waitForActive(reg: ServiceWorkerRegistration) {
+  if (reg.active) return;
+  const sw = reg.installing ?? reg.waiting;
+  if (!sw) {
+    await navigator.serviceWorker.ready;
+    return;
+  }
+  await new Promise<void>((resolve) => {
+    const done = () => {
+      if (sw.state === "activated" || sw.state === "redundant") {
+        sw.removeEventListener("statechange", done);
+        resolve();
+      }
+    };
+    sw.addEventListener("statechange", done);
+    setTimeout(resolve, 8000);
+    done();
+  });
+}
+
 
   for (const reg of regs) {
     try {
