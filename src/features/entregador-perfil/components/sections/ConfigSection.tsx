@@ -33,6 +33,8 @@ export function ConfigSection({
   const pushOn = push.state === "granted";
   const pushDisabled = push.busy || push.state === "loading" || push.state === "unsupported";
 
+  const [diag, setDiag] = useState<string | null>(null);
+
   async function togglePush() {
     try {
       if (pushOn) {
@@ -40,16 +42,22 @@ export function ConfigSection({
         toast.success("Notificações desativadas");
       } else {
         await push.enable();
-        if (push.state === "denied" || (typeof Notification !== "undefined" && Notification.permission === "denied")) {
-          toast.error("Permissão negada. Ative manualmente nas configurações do app/navegador.");
-        } else {
-          toast.success("Notificações ativadas");
-        }
+        toast.success("Notificações ativadas");
       }
     } catch (e: any) {
-      toast.error(e?.message || "Falha ao alterar notificações");
+      toast.error(e?.message || "Falha ao alterar notificações", { duration: 8000 });
     }
   }
+
+  async function rodarDiagnostico() {
+    try {
+      setDiag("Verificando...");
+      setDiag(await push.diagnose());
+    } catch (e: any) {
+      setDiag(`Erro: ${e?.message ?? e}`);
+    }
+  }
+
   return (
     <SectionPanel>
       <div className="flex items-start justify-between gap-3 py-1">
