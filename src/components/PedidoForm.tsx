@@ -25,7 +25,7 @@ const INPUT_CLS =
 const INPUT_ICON_CLS = INPUT_CLS + " pl-10";
 const LABEL_CLS =
   "block text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-2";
-const CARD_CLS = "rounded-2xl border border-border bg-background/40 p-4";
+const CARD_CLS = "rounded-2xl border border-border bg-card p-4 shadow-card";
 
 function FieldIcon({ children }: { children: React.ReactNode }) {
   return (
