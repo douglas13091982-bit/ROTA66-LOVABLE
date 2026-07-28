@@ -23,9 +23,6 @@ function bufToB64Url(buf: ArrayBuffer | null) {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-async function getExistingPushSubscriptions() {
-  const regs = await navigator.serviceWorker.getRegistrations();
-  const subs: PushSubscription[] = [];
 async function waitForActive(reg: ServiceWorkerRegistration) {
   if (reg.active) return;
   const sw = reg.installing ?? reg.waiting;
@@ -45,6 +42,11 @@ async function waitForActive(reg: ServiceWorkerRegistration) {
     done();
   });
 }
+
+async function getExistingPushSubscriptions() {
+  const regs = await navigator.serviceWorker.getRegistrations();
+  const subs: PushSubscription[] = [];
+
 
 
   for (const reg of regs) {
