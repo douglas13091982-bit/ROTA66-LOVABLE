@@ -1,10 +1,15 @@
 import { toast } from "sonner";
+import { Check, Trash2, X } from "lucide-react";
 import { SectionPanel } from "../ui-atoms";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
+import { useAuth } from "@/hooks/use-auth";
+import { useVinculosLoja } from "../../hooks/use-vinculos-loja";
 
 type LojaVinc = {
+  id?: string;
   loja_id: string;
   ativo: boolean;
+  status?: "pendente" | "aceito" | "recusado";
   loja?: { id: string; nome: string | null } | undefined;
 };
 
@@ -21,6 +26,9 @@ export function ConfigSection({
   onToggleExternos,
   lojas,
 }: Props) {
+  const { user } = useAuth();
+  const { responder, excluir } = useVinculosLoja(user?.id);
+
   const push = usePushNotifications();
   const pushOn = push.state === "granted";
   const pushDisabled = push.busy || push.state === "loading" || push.state === "unsupported";
