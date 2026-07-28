@@ -42,6 +42,8 @@ export function useCarteira() {
   useEffect(() => {
     let cancelled = false;
     let stop: (() => void) | null = null;
+    let cleanupExtra: (() => void) | null = null;
+
     (async () => {
       const { data } = await supabase.auth.getUser();
       const uid = data.user?.id;
