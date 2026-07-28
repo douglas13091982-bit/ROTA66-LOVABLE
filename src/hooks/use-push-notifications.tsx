@@ -194,5 +194,46 @@ export function usePushNotifications() {
     }
   }, []);
 
-  return { state, busy, enable, disable, refresh };
+  const diagnose = useCallback(async () => {
+    const linhas: string[] = [];
+    const standalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia?.("(display-mode: standalone)").matches ||
+        (navigator as any).standalone === true);
+    linhas.push(`Modo app instalado: ${standalone ? "sim" : "não"}`);
+    linhas.push(`Suporte Notification: ${"Notification" in window ? "sim" : "NÃO"}`);
+    linhas.push(`Suporte PushManager: ${"PushManager" in window ? "sim" : "NÃO"}`);
+    linhas.push(
+      `Permissão: ${typeof Notification !== "undefined" ? Notification.permission : "indisponível"}`
+    );
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      linhas.push(`Service workers: ${regs.length}`);
+      for (const r of regs) {
+        const sub = await r.pushManager.getSubscription().catch(() => null);
+        linhas.push(
+          `• ${r.active?.scriptURL?.split("/").pop() ?? "?"} — ${
+            r.active ? "ativo" : "inativo"
+          } — assinatura: ${sub ? "sim" : "não"}`
+        );
+      }
+    } catch (e: any) {
+      linhas.push(`Erro ao ler service workers: ${e?.message ?? e}`);
+    }
+    if (user?.id) {
+      const { count, error } = await supabase
+        .from("push_subscriptions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      linhas.push(
+        error
+          ? `Assinaturas no servidor: erro (${error.message})`
+          : `Assinaturas no servidor: ${count ?? 0}`
+      );
+    }
+    return linhas.join("\n");
+  }, [user?.id]);
+
+  return { state, busy, enable, disable, refresh, diagnose };
 }
+
