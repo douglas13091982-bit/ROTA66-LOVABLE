@@ -25,20 +25,18 @@ export function NovoPedidoPage() {
     <LojaShell title="Novo Pedido">
       <div className="max-w-2xl space-y-4">
         {mostrarDica && <DicaCadastroEndereco />}
-        <div className="bg-card border border-border rounded-lg p-5 md:p-6 shadow-card">
-          <PedidoForm
-            lojaId={loja.id}
-            taxaBase={Number(loja.taxa_entrega_base) || 0}
-            enderecoColetaPadrao={matrizEndereco}
-            enderecosColetaSalvos={enderecosComMatriz}
-            bonusPadrao={
-              (loja as any).bonus_entregador_ativo
-                ? Number((loja as any).bonus_entregador_valor ?? 0)
-                : 0
-            }
-            onSuccess={() => navigate({ to: "/loja/pedidos" })}
-          />
-        </div>
+        <PedidoForm
+          lojaId={loja.id}
+          taxaBase={Number(loja.taxa_entrega_base) || 0}
+          enderecoColetaPadrao={matrizEndereco}
+          enderecosColetaSalvos={enderecosComMatriz}
+          bonusPadrao={
+            (loja as any).bonus_entregador_ativo
+              ? Number((loja as any).bonus_entregador_valor ?? 0)
+              : 0
+          }
+          onSuccess={() => navigate({ to: "/loja/pedidos" })}
+        />
       </div>
     </LojaShell>
   );
