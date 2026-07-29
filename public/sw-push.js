@@ -1,6 +1,6 @@
 // Service Worker dedicado a Web Push para o ROTA 66 Entregador.
 // Não faz cache de assets — apenas escuta `push` e `notificationclick`.
-// v4 — ícone grande à direita sobrescrito com PNG 1x1 transparente para ocultar.
+// v5 — badge da barra de status usa o logo monocromático do ROTA 66.
 
 self.addEventListener("install", () => {
   self.skipWaiting();
