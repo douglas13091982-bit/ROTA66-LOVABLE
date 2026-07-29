@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Check, X, RefreshCw, Link2, MessageCircle } from "lucide-react";
+import { X, RefreshCw, Link2, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/AdminShell";
 
@@ -19,7 +19,7 @@ type ResetRow = {
 
 export function AdminPasswordResetPage() {
   const qc = useQueryClient();
-  const [filter, setFilter] = useState<"pendente" | "todos">("pendente");
+  const [filter, setFilter] = useState<"pendente" | "historico" | "todos">("pendente");
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["admin-password-reset", filter],
@@ -28,8 +28,9 @@ export function AdminPasswordResetPage() {
         .from("password_reset_requests" as any)
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(200);
       if (filter === "pendente") q = q.eq("status", "pendente");
+      if (filter === "historico") q = q.neq("status", "pendente");
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []) as unknown as ResetRow[];
@@ -58,18 +59,6 @@ export function AdminPasswordResetPage() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-password-reset"] });
 
-  async function aprovar(id: string) {
-    const { data, error } = await supabase.rpc("aprovar_reset_senha" as any, {
-      _request_id: id,
-    });
-    if (error) return toast.error(error.message);
-    const res = data as any;
-    if (!res?.ok) return toast.error(res?.message ?? "Falha ao aprovar.");
-    const link = montarLink(res.token);
-    await navigator.clipboard.writeText(link).catch(() => {});
-    toast.success("Link gerado e copiado para a área de transferência!");
-    invalidate();
-  }
 
   async function rejeitar(id: string) {
     const motivo = prompt("Motivo da rejeição (opcional):") ?? null;
@@ -144,30 +133,23 @@ export function AdminPasswordResetPage() {
           <div>
             <h1 className="text-2xl font-semibold text-white">Redefinições de senha</h1>
             <p className="text-sm text-white/60 mt-1">
-              Aprove o pedido e envie o link gerado ao usuário pelo WhatsApp ou outro canal.
+              Clique em WhatsApp: o pedido é aprovado automaticamente e o link vai na mensagem.
             </p>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => setFilter("pendente")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
-                filter === "pendente"
-                  ? "bg-white text-black border-white"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-              }`}
-            >
-              Pendentes
-            </button>
-            <button
-              onClick={() => setFilter("todos")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
-                filter === "todos"
-                  ? "bg-white text-black border-white"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-              }`}
-            >
-              Todos
-            </button>
+            {(["pendente", "historico", "todos"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
+                  filter === f
+                    ? "bg-white text-black border-white"
+                    : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
+                }`}
+              >
+                {f === "pendente" ? "Pendentes" : f === "historico" ? "Histórico" : "Todos"}
+              </button>
+            ))}
             <button
               onClick={invalidate}
               className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-white/5 text-white/70 border border-white/10 hover:bg-white/10"
@@ -181,7 +163,11 @@ export function AdminPasswordResetPage() {
           <div className="text-white/60 text-sm">Carregando...</div>
         ) : data.length === 0 ? (
           <div className="pp-card rounded-2xl p-10 text-center text-white/60">
-            Nenhum pedido {filter === "pendente" ? "pendente" : ""}.
+            {filter === "pendente"
+              ? "Nenhum pedido pendente."
+              : filter === "historico"
+                ? "Nenhum pedido no histórico."
+                : "Nenhum pedido."}
           </div>
         ) : (
           <div className="space-y-3">
@@ -191,9 +177,17 @@ export function AdminPasswordResetPage() {
                 className="pp-card rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="text-white font-semibold truncate">{r.email}</div>
+                  <div className="text-white font-semibold truncate">
+                    {(r.user_id && telefones[r.user_id]?.full_name) || r.email}
+                  </div>
+                  {r.user_id && telefones[r.user_id]?.full_name && (
+                    <div className="text-xs text-white/50 truncate">{r.email}</div>
+                  )}
                   <div className="text-xs text-white/50 mt-0.5">
-                    {new Date(r.created_at).toLocaleString("pt-BR")}
+                    Pediu em {new Date(r.created_at).toLocaleString("pt-BR")}
+                    {r.resolved_at && (
+                      <> · resolvido em {new Date(r.resolved_at).toLocaleString("pt-BR")}</>
+                    )}
                     {r.observacao && <> · {r.observacao}</>}
                   </div>
                   {!r.user_id && (
@@ -221,20 +215,12 @@ export function AdminPasswordResetPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <StatusBadge status={r.status} />
                   {r.status === "pendente" && (
-                    <>
-                      <button
-                        onClick={() => aprovar(r.id)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1.5"
-                      >
-                        <Check className="h-3.5 w-3.5" /> Aprovar
-                      </button>
-                      <button
-                        onClick={() => rejeitar(r.id)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 flex items-center gap-1.5"
-                      >
-                        <X className="h-3.5 w-3.5" /> Rejeitar
-                      </button>
-                    </>
+                    <button
+                      onClick={() => rejeitar(r.id)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 flex items-center gap-1.5"
+                    >
+                      <X className="h-3.5 w-3.5" /> Rejeitar
+                    </button>
                   )}
                   {r.status === "aprovado" && r.token && (
                     <>
