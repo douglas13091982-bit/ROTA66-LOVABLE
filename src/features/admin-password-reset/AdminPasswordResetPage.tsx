@@ -88,12 +88,12 @@ export function AdminPasswordResetPage() {
   }
 
   function enviarWhatsApp(r: ResetRow) {
-    if (!r.token) return;
     const info = r.user_id ? telefones[r.user_id] : undefined;
     const nome = info?.full_name?.split(" ")[0] ?? "";
-    const texto =
-      `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
-      `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(r.token)}`;
+    const texto = r.token
+      ? `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
+        `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(r.token)}`
+      : `Olá${nome ? " " + nome : ""}! Falamos do ROTA 66 sobre seu pedido de redefinição de senha.`;
     let fone = normalizarFone(info?.phone ?? null);
     if (!fone) {
       const digitado = prompt(
@@ -217,14 +217,15 @@ export function AdminPasswordResetPage() {
                       >
                         <Link2 className="h-3.5 w-3.5" /> Copiar link
                       </button>
-                      <button
-                        onClick={() => enviarWhatsApp(r)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1.5"
-                      >
-                        <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
-                      </button>
                     </>
                   )}
+                  <button
+                    onClick={() => enviarWhatsApp(r)}
+                    title="Abrir WhatsApp de quem pediu"
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1.5"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                  </button>
                 </div>
               </div>
             ))}
