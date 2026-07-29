@@ -94,10 +94,19 @@ export function AdminPasswordResetPage() {
     const texto =
       `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
       `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(r.token)}`;
-    const fone = normalizarFone(info?.phone ?? null);
-    const url = fone
-      ? `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`
-      : `https://wa.me/?text=${encodeURIComponent(texto)}`;
+    let fone = normalizarFone(info?.phone ?? null);
+    if (!fone) {
+      const digitado = prompt(
+        "Telefone com DDD para abrir o WhatsApp (ex: 11999999999):",
+        "",
+      );
+      fone = normalizarFone(digitado);
+      if (!fone) {
+        toast.error("Telefone não informado.");
+        return;
+      }
+    }
+    const url = `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
     window.open(url, "_blank", "noopener");
   }
 
