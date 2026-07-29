@@ -9,13 +9,14 @@ const ASSET_LINKS = [
     relation: ["delegate_permission/common.handle_all_urls"],
     target: {
       namespace: "android_app",
-      package_name: "br.com.rotas66.app",
+      package_name: "br.com.rotas66.www.twa",
       sha256_cert_fingerprints: [
-        "A8:64:1C:D4:94:0C:13:FA:84:26:2F:8D:DF:5E:CA:60:AA:60:BD:DF:F0:FA:3F:E0:FC:7F:1E:5E:56:27:1C:FF",
+        "D5:E3:3F:D3:A8:9A:4C:A5:82:24:BF:87:24:27:C4:3C:B4:20:BE:62:84:09:95:A9:0E:D1:AA:24:2A:48:21:F4",
       ],
     },
   },
 ];
+
 
 export const Route = createFileRoute("/.well-known/assetlinks.json")({
   server: {
