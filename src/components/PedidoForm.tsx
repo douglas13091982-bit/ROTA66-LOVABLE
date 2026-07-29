@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Calculator,
   Info,
@@ -312,10 +314,35 @@ function CampoComSugestoes({
   inputMode?: "text" | "tel";
 }) {
   const ativo = autocomplete.campoAtivo === campo;
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
+  const aberto = ativo && autocomplete.sugestoes.length > 0;
+
+  useLayoutEffect(() => {
+    if (!aberto) return;
+    const atualizar = () => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+    };
+    atualizar();
+    window.addEventListener("scroll", atualizar, true);
+    window.addEventListener("resize", atualizar);
+    return () => {
+      window.removeEventListener("scroll", atualizar, true);
+      window.removeEventListener("resize", atualizar);
+    };
+  }, [aberto, autocomplete.sugestoes.length]);
+
   return (
-    <div className={ativo ? "relative z-50" : "relative"}>
+    <div className="relative">
       <label className={LABEL_CLS}>{label}</label>
-      <div className="relative">
+      <div className="relative" ref={wrapRef}>
         {icon && <FieldIcon>{icon}</FieldIcon>}
         <input
           className={icon ? INPUT_ICON_CLS : INPUT_CLS}
@@ -338,28 +365,41 @@ function CampoComSugestoes({
           required
         />
       </div>
-      {ativo && autocomplete.sugestoes.length > 0 && (
-        <ul className="absolute z-50 left-0 right-0 mt-1 bg-popover text-popover-foreground border border-border rounded-xl shadow-2xl ring-1 ring-black/20 max-h-64 overflow-auto backdrop-blur-none">
-          {autocomplete.sugestoes.map((c) => (
-            <li key={c.id}>
-              <button
-                type="button"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  onAplicar(c);
-                }}
-                className="w-full text-left px-3 py-2.5 hover:bg-accent text-sm"
-              >
-                <div className="font-medium truncate">{c.nome}</div>
-                <div className="text-xs text-muted-foreground truncate">
-                  {c.telefone}
-                  {c.endereco ? ` · ${c.endereco}` : ""}
-                </div>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {aberto &&
+        pos &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <ul
+            style={{
+              position: "fixed",
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+              zIndex: 9999,
+            }}
+            className="bg-popover text-popover-foreground border border-border rounded-xl shadow-2xl ring-1 ring-black/20 max-h-64 overflow-auto"
+          >
+            {autocomplete.sugestoes.map((c) => (
+              <li key={c.id}>
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onAplicar(c);
+                  }}
+                  className="w-full text-left px-3 py-2.5 hover:bg-accent text-sm"
+                >
+                  <div className="font-medium truncate">{c.nome}</div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {c.telefone}
+                    {c.endereco ? ` · ${c.endereco}` : ""}
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>,
+          document.body,
+        )}
     </div>
   );
 }
