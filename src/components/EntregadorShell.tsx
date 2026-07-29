@@ -16,6 +16,7 @@ import { RetornoLojaDialog } from "@/features/entregador-ativos/components/Retor
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { instalarLimpezaBadge } from "@/lib/app-badge";
+import { useWakeLock } from "@/hooks/use-wake-lock";
 
 
 
@@ -40,6 +41,10 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
   // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
   useEffect(() => instalarLimpezaBadge(), []);
+
+  // Mantém a tela do celular acesa enquanto o app do entregador estiver aberto
+  useWakeLock(true);
+
 
 
   // Pede permissão de push automaticamente na 1ª vez (somente quando há usuário e estado === "default")
