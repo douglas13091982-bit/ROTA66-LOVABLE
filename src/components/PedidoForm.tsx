@@ -313,7 +313,7 @@ function CampoComSugestoes({
 }) {
   const ativo = autocomplete.campoAtivo === campo;
   return (
-    <div className="relative">
+    <div className={ativo ? "relative z-50" : "relative"}>
       <label className={LABEL_CLS}>{label}</label>
       <div className="relative">
         {icon && <FieldIcon>{icon}</FieldIcon>}
