@@ -209,6 +209,7 @@ export type Database = {
         Row: {
           ativo: boolean
           created_at: string
+          expira_em: string | null
           id: string
           image_data_url: string
           link_url: string | null
@@ -219,6 +220,7 @@ export type Database = {
         Insert: {
           ativo?: boolean
           created_at?: string
+          expira_em?: string | null
           id?: string
           image_data_url: string
           link_url?: string | null
@@ -229,6 +231,7 @@ export type Database = {
         Update: {
           ativo?: boolean
           created_at?: string
+          expira_em?: string | null
           id?: string
           image_data_url?: string
           link_url?: string | null
