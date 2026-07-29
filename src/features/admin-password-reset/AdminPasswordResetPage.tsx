@@ -175,7 +175,11 @@ export function AdminPasswordResetPage() {
           <div className="text-white/60 text-sm">Carregando...</div>
         ) : data.length === 0 ? (
           <div className="pp-card rounded-2xl p-10 text-center text-white/60">
-            Nenhum pedido {filter === "pendente" ? "pendente" : ""}.
+            {filter === "pendente"
+              ? "Nenhum pedido pendente."
+              : filter === "historico"
+                ? "Nenhum pedido no histórico."
+                : "Nenhum pedido."}
           </div>
         ) : (
           <div className="space-y-3">
@@ -185,9 +189,17 @@ export function AdminPasswordResetPage() {
                 className="pp-card rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="text-white font-semibold truncate">{r.email}</div>
+                  <div className="text-white font-semibold truncate">
+                    {(r.user_id && telefones[r.user_id]?.full_name) || r.email}
+                  </div>
+                  {r.user_id && telefones[r.user_id]?.full_name && (
+                    <div className="text-xs text-white/50 truncate">{r.email}</div>
+                  )}
                   <div className="text-xs text-white/50 mt-0.5">
-                    {new Date(r.created_at).toLocaleString("pt-BR")}
+                    Pediu em {new Date(r.created_at).toLocaleString("pt-BR")}
+                    {r.resolved_at && (
+                      <> · resolvido em {new Date(r.resolved_at).toLocaleString("pt-BR")}</>
+                    )}
                     {r.observacao && <> · {r.observacao}</>}
                   </div>
                   {!r.user_id && (
