@@ -59,18 +59,6 @@ export function AdminPasswordResetPage() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-password-reset"] });
 
-  async function aprovar(id: string) {
-    const { data, error } = await supabase.rpc("aprovar_reset_senha" as any, {
-      _request_id: id,
-    });
-    if (error) return toast.error(error.message);
-    const res = data as any;
-    if (!res?.ok) return toast.error(res?.message ?? "Falha ao aprovar.");
-    const link = montarLink(res.token);
-    await navigator.clipboard.writeText(link).catch(() => {});
-    toast.success("Link gerado e copiado para a área de transferência!");
-    invalidate();
-  }
 
   async function rejeitar(id: string) {
     const motivo = prompt("Motivo da rejeição (opcional):") ?? null;
