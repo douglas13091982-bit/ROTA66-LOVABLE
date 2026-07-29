@@ -19,13 +19,14 @@ import { MensalidadeVencimentoBanner } from "@/components/MensalidadeVencimentoB
 const NAV_ALL = [
   { to: "/loja/dashboard", label: "Dashboard", icon: LayoutDashboard, ownerOnly: false },
   { to: "/loja/pedidos", label: "Pedidos", icon: ClipboardList, ownerOnly: false },
+  { to: "/loja/mapa", label: "Mapa", icon: MapIcon, ownerOnly: false },
   { to: "/loja/historico", label: "Histórico", icon: History, ownerOnly: false },
   
   { to: "/loja/agendamentos", label: "Agendamentos", icon: CalendarClock, ownerOnly: false },
   { to: "/loja/produtos", label: "Catálogo", icon: Package, ownerOnly: false },
   { to: "/loja/promocoes", label: "Promoções", icon: Megaphone, ownerOnly: false },
   { to: "/loja/entregadores", label: "Entregadores", icon: Users, ownerOnly: false },
-  { to: "/loja/mapa", label: "Mapa", icon: MapIcon, ownerOnly: false },
+
   { to: "/loja/financeiro", label: "Financeiro", icon: Wallet, ownerOnly: true },
   { to: "/loja/funcionarios", label: "Funcionários", icon: Users, ownerOnly: true },
   { to: "/loja/suporte", label: "Suporte", icon: LifeBuoy, ownerOnly: false },
