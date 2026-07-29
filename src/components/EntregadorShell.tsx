@@ -16,6 +16,7 @@ import { RetornoLojaDialog } from "@/features/entregador-ativos/components/Retor
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { instalarLimpezaBadge } from "@/lib/app-badge";
+import { useWakeLock } from "@/hooks/use-wake-lock";
 
 
 
