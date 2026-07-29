@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Check, X, Copy, RefreshCw, Link2 } from "lucide-react";
+import { Check, X, RefreshCw, Link2, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/AdminShell";
 
@@ -37,6 +37,25 @@ export function AdminPasswordResetPage() {
     refetchInterval: 30_000,
   });
 
+  // Telefones (para envio via WhatsApp)
+  const userIds = Array.from(new Set(data.map((r) => r.user_id).filter(Boolean))) as string[];
+  const { data: telefones = {} } = useQuery({
+    queryKey: ["admin-password-reset-phones", userIds.join(",")],
+    enabled: userIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, phone, full_name")
+        .in("id", userIds);
+      if (error) throw error;
+      const map: Record<string, { phone: string | null; full_name: string | null }> = {};
+      (data ?? []).forEach((p: any) => {
+        map[p.id] = { phone: p.phone ?? null, full_name: p.full_name ?? null };
+      });
+      return map;
+    },
+  });
+
   const invalidate = () => qc.invalidateQueries({ queryKey: ["admin-password-reset"] });
 
   async function aprovar(id: string) {
@@ -46,7 +65,7 @@ export function AdminPasswordResetPage() {
     if (error) return toast.error(error.message);
     const res = data as any;
     if (!res?.ok) return toast.error(res?.message ?? "Falha ao aprovar.");
-    const link = `${window.location.origin}/reset-password?token=${res.token}`;
+    const link = montarLink(res.token);
     await navigator.clipboard.writeText(link).catch(() => {});
     toast.success("Link gerado e copiado para a área de transferência!");
     invalidate();
@@ -64,9 +83,22 @@ export function AdminPasswordResetPage() {
   }
 
   function copiarLink(token: string) {
-    const link = `${window.location.origin}/reset-password?token=${token}`;
-    navigator.clipboard.writeText(link).catch(() => {});
+    navigator.clipboard.writeText(montarLink(token)).catch(() => {});
     toast.success("Link copiado!");
+  }
+
+  function enviarWhatsApp(r: ResetRow) {
+    if (!r.token) return;
+    const info = r.user_id ? telefones[r.user_id] : undefined;
+    const nome = info?.full_name?.split(" ")[0] ?? "";
+    const texto =
+      `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
+      `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(r.token)}`;
+    const fone = normalizarFone(info?.phone ?? null);
+    const url = fone
+      ? `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`
+      : `https://wa.me/?text=${encodeURIComponent(texto)}`;
+    window.open(url, "_blank", "noopener");
   }
 
   return (
@@ -133,6 +165,22 @@ export function AdminPasswordResetPage() {
                       ⚠️ E-mail não localizado em auth.users
                     </div>
                   )}
+                  {r.status === "aprovado" && r.token && (
+                    <div className="mt-2">
+                      <input
+                        readOnly
+                        value={montarLink(r.token)}
+                        onFocus={(e) => e.currentTarget.select()}
+                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-[11px] text-white/80 font-mono"
+                      />
+                      <div className="text-[10px] text-white/40 mt-1">
+                        Válido até{" "}
+                        {r.token_expires_at
+                          ? new Date(r.token_expires_at).toLocaleString("pt-BR")
+                          : "24h"}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <StatusBadge status={r.status} />
@@ -153,12 +201,20 @@ export function AdminPasswordResetPage() {
                     </>
                   )}
                   {r.status === "aprovado" && r.token && (
-                    <button
-                      onClick={() => copiarLink(r.token!)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-amber-500/20 text-amber-200 border border-amber-500/30 hover:bg-amber-500/30 flex items-center gap-1.5"
-                    >
-                      <Link2 className="h-3.5 w-3.5" /> Copiar link
-                    </button>
+                    <>
+                      <button
+                        onClick={() => copiarLink(r.token!)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-amber-500/20 text-amber-200 border border-amber-500/30 hover:bg-amber-500/30 flex items-center gap-1.5"
+                      >
+                        <Link2 className="h-3.5 w-3.5" /> Copiar link
+                      </button>
+                      <button
+                        onClick={() => enviarWhatsApp(r)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1.5"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -168,6 +224,22 @@ export function AdminPasswordResetPage() {
       </div>
     </AdminShell>
   );
+}
+
+function montarLink(token: string) {
+  const origin =
+    typeof window !== "undefined" && !window.location.hostname.includes("id-preview")
+      ? window.location.origin
+      : "https://rotas66.lovable.app";
+  return `${origin}/reset-password?token=${token}`;
+}
+
+function normalizarFone(phone: string | null) {
+  if (!phone) return null;
+  let d = phone.replace(/\D/g, "");
+  if (!d) return null;
+  if (d.length <= 11) d = "55" + d;
+  return d;
 }
 
 function StatusBadge({ status }: { status: string }) {
