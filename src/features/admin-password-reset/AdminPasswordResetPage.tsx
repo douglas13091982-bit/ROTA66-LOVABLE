@@ -145,30 +145,23 @@ export function AdminPasswordResetPage() {
           <div>
             <h1 className="text-2xl font-semibold text-white">Redefinições de senha</h1>
             <p className="text-sm text-white/60 mt-1">
-              Aprove o pedido e envie o link gerado ao usuário pelo WhatsApp ou outro canal.
+              Clique em WhatsApp: o pedido é aprovado automaticamente e o link vai na mensagem.
             </p>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => setFilter("pendente")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
-                filter === "pendente"
-                  ? "bg-white text-black border-white"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-              }`}
-            >
-              Pendentes
-            </button>
-            <button
-              onClick={() => setFilter("todos")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
-                filter === "todos"
-                  ? "bg-white text-black border-white"
-                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-              }`}
-            >
-              Todos
-            </button>
+            {(["pendente", "historico", "todos"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide border transition ${
+                  filter === f
+                    ? "bg-white text-black border-white"
+                    : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
+                }`}
+              >
+                {f === "pendente" ? "Pendentes" : f === "historico" ? "Histórico" : "Todos"}
+              </button>
+            ))}
             <button
               onClick={invalidate}
               className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-white/5 text-white/70 border border-white/10 hover:bg-white/10"
