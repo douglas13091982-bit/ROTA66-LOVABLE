@@ -51,11 +51,20 @@ function ResetPasswordPage() {
     };
   }, [token]);
 
+  const regras = [
+    { label: "Mínimo de 8 caracteres", ok: password.length >= 8 },
+    { label: "Pelo menos 1 letra maiúscula", ok: /[A-Z]/.test(password) },
+    { label: "Pelo menos 1 letra minúscula", ok: /[a-z]/.test(password) },
+    { label: "Pelo menos 1 número", ok: /\d/.test(password) },
+    { label: "Sem espaços", ok: password.length > 0 && !/\s/.test(password) },
+  ];
+  const senhaValida = regras.every((r) => r.ok);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!token) return;
-    if (password.length < 6) {
-      toast.error("A senha precisa ter ao menos 6 caracteres.");
+    if (!senhaValida) {
+      toast.error("A senha não atende aos requisitos indicados.");
       return;
     }
     if (password !== confirm) {
