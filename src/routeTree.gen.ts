@@ -22,6 +22,7 @@ import { Route as RastreioPedidoIdRouteImport } from './routes/rastreio.$pedidoI
 import { Route as LojaSlugRouteImport } from './routes/loja.$slug'
 import { Route as ClientesCidadeRouteImport } from './routes/clientes.$cidade'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
+import { Route as Char91DotwellKnownChar93WebAppOriginAssociationRouteImport } from './routes/[.well-known]/web-app-origin-association'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRouteImport } from './routes/[.well-known]/assetlinks[.]json'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -166,6 +167,12 @@ const CSlugRoute = CSlugRouteImport.update({
   path: '/c/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93WebAppOriginAssociationRoute =
+  Char91DotwellKnownChar93WebAppOriginAssociationRouteImport.update({
+    id: '/.well-known/web-app-origin-association',
+    path: '/.well-known/web-app-origin-association',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -646,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.well-known/web-app-origin-association': typeof Char91DotwellKnownChar93WebAppOriginAssociationRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -735,6 +743,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.well-known/web-app-origin-association': typeof Char91DotwellKnownChar93WebAppOriginAssociationRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -830,6 +839,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/.well-known/web-app-origin-association': typeof Char91DotwellKnownChar93WebAppOriginAssociationRoute
   '/c/$slug': typeof CSlugRoute
   '/clientes/$cidade': typeof ClientesCidadeRoute
   '/loja/$slug': typeof LojaSlugRoute
@@ -925,6 +935,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
+    | '/.well-known/web-app-origin-association'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
@@ -1014,6 +1025,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
+    | '/.well-known/web-app-origin-association'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
@@ -1108,6 +1120,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
+    | '/.well-known/web-app-origin-association'
     | '/c/$slug'
     | '/clientes/$cidade'
     | '/loja/$slug'
@@ -1199,6 +1212,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute: typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  Char91DotwellKnownChar93WebAppOriginAssociationRoute: typeof Char91DotwellKnownChar93WebAppOriginAssociationRoute
   CSlugRoute: typeof CSlugRoute
   ClientesCidadeRoute: typeof ClientesCidadeRoute
   LojaSlugRoute: typeof LojaSlugRoute
@@ -1305,6 +1319,13 @@ declare module '@tanstack/react-router' {
       path: '/c/$slug'
       fullPath: '/c/$slug'
       preLoaderRoute: typeof CSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/web-app-origin-association': {
+      id: '/.well-known/web-app-origin-association'
+      path: '/.well-known/web-app-origin-association'
+      fullPath: '/.well-known/web-app-origin-association'
+      preLoaderRoute: typeof Char91DotwellKnownChar93WebAppOriginAssociationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
@@ -2090,6 +2111,8 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  Char91DotwellKnownChar93WebAppOriginAssociationRoute:
+    Char91DotwellKnownChar93WebAppOriginAssociationRoute,
   CSlugRoute: CSlugRoute,
   ClientesCidadeRoute: ClientesCidadeRoute,
   LojaSlugRoute: LojaSlugRoute,
