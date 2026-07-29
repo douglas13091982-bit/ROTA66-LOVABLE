@@ -95,8 +95,9 @@ export function usePedidoActions(lojaId: string | undefined) {
         (existentes ?? []).find((p: any) => p.codigo_coleta)?.codigo_coleta ??
         String(Math.floor(1000 + Math.random() * 9000));
 
+      let atualizados = 0;
       for (let i = 0; i < ids.length; i++) {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("pedidos")
           .update({
             status: "pronto" as any,
@@ -105,25 +106,40 @@ export function usePedidoActions(lojaId: string | undefined) {
             codigo_coleta: codigoCompartilhado,
           } as any)
           .eq("id", ids[i])
-          .eq("status", "em_preparo");
+          .eq("status", "em_preparo")
+          .select("id");
         if (error) {
-          toast.error(error.message);
+          toast.error(traduzErro(error.message));
+          invalidate();
           return;
         }
+        atualizados += data?.length ?? 0;
+      }
+      if (atualizados === 0) {
+        await explicarFalhaPronto(ids);
+        invalidate();
+        return;
       }
     } else {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("pedidos")
         .update({ status: "pronto" as any })
         .in("id", ids)
-        .eq("status", "em_preparo");
+        .eq("status", "em_preparo")
+        .select("id");
       if (error) {
-        toast.error(error.message);
+        toast.error(traduzErro(error.message));
+        return;
+      }
+      if (!data || data.length === 0) {
+        await explicarFalhaPronto(ids);
+        invalidate();
         return;
       }
     }
 
     invalidate();
+
     toast.success(`${ids.length} pedidos marcados como prontos!`);
   };
 
