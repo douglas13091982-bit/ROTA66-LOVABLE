@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { statusOf } from "../logic/constants";
 import { EntregadoresResumo } from "./EntregadoresResumo";
 import { IndicadoPorBadge } from "./IndicadoPorBadge";
+import { CriadoPorBadge } from "./CriadoPorBadge";
+
 import { LojaManageDialog } from "./LojaManageDialog";
 import { setLojaSuporteId } from "@/hooks/use-loja-suporte";
 
@@ -64,7 +66,10 @@ export function LojaCard({
 
       <EntregadoresResumo lojaId={l.id} />
 
+      <CriadoPorBadge tipo={(l as any).criado_por_tipo} nome={(l as any).criado_por_nome} />
+
       <IndicadoPorBadge entregadorId={l.indicado_por_entregador_id} />
+
 
 
 

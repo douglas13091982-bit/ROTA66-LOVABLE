@@ -1577,6 +1577,9 @@ export type Database = {
           city_id: string | null
           cnpj: string | null
           created_at: string
+          criado_por: string | null
+          criado_por_nome: string | null
+          criado_por_tipo: string
           dia_vencimento_mensalidade: number | null
           endereco: string | null
           endereco_lat: number | null
@@ -1619,6 +1622,9 @@ export type Database = {
           city_id?: string | null
           cnpj?: string | null
           created_at?: string
+          criado_por?: string | null
+          criado_por_nome?: string | null
+          criado_por_tipo?: string
           dia_vencimento_mensalidade?: number | null
           endereco?: string | null
           endereco_lat?: number | null
@@ -1661,6 +1667,9 @@ export type Database = {
           city_id?: string | null
           cnpj?: string | null
           created_at?: string
+          criado_por?: string | null
+          criado_por_nome?: string | null
+          criado_por_tipo?: string
           dia_vencimento_mensalidade?: number | null
           endereco?: string | null
           endereco_lat?: number | null

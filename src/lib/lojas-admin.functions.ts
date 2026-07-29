@@ -167,6 +167,14 @@ export const criarLojaManual = createServerFn({ method: "POST" })
       { onConflict: "id" },
     );
 
+    // Identifica quem está criando
+    const criadoPorTipo = isSuper ? "super_admin" : isAdmin ? "franqueado" : "colaborador";
+    const { data: criadorProfile } = await context.supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", context.userId)
+      .maybeSingle();
+
     // Cria loja
     const slug = slugify(nomeLoja);
     const { data: loja, error: errLoja } = await supabaseAdmin
@@ -180,10 +188,14 @@ export const criarLojaManual = createServerFn({ method: "POST" })
         cidade: cidade.nome,
         estado: cidade.uf,
         status: "aprovado",
+        criado_por: context.userId,
+        criado_por_tipo: criadoPorTipo,
+        criado_por_nome: (criadorProfile as any)?.full_name ?? null,
       } as any)
       .select("id")
       .single();
     if (errLoja || !loja) throw new Error(errLoja?.message ?? "Falha ao criar loja");
+
 
     return { loja_id: loja.id, user_id: uid };
   });
