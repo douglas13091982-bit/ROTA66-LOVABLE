@@ -363,28 +363,41 @@ function CampoComSugestoes({
           required
         />
       </div>
-      {ativo && autocomplete.sugestoes.length > 0 && (
-        <ul className="absolute z-50 left-0 right-0 mt-1 bg-popover text-popover-foreground border border-border rounded-xl shadow-2xl ring-1 ring-black/20 max-h-64 overflow-auto backdrop-blur-none">
-          {autocomplete.sugestoes.map((c) => (
-            <li key={c.id}>
-              <button
-                type="button"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  onAplicar(c);
-                }}
-                className="w-full text-left px-3 py-2.5 hover:bg-accent text-sm"
-              >
-                <div className="font-medium truncate">{c.nome}</div>
-                <div className="text-xs text-muted-foreground truncate">
-                  {c.telefone}
-                  {c.endereco ? ` · ${c.endereco}` : ""}
-                </div>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {aberto &&
+        pos &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <ul
+            style={{
+              position: "fixed",
+              top: pos.top,
+              left: pos.left,
+              width: pos.width,
+              zIndex: 9999,
+            }}
+            className="bg-popover text-popover-foreground border border-border rounded-xl shadow-2xl ring-1 ring-black/20 max-h-64 overflow-auto"
+          >
+            {autocomplete.sugestoes.map((c) => (
+              <li key={c.id}>
+                <button
+                  type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    onAplicar(c);
+                  }}
+                  className="w-full text-left px-3 py-2.5 hover:bg-accent text-sm"
+                >
+                  <div className="font-medium truncate">{c.nome}</div>
+                  <div className="text-xs text-muted-foreground truncate">
+                    {c.telefone}
+                    {c.endereco ? ` · ${c.endereco}` : ""}
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>,
+          document.body,
+        )}
     </div>
   );
 }
