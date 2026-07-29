@@ -222,20 +222,12 @@ export function AdminPasswordResetPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <StatusBadge status={r.status} />
                   {r.status === "pendente" && (
-                    <>
-                      <button
-                        onClick={() => aprovar(r.id)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1.5"
-                      >
-                        <Check className="h-3.5 w-3.5" /> Aprovar
-                      </button>
-                      <button
-                        onClick={() => rejeitar(r.id)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 flex items-center gap-1.5"
-                      >
-                        <X className="h-3.5 w-3.5" /> Rejeitar
-                      </button>
-                    </>
+                    <button
+                      onClick={() => rejeitar(r.id)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 flex items-center gap-1.5"
+                    >
+                      <X className="h-3.5 w-3.5" /> Rejeitar
+                    </button>
                   )}
                   {r.status === "aprovado" && r.token && (
                     <>
