@@ -107,8 +107,19 @@ export function AdminPasswordResetPage() {
       }
     }
     const url = `https://wa.me/${fone}?text=${encodeURIComponent(texto)}`;
-    window.open(url, "_blank", "noopener");
+    // Copia a mensagem como fallback (alguns ambientes bloqueiam o WhatsApp em iframe)
+    navigator.clipboard?.writeText(texto).catch(() => {});
+    // Abre como navegação de topo via <a>, evitando bloqueio do preview
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast.success("Abrindo WhatsApp. Mensagem copiada como backup.");
   }
+
 
   return (
     <AdminShell title="Redefinições de senha">
