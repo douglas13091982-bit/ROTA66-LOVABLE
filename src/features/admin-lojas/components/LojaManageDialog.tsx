@@ -12,6 +12,8 @@ import { CatalogoSection } from "./CatalogoSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
 import { RevendedorSelectSection } from "./RevendedorSelectSection";
 import { CidadeSelectSection } from "./CidadeSelectSection";
+import { CriadoPorSelectSection } from "./CriadoPorSelectSection";
+
 
 interface Props {
   loja: any;
