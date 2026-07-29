@@ -312,10 +312,35 @@ function CampoComSugestoes({
   inputMode?: "text" | "tel";
 }) {
   const ativo = autocomplete.campoAtivo === campo;
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
+  const aberto = ativo && autocomplete.sugestoes.length > 0;
+
+  useLayoutEffect(() => {
+    if (!aberto) return;
+    const atualizar = () => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setPos({ top: r.bottom + 4, left: r.left, width: r.width });
+    };
+    atualizar();
+    window.addEventListener("scroll", atualizar, true);
+    window.addEventListener("resize", atualizar);
+    return () => {
+      window.removeEventListener("scroll", atualizar, true);
+      window.removeEventListener("resize", atualizar);
+    };
+  }, [aberto, autocomplete.sugestoes.length]);
+
   return (
-    <div className={ativo ? "relative z-50" : "relative"}>
+    <div className="relative">
       <label className={LABEL_CLS}>{label}</label>
-      <div className="relative">
+      <div className="relative" ref={wrapRef}>
         {icon && <FieldIcon>{icon}</FieldIcon>}
         <input
           className={icon ? INPUT_ICON_CLS : INPUT_CLS}
