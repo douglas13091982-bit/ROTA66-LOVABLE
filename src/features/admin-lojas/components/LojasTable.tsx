@@ -1,5 +1,7 @@
 import { Store, Check, Ban, Trash2 } from "lucide-react";
 import { statusOf } from "../logic/constants";
+import { CriadoPorBadge } from "./CriadoPorBadge";
+
 
 interface Props {
   lojas: any[];
