@@ -87,13 +87,29 @@ export function AdminPasswordResetPage() {
     toast.success("Link copiado!");
   }
 
-  function enviarWhatsApp(r: ResetRow) {
+  async function enviarWhatsApp(r: ResetRow) {
     const info = r.user_id ? telefones[r.user_id] : undefined;
     const nome = info?.full_name?.split(" ")[0] ?? "";
-    const texto = r.token
-      ? `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
-        `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(r.token)}`
-      : `Olá${nome ? " " + nome : ""}! Falamos do ROTA 66 sobre seu pedido de redefinição de senha.`;
+
+    // Garante que sempre exista um link: se ainda não foi aprovado, aprova agora
+    let token = r.token;
+    if (!token) {
+      const { data, error } = await supabase.rpc("aprovar_reset_senha" as any, {
+        _request_id: r.id,
+      });
+      const res = data as any;
+      if (error || !res?.ok) {
+        toast.error(error?.message ?? res?.message ?? "Falha ao gerar o link.");
+        return;
+      }
+      token = res.token as string;
+      invalidate();
+    }
+
+    const texto =
+      `Olá${nome ? " " + nome : ""}! Recebemos seu pedido de redefinição de senha no ROTA 66.\n\n` +
+      `Abra o link abaixo e cadastre sua nova senha (válido por 24 horas):\n${montarLink(token!)}`;
+
     let fone = normalizarFone(info?.phone ?? null);
     if (!fone) {
       const digitado = prompt(
