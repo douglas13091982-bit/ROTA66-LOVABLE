@@ -159,12 +159,19 @@ export function usePedidoActions(lojaId: string | undefined) {
   const cancelarPedido = async (id: string) => {
     // Ao cancelar, arquivamos automaticamente — o pedido fica disponível
     // na aba "Mostrar arquivados" para consulta ou reenvio.
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("pedidos")
       .update({ status: "cancelado", arquivado: true })
-      .eq("id", id);
+      .eq("id", id)
+      .select("id");
     if (error) {
       toast.error(error.message);
+      return;
+    }
+    if (!data || data.length === 0) {
+      // Nenhuma linha atualizada = sem permissão para alterar este pedido.
+      toast.error("Você não tem permissão para cancelar este pedido.");
+      invalidate();
       return;
     }
     invalidate();
