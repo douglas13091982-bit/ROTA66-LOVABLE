@@ -159,6 +159,8 @@ export function AddressAutocomplete({
         typeof document !== "undefined" &&
         createPortal(
           <ul
+            ref={listRef}
+
             style={{
               position: "fixed",
               top: rect.top,
