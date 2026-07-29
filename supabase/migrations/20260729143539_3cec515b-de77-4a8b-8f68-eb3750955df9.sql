@@ -1,0 +1,1 @@
+ALTER TABLE public.anuncios_entregador ADD COLUMN IF NOT EXISTS expira_em timestamptz;

@@ -4,7 +4,9 @@ type Props = {
   titulo: string;
   linkUrl: string;
   imageDataUrl: string | null;
+  diasValidade: number;
   saving: boolean;
+  onDiasChange: (v: number) => void;
   onTituloChange: (v: string) => void;
   onLinkChange: (v: string) => void;
   onFile: (f: File) => void;
@@ -15,7 +17,9 @@ export function NovoAnuncioForm({
   titulo,
   linkUrl,
   imageDataUrl,
+  diasValidade,
   saving,
+  onDiasChange,
   onTituloChange,
   onLinkChange,
   onFile,
@@ -72,6 +76,25 @@ export function NovoAnuncioForm({
           className="w-full px-3 py-2 bg-background border border-border rounded-md"
           placeholder="https://..."
         />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-bold">Prazo de expiração</label>
+        <select
+          value={String(diasValidade)}
+          onChange={(e) => onDiasChange(Number(e.target.value))}
+          className="w-full px-3 py-2 bg-background border border-border rounded-md"
+        >
+          <option value="7">7 dias</option>
+          <option value="15">15 dias</option>
+          <option value="30">30 dias</option>
+          <option value="60">60 dias</option>
+          <option value="90">90 dias</option>
+          <option value="0">Sem prazo (permanente)</option>
+        </select>
+        <p className="text-xs text-muted-foreground">
+          Depois desse prazo o banner deixa de aparecer para os entregadores automaticamente.
+        </p>
       </div>
 
       <button

@@ -12,8 +12,9 @@ export function AnunciosEntregador() {
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("anuncios_entregador")
-        .select("id,titulo,image_data_url,link_url")
+        .select("id,titulo,image_data_url,link_url,expira_em")
         .eq("ativo", true)
+        .or(`expira_em.is.null,expira_em.gt.${new Date().toISOString()}`)
         .order("ordem", { ascending: true })
         .order("created_at", { ascending: false });
       if (error) throw error;

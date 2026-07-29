@@ -13,10 +13,13 @@ export function AnunciosPage() {
     linkUrl,
     setLinkUrl,
     imageDataUrl,
+    diasValidade,
+    setDiasValidade,
     saving,
     handleFile,
     handleCreate,
     toggleAtivo,
+    atualizarPrazo,
     handleDelete,
   } = useAnuncios();
 
@@ -37,6 +40,8 @@ export function AnunciosPage() {
           titulo={titulo}
           linkUrl={linkUrl}
           imageDataUrl={imageDataUrl}
+          diasValidade={diasValidade}
+          onDiasChange={setDiasValidade}
           saving={saving}
           onTituloChange={setTitulo}
           onLinkChange={setLinkUrl}
@@ -48,6 +53,7 @@ export function AnunciosPage() {
           anuncios={anuncios}
           isLoading={isLoading}
           onToggle={toggleAtivo}
+          onPrazo={atualizarPrazo}
           onDelete={handleDelete}
         />
       </div>
