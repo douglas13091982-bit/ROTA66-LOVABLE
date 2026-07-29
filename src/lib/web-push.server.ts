@@ -25,14 +25,27 @@ export async function enviarPushParaUsuario(input: PushInput): Promise<{ sent: n
     return { sent: 0, subs: 0 };
   }
 
-  const { data: subs, error } = await supabaseAdmin
+  const { data: allSubs, error } = await supabaseAdmin
     .from("push_subscriptions")
-    .select("id, endpoint, p256dh, auth")
-    .eq("user_id", input.user_id);
+    .select("id, endpoint, p256dh, auth, user_agent, created_at")
+    .eq("user_id", input.user_id)
+    .order("created_at", { ascending: false });
   if (error) {
     console.error("[send-push] db error", error);
     throw new Error("db error");
   }
+
+  // Dedupe por dispositivo: o mesmo celular pode ter assinaturas em origens
+  // diferentes (navegador + APK/TWA), o que fazia chegar 2 notificações.
+  // Mantemos apenas a assinatura mais recente por user_agent.
+  const vistos = new Set<string>();
+  const subs = (allSubs ?? []).filter((s: any) => {
+    const chave = (s.user_agent || s.id) as string;
+    if (vistos.has(chave)) return false;
+    vistos.add(chave);
+    return true;
+  });
+
 
   if (!subs || subs.length === 0) {
     if (input.tag) {
