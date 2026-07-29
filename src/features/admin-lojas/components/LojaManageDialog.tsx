@@ -12,6 +12,8 @@ import { CatalogoSection } from "./CatalogoSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
 import { RevendedorSelectSection } from "./RevendedorSelectSection";
 import { CidadeSelectSection } from "./CidadeSelectSection";
+import { CriadoPorSelectSection } from "./CriadoPorSelectSection";
+
 
 interface Props {
   loja: any;
@@ -82,6 +84,14 @@ export function LojaManageDialog({
             revendedorIdAtual={l.revendedor_id ?? null}
             onChanged={onChanged}
           />
+
+          <CriadoPorSelectSection
+            lojaId={l.id}
+            tipoAtual={l.criado_por_tipo ?? null}
+            nomeAtual={l.criado_por_nome ?? null}
+            onChanged={onChanged}
+          />
+
 
           <section className="border-t border-border pt-4">
             <EntregadoresDaLoja lojaId={l.id} alwaysOpen />
