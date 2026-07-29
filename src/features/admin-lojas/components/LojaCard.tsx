@@ -3,6 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { statusOf } from "../logic/constants";
 import { EntregadoresResumo } from "./EntregadoresResumo";
 import { IndicadoPorBadge } from "./IndicadoPorBadge";
+import { CriadoPorBadge } from "./CriadoPorBadge";
+
 import { LojaManageDialog } from "./LojaManageDialog";
 import { setLojaSuporteId } from "@/hooks/use-loja-suporte";
 
