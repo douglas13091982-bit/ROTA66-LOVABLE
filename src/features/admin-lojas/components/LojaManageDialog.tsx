@@ -83,6 +83,14 @@ export function LojaManageDialog({
             onChanged={onChanged}
           />
 
+          <CriadoPorSelectSection
+            lojaId={l.id}
+            tipoAtual={l.criado_por_tipo ?? null}
+            nomeAtual={l.criado_por_nome ?? null}
+            onChanged={onChanged}
+          />
+
+
           <section className="border-t border-border pt-4">
             <EntregadoresDaLoja lojaId={l.id} alwaysOpen />
           </section>
