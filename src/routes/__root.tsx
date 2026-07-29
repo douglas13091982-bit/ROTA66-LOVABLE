@@ -105,6 +105,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
           }}
         />
 
+        {/* Registro imediato do service worker (detectável por scanners PWA
+            como o PWABuilder). Bloqueado em preview/iframe do Lovable. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(!('serviceWorker' in navigator))return;var h=location.hostname;var blocked=(window.self!==window.top)||h==='localhost'||h.indexOf('id-preview--')===0||h.indexOf('preview--')===0||/(^|\\.)lovableproject\\.com$/.test(h)||/(^|\\.)lovableproject-dev\\.com$/.test(h)||/(^|\\.)beta\\.lovable\\.dev$/.test(h)||location.search.indexOf('sw=off')>-1;if(blocked)return;navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(function(){});}catch(e){}})();`,
+          }}
+        />
+
+
         <HeadContent />
       </head>
       <body>
