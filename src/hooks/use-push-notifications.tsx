@@ -171,7 +171,19 @@ export function usePushNotifications() {
         { onConflict: "endpoint" }
       );
       if (error) throw error;
+
+      // Remove assinaturas antigas do MESMO dispositivo (ex.: uma criada no
+      // navegador e outra no APK/TWA), que faziam chegar 2 notificações.
+      try {
+        await supabase
+          .from("push_subscriptions")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("user_agent", navigator.userAgent)
+          .neq("endpoint", endpoint);
+      } catch {}
       setState("granted");
+
     } catch (err) {
       console.error("[push] enable error:", err);
       throw err;
