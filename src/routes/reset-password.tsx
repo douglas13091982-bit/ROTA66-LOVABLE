@@ -51,11 +51,20 @@ function ResetPasswordPage() {
     };
   }, [token]);
 
+  const regras = [
+    { label: "Mínimo de 8 caracteres", ok: password.length >= 8 },
+    { label: "Pelo menos 1 letra maiúscula", ok: /[A-Z]/.test(password) },
+    { label: "Pelo menos 1 letra minúscula", ok: /[a-z]/.test(password) },
+    { label: "Pelo menos 1 número", ok: /\d/.test(password) },
+    { label: "Sem espaços", ok: password.length > 0 && !/\s/.test(password) },
+  ];
+  const senhaValida = regras.every((r) => r.ok);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!token) return;
-    if (password.length < 6) {
-      toast.error("A senha precisa ter ao menos 6 caracteres.");
+    if (!senhaValida) {
+      toast.error("A senha não atende aos requisitos indicados.");
       return;
     }
     if (password !== confirm) {
@@ -103,6 +112,24 @@ function ResetPasswordPage() {
             placeholder="••••••••"
             autoComplete="new-password"
           />
+
+          <div className="mb-4 rounded-lg border border-white/10 bg-white/5 p-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              A senha deve conter:
+            </p>
+            <ul className="space-y-1">
+              {regras.map((r) => (
+                <li
+                  key={r.label}
+                  className={`flex items-center gap-2 text-xs ${r.ok ? "text-emerald-400" : "text-muted-foreground"}`}
+                >
+                  <span aria-hidden>{r.ok ? "✓" : "•"}</span>
+                  {r.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <AuthPasswordInput
             label="Confirmar senha"
             required
@@ -111,7 +138,10 @@ function ResetPasswordPage() {
             placeholder="••••••••"
             autoComplete="new-password"
           />
-          <PrimaryButton type="submit" disabled={loading}>
+          {confirm.length > 0 && confirm !== password && (
+            <p className="mb-3 text-xs text-red-400">As senhas não conferem.</p>
+          )}
+          <PrimaryButton type="submit" disabled={loading || !senhaValida || password !== confirm}>
             {loading ? "Salvando..." : "Salvar nova senha"}
           </PrimaryButton>
         </form>
@@ -119,6 +149,7 @@ function ResetPasswordPage() {
     </AuthCard>
   );
 }
+
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
