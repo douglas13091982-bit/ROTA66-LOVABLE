@@ -38,7 +38,12 @@ export function LojasTable({ lojas, isLoading, onSetStatus, onRemove }: Props) {
                         <div className="text-[11px] text-muted-foreground truncate">
                           /{l.slug}
                         </div>
+                        <CriadoPorBadge
+                          tipo={(l as any).criado_por_tipo}
+                          nome={(l as any).criado_por_nome}
+                        />
                       </div>
+
                     </div>
                   </td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">
