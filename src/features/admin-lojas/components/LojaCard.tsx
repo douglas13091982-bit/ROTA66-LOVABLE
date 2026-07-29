@@ -64,7 +64,10 @@ export function LojaCard({
 
       <EntregadoresResumo lojaId={l.id} />
 
+      <CriadoPorBadge tipo={(l as any).criado_por_tipo} nome={(l as any).criado_por_nome} />
+
       <IndicadoPorBadge entregadorId={l.indicado_por_entregador_id} />
+
 
 
 
