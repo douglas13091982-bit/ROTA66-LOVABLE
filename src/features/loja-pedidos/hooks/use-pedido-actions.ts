@@ -13,13 +13,58 @@ export function usePedidoActions(lojaId: string | undefined) {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["pedidos", lojaId] });
 
+  /**
+   * Quando o pedido não sai de "em preparo", a causa quase sempre é saldo
+   * insuficiente da loja (trigger `validar_saldo_loja_para_pedido`) ou falta de
+   * permissão. Aqui traduzimos isso numa mensagem clara em vez de um
+   * "sucesso" enganoso.
+   */
+  const explicarFalhaPronto = async (ids: string[]) => {
+    const { data: peds } = await supabase
+      .from("pedidos")
+      .select("id, loja_id, taxa_entrega, bonus_entregador")
+      .in("id", ids);
+    const lista = (peds ?? []) as any[];
+    const necessario = lista.reduce(
+      (acc, p) => acc + Number(p.taxa_entrega ?? 0) + Number(p.bonus_entregador ?? 0),
+      0,
+    );
+    const alvoLoja = lojaId ?? lista[0]?.loja_id;
+    if (alvoLoja) {
+      const { data: s } = await supabase
+        .from("lojas_saldo" as any)
+        .select("saldo")
+        .eq("loja_id", alvoLoja)
+        .maybeSingle();
+      const saldo = Number((s as any)?.saldo ?? 0);
+      if (saldo < necessario) {
+        toast.error(
+          `Saldo insuficiente: a loja tem R$ ${saldo.toFixed(2)} e precisa de R$ ${necessario.toFixed(2)} para liberar o pedido. Recarregue o saldo.`,
+        );
+        return;
+      }
+    }
+    toast.error("Não foi possível liberar o pedido. Atualize a página e tente novamente.");
+  };
+
+  const traduzErro = (msg: string) => {
+    if (/saldo insuficiente/i.test(msg)) return msg;
+    return msg;
+  };
+
   const updateStatus = async (id: string, newStatus: string) => {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("pedidos")
       .update({ status: newStatus as any })
-      .eq("id", id);
+      .eq("id", id)
+      .select("id, status");
     if (error) {
-      toast.error(error.message);
+      toast.error(traduzErro(error.message));
+      return;
+    }
+    if (newStatus === "pronto" && (!data || data.length === 0)) {
+      await explicarFalhaPronto([id]);
+      invalidate();
       return;
     }
     invalidate();
@@ -27,6 +72,7 @@ export function usePedidoActions(lojaId: string | undefined) {
       toast.success("Pedido pronto! Os entregadores vinculados já podem aceitar.");
     }
   };
+
 
   const marcarLoteComoPronto = async (ids: string[]) => {
     if (ids.length === 0) return;
