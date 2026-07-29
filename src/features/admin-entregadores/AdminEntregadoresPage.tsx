@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
 import { useAdminEntregadores } from "./hooks/use-admin-entregadores";
+import { useDocsPendentesIds } from "./hooks/use-docs-pendentes-ids";
 import { contarPorVeiculo, filtrarEntregadores } from "./logic/filters";
 import type { StatusFilter, VeiculoFilter } from "./logic/types";
 import { ToolbarBusca, ViewToggle, type ViewMode } from "./components/ToolbarBusca";
@@ -9,6 +10,7 @@ import { VeiculoFilterTabs } from "./components/VeiculoFilterTabs";
 import { EntregadoresGrid } from "./components/EntregadoresGrid";
 import { EntregadoresTabela } from "./components/EntregadoresTabela";
 import { Paginacao } from "./components/Paginacao";
+import { FileText } from "lucide-react";
 
 const PER_PAGE = 12;
 
@@ -19,11 +21,18 @@ export function AdminEntregadoresPage() {
   const [search, setSearch] = useState("");
   const [veiculo, setVeiculo] = useState<VeiculoFilter>("todos");
   const [page, setPage] = useState(1);
+  const [soDocs, setSoDocs] = useState(false);
+  const docsPendentes = useDocsPendentesIds();
 
-  const filtered = useMemo(
-    () => filtrarEntregadores(data, filter, search, veiculo),
-    [data, filter, search, veiculo]
-  );
+  const filtered = useMemo(() => {
+    const base = filtrarEntregadores(data, filter, search, veiculo);
+    const lista = soDocs ? base.filter((e) => docsPendentes.has(e.id)) : base;
+    // Quem tem documento aguardando revisão aparece primeiro.
+    return [...lista].sort(
+      (a, b) => Number(docsPendentes.has(b.id)) - Number(docsPendentes.has(a.id))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, filter, search, veiculo, soDocs, docsPendentes.size]);
 
   const veiculoCounts = useMemo(
     () => contarPorVeiculo(filtrarEntregadores(data, filter, search)),
@@ -42,7 +51,7 @@ export function AdminEntregadoresPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [filter, search, veiculo, view]);
+  }, [filter, search, veiculo, view, soDocs]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const currentPage = Math.min(page, totalPages);
@@ -65,6 +74,24 @@ export function AdminEntregadoresPage() {
         <div className="overflow-x-auto">
           <StatusFilterTabs filter={filter} counts={statusCounts} onChange={setFilter} />
         </div>
+        <button
+          onClick={() => setSoDocs((v) => !v)}
+          className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold uppercase tracking-wider transition ${
+            soDocs
+              ? "bg-primary text-primary-foreground border-primary"
+              : "border-white/10 bg-white/[0.03] text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <FileText className="h-4 w-4" />
+          Docs para revisar
+          <span
+            className={`px-1.5 py-0.5 rounded text-[10px] tabular-nums ${
+              soDocs ? "bg-black/20" : "bg-white/[0.06] text-foreground"
+            }`}
+          >
+            {docsPendentes.size}
+          </span>
+        </button>
       </div>
 
       <VeiculoFilterTabs filter={veiculo} counts={veiculoCounts} onChange={setVeiculo} />
