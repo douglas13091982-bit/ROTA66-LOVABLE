@@ -11,6 +11,10 @@
   "theme_color": "#cc2229",
   "lang": "pt-BR",
   "dir": "ltr",
+  "scope_extensions": [
+    { "origin": "https://www.rotas66.com.br" },
+    { "origin": "https://rotas66.lovable.app" }
+  ],
   "prefer_related_applications": false,
   "related_applications": [],
   "categories": [
