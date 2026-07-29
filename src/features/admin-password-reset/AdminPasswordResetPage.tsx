@@ -19,7 +19,7 @@ type ResetRow = {
 
 export function AdminPasswordResetPage() {
   const qc = useQueryClient();
-  const [filter, setFilter] = useState<"pendente" | "todos">("pendente");
+  const [filter, setFilter] = useState<"pendente" | "historico" | "todos">("pendente");
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["admin-password-reset", filter],
@@ -28,8 +28,9 @@ export function AdminPasswordResetPage() {
         .from("password_reset_requests" as any)
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(200);
       if (filter === "pendente") q = q.eq("status", "pendente");
+      if (filter === "historico") q = q.neq("status", "pendente");
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []) as unknown as ResetRow[];
