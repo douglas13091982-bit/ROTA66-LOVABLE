@@ -3,13 +3,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { convertImageToWebpDataUrl } from "@/lib/image-to-webp";
-import { ANUNCIO_MAX_BYTES, type AnuncioRow } from "../logic/types";
+import {
+  ANUNCIO_MAX_BYTES,
+  diasParaExpiracao,
+  type AnuncioRow,
+} from "../logic/types";
 
 export function useAnuncios() {
   const qc = useQueryClient();
   const [titulo, setTitulo] = useState("");
   const [linkUrl, setLinkUrl] = useState("");
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
+  const [diasValidade, setDiasValidade] = useState<number>(30);
   const [saving, setSaving] = useState(false);
 
   const { data: anuncios, isLoading } = useQuery({
@@ -70,6 +75,7 @@ export function useAnuncios() {
       link_url: linkUrl.trim() || null,
       image_data_url: imageDataUrl,
       ativo: true,
+      expira_em: diasParaExpiracao(diasValidade),
     });
     setSaving(false);
     if (error) return toast.error(error.message);
@@ -77,6 +83,7 @@ export function useAnuncios() {
     setTitulo("");
     setLinkUrl("");
     setImageDataUrl(null);
+    setDiasValidade(30);
     invalidate();
   };
 
@@ -86,6 +93,16 @@ export function useAnuncios() {
       .update({ ativo: !ativo })
       .eq("id", id);
     if (error) return toast.error(error.message);
+    invalidate();
+  };
+
+  const atualizarPrazo = async (id: string, dias: number | null) => {
+    const { error } = await (supabase as any)
+      .from("anuncios_entregador")
+      .update({ expira_em: diasParaExpiracao(dias) })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success(dias ? `Prazo atualizado para ${dias} dias` : "Prazo removido");
     invalidate();
   };
 
@@ -108,10 +125,13 @@ export function useAnuncios() {
     linkUrl,
     setLinkUrl,
     imageDataUrl,
+    diasValidade,
+    setDiasValidade,
     saving,
     handleFile,
     handleCreate,
     toggleAtivo,
+    atualizarPrazo,
     handleDelete,
   };
 }
