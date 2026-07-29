@@ -10,6 +10,8 @@
   "background_color": "#ffffff",
   "theme_color": "#cc2229",
   "lang": "pt-BR",
+  "prefer_related_applications": false,
+  "related_applications": [],
   "categories": [
     "shopping",
     "food",
