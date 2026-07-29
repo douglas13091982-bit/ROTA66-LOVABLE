@@ -42,6 +42,7 @@ export function AddressAutocomplete({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
 
   useEffect(() => {
@@ -50,11 +51,15 @@ export function AddressAutocomplete({
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+      const alvo = e.target as Node;
+      // A lista é renderizada via portal no body — precisa ser considerada "dentro".
+      if (wrapRef.current?.contains(alvo) || listRef.current?.contains(alvo)) return;
+      setOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
 
   const aberto = open && suggestions.length > 0;
 
