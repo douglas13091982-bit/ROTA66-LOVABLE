@@ -2021,3 +2021,10 @@ select,
   border-radius: 0 !important;
 }
 .panel-premium .pp-nav-active::before { border-radius: 0 !important; }
+
+/* Sem cantos arredondados em nenhum elemento (inclui pills, badges e avatares) */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
