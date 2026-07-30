@@ -180,25 +180,28 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
       <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
-          className="fixed z-50 flex flex-col gap-0 overflow-hidden rounded-xl border border-[oklch(0.78_0.16_75_/_0.40)] bg-[oklch(0.12_0.015_260)] p-0 shadow-xl outline-none w-[calc(100svw-1rem)] max-w-2xl sm:h-[70vh] sm:max-h-[560px]"
+          className="fixed z-50 flex flex-col gap-0 overflow-hidden border border-[#e4e8ef] bg-white p-0 shadow-[0_20px_50px_-20px_rgba(15,27,45,0.35)] outline-none w-[calc(100svw-1rem)] max-w-md"
           style={
             viewportH
               ? {
-                  top: `${viewportOffset}px`,
+                  top: `${viewportOffset + 8}px`,
                   left: 0,
                   right: 0,
                   bottom: "auto",
                   margin: "0 auto",
-                  height: `${viewportH}px`,
-                  maxHeight: `${viewportH}px`,
+                  height: `${Math.round(viewportH * 0.5)}px`,
+                  maxHeight: `${Math.round(viewportH * 0.5)}px`,
                   translate: "none",
                   transform: "none",
                 }
               : {
-                  inset: 0,
-                  margin: "auto",
-                  height: "fit-content",
-                  maxHeight: "calc(100svh - 1rem)",
+                  top: "0.5rem",
+                  left: 0,
+                  right: 0,
+                  bottom: "auto",
+                  margin: "0 auto",
+                  height: "50svh",
+                  maxHeight: "50svh",
                   translate: "none",
                   transform: "none",
                 }
