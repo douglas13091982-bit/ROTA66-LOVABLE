@@ -27,18 +27,45 @@ export type PlaceSelection = {
   lng: number | null;
 };
 
+function mapsReady() {
+  return typeof window !== "undefined" && !!(window as any).google?.maps?.importLibrary;
+}
+
+function waitForMaps(timeoutMs = 15000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const tick = () => {
+      if (mapsReady()) return resolve();
+      if (Date.now() - start > timeoutMs) {
+        return reject(new Error("Google Maps não carregou a tempo"));
+      }
+      setTimeout(tick, 100);
+    };
+    tick();
+  });
+}
+
 export function loadGoogleMaps(): Promise<void> {
   if (typeof window === "undefined") return Promise.reject(new Error("ssr"));
+  if (mapsReady()) return Promise.resolve();
   if (mapsLoader) return mapsLoader;
-  if ((window as any).google?.maps?.importLibrary) {
-    mapsLoader = Promise.resolve();
+
+  // Outro loader do app pode já ter injetado o script — aguarda ele terminar.
+  const existing = document.querySelector<HTMLScriptElement>(
+    'script[src*="maps.googleapis.com/maps/api/js"]',
+  );
+  if (existing) {
+    mapsLoader = waitForMaps();
     return mapsLoader;
   }
+
   if (!BROWSER_KEY) {
     return Promise.reject(new Error("Google Maps browser key indisponível"));
   }
   mapsLoader = new Promise<void>((resolve, reject) => {
-    (window as any).__lovableInitMaps = () => resolve();
+    (window as any).__lovableInitMaps = () => {
+      waitForMaps().then(resolve, reject);
+    };
     const s = document.createElement("script");
     const params = new URLSearchParams({
       key: BROWSER_KEY,
@@ -53,8 +80,14 @@ export function loadGoogleMaps(): Promise<void> {
     s.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`;
     s.async = true;
     s.defer = true;
-    s.onerror = () => reject(new Error("Falha ao carregar Google Maps"));
+    s.onerror = () => {
+      mapsLoader = null;
+      reject(new Error("Falha ao carregar Google Maps"));
+    };
     document.head.appendChild(s);
+  }).catch((e) => {
+    mapsLoader = null;
+    throw e;
   });
   return mapsLoader;
 }
