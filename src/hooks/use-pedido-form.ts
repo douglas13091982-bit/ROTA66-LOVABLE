@@ -230,7 +230,7 @@ export function usePedidoForm({
       // dispara push para os entregadores da cidade (valida e deduplica lá).
       void convocarEntregadoresCidade({
         data: { loja_id: lojaId, motivo: "primeiro_pedido" },
-      }).catch((e) => console.error("[convocacao-primeiro-pedido] falhou", e));
+      }).catch((e: unknown) => console.error("[convocacao-primeiro-pedido] falhou", e));
 
 
 
