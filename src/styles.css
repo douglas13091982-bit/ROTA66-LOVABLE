@@ -2028,3 +2028,25 @@ select,
 *::after {
   border-radius: 0 !important;
 }
+
+/* ===========================================================
+   TEXTO BRANCO EM BOTÕES VERMELHOS (tema claro dos painéis)
+   =========================================================== */
+.panel-premium.panel-light button[class*="bg-destructive"],
+.panel-premium.panel-light button[class*="bg-destructive"] *,
+.panel-premium.panel-light button[class*="bg-primary"]:not([class*="bg-primary/"]),
+.panel-premium.panel-light button[class*="bg-primary"]:not([class*="bg-primary/"]) *,
+.panel-premium.panel-light button[class*="bg-gradient-red"],
+.panel-premium.panel-light button[class*="bg-gradient-red"] *,
+.panel-premium.panel-light button[class*="text-white"],
+.panel-premium.panel-light button[class*="text-white"] *,
+.panel-premium.panel-light .pp-cta,
+.panel-premium.panel-light .pp-cta *,
+button[class*="bg-\[oklch\(0\.55_0\.26_25\)\]"],
+button[class*="bg-\[oklch\(0\.55_0\.26_25\)\]"] *,
+button[class*="bg-\[\#AE0000\]"],
+button[class*="bg-\[\#AE0000\]"] *,
+button[class*="bg-\[\#E01818\]"],
+button[class*="bg-\[\#E01818\]"] * {
+  color: #ffffff !important;
+}
