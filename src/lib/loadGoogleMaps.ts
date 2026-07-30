@@ -14,6 +14,25 @@ export function loadGoogleMaps(): Promise<typeof google> {
   if (window.google?.maps?.places) return Promise.resolve(window.google);
   if (promise) return promise;
 
+  const existing = document.querySelector<HTMLScriptElement>(
+    'script[src*="maps.googleapis.com/maps/api/js"]',
+  );
+  if (existing) {
+    promise = new Promise((resolve, reject) => {
+      const start = Date.now();
+      const tick = () => {
+        if (window.google?.maps?.places) return resolve(window.google);
+        if (Date.now() - start > 15000) {
+          promise = null;
+          return reject(new Error("Google Maps não carregou a tempo"));
+        }
+        setTimeout(tick, 100);
+      };
+      tick();
+    });
+    return promise;
+  }
+
   const key = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY;
   const channel = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID;
   if (!key) return Promise.reject(new Error("Google Maps browser key indisponível"));
