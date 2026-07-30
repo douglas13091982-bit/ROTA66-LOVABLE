@@ -114,9 +114,11 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <Power className="h-4 w-4 text-[#0f1b2d]" strokeWidth={2.5} />
         </span>
         <span
+          data-surface={online ? "red" : undefined}
           className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-[#0f1b2d]/60"
+            online ? "!text-white" : "text-[#0f1b2d]/60"
           }`}
+
           style={online ? { background: "#AE0000", boxShadow: "0 6px 18px -6px rgba(174,0,0,0.55)" } : undefined}
         >
           ON
