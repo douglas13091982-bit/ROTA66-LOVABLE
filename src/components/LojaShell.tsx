@@ -49,6 +49,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const suporteBadge = useSuporteBadge("loja", loja?.id);
   usePedidosRealtime(loja?.id);
   const isOwner = useIsLojaOwner(loja);
+  useConvocacaoAbertura(loja);
   const NAV = NAV_ALL.filter((n) => !n.ownerOnly || isOwner);
 
   const sairModoSuporte = () => {
