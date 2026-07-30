@@ -13,12 +13,12 @@ type Props = {
 
 export function ApkList({ apks, loading, busyName, onRefresh, onDownload, onDelete }: Props) {
   return (
-    <div className="glass-strong border border-border/60 rounded-xl p-6">
+    <div className="bg-white border border-[#e2e6ec] p-6" style={{ boxShadow: "0 10px 30px -12px rgba(15,27,45,0.25)" }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-lg tracking-wide">Versões hospedadas</h3>
+        <h3 className="font-display text-lg tracking-wide text-[#0f1b2d]">Versões hospedadas</h3>
         <button
           onClick={onRefresh}
-          className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary inline-flex items-center gap-1"
+          className="text-xs font-bold uppercase tracking-widest text-[#AE0000] hover:text-[#8a0000] inline-flex items-center gap-1"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Atualizar
@@ -26,13 +26,13 @@ export function ApkList({ apks, loading, busyName, onRefresh, onDownload, onDele
       </div>
 
       {loading ? (
-        <div className="text-center text-sm text-muted-foreground py-6">Carregando…</div>
+        <div className="text-center text-sm text-[#5a6675] py-6">Carregando…</div>
       ) : apks.length === 0 ? (
-        <div className="text-center text-sm text-muted-foreground py-8 border border-dashed border-border rounded-lg">
+        <div className="text-center text-sm text-[#5a6675] py-8 border border-dashed border-[#c3cad6]">
           Nenhum APK enviado ainda.
         </div>
       ) : (
-        <ul className="divide-y divide-border">
+        <ul className="divide-y divide-[#e2e6ec]">
           {apks.map((a, i) => (
             <ApkListItem
               key={a.name}
