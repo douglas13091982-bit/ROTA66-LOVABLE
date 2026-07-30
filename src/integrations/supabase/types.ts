@@ -785,6 +785,58 @@ export type Database = {
         }
         Relationships: []
       }
+      convocacoes_entregadores: {
+        Row: {
+          created_at: string
+          destinatarios: number
+          dia: string
+          enviados: number
+          id: string
+          loja_id: string
+          motivo: string
+        }
+        Insert: {
+          created_at?: string
+          destinatarios?: number
+          dia?: string
+          enviados?: number
+          id?: string
+          loja_id: string
+          motivo: string
+        }
+        Update: {
+          created_at?: string
+          destinatarios?: number
+          dia?: string
+          enviados?: number
+          id?: string
+          loja_id?: string
+          motivo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convocacoes_entregadores_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convocacoes_entregadores_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_para_entregador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convocacoes_entregadores_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas_publicas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entregador_creditos: {
         Row: {
           entregador_id: string

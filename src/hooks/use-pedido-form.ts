@@ -9,6 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveAddressToPlace } from "@/lib/google-maps-places";
 import { useTarifaEntrega } from "./use-tarifa-entrega";
+import { convocarEntregadoresCidade } from "@/lib/convocacao.functions";
 
 export type Item = { nome: string; qtd: number; preco: number };
 
@@ -224,6 +225,14 @@ export function usePedidoForm({
         .select("*, lojas:loja_id(taxa_por_pedido, plano_mensal_ativo)")
         .single();
       if (error) throw error;
+
+      // Convocação: se for o primeiro pedido do dia desta loja, o servidor
+      // dispara push para os entregadores da cidade (valida e deduplica lá).
+      void convocarEntregadoresCidade({
+        data: { loja_id: lojaId, motivo: "primeiro_pedido" },
+      }).catch((e: unknown) => console.error("[convocacao-primeiro-pedido] falhou", e));
+
+
 
 
       // Optimistic update: insere o pedido no cache antes do refetch/realtime,
