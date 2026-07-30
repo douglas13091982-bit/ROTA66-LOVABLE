@@ -1896,3 +1896,92 @@ html.light .entregador-sticky-top {
 .panel-premium.panel-light .text-amber-400:not(aside *) { color: #b45309; }
 .panel-premium.panel-light .text-amber-300:not(aside *) { color: #92400e; }
 .panel-premium.panel-light .text-blue-400:not(aside *) { color: #2563eb; }
+
+/* ===========================================================
+   PANEL LIGHT — override do "premium polish" escuro
+   (mesmos seletores, porém escopados em .panel-light e fora da sidebar)
+   =========================================================== */
+.panel-premium.panel-light [class*="bg-card"]:not(button):not(input):not([role="tab"]):not(aside *),
+.panel-premium.panel-light [class*="rounded-2xl"][class*="bg-card"]:not(aside *) {
+  background: #ffffff !important;
+  border-color: #e4e8ef !important;
+  backdrop-filter: none;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.05), 0 12px 30px -22px oklch(0 0 0 / 0.25);
+}
+.panel-premium.panel-light [class*="rounded-2xl"][class*="bg-card"]:not(aside *)::before {
+  display: none;
+}
+.panel-premium.panel-light [class*="rounded-2xl"][class*="bg-card"]:not(aside *):hover {
+  border-color: #d3d9e4 !important;
+}
+
+/* Tabelas */
+.panel-premium.panel-light thead tr:not(aside *) { border-bottom-color: #e4e8ef !important; }
+.panel-premium.panel-light thead th:not(aside *) { color: #6b7688 !important; background: #f7f9fc !important; }
+.panel-premium.panel-light tbody tr:not(aside *) { border-bottom-color: #eef1f6 !important; }
+.panel-premium.panel-light tbody tr:not(aside *):hover { background: #f5f7fa !important; }
+.panel-premium.panel-light tbody td:not(aside *) { color: #0f1b2d !important; }
+
+/* Inputs / selects */
+.panel-premium.panel-light input:not([type="checkbox"]):not([type="radio"]):not(aside *),
+.panel-premium.panel-light select:not(aside *),
+.panel-premium.panel-light textarea:not(aside *),
+.panel-premium.panel-light [role="combobox"]:not(aside *),
+.panel-premium.panel-light [data-radix-select-trigger]:not(aside *) {
+  background: #ffffff !important;
+  border-color: #dfe4ec !important;
+  color: #0f1b2d !important;
+}
+.panel-premium.panel-light input::placeholder,
+.panel-premium.panel-light textarea::placeholder { color: #97a1b0 !important; }
+.panel-premium.panel-light [data-radix-select-trigger]:not(aside *):hover,
+.panel-premium.panel-light button[role="combobox"]:not(aside *):hover {
+  background: #f5f7fa !important;
+}
+.panel-premium.panel-light label:not(aside *) { color: #46536a !important; }
+
+/* Tabs */
+.panel-premium.panel-light [role="tablist"]:not(aside *) {
+  background: #eef1f6 !important;
+  border-color: #e4e8ef !important;
+}
+.panel-premium.panel-light [role="tab"]:not(aside *) { color: #6b7688 !important; }
+.panel-premium.panel-light [role="tab"][data-state="active"]:not(aside *) {
+  background: #ffffff !important;
+  color: #0f1b2d !important;
+  box-shadow: 0 1px 3px oklch(0 0 0 / 0.12);
+}
+
+/* Botões secundários / outline */
+.panel-premium.panel-light button[class*="border"][class*="bg-background"]:not(aside *),
+.panel-premium.panel-light button[class*="bg-secondary"]:not([class*="bg-secondary/"]):not(aside *) {
+  background: #ffffff !important;
+  border-color: #dfe4ec !important;
+  color: #0f1b2d !important;
+}
+.panel-premium.panel-light button[class*="border"][class*="bg-background"]:not(aside *):hover,
+.panel-premium.panel-light button[class*="hover\:bg-accent"]:not(aside *):hover,
+.panel-premium.panel-light button[class*="hover\:bg-muted"]:not(aside *):hover {
+  background: #f1f4f9 !important;
+  color: #0f1b2d !important;
+}
+
+/* Diversos */
+.panel-premium.panel-light hr:not(aside *),
+.panel-premium.panel-light [role="separator"]:not(aside *) { border-color: #e4e8ef !important; background-color: #e4e8ef !important; }
+.panel-premium.panel-light [class*="animate-pulse"][class*="bg-muted"]:not(aside *),
+.panel-premium.panel-light [class*="rounded-full"][class*="bg-muted"]:not(aside *) { background: #e8ecf3 !important; }
+.panel-premium.panel-light [data-radix-accordion-item]:not(aside *) { border-color: #e4e8ef !important; }
+.panel-premium.panel-light [role="alert"]:not(aside *) { background: #f7f9fc !important; border-color: #e4e8ef !important; color: #0f1b2d !important; }
+.panel-premium.panel-light h1:not(aside *),
+.panel-premium.panel-light h2:not(aside *),
+.panel-premium.panel-light h3:not(aside *),
+.panel-premium.panel-light h4:not(aside *) { color: #0f1b2d; }
+
+/* Diálogos / popovers (renderizados em portal) seguem o tema escuro atual;
+   quando dentro do painel, ficam claros */
+.panel-premium.panel-light [role="dialog"]:not(aside *) {
+  background: #ffffff !important;
+  border-color: #e4e8ef !important;
+  color: #0f1b2d !important;
+}
