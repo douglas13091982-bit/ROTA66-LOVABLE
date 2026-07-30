@@ -2107,7 +2107,7 @@ button[class*="bg-\[\#E01818\]"] * {
   background-color: #ffffff !important;
   border-color: #e4e8ef !important;
 }
-.entregador-theme.panel-light .bg-background { background-color: #f5f7fa !important; }
+.entregador-theme.panel-light .bg-background { background-color: #ffffff !important; }
 .entregador-theme.panel-light .bg-muted { background-color: #eef1f6 !important; }
 
 /* Em superfícies vermelhas/navy o texto continua branco */
