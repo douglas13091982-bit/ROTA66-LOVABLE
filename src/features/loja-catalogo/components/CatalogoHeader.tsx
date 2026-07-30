@@ -178,27 +178,6 @@ export function CatalogoHeader({
             </div>
           </div>
 
-          {/* Barra de indicadores */}
-          <div className="cc-card rounded-2xl mt-3.5 px-3 py-3 grid grid-cols-3 divide-x divide-border text-center">
-            <div className="flex items-center justify-center gap-2">
-              <Star className="h-4 w-4 cc-gold-text fill-current" />
-              <span className="cc-serif text-[16px]">
-                {nota != null ? nota.toFixed(1).replace(".", ",") : "5,0"}
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <Timer className="h-4 w-4 text-muted-foreground" />
-              <span className="cc-serif text-[15px]">{tempoEntrega || "30–45 min"}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <Bike className="h-4 w-4 text-muted-foreground" />
-              <span className="cc-serif text-[15px]">
-                {taxaEntrega != null && taxaEntrega > 0
-                  ? `Entrega R$ ${taxaEntrega.toFixed(2).replace(".", ",")}`
-                  : "Entrega"}
-              </span>
-            </div>
-          </div>
 
         </div>
 
