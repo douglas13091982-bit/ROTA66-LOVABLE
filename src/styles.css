@@ -2057,7 +2057,7 @@ button[class*="bg-\[\#E01818\]"] * {
    A barra inferior segue navy (equivalente à sidebar dos painéis).
    =========================================================== */
 .entregador-theme.panel-light {
-  background: #ffffff !important;
+  background: #f5f7fa !important;
   color: #0f1b2d;
 }
 
@@ -2067,7 +2067,7 @@ button[class*="bg-\[\#E01818\]"] * {
 /* Faixa fixa do topo (Disponíveis) */
 .entregador-theme.panel-light .entregador-sticky-top {
   background: #ffffff;
-  border-bottom: none;
+  border-bottom: 1px solid #e4e8ef;
 }
 
 /* Texto: branco sólido → navy; branco translúcido → cinza.
@@ -2107,7 +2107,7 @@ button[class*="bg-\[\#E01818\]"] * {
   background-color: #ffffff !important;
   border-color: #e4e8ef !important;
 }
-.entregador-theme.panel-light .bg-background { background-color: #ffffff !important; }
+.entregador-theme.panel-light .bg-background { background-color: #f5f7fa !important; }
 .entregador-theme.panel-light .bg-muted { background-color: #eef1f6 !important; }
 
 /* Em superfícies vermelhas/navy o texto continua branco */
