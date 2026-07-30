@@ -180,25 +180,28 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
       <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
-          className="fixed z-50 flex flex-col gap-0 overflow-hidden rounded-xl border border-[oklch(0.78_0.16_75_/_0.40)] bg-[oklch(0.12_0.015_260)] p-0 shadow-xl outline-none w-[calc(100svw-1rem)] max-w-2xl sm:h-[70vh] sm:max-h-[560px]"
+          className="fixed z-50 flex flex-col gap-0 overflow-hidden border border-[#e4e8ef] bg-white p-0 shadow-[0_20px_50px_-20px_rgba(15,27,45,0.35)] outline-none w-[calc(100svw-1rem)] max-w-md"
           style={
             viewportH
               ? {
-                  top: `${viewportOffset}px`,
+                  top: `${viewportOffset + 8}px`,
                   left: 0,
                   right: 0,
                   bottom: "auto",
                   margin: "0 auto",
-                  height: `${viewportH}px`,
-                  maxHeight: `${viewportH}px`,
+                  height: `${Math.round(viewportH * 0.5)}px`,
+                  maxHeight: `${Math.round(viewportH * 0.5)}px`,
                   translate: "none",
                   transform: "none",
                 }
               : {
-                  inset: 0,
-                  margin: "auto",
-                  height: "fit-content",
-                  maxHeight: "calc(100svh - 1rem)",
+                  top: "0.5rem",
+                  left: 0,
+                  right: 0,
+                  bottom: "auto",
+                  margin: "0 auto",
+                  height: "50svh",
+                  maxHeight: "50svh",
                   translate: "none",
                   transform: "none",
                 }
@@ -206,32 +209,32 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         >
 
 
-        <DialogHeader className="px-5 py-3 border-b border-[oklch(0.78_0.16_75_/_0.25)] bg-[oklch(0.14_0.012_260)] shrink-0 relative">
-          <DialogTitle className="font-['Sora'] text-base tracking-wide flex items-center gap-2 pr-8 text-white">
-            <MessageCircle className="h-5 w-5 text-[var(--rota-gold)]" />
-            Chat {pedidoNumero ? <span className="text-[var(--rota-gold)]">· Pedido #{pedidoNumero}</span> : ""}
+        <DialogHeader className="px-4 py-2.5 border-b border-[#e4e8ef] bg-[#0d2c54] shrink-0 relative">
+          <DialogTitle className="font-['Sora'] text-sm tracking-wide flex items-center gap-2 pr-8 !text-white">
+            <MessageCircle className="h-4 w-4 text-white" />
+            Chat {pedidoNumero ? <span className="text-white/80">· Pedido #{pedidoNumero}</span> : ""}
           </DialogTitle>
-          <DialogDescription className="flex items-center gap-1.5 text-[0.65rem] pr-8 uppercase tracking-[0.22em] font-bold text-[oklch(0.52_0.02_260)]">
-            <OutroIcon className="h-3.5 w-3.5 text-[var(--rota-gold)]" />
+          <DialogDescription className="flex items-center gap-1.5 text-[0.6rem] pr-8 uppercase tracking-[0.2em] font-bold !text-white/70">
+            <OutroIcon className="h-3 w-3 text-white/70" />
             Falando com {contraparteNome ?? outroLabel}
           </DialogDescription>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="absolute top-2.5 right-3 h-8 w-8 flex items-center justify-center rounded-full hover:bg-[oklch(1_0_0_/_0.035)] transition-colors"
+            className="absolute top-2 right-2.5 h-8 w-8 flex items-center justify-center hover:bg-white/10 transition-colors"
             aria-label="Fechar chat"
           >
-            <X className="h-4 w-4 text-[oklch(0.68_0.02_260)]" />
+            <X className="h-4 w-4 text-white" />
           </button>
         </DialogHeader>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-[oklch(0.12_0.015_260)]">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 bg-[#f5f7fa]">
           {isLoading ? (
-            <div className="flex items-center justify-center py-10 text-[oklch(0.68_0.02_260)]">
+            <div className="flex items-center justify-center py-10 text-[#5b6b82]">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           ) : !mensagens || mensagens.length === 0 ? (
-            <div className="text-center py-10 text-sm text-[oklch(0.52_0.02_260)]">
+            <div className="text-center py-10 text-sm text-[#5b6b82]">
               Nenhuma mensagem ainda. <br />
               Envie a primeira mensagem se precisar comunicar algo sobre este pedido.
             </div>
@@ -241,14 +244,14 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
               return (
                 <div key={m.id} className={`flex ${meu ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[78%] px-3.5 py-2 rounded-2xl text-sm leading-snug shadow-soft ${
+                    className={`max-w-[78%] px-3 py-2 text-sm leading-snug ${
                       meu
-                        ? "bg-gradient-red text-white rounded-br-sm"
-                        : "bg-[oklch(0.18_0.02_260)] border border-[oklch(0.28_0.035_260_/_0.55)] text-[oklch(0.97_0_0)] rounded-bl-sm"
+                        ? "bg-[#AE0000] !text-white"
+                        : "bg-white border border-[#e4e8ef] text-[#0f1b2d]"
                     }`}
                   >
                     <div className="whitespace-pre-wrap break-words">{m.mensagem}</div>
-                    <div className={`text-[10px] mt-1 ${meu ? "text-white/70" : "text-[oklch(0.52_0.02_260)]"}`}>
+                    <div className={`text-[10px] mt-1 ${meu ? "text-white/70" : "text-[#5b6b82]"}`}>
                       {new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
@@ -258,7 +261,8 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
           )}
         </div>
 
-        <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-3 border-t border-[oklch(0.78_0.16_75_/_0.25)] bg-[oklch(0.14_0.012_260)] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+
+        <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-2.5 border-t border-[#e4e8ef] bg-white pb-[max(0.625rem,env(safe-area-inset-bottom))]">
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
@@ -272,17 +276,18 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
             rows={1}
             maxLength={2000}
             disabled={enviando}
-            className="flex-1 resize-none rounded-xl border border-[oklch(0.28_0.035_260_/_0.55)] bg-[oklch(0.12_0.015_260)] px-3 py-2 text-sm text-white placeholder:text-[oklch(0.52_0.02_260)] focus:outline-none focus:ring-2 focus:ring-[oklch(0.55_0.21_27_/_0.40)] max-h-32"
+            className="flex-1 resize-none border border-[#e4e8ef] bg-[#f5f7fa] px-3 py-2 text-sm text-[#0f1b2d] placeholder:text-[#8a97a8] focus:outline-none focus:border-[#AE0000] max-h-24"
           />
           <button
             type="submit"
             disabled={enviando || !texto.trim()}
-            className="shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-gradient-red text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all duration-200"
+            className="shrink-0 h-9 w-9 flex items-center justify-center bg-[#AE0000] !text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             aria-label="Enviar"
           >
             {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </button>
         </form>
+
         </DialogPrimitive.Content>
       </DialogPortal>
     </Dialog>
