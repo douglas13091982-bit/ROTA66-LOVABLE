@@ -2012,3 +2012,12 @@ select,
 [data-radix-popper-content-wrapper] > * {
   border-radius: 0 !important;
 }
+
+/* Itens do menu lateral também com cantos retos */
+.panel-premium .pp-nav,
+.panel-premium .pp-nav-active,
+.panel-premium aside a,
+.panel-premium aside button {
+  border-radius: 0 !important;
+}
+.panel-premium .pp-nav-active::before { border-radius: 0 !important; }
