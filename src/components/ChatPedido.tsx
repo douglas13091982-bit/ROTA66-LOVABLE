@@ -209,32 +209,32 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         >
 
 
-        <DialogHeader className="px-5 py-3 border-b border-[oklch(0.78_0.16_75_/_0.25)] bg-[oklch(0.14_0.012_260)] shrink-0 relative">
-          <DialogTitle className="font-['Sora'] text-base tracking-wide flex items-center gap-2 pr-8 text-white">
-            <MessageCircle className="h-5 w-5 text-[var(--rota-gold)]" />
-            Chat {pedidoNumero ? <span className="text-[var(--rota-gold)]">· Pedido #{pedidoNumero}</span> : ""}
+        <DialogHeader className="px-4 py-2.5 border-b border-[#e4e8ef] bg-[#0d2c54] shrink-0 relative">
+          <DialogTitle className="font-['Sora'] text-sm tracking-wide flex items-center gap-2 pr-8 !text-white">
+            <MessageCircle className="h-4 w-4 text-white" />
+            Chat {pedidoNumero ? <span className="text-white/80">· Pedido #{pedidoNumero}</span> : ""}
           </DialogTitle>
-          <DialogDescription className="flex items-center gap-1.5 text-[0.65rem] pr-8 uppercase tracking-[0.22em] font-bold text-[oklch(0.52_0.02_260)]">
-            <OutroIcon className="h-3.5 w-3.5 text-[var(--rota-gold)]" />
+          <DialogDescription className="flex items-center gap-1.5 text-[0.6rem] pr-8 uppercase tracking-[0.2em] font-bold !text-white/70">
+            <OutroIcon className="h-3 w-3 text-white/70" />
             Falando com {contraparteNome ?? outroLabel}
           </DialogDescription>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="absolute top-2.5 right-3 h-8 w-8 flex items-center justify-center rounded-full hover:bg-[oklch(1_0_0_/_0.035)] transition-colors"
+            className="absolute top-2 right-2.5 h-8 w-8 flex items-center justify-center hover:bg-white/10 transition-colors"
             aria-label="Fechar chat"
           >
-            <X className="h-4 w-4 text-[oklch(0.68_0.02_260)]" />
+            <X className="h-4 w-4 text-white" />
           </button>
         </DialogHeader>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-[oklch(0.12_0.015_260)]">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5 bg-[#f5f7fa]">
           {isLoading ? (
-            <div className="flex items-center justify-center py-10 text-[oklch(0.68_0.02_260)]">
+            <div className="flex items-center justify-center py-10 text-[#5b6b82]">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           ) : !mensagens || mensagens.length === 0 ? (
-            <div className="text-center py-10 text-sm text-[oklch(0.52_0.02_260)]">
+            <div className="text-center py-10 text-sm text-[#5b6b82]">
               Nenhuma mensagem ainda. <br />
               Envie a primeira mensagem se precisar comunicar algo sobre este pedido.
             </div>
@@ -244,14 +244,14 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
               return (
                 <div key={m.id} className={`flex ${meu ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[78%] px-3.5 py-2 rounded-2xl text-sm leading-snug shadow-soft ${
+                    className={`max-w-[78%] px-3 py-2 text-sm leading-snug ${
                       meu
-                        ? "bg-gradient-red text-white rounded-br-sm"
-                        : "bg-[oklch(0.18_0.02_260)] border border-[oklch(0.28_0.035_260_/_0.55)] text-[oklch(0.97_0_0)] rounded-bl-sm"
+                        ? "bg-[#AE0000] !text-white"
+                        : "bg-white border border-[#e4e8ef] text-[#0f1b2d]"
                     }`}
                   >
                     <div className="whitespace-pre-wrap break-words">{m.mensagem}</div>
-                    <div className={`text-[10px] mt-1 ${meu ? "text-white/70" : "text-[oklch(0.52_0.02_260)]"}`}>
+                    <div className={`text-[10px] mt-1 ${meu ? "text-white/70" : "text-[#5b6b82]"}`}>
                       {new Date(m.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
@@ -260,6 +260,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
             })
           )}
         </div>
+
 
         <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-3 border-t border-[oklch(0.78_0.16_75_/_0.25)] bg-[oklch(0.14_0.012_260)] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <textarea
