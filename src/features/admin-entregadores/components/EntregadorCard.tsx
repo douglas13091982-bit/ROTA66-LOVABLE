@@ -53,7 +53,10 @@ export function EntregadorCard({
   const v = veiculoInfo(p.tipo_veiculo ?? docTipo);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+    <div
+      className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition-shadow duration-200 hover:-translate-y-0.5 transition-transform"
+      style={{ boxShadow: "0 10px 30px -8px rgba(15,27,45,0.28), 0 4px 12px -4px rgba(15,27,45,0.18)" }}
+    >
       {showDocs && (
         <DocumentosReviewDialog
           entregadorId={p.id}
