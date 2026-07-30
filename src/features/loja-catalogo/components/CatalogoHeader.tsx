@@ -85,7 +85,7 @@ export function CatalogoHeader({
   };
 
   return (
-    <header className="relative z-30">
+    <header className="sticky top-0 z-30">
       {/* Topbar navy */}
       <div className="cc-topbar">
         <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center gap-3">
@@ -211,11 +211,9 @@ export function CatalogoHeader({
             />
           </div>
         </div>
-      </div>
 
-      {categorias.length > 0 && !busca && (
-        <div className="sticky top-0 z-40 cc-hero-bg border-b border-border shadow-sm">
-          <div className="max-w-2xl mx-auto py-3 relative">
+        {categorias.length > 0 && !busca && (
+          <div className="max-w-2xl mx-auto pb-3.5 relative">
             <div className="flex gap-2.5 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
               <button
                 onClick={() => {
@@ -243,8 +241,8 @@ export function CatalogoHeader({
               })}
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }

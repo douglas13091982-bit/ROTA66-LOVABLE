@@ -69,7 +69,7 @@ export function CatalogoListagem({
   return (
     <>
       {groups.map(({ cat, items }) => (
-        <section key={cat} id={`cat-${cat}`} className={`${isHorizontal ? "mb-7" : "mb-8"} scroll-mt-24`}>
+        <section key={cat} id={`cat-${cat}`} className={`${isHorizontal ? "mb-7" : "mb-8"} scroll-mt-44`}>
           <div className="flex items-center gap-2.5 mb-3 px-1">
             <span className="h-7 w-6 rounded-[4px] flex items-center justify-center shrink-0 bg-[var(--cc-gold)]">
               <Bookmark className="h-3.5 w-3.5 text-white fill-current" />
