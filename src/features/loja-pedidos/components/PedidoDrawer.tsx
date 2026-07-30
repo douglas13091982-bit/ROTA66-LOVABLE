@@ -228,7 +228,6 @@ export function PedidoDrawer({
               </div>
             </div>
 
-            </div>
           )}
 
           {detalhe.entregador_id && (
