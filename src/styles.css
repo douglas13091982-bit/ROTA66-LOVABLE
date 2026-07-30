@@ -722,17 +722,43 @@ html.light .panel-premium [data-nav-badge] * {
   --panel-border-strong: #d3d9e4;
   --panel-shadow-card: 0 1px 2px oklch(0 0 0 / 0.05), 0 12px 30px -22px oklch(0 0 0 / 0.25);
   --panel-shadow-hover: 0 2px 6px oklch(0 0 0 / 0.07), 0 24px 50px -26px oklch(0 0 0 / 0.3);
+
+  /* tokens semânticos (shadcn) no claro */
+  --background: #f5f7fa;
+  --foreground: #0f1b2d;
+  --card: #ffffff;
+  --card-foreground: #0f1b2d;
+  --popover: #ffffff;
+  --popover-foreground: #0f1b2d;
+  --secondary: #eef1f6;
+  --secondary-foreground: #0f1b2d;
+  --muted: #eef1f6;
+  --muted-foreground: #6b7688;
+  --border: #e4e8ef;
+  --input: #e4e8ef;
+
   background: #f5f7fa;
   color: #0f1b2d;
 }
 
 /* Sidebar navy sólida */
 .panel-premium.panel-light aside {
+  --background: var(--rota-navy);
+  --foreground: oklch(0.97 0 0);
+  --card: #123a63;
+  --card-foreground: oklch(0.97 0 0);
+  --popover: #123a63;
+  --popover-foreground: oklch(0.97 0 0);
+  --secondary: oklch(0.28 0.06 265);
+  --muted: oklch(0.26 0.05 265);
+  --muted-foreground: oklch(0.72 0.03 260);
+  --border: oklch(1 0 0 / 0.08);
   background: #0d2c54 !important;
   backdrop-filter: none !important;
   border-right: 1px solid oklch(1 0 0 / 0.06) !important;
   color: #ffffff;
 }
+
 .panel-premium.panel-light aside .pp-nav:hover {
   color: #ffffff;
   background: oklch(1 0 0 / 0.08);
