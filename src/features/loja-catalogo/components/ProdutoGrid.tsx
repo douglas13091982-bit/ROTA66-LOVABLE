@@ -19,9 +19,7 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
     if (hasAdicionais(p)) {
       return (
         <div className="flex items-center gap-2">
-          {qtd > 0 && (
-            <span className="text-[11px] font-bold text-primary tabular-nums">{qtd}×</span>
-          )}
+          {qtd > 0 && <span className="text-[12px] font-bold text-primary tabular-nums">{qtd}×</span>}
           <AddButton onAdd={() => onAdd(p)} />
         </div>
       );
@@ -33,33 +31,45 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
     );
   };
 
+  const preco = (p: Produto) =>
+    promoAtiva(p) ? (
+      <span className="inline-flex items-baseline gap-2">
+        <span className="cc-price text-[19px] text-primary leading-none">
+          R$ {precoEfetivo(p).toFixed(2).replace(".", ",")}
+        </span>
+        <span className="text-[12px] text-muted-foreground line-through">
+          R$ {Number(p.preco).toFixed(2).replace(".", ",")}
+        </span>
+      </span>
+    ) : (
+      <span className="cc-price text-[19px] text-primary leading-none">
+        R$ {Number(p.preco).toFixed(2).replace(".", ",")}
+      </span>
+    );
+
   if (layout === "lista") {
     return (
-      <div className="space-y-0 cc-card rounded-2xl px-3.5">
+      <div className="cc-card rounded-2xl px-4">
         {items.map((p, i) => (
           <div
             key={p.id}
-            className={`flex items-center gap-3.5 py-3.5 ${i !== items.length - 1 ? "border-b border-border/70" : ""}`}
+            className={`flex items-center gap-3.5 py-4 ${i !== items.length - 1 ? "border-b border-border" : ""}`}
           >
-            <div className="cc-img-wrap h-16 w-16 rounded-xl shrink-0">
+            <div className="cc-img-wrap h-[68px] w-[68px] rounded-xl shrink-0">
               {p.imagem_url ? (
                 <img src={p.imagem_url} alt={p.nome} loading="lazy" className="h-full w-full object-cover" />
               ) : (
-                <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground">sem foto</div>
+                <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground">
+                  sem foto
+                </div>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-display text-[15px] leading-tight tracking-tight text-foreground truncate">{p.nome}</h3>
-              {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-1 mt-0.5">{p.descricao}</p>}
-              {promoAtiva(p) ? (
-                <span className="mt-1 inline-flex items-baseline gap-2">
-                  <span className="cc-price text-[16px] text-primary leading-none">R$ {precoEfetivo(p).toFixed(2)}</span>
-                  <span className="text-[11px] text-muted-foreground line-through">R$ {Number(p.preco).toFixed(2)}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">Promo</span>
-                </span>
-              ) : (
-                <span className="cc-price text-[16px] text-primary leading-none mt-1 inline-block">R$ {Number(p.preco).toFixed(2)}</span>
+              <h3 className="cc-serif cc-ink-text text-[17px] leading-tight truncate">{p.nome}</h3>
+              {p.descricao && (
+                <p className="text-[13px] text-muted-foreground line-clamp-1 mt-0.5">{p.descricao}</p>
               )}
+              <div className="mt-1">{preco(p)}</div>
             </div>
             <div className="shrink-0">{renderControls(p)}</div>
           </div>
@@ -69,31 +79,31 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="flex flex-col gap-3">
       {items.map((p) => (
-        <article key={p.id} className="cc-card rounded-2xl p-3 flex gap-3 group">
-          <div className="cc-img-wrap h-24 w-24 sm:h-[88px] sm:w-[88px] rounded-xl shrink-0">
+        <article key={p.id} className="cc-card rounded-2xl p-3 flex items-center gap-3.5">
+          <div className="cc-img-wrap h-[92px] w-[92px] rounded-xl shrink-0 relative">
             {p.imagem_url ? (
               <img src={p.imagem_url} alt={p.nome} loading="lazy" className="h-full w-full object-cover" />
             ) : (
-              <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground">sem foto</div>
+              <div className="h-full w-full flex items-center justify-center text-[10px] text-muted-foreground">
+                sem foto
+              </div>
+            )}
+            {promoAtiva(p) && (
+              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-bold uppercase tracking-[0.12em]">
+                Promo
+              </span>
             )}
           </div>
-          <div className="flex-1 min-w-0 flex flex-col">
-            <h3 className="font-display text-[15px] leading-tight tracking-tight text-foreground line-clamp-1">{p.nome}</h3>
-            {p.descricao && <p className="text-[12px] text-muted-foreground line-clamp-2 mt-0.5 leading-snug">{p.descricao}</p>}
-            <div className="mt-auto pt-2 flex items-center justify-between gap-2">
-              {promoAtiva(p) ? (
-                <span className="inline-flex items-baseline gap-2">
-                  <span className="cc-price text-[18px] text-primary leading-none">R$ {precoEfetivo(p).toFixed(2)}</span>
-                  <span className="text-[12px] text-muted-foreground line-through">R$ {Number(p.preco).toFixed(2)}</span>
-                </span>
-              ) : (
-                <span className="cc-price text-[18px] text-primary leading-none">R$ {Number(p.preco).toFixed(2)}</span>
-              )}
-              {renderControls(p)}
-            </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="cc-serif cc-ink-text text-[19px] leading-tight line-clamp-2">{p.nome}</h3>
+            {p.descricao && (
+              <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1 leading-snug">{p.descricao}</p>
+            )}
+            <div className="mt-1.5">{preco(p)}</div>
           </div>
+          <div className="shrink-0 self-end pb-1">{renderControls(p)}</div>
         </article>
       ))}
     </div>
