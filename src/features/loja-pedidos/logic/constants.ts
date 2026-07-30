@@ -15,14 +15,14 @@ export const STATUS_LABEL: Record<string, string> = {
 };
 
 export const STATUS_COLOR: Record<string, string> = {
-  novo: "bg-[oklch(0.55_0.26_25)] text-white",
-  aceito: "bg-[oklch(0.35_0.06_265)] text-white",
-  em_preparo: "bg-[oklch(0.55_0.16_75)] text-[#0e0f12]",
-  pronto: "bg-[oklch(0.50_0.24_25)] text-white",
-  em_rota: "bg-[oklch(0.40_0.06_265)] text-white",
-  coletado: "bg-[oklch(0.45_0.06_265)] text-white",
-  entregue: "bg-[oklch(0.38_0.06_165)] text-white",
-  cancelado: "bg-zinc-600 text-white",
+  novo: "bg-[oklch(0.55_0.26_25)] !text-white",
+  aceito: "bg-[oklch(0.35_0.06_265)] !text-white",
+  em_preparo: "bg-[oklch(0.55_0.16_75)] !text-white",
+  pronto: "bg-[oklch(0.50_0.24_25)] !text-white",
+  em_rota: "bg-[oklch(0.40_0.06_265)] !text-white",
+  coletado: "bg-[oklch(0.45_0.06_265)] !text-white",
+  entregue: "bg-[oklch(0.38_0.06_165)] !text-white",
+  cancelado: "bg-zinc-600 !text-white",
 };
 
 /**
@@ -62,7 +62,7 @@ export const COLUMNS: ColumnDef[] = [
     statuses: ["novo", "aceito", "em_preparo"],
     accent: "border-t-[oklch(0.55_0.16_75)]",
     tone: "bg-[oklch(0.62_0.16_75)]",
-    iconBg: "bg-[oklch(0.62_0.16_75)] text-[#0e0f12]",
+    iconBg: "bg-[oklch(0.62_0.16_75)] !text-white",
     badge: "bg-[oklch(0.62_0.16_75)]/25 text-[oklch(0.80_0.14_75)]",
   },
   {
@@ -73,7 +73,7 @@ export const COLUMNS: ColumnDef[] = [
     statuses: ["pronto"],
     accent: "border-t-[oklch(0.55_0.26_25)]",
     tone: "bg-[oklch(0.55_0.26_25)]",
-    iconBg: "bg-[oklch(0.55_0.26_25)] text-white",
+    iconBg: "bg-[oklch(0.55_0.26_25)] !text-white",
     badge: "bg-[oklch(0.55_0.26_25)]/25 text-[oklch(0.78_0.16_25)]",
   },
   {
@@ -84,7 +84,7 @@ export const COLUMNS: ColumnDef[] = [
     statuses: ["em_rota", "coletado"],
     accent: "border-t-[oklch(0.55_0.16_150)]",
     tone: "bg-[oklch(0.60_0.16_150)]",
-    iconBg: "bg-[oklch(0.60_0.16_150)] text-[#0e0f12]",
+    iconBg: "bg-[oklch(0.60_0.16_150)] !text-white",
     badge: "bg-[oklch(0.60_0.16_150)]/25 text-[oklch(0.80_0.14_150)]",
   },
   // Cancelados ficam junto com "Entregue" (arquivados) — o badge de status "Cancelado" diferencia visualmente.
@@ -96,7 +96,7 @@ export const COLUMNS: ColumnDef[] = [
     statuses: ["entregue", "cancelado"],
     accent: "border-t-[oklch(0.38_0.06_165)]",
     tone: "bg-[oklch(0.50_0.08_200)]",
-    iconBg: "bg-[oklch(0.50_0.08_200)] text-white",
+    iconBg: "bg-[oklch(0.50_0.08_200)] !text-white",
     badge: "bg-[oklch(0.50_0.08_200)]/25 text-[oklch(0.80_0.05_200)]",
   },
 ];
