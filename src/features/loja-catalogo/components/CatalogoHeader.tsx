@@ -8,7 +8,6 @@ import {
   Flame,
   Heart,
   IceCream,
-  MapPin,
   Pizza,
   Sandwich,
   Share2,
@@ -155,17 +154,6 @@ export function CatalogoHeader({
                 {aberta ? "Loja aberta" : "Loja fechada"}
               </span>
               <h1 className="cc-serif cc-ink-text text-[26px] leading-tight mt-1 truncate">{loja.nome}</h1>
-              <div className="text-[13px] text-muted-foreground mt-1 space-y-0.5">
-                {loja.endereco && (
-                  <div className="flex items-start gap-1.5">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                    <span className="line-clamp-2">
-                      {loja.endereco}
-                      {loja.cidade ? ` — ${loja.cidade}` : ""}
-                    </span>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
 
