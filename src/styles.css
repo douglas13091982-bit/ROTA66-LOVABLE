@@ -2170,3 +2170,20 @@ button[class*="bg-\[\#E01818\]"] * {
 }
 .entregador-theme.panel-light [role="tab"][data-surface="navy"] { background: #0d2c54 !important; }
 .entregador-theme.panel-light [role="tab"][data-surface="red"] { background: #AE0000 !important; }
+
+/* Restaura texto branco sobre superfícies escuras do app do entregador
+   (nav inferior e pílulas navy/vermelhas), acima de qualquer override claro. */
+.panel-premium.panel-light [data-surface="red"],
+.panel-premium.panel-light [data-surface="red"] *,
+.panel-premium.panel-light [data-surface="navy"],
+.panel-premium.panel-light [data-surface="navy"] *,
+.panel-premium.panel-light [data-entregador-nav],
+.panel-premium.panel-light [data-entregador-nav] * {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+.panel-premium.panel-light [data-surface="red"] [class*="text-white\/"],
+.panel-premium.panel-light [data-surface="navy"] [class*="text-white\/"],
+.panel-premium.panel-light [data-entregador-nav] [class*="text-white\/"] {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
