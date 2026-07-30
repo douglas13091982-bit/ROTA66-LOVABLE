@@ -32,7 +32,7 @@ export function PopupPedido({
       <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
-          className="panel-premium fixed inset-0 z-50 m-auto flex h-fit flex-col gap-0 overflow-y-auto overflow-x-hidden overscroll-contain rounded-2xl p-0 outline-none"
+          className="entregador-theme panel-premium panel-light fixed inset-0 z-50 m-auto flex h-fit flex-col gap-0 overflow-y-auto overflow-x-hidden overscroll-contain rounded-2xl p-0 outline-none"
           style={{
             inset: 0,
             margin: "auto",
@@ -41,12 +41,13 @@ export function PopupPedido({
             width: "calc(100svw - 1rem)",
             maxWidth: "min(42rem, calc(100svw - 1rem))",
             maxHeight: "calc(100svh - 1rem)",
-            background: "oklch(0.12 0.015 260)",
-            border: "1px solid oklch(0.78 0.16 75 / 0.40)",
-            boxShadow: "0 30px 80px -20px oklch(0 0 0 / 0.65), 0 0 0 1px oklch(0.78 0.16 75 / 0.08)",
+            background: "#ffffff",
+            border: "1px solid #e4e8ef",
+            boxShadow: "0 30px 80px -20px rgba(15,27,45,0.35)",
           }}
           onInteractOutside={(e) => e.preventDefault()}
         >
+
           <VisuallyHidden>
             <DialogTitle>Novo pedido disponível</DialogTitle>
           </VisuallyHidden>

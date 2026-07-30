@@ -2050,3 +2050,123 @@ button[class*="bg-\[\#E01818\]"],
 button[class*="bg-\[\#E01818\]"] * {
   color: #ffffff !important;
 }
+
+/* ===========================================================
+   ENTREGADOR — TEMA CLARO (mesma paleta dos painéis)
+   Fundo branco/cinza claro + texto navy + vermelho #AE0000.
+   A barra inferior segue navy (equivalente à sidebar dos painéis).
+   =========================================================== */
+.entregador-theme.panel-light {
+  background: #f5f7fa !important;
+  color: #0f1b2d;
+}
+
+/* Sem grade escura decorativa */
+.entregador-theme.panel-light .pp-grid-overlay { display: none !important; }
+
+/* Faixa fixa do topo (Disponíveis) */
+.entregador-theme.panel-light .entregador-sticky-top {
+  background: #ffffff;
+  border-bottom: 1px solid #e4e8ef;
+}
+
+/* Texto: branco sólido → navy; branco translúcido → cinza.
+   Superfícies escuras (nav inferior, pílulas navy/vermelhas) ficam de fora. */
+.entregador-theme.panel-light .text-white:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *),
+.entregador-theme.panel-light .\!text-white:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  color: #0f1b2d !important;
+  text-shadow: none !important;
+}
+.entregador-theme.panel-light [class*="text-white\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *),
+.entregador-theme.panel-light [class*="\!text-white\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  color: #6b7688 !important;
+}
+
+
+/* Superfícies translúcidas → cinza claro */
+.entregador-theme.panel-light [class*="bg-white\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  background-color: #f1f3f7 !important;
+}
+.entregador-theme.panel-light [class*="bg-black\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  background-color: #eef0f4 !important;
+}
+.entregador-theme.panel-light [class*="border-white\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  border-color: #e4e8ef !important;
+}
+.entregador-theme.panel-light [class*="ring-white\/"]:not([data-entregador-nav] *):not([data-surface]):not([data-surface] *) {
+  --tw-ring-color: #e4e8ef !important;
+}
+
+.entregador-theme.panel-light [class*="divide-white\/"] > * + * {
+  border-color: #e4e8ef !important;
+}
+
+/* Cards / superfícies base */
+.entregador-theme.panel-light .bg-card,
+.entregador-theme.panel-light [class*="bg-card"] {
+  background-color: #ffffff !important;
+  border-color: #e4e8ef !important;
+}
+.entregador-theme.panel-light .bg-background { background-color: #f5f7fa !important; }
+.entregador-theme.panel-light .bg-muted { background-color: #eef1f6 !important; }
+
+/* Em superfícies vermelhas/navy o texto continua branco */
+.entregador-theme.panel-light [class*="bg-[#AE0000]"],
+.entregador-theme.panel-light [class*="bg-[#AE0000]"] *,
+.entregador-theme.panel-light [class*="bg-[#E01818]"],
+.entregador-theme.panel-light [class*="bg-[#E01818]"] *,
+.entregador-theme.panel-light [class*="bg-gradient-red"],
+.entregador-theme.panel-light [class*="bg-gradient-red"] *,
+.entregador-theme.panel-light [class*="bg-primary"]:not([class*="bg-primary/"]),
+.entregador-theme.panel-light [class*="bg-primary"]:not([class*="bg-primary/"]) *,
+.entregador-theme.panel-light [class*="bg-destructive"]:not([class*="bg-destructive/"]),
+.entregador-theme.panel-light [class*="bg-destructive"]:not([class*="bg-destructive/"]) *,
+.entregador-theme.panel-light [data-surface="red"],
+.entregador-theme.panel-light [data-surface="red"] *,
+.entregador-theme.panel-light [data-surface="navy"],
+.entregador-theme.panel-light [data-surface="navy"] * {
+  color: #ffffff !important;
+}
+.entregador-theme.panel-light [data-surface="red"] [class*="bg-white\/"],
+.entregador-theme.panel-light [data-surface="navy"] [class*="bg-white\/"] {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+.entregador-theme.panel-light [data-surface="red"] [class*="border-white\/"],
+.entregador-theme.panel-light [data-surface="navy"] [class*="border-white\/"] {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Barra inferior permanece navy */
+.entregador-theme.panel-light [data-entregador-nav],
+.entregador-theme.panel-light [data-entregador-nav] * {
+  color: inherit;
+}
+
+/* Card de pedido disponível no claro */
+.entregador-theme.panel-light .pedido-list-card {
+  background: #ffffff !important;
+  border: 1px solid #e4e8ef !important;
+  box-shadow: 0 1px 2px rgba(15, 27, 45, 0.05), 0 12px 30px -22px rgba(15, 27, 45, 0.3) !important;
+}
+
+/* Tons claros que somem sobre branco */
+.entregador-theme.panel-light .text-emerald-400,
+.entregador-theme.panel-light .text-emerald-300 { color: #047857 !important; }
+.entregador-theme.panel-light .text-amber-400,
+.entregador-theme.panel-light .text-amber-300 { color: #b45309 !important; }
+.entregador-theme.panel-light .text-sky-400,
+.entregador-theme.panel-light .text-sky-300,
+.entregador-theme.panel-light .text-blue-400 { color: #1d4ed8 !important; }
+.entregador-theme.panel-light .text-muted-foreground { color: #6b7688 !important; }
+
+/* Abas de ordenação do entregador mantêm o visual de pílulas navy/vermelho */
+.entregador-theme.panel-light [role="tablist"] {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+.entregador-theme.panel-light [role="tab"][data-surface] {
+  color: #ffffff !important;
+  box-shadow: none;
+}
+.entregador-theme.panel-light [role="tab"][data-surface="navy"] { background: #0d2c54 !important; }
+.entregador-theme.panel-light [role="tab"][data-surface="red"] { background: #AE0000 !important; }

@@ -19,8 +19,8 @@ type Props = {
 const BRAND = {
   red: "#AE0000",
   navy: "#0D2B45",
-  navySoft: "#1C2633",
-  gray: "#B8C2CC",
+  navySoft: "#FFFFFF",
+  gray: "#6B7688",
 } as const;
 
 function roundPos(p: LatLng | null): string {
@@ -93,12 +93,13 @@ function PedidoListItemBase({
       style={{
         background: BRAND.navySoft,
         borderRadius: 22,
-        border: `1px solid rgba(255,255,255,0.06)`,
-        boxShadow: "0 12px 32px -16px rgba(0,0,0,0.55)",
+        border: `1px solid #e4e8ef`,
+        boxShadow: "0 1px 2px rgba(15,27,45,0.05), 0 12px 30px -22px rgba(15,27,45,0.30)",
       }}
     >
       {/* Header: status + valor */}
       <div
+        data-surface="red"
         className="px-5 py-4 flex items-center justify-between"
         style={{ background: BRAND.red }}
       >
@@ -106,13 +107,13 @@ function PedidoListItemBase({
           {atrasado ? (
             <>
               <div className="p-2 rounded-xl" style={{ background: "rgba(255,255,255,0.14)" }}>
-                <AlertTriangle className="h-4 w-4 !text-white" />
+                <AlertTriangle className="h-4 w-4 " />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] font-black !text-white/85 uppercase tracking-[0.18em] leading-none">
+                <span className="text-[10px] font-black text-white/85 uppercase tracking-[0.18em] leading-none">
                   Atrasado
                 </span>
-                <span className="text-sm font-extrabold !text-white leading-tight mt-0.5">
+                <span className="text-sm font-extrabold  leading-tight mt-0.5">
                   {minutosAtraso} min
                 </span>
               </div>
@@ -120,7 +121,7 @@ function PedidoListItemBase({
           ) : (
             <>
               <span
-                className="text-[10px] font-black !text-white/70 uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg"
+                className="text-[10px] font-black text-white/70 uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg"
                 style={{ background: "rgba(255,255,255,0.08)" }}
               >
                 #{principal.numero}
@@ -137,8 +138,8 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[9px] font-bold !text-white/70 uppercase tracking-[0.2em]">Ganhos</p>
-          <p className="text-2xl font-black !text-white tracking-tight tabular-nums">
+          <p className="text-[9px] font-bold text-white/70 uppercase tracking-[0.2em]">Ganhos</p>
+          <p className="text-2xl font-black  tracking-tight tabular-nums">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
@@ -150,26 +151,26 @@ function PedidoListItemBase({
         <div className="relative">
           <div
             className="absolute left-[23px] top-11 bottom-11 w-[2px]"
-            style={{ background: "rgba(255,255,255,0.10)" }}
+            style={{ background: "#e4e8ef" }}
           />
 
           {/* Loja (coleta) */}
           <div className="flex items-start gap-4 relative">
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+              style={{ background: "#f1f3f7", border: "1px solid #e4e8ef" }}
             >
               <Store className="h-5 w-5" style={{ color: BRAND.gray }} />
             </div>
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-[14px] font-black !text-white uppercase tracking-wide truncate">
+                <h3 className="text-[14px] font-black text-[#0f1b2d] uppercase tracking-wide truncate">
                   {nomeLoja}
                 </h3>
               </div>
               <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
                 {bairroLoja || "Loja"}
-                {kmLoja && <span className="ml-1.5 !text-white/70">· {kmLoja} km</span>}
+                {kmLoja && <span className="ml-1.5 text-[#6B7688]">· {kmLoja} km</span>}
               </p>
             </div>
           </div>
@@ -187,7 +188,7 @@ function PedidoListItemBase({
             <div className="flex-1 min-w-0 pt-1">
               {ehRota ? (
                 <>
-                  <h3 className="text-[13px] font-bold !text-white/90 leading-tight">
+                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight">
                     {grupo.items.length} entregas agrupadas
                   </h3>
                   <p className="text-[11px] font-medium mt-0.5" style={{ color: BRAND.gray }}>
@@ -196,12 +197,12 @@ function PedidoListItemBase({
                 </>
               ) : (
                 <>
-                  <h3 className="text-[13px] font-bold !text-white/95 leading-tight truncate">
+                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight truncate">
                     {endereco || "Cliente"}
                   </h3>
                   <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
                     Cliente
-                    {distEntrega && <span className="ml-1.5 !text-white/70">· {distEntrega} km</span>}
+                    {distEntrega && <span className="ml-1.5 text-[#6B7688]">· {distEntrega} km</span>}
                   </p>
                 </>
               )}
@@ -213,24 +214,24 @@ function PedidoListItemBase({
         <div className="grid grid-cols-2 gap-3">
           <div
             className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.05)" }}
+            style={{ background: "#f1f3f7", border: "1px solid #e4e8ef" }}
           >
             <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
               Distância
             </span>
-            <span className="text-base font-black !text-white tabular-nums">
+            <span className="text-base font-black text-[#0f1b2d] tabular-nums">
               {distEntrega ?? kmLoja ?? "—"}
               <span className="text-[10px] font-bold ml-1" style={{ color: BRAND.gray }}>KM</span>
             </span>
           </div>
           <div
             className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.05)" }}
+            style={{ background: "#f1f3f7", border: "1px solid #e4e8ef" }}
           >
             <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
               Chamada
             </span>
-            <span className="text-base font-black !text-white tabular-nums">
+            <span className="text-base font-black text-[#0f1b2d] tabular-nums">
               #{principal.numero}
             </span>
           </div>
@@ -242,15 +243,15 @@ function PedidoListItemBase({
             {totalBonus > 0 && (
               <span
                 className="text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg"
-                style={{ background: "rgba(174,0,0,0.14)", color: "#fff" }}
+                style={{ background: "#AE0000", color: "#fff" }}
               >
                 + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
               </span>
             )}
             {ehCartao && (
               <span
-                className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg !text-white"
-                style={{ background: "rgba(255,255,255,0.08)" }}
+                className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg"
+                style={{ background: "#0d2c54", color: "#fff" }}
               >
                 <CreditCard className="h-3 w-3" /> Retornar
               </span>
@@ -321,7 +322,8 @@ function BotaoAceitarPress({
       onPointerLeave={stop}
       onPointerCancel={stop}
       onContextMenu={(e) => e.preventDefault()}
-      className="relative w-full h-14 !text-white text-[13px] font-black uppercase tracking-[0.22em] active:scale-[0.98] transition-transform duration-150 overflow-hidden select-none flex items-center justify-center gap-3 [&_*]:!text-white"
+      data-surface="red"
+      className="relative w-full h-14 text-white text-[13px] font-black uppercase tracking-[0.22em] active:scale-[0.98] transition-transform duration-150 overflow-hidden select-none flex items-center justify-center gap-3"
       style={{
         background: BRAND.red,
         borderRadius: 18,

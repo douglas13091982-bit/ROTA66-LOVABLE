@@ -103,21 +103,21 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <button
         onClick={toggle}
         data-status-toggle
-        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300 border border-black/10"
-        style={{ background: "#EFE5D3", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.15)" }}
+        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300 border border-[#d3d9e4]"
+        style={{ background: "#eef1f6", boxShadow: "inset 0 1px 2px rgba(15,27,45,0.10)" }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
         <span
           className="grid place-items-center h-9 w-14 rounded-full transition-all duration-300"
-          style={!online ? { background: "#EFE5D3" } : undefined}
+          style={!online ? { background: "#eef1f6" } : undefined}
         >
-          <Power className="h-4 w-4 text-[#2a2a2a]" strokeWidth={2.5} />
+          <Power className="h-4 w-4 text-[#0f1b2d]" strokeWidth={2.5} />
         </span>
         <span
           className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "text-white" : "text-[#0F304D]/70"
+            online ? "text-white" : "text-[#0f1b2d]/60"
           }`}
-          style={online ? { background: "#0F304D", boxShadow: "0 6px 18px -6px rgba(15,48,77,0.65)" } : undefined}
+          style={online ? { background: "#AE0000", boxShadow: "0 6px 18px -6px rgba(174,0,0,0.55)" } : undefined}
         >
           ON
         </span>
@@ -128,15 +128,15 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
   if (!isMobile) {
     return (
-      <div className="entregador-theme panel-premium min-h-screen flex items-center justify-center p-6">
+      <div className="entregador-theme panel-premium panel-light min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
           <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
             style={{ background: "linear-gradient(135deg, #AE0000, #6D0000)" }}
           >
             <Smartphone className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-3">Acesse pelo celular</h1>
-          <p className="text-white/55 text-sm leading-relaxed">
+          <h1 className="text-2xl font-bold text-[#0f1b2d] tracking-tight mb-3">Acesse pelo celular</h1>
+          <p className="text-[#6b7688] text-sm leading-relaxed">
             O app do entregador foi projetado exclusivamente para dispositivos móveis.
             Abra esta página no seu smartphone para continuar.
           </p>
@@ -147,7 +147,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
 
   return (
-    <div className="entregador-theme panel-premium flex flex-col min-h-screen">
+    <div className="entregador-theme panel-premium panel-light flex flex-col min-h-screen">
+
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
@@ -174,8 +175,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.06] pb-[env(safe-area-inset-bottom)]"
-        style={{ background: "#091421" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] pb-[env(safe-area-inset-bottom)]"
+        style={{ background: "#0d2c54" }}
       >
         <div className="grid grid-cols-4">
 
@@ -190,28 +191,29 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 data-nav-link
                 data-active={active ? "true" : "false"}
                 className={`group relative flex flex-col items-center justify-center gap-2 py-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-[#E01818]" : "text-white/75 hover:text-white"
+                  active ? "text-white" : "text-white/70 hover:text-white"
                 }`}
               >
                 {active && (
-                  <span className="absolute inset-x-1 inset-y-0 rounded-[22px] bg-white/[0.04]" />
+                  <span className="absolute inset-x-1 inset-y-1" style={{ background: "#AE0000" }} />
                 )}
 
                 <div className="relative z-10">
                   <Icon
                     className={`h-6 w-6 transition-all duration-300 ${
-                      active ? "text-[#E01818]" : "text-white/75 group-hover:text-white"
+                      active ? "text-white" : "text-white/70 group-hover:text-white"
                     }`}
                     strokeWidth={1.75}
                   />
                   {badge > 0 && (
                     <span
                       data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#091421]"
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0d2c54]"
                       style={{
-                        background: "linear-gradient(135deg, #E01818, #6D0000)",
-                        boxShadow: "0 0 10px -1px oklch(0.55 0.26 25 / 0.9)",
+                        background: "#AE0000",
+                        boxShadow: "0 0 10px -1px rgba(174,0,0,0.9)",
                       }}
+
                       aria-label={`${badge} oportunidades`}
                     >
                       {badge > 9 ? "9+" : badge}
