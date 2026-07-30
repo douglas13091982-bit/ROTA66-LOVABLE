@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import {
   Beef,
-  Bike,
   Cake,
   ChevronLeft,
   Coffee,
@@ -15,8 +14,6 @@ import {
   Sandwich,
   Share2,
   Soup,
-  Star,
-  Timer,
   UtensilsCrossed,
 } from "lucide-react";
 import { toast } from "sonner";
