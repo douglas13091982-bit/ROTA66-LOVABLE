@@ -260,14 +260,14 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
           }`}
         >
           <button
-            className="md:hidden h-9 w-9 grid place-items-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition"
+            className="md:hidden h-9 w-9 grid place-items-center bg-[#AE0000] hover:bg-[#8d0000] !text-white transition"
             onClick={() => setOpen(true)}
             aria-label="Abrir menu"
           >
             <Menu className="h-5 w-5" />
           </button>
           <button
-            className="hidden md:grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition"
+            className="hidden md:grid h-9 w-9 place-items-center bg-[#AE0000] hover:bg-[#8d0000] !text-white transition"
             onClick={toggleCollapsed}
             aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
             title={collapsed ? "Expandir menu" : "Recolher menu"}
