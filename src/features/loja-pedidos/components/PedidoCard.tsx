@@ -103,8 +103,9 @@ export function PedidoCard({
         <div className="flex items-center gap-2 shrink-0">
           {p.status === "em_rota" && p.codigo_coleta && (
             <span
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-xs font-black tracking-widest"
-              style={{ borderColor: "#AE0000", backgroundColor: "#fff1f1", color: "#AE0000" }}
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[11px] font-bold tracking-wider"
+              style={{ borderColor: "#AE000033", backgroundColor: "#fdf6f6", color: "#AE0000" }}
+
             >
               <KeyRound className="h-3 w-3" />
               {p.codigo_coleta}
