@@ -101,10 +101,14 @@ export function PedidoCard({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {p.status === "em_rota" && p.codigo_coleta && (
-            <span className="inline-flex items-center gap-1 font-mono font-bold tracking-widest">
+            <span
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-xs font-black tracking-widest"
+              style={{ borderColor: "#AE0000", backgroundColor: "#fff1f1", color: "#AE0000" }}
+            >
               <KeyRound className="h-3 w-3" />
               {p.codigo_coleta}
             </span>
+
           )}
           <span className="font-display text-base leading-none text-emerald-500">
             R$ {Number(p.valor_total).toFixed(2)}
