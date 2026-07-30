@@ -2067,8 +2067,9 @@ button[class*="bg-\[\#E01818\]"] * {
 /* Faixa fixa do topo (Disponíveis) */
 .entregador-theme.panel-light .entregador-sticky-top {
   background: #ffffff;
-  border-bottom: 1px solid #e4e8ef;
+  border-bottom: none;
 }
+
 
 /* Texto: branco sólido → navy; branco translúcido → cinza.
    Superfícies escuras (nav inferior, pílulas navy/vermelhas) ficam de fora. */
