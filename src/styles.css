@@ -1985,3 +1985,30 @@ html.light .entregador-sticky-top {
   border-color: #e4e8ef !important;
   color: #0f1b2d !important;
 }
+
+/* ===========================================================
+   CANTOS RETOS — cards, botões, inputs e superfícies
+   (mantém apenas elementos circulares: rounded-full/avatars)
+   =========================================================== */
+:root {
+  --radius: 0rem;
+}
+
+button:not([class*="rounded-full"]),
+input:not([class*="rounded-full"]),
+textarea,
+select,
+[class*="rounded-sm"]:not([class*="rounded-full"]),
+[class*="rounded-md"]:not([class*="rounded-full"]),
+[class*="rounded-lg"]:not([class*="rounded-full"]),
+[class*="rounded-xl"]:not([class*="rounded-full"]),
+[class*="rounded-2xl"]:not([class*="rounded-full"]),
+[class*="rounded-3xl"]:not([class*="rounded-full"]),
+[class*="bg-card"]:not([class*="rounded-full"]),
+[role="dialog"],
+[role="tablist"],
+[role="tab"]:not([class*="rounded-full"]),
+[data-radix-select-trigger],
+[data-radix-popper-content-wrapper] > * {
+  border-radius: 0 !important;
+}
