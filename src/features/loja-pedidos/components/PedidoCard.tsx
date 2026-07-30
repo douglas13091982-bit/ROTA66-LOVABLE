@@ -56,7 +56,7 @@ export function PedidoCard({
           onOpenDetalhe(p);
         }
       }}
-      className={`w-full text-left bg-card border border-border/60 rounded-xl px-3 py-2 shadow-card hover:border-[oklch(0.78_0.16_75_/_0.5)] transition-all ${
+      className={`w-full text-left bg-card border-2 border-border px-3 py-2.5 shadow-[0_4px_14px_rgba(15,27,45,0.18)] hover:shadow-[0_8px_22px_rgba(15,27,45,0.28)] hover:border-[#AE0000] hover:-translate-y-0.5 transition-all ${
         lojaControla ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
       } ${dragId === p.id ? "opacity-50" : ""}`}
     >
