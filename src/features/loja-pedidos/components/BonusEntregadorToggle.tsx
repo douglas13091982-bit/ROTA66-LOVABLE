@@ -134,13 +134,15 @@ export function BonusEntregadorToggle({ lojaId, initialAtivo, initialValor }: Pr
         type="button"
         onClick={onToggle}
         disabled={saving}
-        className={`ml-1 shrink-0 relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-          ativo ? "bg-[var(--rota-gold)]" : "bg-muted"
+        className={`ml-1 shrink-0 relative inline-flex h-5 w-9 items-center rounded-full border transition-colors ${
+          ativo
+            ? "bg-[#10b981] border-[#059669]"
+            : "bg-[#c3cad6] border-[#aab3c2]"
         }`}
         aria-pressed={ativo}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
             ativo ? "translate-x-4" : "translate-x-0.5"
           }`}
         />
