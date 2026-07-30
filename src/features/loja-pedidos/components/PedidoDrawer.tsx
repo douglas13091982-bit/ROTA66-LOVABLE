@@ -208,23 +208,26 @@ export function PedidoDrawer({
           </div>
 
           {detalhe.codigo_coleta && detalhe.status !== "entregue" && detalhe.status !== "cancelado" && (
-            <div className="pp-card p-4 space-y-3 border-2 border-[#e4e8ef] bg-[#f7f9fc]">
-              <div className="pp-eyebrow flex items-center gap-2">
+            <div className="pp-card p-4 space-y-3 border-2 border-[#AE0000] bg-white shadow-[0_4px_16px_rgba(174,0,0,0.15)]">
+              <div className="pp-eyebrow flex items-center gap-2" style={{ color: "#AE0000" }}>
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta (confira com o entregador)
               </div>
               <div className="flex justify-center gap-2">
                 {String(detalhe.codigo_coleta).split("").map((d, i) => (
                   <div
                     key={i}
-                    className="h-14 w-12 flex items-center justify-center  border-2 border-[#e4e8ef] bg-[#f7f9fc] text-3xl font-mono font-bold text-[#AE0000]"
+                    className="h-16 w-14 flex items-center justify-center border-2 text-4xl font-mono font-black tracking-wider"
+                    style={{ borderColor: "#AE0000", backgroundColor: "#fff1f1", color: "#AE0000" }}
                   >
                     {d}
                   </div>
                 ))}
               </div>
-              <div className="text-[11px] text-center text-[#6b7688]">
+              <div className="text-[11px] text-center font-semibold" style={{ color: "#0f1b2d" }}>
                 Peça para o entregador mostrar o mesmo número no app antes de liberar o pedido.
               </div>
+            </div>
+
             </div>
           )}
 
