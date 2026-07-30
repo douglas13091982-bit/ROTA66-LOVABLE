@@ -13,7 +13,6 @@ import {
   Phone,
   Pizza,
   Sandwich,
-  Search,
   Share2,
   Soup,
   Star,
@@ -201,15 +200,6 @@ export function CatalogoHeader({
             </div>
           </div>
 
-          <div className="relative mt-3.5">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <input
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              placeholder="Buscar no catálogo..."
-              className="w-full pl-12 pr-3 py-3.5 bg-card border border-border rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary/40 transition"
-            />
-          </div>
         </div>
 
         {categorias.length > 0 && !busca && (
