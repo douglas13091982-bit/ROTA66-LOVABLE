@@ -225,6 +225,14 @@ export function usePedidoForm({
         .single();
       if (error) throw error;
 
+      // Convocação: se for o primeiro pedido do dia desta loja, o servidor
+      // dispara push para os entregadores da cidade (valida e deduplica lá).
+      void convocarEntregadoresCidade({
+        data: { loja_id: lojaId, motivo: "primeiro_pedido" },
+      }).catch((e) => console.error("[convocacao-primeiro-pedido] falhou", e));
+
+
+
 
       // Optimistic update: insere o pedido no cache antes do refetch/realtime,
       // para que apareça instantaneamente ao navegar para /loja/pedidos.
