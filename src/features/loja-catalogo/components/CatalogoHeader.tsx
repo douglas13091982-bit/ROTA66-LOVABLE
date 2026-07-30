@@ -9,7 +9,6 @@ import {
   Heart,
   IceCream,
   MapPin,
-  Phone,
   Pizza,
   Sandwich,
   Share2,
