@@ -153,7 +153,7 @@ export function MeuPlanoCard({ lojaId, planoIdAtual }: Props) {
                   setSelected(planoIdAtual);
                   setEditing(false);
                 }}
-                className="flex-1 py-2.5 text-sm rounded-lg border border-white/15 text-white/80 hover:bg-white/5"
+                className="flex-1 py-2.5 text-sm font-semibold bg-[#0f1b2d] hover:bg-[#1b2b45] !text-white border border-[#0f1b2d] transition-colors"
               >
                 Cancelar
               </button>
