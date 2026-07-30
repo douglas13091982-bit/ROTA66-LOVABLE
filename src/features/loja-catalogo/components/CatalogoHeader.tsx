@@ -85,7 +85,7 @@ export function CatalogoHeader({
   };
 
   return (
-    <header className="sticky top-0 z-30">
+    <header className="relative z-30">
       {/* Topbar navy */}
       <div className="cc-topbar">
         <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center gap-3">
