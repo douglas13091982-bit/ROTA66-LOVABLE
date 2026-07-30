@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Search } from "lucide-react";
+import { Bookmark, Search } from "lucide-react";
 import type { Produto } from "@/routes/-catalogo-types";
 import { ProdutoGrid } from "./ProdutoGrid";
 import { CategoriaCarrossel } from "./CategoriaCarrossel";
