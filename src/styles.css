@@ -1887,3 +1887,12 @@ html.light .entregador-sticky-top {
 }
 
 
+
+/* Ajustes de legibilidade de tons claros sobre fundo branco no painel claro */
+.panel-premium.panel-light .text-emerald-400:not(aside *) { color: #059669; }
+.panel-premium.panel-light .text-emerald-300:not(aside *) { color: #047857; }
+.panel-premium.panel-light .text-red-400:not(aside *) { color: #dc2626; }
+.panel-premium.panel-light .text-red-300:not(aside *) { color: #b91c1c; }
+.panel-premium.panel-light .text-amber-400:not(aside *) { color: #b45309; }
+.panel-premium.panel-light .text-amber-300:not(aside *) { color: #92400e; }
+.panel-premium.panel-light .text-blue-400:not(aside *) { color: #2563eb; }
