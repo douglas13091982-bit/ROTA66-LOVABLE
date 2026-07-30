@@ -13,7 +13,6 @@ import {
   Phone,
   Pizza,
   Sandwich,
-  Search,
   Share2,
   Soup,
   Star,
