@@ -262,7 +262,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         </div>
 
 
-        <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-3 border-t border-[oklch(0.78_0.16_75_/_0.25)] bg-[oklch(0.14_0.012_260)] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-2.5 border-t border-[#e4e8ef] bg-white pb-[max(0.625rem,env(safe-area-inset-bottom))]">
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
@@ -276,17 +276,18 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
             rows={1}
             maxLength={2000}
             disabled={enviando}
-            className="flex-1 resize-none rounded-xl border border-[oklch(0.28_0.035_260_/_0.55)] bg-[oklch(0.12_0.015_260)] px-3 py-2 text-sm text-white placeholder:text-[oklch(0.52_0.02_260)] focus:outline-none focus:ring-2 focus:ring-[oklch(0.55_0.21_27_/_0.40)] max-h-32"
+            className="flex-1 resize-none border border-[#e4e8ef] bg-[#f5f7fa] px-3 py-2 text-sm text-[#0f1b2d] placeholder:text-[#8a97a8] focus:outline-none focus:border-[#AE0000] max-h-24"
           />
           <button
             type="submit"
             disabled={enviando || !texto.trim()}
-            className="shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-gradient-red text-white disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 transition-all duration-200"
+            className="shrink-0 h-9 w-9 flex items-center justify-center bg-[#AE0000] !text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             aria-label="Enviar"
           >
             {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </button>
         </form>
+
         </DialogPrimitive.Content>
       </DialogPortal>
     </Dialog>
