@@ -158,24 +158,25 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     }
   }
 
-  // Paleta Rota 66 (theme-aware)
-  const isLight = false;
+  // Paleta Rota 66 (theme-aware) — app do entregador usa tema claro
+  const isLight = true;
   const RED = "#AE0000";
-  const BG = isLight ? "#EFE5D3" : "#0D2B45";
-  const TEXT = isLight ? "#0D2B45" : "#FFFFFF";
-  const MUTED = isLight ? "#8A94A6" : "#8FA3B8";
-  const DIVIDER = isLight ? "rgba(13,43,69,0.08)" : "rgba(255,255,255,0.08)";
-  const SUBTLE_BORDER = isLight ? "rgba(13,43,69,0.12)" : "rgba(255,255,255,0.15)";
-  const SUBTLE_BG = isLight ? "rgba(13,43,69,0.03)" : "rgba(255,255,255,0.02)";
+  const BG = isLight ? "#FFFFFF" : "#0D2B45";
+  const TEXT = isLight ? "#0f1b2d" : "#FFFFFF";
+  const MUTED = isLight ? "#6B7688" : "#8FA3B8";
+  const DIVIDER = isLight ? "#e4e8ef" : "rgba(255,255,255,0.08)";
+  const SUBTLE_BORDER = isLight ? "#e4e8ef" : "rgba(255,255,255,0.15)";
+  const SUBTLE_BG = isLight ? "#f5f7fa" : "rgba(255,255,255,0.02)";
   const ICON_CIRCLE_BG = isLight ? "#FDECEC" : "transparent";
   const RING_CLASS = isDestaque
     ? isLight
-      ? "ring-4 ring-black/10"
+      ? "ring-4 ring-[#AE0000]/15"
       : "ring-4 ring-white/20"
     : "";
 
   const stagePillLabel = isColeta ? "INDO BUSCAR" : "EM ENTREGA";
   const stagePillColor = isColeta ? (isLight ? RED : "#F5B301") : (isLight ? "#0EA5E9" : "#7DD3FC");
+
 
   return (
     <div

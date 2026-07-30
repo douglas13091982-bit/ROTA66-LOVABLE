@@ -15,7 +15,7 @@ export function HistoricoPage() {
 
   return (
     <EntregadorShell title="Histórico">
-      <style>{`.panel-premium { background: #0f304d !important; }`}</style>
+      
 
       <PeriodoToggle periodo={periodo} onChange={setPeriodo} />
       <ResumoPeriodo periodo={periodo} totalPeriodo={totalPeriodo} totalEntregas={totalEntregas} />

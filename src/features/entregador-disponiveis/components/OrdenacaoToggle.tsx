@@ -22,12 +22,13 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected, a
       type="button"
       role="tab"
       aria-selected={ariaSelected}
+      data-surface={active ? "red" : "navy"}
       onClick={onClick}
       className={[
         "flex-1 min-w-0 flex items-center gap-2 rounded-xl px-2.5 py-2 transition-all duration-300 text-left",
         active
           ? activeClasses
-          : "bg-gradient-to-br from-[#0F304D] to-[#0a2338] shadow-md shadow-[#0F304D]/30 ring-1 ring-[#1e5a8a]/30 hover:brightness-110",
+          : "bg-[#0d2c54] shadow-md shadow-[#0d2c54]/25 ring-1 ring-[#0d2c54]/30 hover:brightness-110",
       ].join(" ")}
     >
       <span
@@ -76,7 +77,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Mais Próximos"
         subtitle="Ver pedidos próximos"
         icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
+        activeClasses="bg-[#AE0000] shadow-md shadow-[#AE0000]/35 ring-1 ring-[#AE0000]/40"
       />
       <OrdenacaoCard
         active={value === "valor"}
@@ -85,7 +86,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Maior Valor"
         subtitle="Ver maior valor"
         icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-gradient-to-br from-[#AE0000] to-[#8A0000] shadow-md shadow-[#AE0000]/40 ring-1 ring-[#cc3535]/40"
+        activeClasses="bg-[#AE0000] shadow-md shadow-[#AE0000]/35 ring-1 ring-[#AE0000]/40"
       />
     </div>
   );
