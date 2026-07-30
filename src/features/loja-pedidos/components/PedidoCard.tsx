@@ -56,15 +56,16 @@ export function PedidoCard({
           onOpenDetalhe(p);
         }
       }}
-      className={`group relative w-full text-left bg-card border-2 border-border px-3 py-2.5 pl-4 shadow-[0_4px_14px_rgba(15,27,45,0.18)] hover:shadow-[0_8px_22px_rgba(15,27,45,0.28)] hover:border-[#AE0000] hover:ring-4 hover:ring-[#AE0000]/15 hover:-translate-y-0.5 transition-all duration-200 ${
+      className={`group relative w-full text-left bg-card border border-border px-3 py-2.5 pl-4 shadow-[0_1px_6px_rgba(15,27,45,0.08)] hover:shadow-[0_3px_12px_rgba(15,27,45,0.12)] hover:border-[#AE0000]/40 transition-all duration-200 ${
         lojaControla ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
       } ${dragId === p.id ? "opacity-50" : ""}`}
     >
       {/* Barra de destaque na borda esquerda */}
       <span
         aria-hidden
-        className="pointer-events-none absolute left-0 top-0 h-full w-1 bg-[#AE0000]/40 group-hover:bg-[#AE0000] transition-colors duration-200"
+        className="pointer-events-none absolute left-0 top-0 h-full w-0.5 bg-[#AE0000]/20 group-hover:bg-[#AE0000]/60 transition-colors duration-200"
       />
+
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
 
         <div className="min-w-0 flex items-center gap-2">
