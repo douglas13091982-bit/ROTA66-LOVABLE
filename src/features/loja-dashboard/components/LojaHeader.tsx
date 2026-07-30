@@ -13,7 +13,7 @@ export function LojaHeader({ nome, ativa }: { nome: string; ativa: boolean }) {
               "0 12px 30px -10px oklch(0.55 0.21 27 / 0.6), inset 0 1px 0 oklch(1 0 0 / 0.15)",
           }}
         >
-          <Store className="h-6 w-6" />
+          <Store className="h-6 w-6" style={{ color: "#ffffff" }} />
         </div>
         <div className="min-w-0">
           <div className="pp-eyebrow">Sua loja</div>
