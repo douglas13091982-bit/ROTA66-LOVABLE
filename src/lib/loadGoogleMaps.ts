@@ -21,7 +21,7 @@ export function loadGoogleMaps(): Promise<typeof google> {
     promise = new Promise((resolve, reject) => {
       const start = Date.now();
       const tick = () => {
-        if (window.google?.maps?.importLibrary) return resolve(window.google);
+        if (window.google?.maps?.places) return resolve(window.google);
         if (Date.now() - start > 15000) {
           promise = null;
           return reject(new Error("Google Maps não carregou a tempo"));
