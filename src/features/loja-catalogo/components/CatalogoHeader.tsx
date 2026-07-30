@@ -8,7 +8,6 @@ import {
   Flame,
   Heart,
   IceCream,
-  MapPin,
   Pizza,
   Sandwich,
   Share2,
