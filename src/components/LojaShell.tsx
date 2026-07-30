@@ -108,7 +108,7 @@ export function LojaShell({ children, title }: { children: ReactNode; title: str
   const initials = (user?.email ?? "L").slice(0, 1).toUpperCase();
 
   return (
-    <div className="panel-premium flex">
+    <div className="panel-premium panel-light flex">
       {/* Sidebar */}
       <aside
         className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 ${collapsed ? "w-[76px]" : "w-[260px]"} h-screen pp-glass-strong border-r flex flex-col transition-[transform,width] duration-500`}

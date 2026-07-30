@@ -22,7 +22,7 @@ export function RevendedorShell({ children, title }: { children: ReactNode; titl
   const initials = (user?.email ?? "R").slice(0, 1).toUpperCase();
 
   return (
-    <div className="panel-premium flex">
+    <div className="panel-premium panel-light flex">
       <aside
         className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 w-[260px] h-screen pp-glass-strong border-r flex flex-col transition-transform duration-500`}
       >

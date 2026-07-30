@@ -92,7 +92,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
   const initials = (user?.email ?? "A").slice(0, 1).toUpperCase();
 
   return (
-    <div className="panel-premium flex">
+    <div className="panel-premium panel-light flex">
       <aside
         className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 w-[260px] h-screen pp-glass-strong border-r flex flex-col transition-transform duration-500`}
         style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}

@@ -707,6 +707,117 @@ html.light .panel-premium [data-nav-badge] * {
   color: #ffffff;
 }
 
+/* ===========================================================
+   PANEL LIGHT — tema claro (fundo branco + sidebar navy + vermelho)
+   Aplicado em .panel-premium.panel-light (Loja, Admin, Revendedor).
+   A sidebar (<aside>) permanece navy; só o conteúdo vira claro.
+   =========================================================== */
+.panel-premium.panel-light {
+  --panel-bg: #f5f7fa;
+  --panel-bg-elev: #ffffff;
+  --panel-text: #0f1b2d;
+  --panel-text-dim: #46536a;
+  --panel-text-muted: #7b8798;
+  --panel-border: #e4e8ef;
+  --panel-border-strong: #d3d9e4;
+  --panel-shadow-card: 0 1px 2px oklch(0 0 0 / 0.05), 0 12px 30px -22px oklch(0 0 0 / 0.25);
+  --panel-shadow-hover: 0 2px 6px oklch(0 0 0 / 0.07), 0 24px 50px -26px oklch(0 0 0 / 0.3);
+  background: #f5f7fa;
+  color: #0f1b2d;
+}
+
+/* Sidebar navy sólida */
+.panel-premium.panel-light aside {
+  background: #0d2c54 !important;
+  backdrop-filter: none !important;
+  border-right: 1px solid oklch(1 0 0 / 0.06) !important;
+  color: #ffffff;
+}
+.panel-premium.panel-light aside .pp-nav:hover {
+  color: #ffffff;
+  background: oklch(1 0 0 / 0.08);
+}
+.panel-premium.panel-light aside .pp-nav:hover svg { color: #ffffff; }
+.panel-premium.panel-light aside .pp-nav-active,
+.panel-premium.panel-light aside .pp-nav-active svg {
+  color: #ffffff;
+}
+.panel-premium.panel-light aside .pp-nav-active {
+  background: linear-gradient(90deg, #e01818, #b81111);
+  box-shadow: 0 10px 24px -12px oklch(0.55 0.26 25 / 0.75);
+}
+.panel-premium.panel-light aside .pp-nav-active::before { display: none; }
+
+/* Conteúdo (tudo fora da sidebar) */
+.panel-premium.panel-light header:not(aside *) {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  border-color: #e4e8ef !important;
+  color: #0f1b2d;
+}
+.panel-premium.panel-light .pp-grid-overlay:not(aside *) {
+  background-image: none;
+}
+.panel-premium.panel-light .pp-card:not(aside *) {
+  background: #ffffff;
+  border: 1px solid #e4e8ef;
+  box-shadow: var(--panel-shadow-card);
+}
+.panel-premium.panel-light .pp-glass:not(aside *),
+.panel-premium.panel-light .pp-glass-strong:not(aside *) {
+  background: #ffffff;
+  backdrop-filter: none;
+  border-color: #e4e8ef;
+}
+.panel-premium.panel-light .pp-eyebrow:not(aside *) { color: #7b8798; }
+.panel-premium.panel-light .pp-disc:not(aside *) {
+  background: #0d2c54;
+  border-color: #0d2c54;
+  color: #ffffff;
+}
+.panel-premium.panel-light .pp-disc-accent:not(aside *) {
+  background: linear-gradient(135deg, #e01818, #b81111);
+  border-color: #b81111;
+  color: #ffffff;
+}
+
+/* Texto translúcido branco → tons legíveis no claro */
+.panel-premium.panel-light [class*="text-white\/"]:not(aside *) { color: #5b6677; }
+.panel-premium.panel-light .text-white\/95:not(aside *),
+.panel-premium.panel-light .text-white:not(aside *) {
+  color: #0f1b2d;
+  text-shadow: none !important;
+}
+
+/* Superfícies translúcidas → cinza claro */
+.panel-premium.panel-light [class*="bg-white\/"]:not(aside *) {
+  background-color: #f1f4f8;
+}
+.panel-premium.panel-light [class*="bg-black\/"]:not(aside *):not([class*="backdrop"]) {
+  background-color: #eef1f6;
+}
+.panel-premium.panel-light [class*="border-white\/"]:not(aside *) {
+  border-color: #e4e8ef;
+}
+
+/* Superfícies de marca mantêm texto branco */
+.panel-premium.panel-light [class*="bg-gradient-red"]:not(aside *),
+.panel-premium.panel-light [class*="bg-gradient-red"]:not(aside *) *,
+.panel-premium.panel-light .pp-cta:not(aside *),
+.panel-premium.panel-light .pp-cta:not(aside *) *,
+.panel-premium.panel-light [class*="bg-primary"]:not([class*="bg-primary/"]):not(aside *),
+.panel-premium.panel-light [class*="bg-primary"]:not([class*="bg-primary/"]):not(aside *) *,
+.panel-premium.panel-light [class*="bg-destructive"]:not(aside *),
+.panel-premium.panel-light [class*="bg-destructive"]:not(aside *) * {
+  color: #ffffff;
+}
+
+.panel-premium.panel-light ::-webkit-scrollbar-thumb {
+  background: #cfd6e2;
+  background-clip: padding-box;
+}
+
+
 
 
 
