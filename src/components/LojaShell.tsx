@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
 import { useMinhaLoja, useIsLojaOwner } from "@/hooks/use-loja";
+import { useConvocacaoAbertura } from "@/hooks/use-convocacao-abertura";
 import { useLojaSuporteId, clearLojaSuporteId } from "@/hooks/use-loja-suporte";
 import { supabase } from "@/integrations/supabase/client";
 import { AceiteContratoGate } from "@/components/AceiteContratoGate";
