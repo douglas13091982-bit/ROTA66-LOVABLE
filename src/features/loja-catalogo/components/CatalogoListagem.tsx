@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Search } from "lucide-react";
+import { Bookmark, Search } from "lucide-react";
 import type { Produto } from "@/routes/-catalogo-types";
 import { ProdutoGrid } from "./ProdutoGrid";
 import { CategoriaCarrossel } from "./CategoriaCarrossel";
@@ -70,13 +70,17 @@ export function CatalogoListagem({
     <>
       {groups.map(({ cat, items }) => (
         <section key={cat} id={`cat-${cat}`} className={`${isHorizontal ? "mb-7" : "mb-8"} scroll-mt-44`}>
-          <div className="flex items-center gap-3 mb-3 px-1">
-            <h2 className={`font-display ${isHorizontal ? "text-[20px]" : "text-[22px]"} cc-ink-text`}>{cat}</h2>
-            <div className="flex-1 cc-divider-gold" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground tabular-nums">
-              {items.length} itens
+          <div className="flex items-center gap-2.5 mb-3 px-1">
+            <span className="h-7 w-6 rounded-[4px] flex items-center justify-center shrink-0 bg-[var(--cc-gold)]">
+              <Bookmark className="h-3.5 w-3.5 text-white fill-current" />
             </span>
+            <h2 className={`cc-serif cc-ink-text ${isHorizontal ? "text-[22px]" : "text-[24px]"} leading-none`}>
+              {cat}
+            </h2>
+            <div className="flex-1" />
+            <span className="text-[12px] text-muted-foreground tabular-nums">{items.length} itens</span>
           </div>
+
           {isHorizontal ? (
             <CategoriaCarrossel items={items} qtdByProduto={qtdByProduto} onAdd={onAdd} onDec={onDec} />
           ) : (

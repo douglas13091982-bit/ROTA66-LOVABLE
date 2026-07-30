@@ -12,6 +12,8 @@ import { CheckoutDialog } from "./components/CheckoutDialog";
 import { PedidoSucesso } from "./components/PedidoSucesso";
 import { StickyCartBar } from "./components/StickyCartBar";
 import { ProdutoPersonalizarDialog } from "./components/ProdutoPersonalizarDialog";
+import { BottomNavCliente } from "@/features/clientes-cidade/components/BottomNavCliente";
+import { useAvaliacoesLojas } from "@/features/clientes-cidade/hooks/use-avaliacoes-lojas";
 
 function hasAdicionais(p: Produto) {
   return (p.adicionais_grupos ?? []).some((g) => g.opcoes.length > 0);
@@ -35,6 +37,8 @@ export function CatalogoPage({ slug }: { slug: string }) {
   const lojaFechada = !!loja && !lojaAbertaAgora(horario, agora);
   const { data: produtos } = useProdutosCatalogo(loja?.id, catalogoAtivo);
   const { data: catalogoConfig } = useCatalogoConfig();
+  const avaliacoes = useAvaliacoesLojas(loja?.id ? [loja.id] : []);
+  const resumoAval = loja?.id ? avaliacoes.get(loja.id) : undefined;
 
   const {
     clear,
@@ -126,11 +130,13 @@ export function CatalogoPage({ slug }: { slug: string }) {
         categorias={categorias}
         catAtiva={catAtiva}
         setCatAtiva={setCatAtiva}
+        nota={resumoAval && resumoAval.total > 0 ? resumoAval.media : null}
+        taxaEntrega={taxaBase}
       />
 
       {lojaFechada && <LojaFechadaBanner horario={horario} />}
 
-      <main className="max-w-2xl mx-auto px-4 pt-5">
+      <main className="max-w-2xl mx-auto px-4 pt-5 pb-24">
         <CatalogoListagem
           produtos={produtos ?? []}
           produtosFiltrados={produtosFiltrados}
@@ -156,7 +162,12 @@ export function CatalogoPage({ slug }: { slug: string }) {
       )}
 
       {!lojaFechada && !showCheckout && (
-        <StickyCartBar totalItens={totalItens} subtotal={subtotal} onOpen={() => setShowCheckout(true)} />
+        <StickyCartBar
+          totalItens={totalItens}
+          subtotal={subtotal}
+          onOpen={() => setShowCheckout(true)}
+          offsetNav={!!loja.cidade}
+        />
       )}
 
       {!lojaFechada && showCheckout && (
@@ -178,6 +189,12 @@ export function CatalogoPage({ slug }: { slug: string }) {
           onDec={(lineId) => changeQty(lineId, -1)}
           onRemove={(lineId) => removeLine(lineId)}
         />
+      )}
+
+      {loja.cidade && !showCheckout && (
+        <div className="mp-splash">
+          <BottomNavCliente cidade={loja.cidade} />
+        </div>
       )}
     </div>
   );
