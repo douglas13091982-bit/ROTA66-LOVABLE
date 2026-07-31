@@ -68,8 +68,10 @@ export function RotasDisponiveisList({
   ordenacao,
   onOrdenacaoChange,
 }: Props) {
+  const [detalhe, setDetalhe] = useState<GrupoPedido | null>(null);
   // Tick a cada 30s para reavaliar "em atraso" e o contador de minutos.
   const [agora, setAgora] = useState(() => Date.now());
+
   useEffect(() => {
     const id = setInterval(() => setAgora(Date.now()), 30_000);
     return () => clearInterval(id);
