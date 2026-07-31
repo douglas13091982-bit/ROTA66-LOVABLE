@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Package } from "lucide-react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PedidoListItem } from "@/components/entregador/PedidoListItem";
+import { PedidoRowCompacto } from "@/components/entregador/PedidoRowCompacto";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 import { minutosAtrasoGrupo, ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import { OrdenacaoToggle } from "./OrdenacaoToggle";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
+
 
 interface Props {
   grupos: GrupoPedido[];
