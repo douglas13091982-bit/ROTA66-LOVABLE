@@ -157,13 +157,16 @@ export function RotasDisponiveisList({
             <VisuallyHidden>
               <DialogTitle>Detalhes do pedido</DialogTitle>
             </VisuallyHidden>
-            <DialogPrimitive.Close
-              aria-label="Fechar"
-              className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full outline-none"
-              style={{ background: "rgba(255,255,255,0.22)", border: "1px solid rgba(255,255,255,0.45)" }}
-            >
-              <X className="h-5 w-5 !text-white" strokeWidth={2.6} />
-            </DialogPrimitive.Close>
+            <div className="mb-2 flex justify-end">
+              <DialogPrimitive.Close
+                aria-label="Fechar"
+                className="grid h-10 w-10 place-items-center outline-none"
+                style={{ background: "#AE0000", border: "2px solid #ffffff" }}
+              >
+                <X className="h-5 w-5 !text-white" strokeWidth={2.8} />
+              </DialogPrimitive.Close>
+            </div>
+
 
             {detalhe && (
               <PedidoListItem
