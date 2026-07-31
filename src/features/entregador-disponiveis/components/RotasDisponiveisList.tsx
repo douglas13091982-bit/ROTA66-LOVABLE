@@ -125,15 +125,52 @@ export function RotasDisponiveisList({
       )}
 
       {gruposOrdenados.map((grupo) => (
-        <PedidoListItem
+        <PedidoRowCompacto
           key={grupo.key}
           grupo={grupo}
           minhaPos={minhaPos}
           taxaParaExibir={taxaParaExibir}
-          onAceitar={onAceitar}
+          onAbrir={setDetalhe}
           minutosAtraso={minutosAtrasoGrupo(grupo, agora)}
         />
       ))}
+
+      <Dialog open={!!detalhe} onOpenChange={(o) => !o && setDetalhe(null)}>
+        <DialogPortal>
+          <DialogOverlay />
+          <DialogPrimitive.Content
+            className="entregador-theme fixed inset-0 z-50 m-auto flex h-fit flex-col overflow-y-auto overscroll-contain outline-none"
+            style={{
+              inset: 0,
+              margin: "auto",
+              translate: "none",
+              transform: "none",
+              width: "calc(100svw - 1rem)",
+              maxWidth: "min(32rem, calc(100svw - 1rem))",
+              maxHeight: "calc(100svh - 1rem)",
+              background: "transparent",
+              border: "none",
+            }}
+          >
+            <VisuallyHidden>
+              <DialogTitle>Detalhes do pedido</DialogTitle>
+            </VisuallyHidden>
+            {detalhe && (
+              <PedidoListItem
+                grupo={detalhe}
+                minhaPos={minhaPos}
+                taxaParaExibir={taxaParaExibir}
+                onAceitar={(g) => {
+                  setDetalhe(null);
+                  onAceitar(g);
+                }}
+                minutosAtraso={minutosAtrasoGrupo(detalhe, agora)}
+              />
+            )}
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      </Dialog>
     </div>
   );
+
 }
