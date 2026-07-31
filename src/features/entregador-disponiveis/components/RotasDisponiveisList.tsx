@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Package } from "lucide-react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PedidoListItem } from "@/components/entregador/PedidoListItem";
+import { PedidoRowCompacto } from "@/components/entregador/PedidoRowCompacto";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 import { minutosAtrasoGrupo, ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import { OrdenacaoToggle } from "./OrdenacaoToggle";
 import type { OrdenacaoPedidos } from "../hooks/use-ordenacao-pedidos";
+
 
 interface Props {
   grupos: GrupoPedido[];
@@ -63,8 +68,10 @@ export function RotasDisponiveisList({
   ordenacao,
   onOrdenacaoChange,
 }: Props) {
+  const [detalhe, setDetalhe] = useState<GrupoPedido | null>(null);
   // Tick a cada 30s para reavaliar "em atraso" e o contador de minutos.
   const [agora, setAgora] = useState(() => Date.now());
+
   useEffect(() => {
     const id = setInterval(() => setAgora(Date.now()), 30_000);
     return () => clearInterval(id);
@@ -120,15 +127,52 @@ export function RotasDisponiveisList({
       )}
 
       {gruposOrdenados.map((grupo) => (
-        <PedidoListItem
+        <PedidoRowCompacto
           key={grupo.key}
           grupo={grupo}
           minhaPos={minhaPos}
           taxaParaExibir={taxaParaExibir}
-          onAceitar={onAceitar}
+          onAbrir={setDetalhe}
           minutosAtraso={minutosAtrasoGrupo(grupo, agora)}
         />
       ))}
+
+      <Dialog open={!!detalhe} onOpenChange={(o) => !o && setDetalhe(null)}>
+        <DialogPortal>
+          <DialogOverlay />
+          <DialogPrimitive.Content
+            className="entregador-theme fixed inset-0 z-50 m-auto flex h-fit flex-col overflow-y-auto overscroll-contain outline-none"
+            style={{
+              inset: 0,
+              margin: "auto",
+              translate: "none",
+              transform: "none",
+              width: "calc(100svw - 1rem)",
+              maxWidth: "min(32rem, calc(100svw - 1rem))",
+              maxHeight: "calc(100svh - 1rem)",
+              background: "transparent",
+              border: "none",
+            }}
+          >
+            <VisuallyHidden>
+              <DialogTitle>Detalhes do pedido</DialogTitle>
+            </VisuallyHidden>
+            {detalhe && (
+              <PedidoListItem
+                grupo={detalhe}
+                minhaPos={minhaPos}
+                taxaParaExibir={taxaParaExibir}
+                onAceitar={(g) => {
+                  setDetalhe(null);
+                  onAceitar(g);
+                }}
+                minutosAtraso={minutosAtrasoGrupo(detalhe, agora)}
+              />
+            )}
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      </Dialog>
     </div>
   );
+
 }
