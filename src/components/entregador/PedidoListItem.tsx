@@ -11,9 +11,11 @@ type Props = {
   minhaPos: LatLng | null;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
+  onRecusar?: () => void;
   /** Minutos que o pedido mais antigo do grupo está no pool. */
   minutosAtraso?: number;
 };
+
 
 // Paleta de marca Rota 66
 const BRAND = {
@@ -61,8 +63,10 @@ function PedidoListItemBase({
   minhaPos,
   taxaParaExibir,
   onAceitar,
+  onRecusar,
   minutosAtraso = 0,
 }: Props) {
+
   const principal = grupo.items[0];
   const atrasado = minutosAtraso >= ATRASO_POOL_MINUTOS;
   const totalBonus = useMemo(
@@ -259,8 +263,28 @@ function PedidoListItemBase({
           </div>
         )}
 
-        {/* Botão aceitar */}
-        <BotaoAceitarPress onAceitar={handleAceitar} />
+        {/* Ações */}
+        <div className="flex items-stretch gap-3">
+          {onRecusar && (
+            <button
+              type="button"
+              onClick={onRecusar}
+              className="h-14 px-5 text-[12px] font-black uppercase tracking-[0.18em] active:scale-[0.98] transition-transform duration-150 select-none shrink-0"
+              style={{
+                background: "#ffffff",
+                color: BRAND.navy,
+                border: `2px solid ${BRAND.navy}`,
+                borderRadius: 18,
+              }}
+            >
+              Recusar
+            </button>
+          )}
+          <div className="flex-1 min-w-0">
+            <BotaoAceitarPress onAceitar={handleAceitar} />
+          </div>
+        </div>
+
       </div>
     </div>
   );
@@ -268,6 +292,8 @@ function PedidoListItemBase({
 
 export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
   if (prev.onAceitar !== next.onAceitar) return false;
+  if (prev.onRecusar !== next.onRecusar) return false;
+
   if (prev.taxaParaExibir !== next.taxaParaExibir) return false;
   if (prev.grupo !== next.grupo) return false;
   if ((prev.minutosAtraso ?? 0) !== (next.minutosAtraso ?? 0)) return false;
