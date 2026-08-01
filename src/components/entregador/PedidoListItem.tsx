@@ -292,6 +292,8 @@ function PedidoListItemBase({
 
 export const PedidoListItem = memo(PedidoListItemBase, (prev, next) => {
   if (prev.onAceitar !== next.onAceitar) return false;
+  if (prev.onRecusar !== next.onRecusar) return false;
+
   if (prev.taxaParaExibir !== next.taxaParaExibir) return false;
   if (prev.grupo !== next.grupo) return false;
   if ((prev.minutosAtraso ?? 0) !== (next.minutosAtraso ?? 0)) return false;
