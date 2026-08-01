@@ -67,8 +67,9 @@ function PedidoRowCompactoBase({
       <div className="relative flex items-center gap-3 px-4 py-4">
         <div
           className="w-12 h-12 rounded-2xl grid place-items-center shrink-0"
-          style={{ background: "rgba(255,255,255,0.16)" }}
+          style={{ background: "#0d2c54", border: "1px solid rgba(255,255,255,0.25)" }}
         >
+
           {atrasado ? (
             <AlertTriangle className="h-6 w-6 !text-white" />
           ) : (
