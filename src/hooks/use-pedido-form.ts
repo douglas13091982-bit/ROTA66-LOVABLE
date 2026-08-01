@@ -102,12 +102,7 @@ export function usePedidoForm({
   });
   const [entregaCoords, setEntregaCoords] = useState<Coords>({ lat: null, lng: null });
 
-  const { taxa, info: taxaInfo, setTaxa } = useTarifaEntrega(
-    lojaId,
-    coletaCoords,
-    entregaCoords,
-    formaPagamento,
-  );
+  const { taxa, info: taxaInfo, setTaxa } = useTarifaEntrega(lojaId, coletaCoords, entregaCoords);
 
   // Inicializa com taxa base se a calculada ainda for 0
   const taxaBruta = taxa || Number(taxaBase) || 0;

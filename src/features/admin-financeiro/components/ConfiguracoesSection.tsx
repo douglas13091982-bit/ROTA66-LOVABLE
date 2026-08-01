@@ -73,22 +73,6 @@ export function ConfiguracoesSection({
           />
           <span className="text-[10px] text-muted-foreground">Entre 1 e 28</span>
         </label>
-        <label className="block">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Retorno cartão (R$ / km)
-          </span>
-          <input
-            type="number"
-            min={0}
-            step="0.01"
-            value={config.retornoCartaoPorKm}
-            onChange={(e) => upd({ retornoCartaoPorKm: Number(e.target.value) })}
-            className="mt-1 w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
-          />
-          <span className="text-[10px] text-muted-foreground">
-            Pagamento em cartão na entrega: km do retorno × este valor é somado ao frete do cliente
-          </span>
-        </label>
       </div>
 
       <div className="mt-6 pt-6 border-t border-border">

@@ -15,7 +15,6 @@ export function useAdminFinanceiro() {
     saqueModo: "dia_semana",
     saqueValorMinimo: 50,
     saqueDiaSemana: 5,
-    retornoCartaoPorKm: 0,
   });
 
   const [configId, setConfigId] = useState<string | null>(null);
@@ -44,7 +43,6 @@ export function useAdminFinanceiro() {
         saqueModo: ((cfg as any).saque_modo ?? "dia_semana") as "dia_semana" | "valor",
         saqueValorMinimo: Number((cfg as any).saque_valor_minimo ?? 50),
         saqueDiaSemana: Number((cfg as any).saque_dia_semana ?? 5),
-        retornoCartaoPorKm: Number((cfg as any).retorno_cartao_valor_por_km ?? 0),
       });
 
     }
@@ -123,7 +121,6 @@ export function useAdminFinanceiro() {
       saque_modo: config.saqueModo,
       saque_valor_minimo: Math.max(Number(config.saqueValorMinimo) || 0, 0),
       saque_dia_semana: Math.min(Math.max(Number(config.saqueDiaSemana) || 0, 0), 6),
-      retorno_cartao_valor_por_km: Math.max(Number(config.retornoCartaoPorKm) || 0, 0),
       singleton: true,
     };
 

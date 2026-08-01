@@ -155,9 +155,6 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
     }
 
     let taxa_entrega = Number(loja.taxa_entrega_base) || 0;
-    const ehCartaoEntrega = ["cartao", "cartao_credito", "cartao_debito"].includes(
-      data.forma_pagamento,
-    );
     if (coletaLat != null && coletaLng != null && entregaLat != null && entregaLng != null) {
       const km = haversineKm(coletaLat, coletaLng, entregaLat, entregaLng);
       const { data: tarifas } = await supabaseAdmin
@@ -168,19 +165,6 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         .order("faixa_km_min", { ascending: true });
       const calc = calcularTarifaPorFaixa(km, tarifas ?? []);
       if (calc != null) taxa_entrega = Number(calc.toFixed(2));
-      // Cartão na entrega: entregador volta à loja devolver a maquininha.
-      // O retorno é cobrado do cliente como km × valor por km configurado.
-      if (ehCartaoEntrega) {
-        const { data: cfg } = await (supabaseAdmin as any)
-          .from("config_financeiro")
-          .select("retorno_cartao_valor_por_km")
-          .eq("singleton", true)
-          .maybeSingle();
-        const porKm = Number((cfg as any)?.retorno_cartao_valor_por_km ?? 0) || 0;
-        if (porKm > 0) {
-          taxa_entrega = Number((taxa_entrega + km * porKm).toFixed(2));
-        }
-      }
     }
     let taxaPlano = Number((loja as any).taxa_por_pedido ?? 0) || 0;
     if (isRetirada) {

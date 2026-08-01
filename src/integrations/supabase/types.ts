@@ -597,7 +597,6 @@ export type Database = {
           pix_cidade_sistema: string | null
           pix_titular_sistema: string | null
           prazo_pagamento_dias: number
-          retorno_cartao_valor_por_km: number
           saque_dia_semana: number
           saque_modo: string
           saque_valor_minimo: number
@@ -614,7 +613,6 @@ export type Database = {
           pix_cidade_sistema?: string | null
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
-          retorno_cartao_valor_por_km?: number
           saque_dia_semana?: number
           saque_modo?: string
           saque_valor_minimo?: number
@@ -631,7 +629,6 @@ export type Database = {
           pix_cidade_sistema?: string | null
           pix_titular_sistema?: string | null
           prazo_pagamento_dias?: number
-          retorno_cartao_valor_por_km?: number
           saque_dia_semana?: number
           saque_modo?: string
           saque_valor_minimo?: number
@@ -4080,7 +4077,6 @@ export type Database = {
         }[]
       }
       get_private_config: { Args: { _key: string }; Returns: string }
-      get_retorno_cartao_por_km: { Args: never; Returns: number }
       get_taxa_sistema: { Args: never; Returns: number }
       get_taxa_sistema_loja: { Args: { _loja_id: string }; Returns: number }
       has_admin_area: {
