@@ -14,9 +14,9 @@ describe("liquidoEntregador (entregador recebe apenas o frete global)", () => {
     expect(liquidoEntregador(9.5, 1.5)).toBe(8);
   });
 
-  it("mantém o valor integral quando o plano mensal está ativo", () => {
-    expect(liquidoEntregador(10, 2, true)).toBe(10);
-    expect(liquidoEntregador(8, 5, true)).toBe(8);
+  it("desconta a taxa por pedido mesmo com plano mensal ativo (regra fixa)", () => {
+    expect(liquidoEntregador(10, 2, true)).toBe(8);
+    expect(liquidoEntregador(8, 5, true)).toBe(3);
   });
 
   it("retorna zero quando a taxa da loja é maior que a taxa de entrega", () => {
