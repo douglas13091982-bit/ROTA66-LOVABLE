@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Package, X } from "lucide-react";
+import { Package } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
