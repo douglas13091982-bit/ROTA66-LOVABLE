@@ -157,22 +157,13 @@ export function RotasDisponiveisList({
             <VisuallyHidden>
               <DialogTitle>Detalhes do pedido</DialogTitle>
             </VisuallyHidden>
-            <div className="mb-2 flex justify-end">
-              <DialogPrimitive.Close
-                aria-label="Fechar"
-                className="grid h-10 w-10 place-items-center outline-none"
-                style={{ background: "#AE0000", border: "2px solid #ffffff" }}
-              >
-                <X className="h-5 w-5 !text-white" strokeWidth={2.8} />
-              </DialogPrimitive.Close>
-            </div>
-
 
             {detalhe && (
               <PedidoListItem
                 grupo={detalhe}
                 minhaPos={minhaPos}
                 taxaParaExibir={taxaParaExibir}
+                onRecusar={() => setDetalhe(null)}
                 onAceitar={(g) => {
                   setDetalhe(null);
                   onAceitar(g);
@@ -180,6 +171,7 @@ export function RotasDisponiveisList({
                 minutosAtraso={minutosAtrasoGrupo(detalhe, agora)}
               />
             )}
+
           </DialogPrimitive.Content>
         </DialogPortal>
       </Dialog>
