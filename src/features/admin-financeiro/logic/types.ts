@@ -33,5 +33,6 @@ export type ConfigFinanceiro = {
   saqueModo: "dia_semana" | "valor";
   saqueValorMinimo: number;
   saqueDiaSemana: number;
+  retornoCartaoPorKm: number;
 };
 
