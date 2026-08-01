@@ -69,14 +69,14 @@ describe("taxaParaExibir × liquidoEntregador — sem subtração dupla", () => 
     );
   });
 
-  it("dobra o frete quando pagamento é cartão (regra da maquininha)", () => {
+  it("não dobra mais o frete no cartão (retorno agora é por km, embutido na taxa)", () => {
     const p = pedido({
       taxa_entrega: 11,
       loja_taxa_por_pedido: 1.5,
       forma_pagamento: "cartao",
     });
-    // frete líquido = 11 - 1.5 = 9.5 → dobra = 19
-    expect(taxaParaExibir(p)).toBe(19);
+    // frete líquido = 11 - 1.5 = 9.5 (adicional de retorno já vem em taxa_entrega)
+    expect(taxaParaExibir(p)).toBe(9.5);
     expect(taxaParaExibir(p)).toBe(
       liquidoEntregador(11, 1.5, false, "cartao"),
     );

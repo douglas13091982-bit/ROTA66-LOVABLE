@@ -4,9 +4,11 @@
  * ⚠️ REGRA FIXA (não alterar sem alinhar com liquidoEntregador + trigger
  * `processar_saldos_pedido_entregue` no banco):
  *
- *   cliente paga = frete_global + taxa_por_pedido_loja
- *   entregador   = frete_global (dobrado quando pagamento é em cartão)
+ *   cliente paga = frete_global + adicional_retorno_cartao + taxa_por_pedido_loja
+ *   entregador   = taxa_entrega - taxa_por_pedido_loja
  *
+ * O adicional de retorno do cartão (km × valor por km configurado no sistema)
+ * já vem embutido em `taxa_entrega` — não há mais frete dobrado.
  * Esta função DEVE retornar exatamente o líquido do entregador, para que
  * o card no pool não prometa um valor diferente do crédito na carteira.
  * Consumidores (ex.: PedidoListItem) NUNCA devem re-envolver o resultado
