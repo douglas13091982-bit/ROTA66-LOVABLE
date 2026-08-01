@@ -11,9 +11,11 @@ type Props = {
   minhaPos: LatLng | null;
   taxaParaExibir: (p: PedidoDisponivel) => number;
   onAceitar: (grupo: GrupoPedido) => void;
+  onRecusar?: () => void;
   /** Minutos que o pedido mais antigo do grupo está no pool. */
   minutosAtraso?: number;
 };
+
 
 // Paleta de marca Rota 66
 const BRAND = {
@@ -61,8 +63,10 @@ function PedidoListItemBase({
   minhaPos,
   taxaParaExibir,
   onAceitar,
+  onRecusar,
   minutosAtraso = 0,
 }: Props) {
+
   const principal = grupo.items[0];
   const atrasado = minutosAtraso >= ATRASO_POOL_MINUTOS;
   const totalBonus = useMemo(
