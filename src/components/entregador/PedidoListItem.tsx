@@ -263,8 +263,28 @@ function PedidoListItemBase({
           </div>
         )}
 
-        {/* Botão aceitar */}
-        <BotaoAceitarPress onAceitar={handleAceitar} />
+        {/* Ações */}
+        <div className="flex items-stretch gap-3">
+          {onRecusar && (
+            <button
+              type="button"
+              onClick={onRecusar}
+              className="h-14 px-5 text-[12px] font-black uppercase tracking-[0.18em] active:scale-[0.98] transition-transform duration-150 select-none shrink-0"
+              style={{
+                background: "#ffffff",
+                color: BRAND.navy,
+                border: `2px solid ${BRAND.navy}`,
+                borderRadius: 18,
+              }}
+            >
+              Recusar
+            </button>
+          )}
+          <div className="flex-1 min-w-0">
+            <BotaoAceitarPress onAceitar={handleAceitar} />
+          </div>
+        </div>
+
       </div>
     </div>
   );
