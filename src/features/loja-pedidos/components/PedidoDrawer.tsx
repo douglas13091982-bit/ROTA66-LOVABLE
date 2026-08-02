@@ -68,10 +68,8 @@ export function PedidoDrawer({
       ? Math.min(snapshotAplicada, taxa)
       : Math.min(taxaLojaAtual, taxa);
   const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
-  const CARTAO_FORMAS = ["cartao", "cartao_credito", "cartao_debito"];
-  const ehCartao = CARTAO_FORMAS.includes(String(detalhe.forma_pagamento ?? "").toLowerCase());
-  const freteEntregador = ehCartao ? taxaGlobal * 2 : taxaGlobal;
-  const extraCartao = freteEntregador - taxaGlobal;
+  const freteEntregador = taxaGlobal;
+
 
 
   const podeAvancar =
@@ -173,28 +171,11 @@ export function PedidoDrawer({
               <span className="text-[#6b7688]">↳ Taxa por pedido da loja</span>
               <span className="pp-num text-[#6b7688]">R$ {taxaPorPedido.toFixed(2)}</span>
             </div>
-            {ehCartao && (
-              <div className=" border border-[#e4e8ef] bg-[#f7f9fc] p-3 space-y-1.5 text-xs">
-                <div className="pp-eyebrow">Cartão na entrega · frete 2x</div>
-                <p className="text-[#6b7688] leading-relaxed">
-                  O entregador volta à loja para devolver a maquininha, por isso
-                  recebe o frete dobrado. O cliente continua pagando o frete
-                  normal — a diferença sai do saldo da loja.
-                </p>
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[#6b7688]">Cliente paga (frete)</span>
-                  <span className="pp-num text-[#0f1b2d]">R$ {taxaGlobal.toFixed(2)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#6b7688]">Entregador recebe (2x)</span>
-                  <span className="pp-num text-[#AE0000]">R$ {freteEntregador.toFixed(2)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#6b7688]">Custo extra da loja</span>
-                  <span className="pp-num text-[#0f1b2d]">R$ {extraCartao.toFixed(2)}</span>
-                </div>
-              </div>
-            )}
+            <div className="flex items-center justify-between pl-3 text-xs">
+              <span className="text-[#6b7688]">↳ Entregador recebe</span>
+              <span className="pp-num text-[#AE0000]">R$ {freteEntregador.toFixed(2)}</span>
+            </div>
+
             {bonus > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-[#6b7688]">Bônus ao entregador</span>

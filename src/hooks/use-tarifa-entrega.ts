@@ -52,6 +52,11 @@ async function buscarTaxaPlanoLoja(
   };
 }
 
+async function buscarAdicionalRetornoPorKm(): Promise<number> {
+  const { data } = await (supabase as any).rpc("get_retorno_cartao_por_km");
+  return Number(data ?? 0) || 0;
+}
+
 function coordsValidas(c: Coords): c is LatLng {
   return c.lat != null && c.lng != null;
 }
@@ -60,28 +65,33 @@ export function useTarifaEntrega(
   lojaId: string,
   coleta: Coords,
   entrega: Coords,
+  retornoMaquina = false,
 ) {
   const [taxa, setTaxa] = useState<number>(0);
   const [info, setInfo] = useState<string | null>(null);
+  const [adicionalRetorno, setAdicionalRetorno] = useState<number>(0);
 
   useEffect(() => {
     if (!coordsValidas(coleta) || !coordsValidas(entrega)) {
       setTaxa(0);
       setInfo(null);
+      setAdicionalRetorno(0);
       return;
     }
 
     let cancelled = false;
     (async () => {
       const km = haversineKm(coleta, entrega);
-      const [tarifas, plano] = await Promise.all([
+      const [tarifas, plano, valorPorKmRetorno] = await Promise.all([
         buscarTarifas(),
         buscarTaxaPlanoLoja(lojaId),
+        retornoMaquina ? buscarAdicionalRetornoPorKm() : Promise.resolve(0),
       ]);
       if (cancelled) return;
       if (tarifas.length === 0) {
         setTaxa(0);
         setInfo(null);
+        setAdicionalRetorno(0);
         return;
       }
 
@@ -89,30 +99,39 @@ export function useTarifaEntrega(
       if (valorGlobal == null) {
         setTaxa(0);
         setInfo(null);
+        setAdicionalRetorno(0);
         return;
       }
 
       const taxaPlano = plano.taxa;
-      const total = Number((valorGlobal + taxaPlano).toFixed(2));
+      // Retorno com máquina: distância loja→cliente × valor por km do menu
+      // Tarifas do admin. Cobrado do cliente e repassado ao entregador.
+      const adicional = retornoMaquina
+        ? Number((km * valorPorKmRetorno).toFixed(2))
+        : 0;
+      const total = Number((valorGlobal + taxaPlano + adicional).toFixed(2));
       const faixa = encontrarFaixa(km, tarifas);
+      setAdicionalRetorno(adicional);
       setTaxa(total);
       if (faixa) {
         const sufixoPlano =
           taxaPlano > 0
             ? ` + R$ ${taxaPlano.toFixed(2)} da taxa por pedido da loja`
             : "";
+        const sufixoRetorno =
+          adicional > 0
+            ? ` + R$ ${adicional.toFixed(2)} de retorno com máquina (${km.toFixed(1)} km × R$ ${valorPorKmRetorno.toFixed(2)})`
+            : "";
         setInfo(
-          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · frete R$ ${valorGlobal.toFixed(2)}${sufixoPlano}`,
+          `${km.toFixed(1)} km · faixa ${faixa.faixa_km_min}–${faixa.faixa_km_max} km · frete R$ ${valorGlobal.toFixed(2)}${sufixoPlano}${sufixoRetorno}`,
         );
       }
-
-
-
     })();
     return () => {
       cancelled = true;
     };
-  }, [lojaId, coleta.lat, coleta.lng, entrega.lat, entrega.lng]);
+  }, [lojaId, coleta.lat, coleta.lng, entrega.lat, entrega.lng, retornoMaquina]);
 
-  return { taxa, info, setTaxa };
+  return { taxa, info, setTaxa, adicionalRetorno };
 }
+
