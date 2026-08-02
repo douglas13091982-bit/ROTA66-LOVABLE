@@ -101,14 +101,20 @@ export function usePedidoForm({
     lng: enderecoInicial?.lng ?? null,
   });
   const [entregaCoords, setEntregaCoords] = useState<Coords>({ lat: null, lng: null });
+  const [retornoMaquina, setRetornoMaquina] = useState(false);
 
-  const { taxa, info: taxaInfo, setTaxa } = useTarifaEntrega(lojaId, coletaCoords, entregaCoords);
+  const { taxa, info: taxaInfo, setTaxa, adicionalRetorno } = useTarifaEntrega(
+    lojaId,
+    coletaCoords,
+    entregaCoords,
+    retornoMaquina,
+  );
 
   // Inicializa com taxa base se a calculada ainda for 0
   const taxaBruta = taxa || Number(taxaBase) || 0;
   const taxaAtual = taxaBruta;
-  const ehCartaoEntrega = false;
   const taxaFinal = taxaAtual;
+
   const bonusValor = Number(bonus) || 0;
   const valorProdutos = itens.reduce(
     (s, i) => s + (Number(i.qtd) || 0) * (Number(i.preco) || 0),
