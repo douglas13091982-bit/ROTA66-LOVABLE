@@ -69,18 +69,18 @@ describe("taxaParaExibir × liquidoEntregador — sem subtração dupla", () => 
     );
   });
 
-  it("dobra o frete quando pagamento é cartão (regra da maquininha)", () => {
+  it("NÃO dobra o frete quando pagamento é cartão (regra removida)", () => {
     const p = pedido({
       taxa_entrega: 11,
       loja_taxa_por_pedido: 1.5,
       forma_pagamento: "cartao",
     });
-    // frete líquido = 11 - 1.5 = 9.5 → dobra = 19
-    expect(taxaParaExibir(p)).toBe(19);
+    expect(taxaParaExibir(p)).toBe(9.5);
     expect(taxaParaExibir(p)).toBe(
       liquidoEntregador(11, 1.5, false, "cartao"),
     );
   });
+
 
   it("REGRESSÃO: somar taxaParaExibir num grupo não aplica desconto extra", () => {
     // Simula o cálculo do PedidoListItem: soma dos itens do grupo.
