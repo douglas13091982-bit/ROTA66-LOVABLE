@@ -68,10 +68,8 @@ export function PedidoDrawer({
       ? Math.min(snapshotAplicada, taxa)
       : Math.min(taxaLojaAtual, taxa);
   const taxaGlobal = Math.max(0, taxa - taxaPorPedido);
-  const CARTAO_FORMAS = ["cartao", "cartao_credito", "cartao_debito"];
-  const ehCartao = CARTAO_FORMAS.includes(String(detalhe.forma_pagamento ?? "").toLowerCase());
-  const freteEntregador = ehCartao ? taxaGlobal * 2 : taxaGlobal;
-  const extraCartao = freteEntregador - taxaGlobal;
+  const freteEntregador = taxaGlobal;
+
 
 
   const podeAvancar =
