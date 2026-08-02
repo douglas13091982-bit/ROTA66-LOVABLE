@@ -302,7 +302,9 @@ export function usePedidoForm({
     // derivados
     taxa: taxaAtual,
     taxaBruta,
-    ehCartaoEntrega,
+    retornoMaquina, setRetornoMaquina,
+    adicionalRetorno,
+
     taxaInfo,
     setTaxa,
     taxaFinal,
