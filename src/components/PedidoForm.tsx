@@ -244,7 +244,25 @@ export function PedidoForm({
                 />
               </div>
             )}
+            <label className="mt-3 flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={form.retornoMaquina}
+                onChange={(e) => form.setRetornoMaquina(e.target.checked)}
+                className="mt-0.5 h-5 w-5 shrink-0 accent-primary"
+              />
+              <span className="text-sm">
+                <span className="font-semibold">Retorno com máquina</span>
+                <span className="block text-[11px] text-muted-foreground">
+                  Adiciona a taxa por km do menu Tarifas na entrega — o valor é
+                  cobrado do cliente e repassado ao entregador.
+                  {form.adicionalRetorno > 0 &&
+                    ` Adicional: R$ ${form.adicionalRetorno.toFixed(2)}`}
+                </span>
+              </span>
+            </label>
           </div>
+
           <TaxaSection taxa={form.taxa} taxaInfo={form.taxaInfo} />
         </div>
       </div>
