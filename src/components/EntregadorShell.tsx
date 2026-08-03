@@ -10,6 +10,7 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
+import { useSomPush } from "@/hooks/use-som-push";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
 
@@ -36,6 +37,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const turnosCount = useTurnosDisponiveisCount();
   useChatNaoLidasGlobal();
   const push = usePushNotifications();
+  useSomPush();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
 
