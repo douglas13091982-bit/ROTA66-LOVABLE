@@ -45,9 +45,17 @@ self.addEventListener("push", (event) => {
     (async () => {
       await self.registration.showNotification(title, options);
       await atualizarAppBadge();
+      // Se o app estiver aberto, pede para tocar o som configurado no painel.
+      try {
+        const clientList = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        for (const client of clientList) {
+          client.postMessage({ type: "rota66-push", title, body: options.body });
+        }
+      } catch {}
     })()
   );
 });
+
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
