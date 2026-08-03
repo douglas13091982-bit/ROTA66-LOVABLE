@@ -26,7 +26,7 @@ const TABS: { key: SomScope; label: string; Icon: typeof Bell; hint: string }[] 
 ];
 
 export function SomAlertaAdminPage() {
-  const [tab, setTab] = useState<SomScope>("entregador");
+  const [tab, setTab] = useState<SomScope>("push_entregador");
   const current = TABS.find((t) => t.key === tab)!;
 
   return (
