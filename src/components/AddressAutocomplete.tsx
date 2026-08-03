@@ -107,8 +107,11 @@ export function AddressAutocomplete({
       sessionTokenRef.current = null;
       const details = await fetchPlaceDetails(s);
       onChange(details.endereco);
-      onSelect?.(details);
-      onSelectPlace?.(details);
+      if (onSelect) {
+        onSelect(details);
+      } else if (onSelectPlace) {
+        onSelectPlace(details);
+      }
     } catch (e: any) {
       setError(e?.message ?? "Não foi possível obter detalhes do endereço");
     }

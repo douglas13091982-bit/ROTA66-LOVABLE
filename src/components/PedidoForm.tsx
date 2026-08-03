@@ -145,9 +145,9 @@ export function PedidoForm({
               form.setEndereco(v);
               form.setEntregaCoords({ lat: null, lng: null });
             }}
-            onSelectPlace={(p) => {
-              form.setEndereco(p.address);
-              form.setEntregaCoords({ lat: p.lat, lng: p.lng });
+            onSelect={(s) => {
+              form.setEndereco(s.endereco);
+              form.setEntregaCoords({ lat: s.lat, lng: s.lng });
             }}
             required
             placeholder="Rua, número, bairro"
@@ -474,7 +474,14 @@ function SecaoEnderecoColeta({
             className={INPUT_ICON_CLS}
             value={enderecoColeta}
             onChange={onChangeEnderecoColeta}
-            onSelectPlace={onSelectPlaceColeta}
+            onSelect={(s) => {
+              onChangeEnderecoColeta(s.endereco);
+              onSelectPlaceColeta({
+                address: s.endereco,
+                lat: s.lat,
+                lng: s.lng,
+              });
+            }}
             required
             placeholder="De onde o entregador vai buscar"
           />
