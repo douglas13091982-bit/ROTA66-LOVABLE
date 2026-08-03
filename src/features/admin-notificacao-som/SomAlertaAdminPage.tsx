@@ -9,7 +9,13 @@ const TABS: { key: SomScope; label: string; Icon: typeof Bell; hint: string }[] 
     key: "entregador",
     label: "Entregador",
     Icon: Bike,
-    hint: "Esse som toca no app do entregador quando aparece um novo pedido disponível.",
+    hint: "Esse som toca no app do entregador quando aparece um novo pedido disponível na lista.",
+  },
+  {
+    key: "push_entregador",
+    label: "Push Entregador",
+    Icon: Bell,
+    hint: "Esse som toca no app do entregador APENAS quando uma Notificação Push (Notificação de sistema) é recebida com o app aberto.",
   },
   {
     key: "loja",

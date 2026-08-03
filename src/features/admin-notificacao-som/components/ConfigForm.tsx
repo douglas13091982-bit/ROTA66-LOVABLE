@@ -50,7 +50,7 @@ export function ConfigForm({ scope = "entregador" }: { scope?: SomScope }) {
     <form onSubmit={handleSave} className="bg-card border border-border rounded-lg p-6 space-y-5 shadow-card">
       <ToggleCard
         title="Som ativado"
-        description="Quando desligado, o entregador só recebe vibração (se ativada)."
+        description="Quando desligado, o som do Push não toca nem com o app aberto."
         checked={form.ativo}
         onChange={(v) => setForm({ ...form, ativo: v })}
       />

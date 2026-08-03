@@ -18,6 +18,7 @@ import { haversineKm } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { criarCalculadorTaxaExibida } from "@/lib/taxa-exibida";
 import { agruparPedidosPorRota } from "@/lib/pedido-agrupador";
+import { fetchConfigSom, tocarNotificacao } from "@/lib/notificacao-som";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
 import type { Database } from "@/integrations/supabase/types";
@@ -285,6 +286,8 @@ export function usePedidosDisponiveis(
               if (ficouPronto) {
                 toast.success("🚨 Novo pedido pronto para retirar!");
                 mostrarNotificacaoLocalNovoPedido(novo, userId);
+                // Toca o som de "Novo Pedido" configurado (não o do push)
+                void fetchConfigSom("entregador").then(tocarNotificacao);
               }
             },
           )

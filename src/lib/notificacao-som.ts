@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export type SomScope = "entregador" | "loja";
+export type SomScope = "entregador" | "loja" | "push_entregador";
 
 export type ConfigNotificacaoSom = {
   id: string;
