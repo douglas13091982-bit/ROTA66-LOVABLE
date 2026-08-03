@@ -22,7 +22,7 @@ const SOM_REFRESH_MS = 30 * 60_000;
 export function useSomPush() {
   const { data: somCfg } = useQuery({
     queryKey: ["config-notificacao-som"],
-    queryFn: () => fetchConfigSom("entregador"),
+    queryFn: () => fetchConfigSom("push_entregador"),
     staleTime: 60_000,
   });
 
