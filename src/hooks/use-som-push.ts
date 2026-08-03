@@ -53,7 +53,12 @@ export function useSomPush() {
     if (!somCfg) return;
     function onMessage(event: MessageEvent) {
       if (event.data?.type !== "rota66-push") return;
-      if (somCfg!.audio_path && !pronto) return;
+      if (somCfg!.audio_path && !pronto) {
+        console.warn("[useSomPush] Som ainda não carregado ou falhou:", somCfg!.audio_path);
+        // Fallback para o beep se o MP3 falhar
+        tocarNotificacao({ ...somCfg!, audio_path: null });
+        return;
+      }
       tocarNotificacao(somCfg!);
     }
     navigator.serviceWorker.addEventListener("message", onMessage);

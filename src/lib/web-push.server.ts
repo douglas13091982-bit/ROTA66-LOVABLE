@@ -319,7 +319,11 @@ async function sendWebPush(opts: {
   const audience = `${u.protocol}//${u.host}`;
   const { authorization } = await buildVapidHeader(audience, opts.vapidSubject, opts.vapidPublic, opts.vapidPrivate);
   const body = opts.payload ? await encryptPayloadAes128Gcm(opts.payload, opts.p256dh, opts.auth) : undefined;
-  const headers: Record<string, string> = { authorization, ttl: "60" };
+  const headers: Record<string, string> = { 
+    authorization, 
+    ttl: "60",
+    urgency: "high" // Prioridade alta para despertar o dispositivo
+  };
   if (body) {
     headers["content-encoding"] = "aes128gcm";
     headers["content-type"] = "application/octet-stream";
