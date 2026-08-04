@@ -109,13 +109,20 @@ export function RetornoLojaDialog() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border/40 bg-background/40 backdrop-blur-sm p-3">
-          <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold mb-1.5 flex items-center gap-1.5">
-            <Store className="h-3.5 w-3.5" /> Endereço da loja
+        <div className="rounded-xl border border-border/40 bg-background/40 backdrop-blur-sm p-4">
+          <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold mb-2 flex items-center gap-1.5">
+            <Store className="h-4 w-4" /> Endereço de retorno à loja
           </div>
-          <div className="flex items-start gap-2">
-            <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
-            <span className="font-semibold text-sm text-gray-500">{endereco}</span>
+          <div className="flex items-start gap-3">
+            <MapPin className="h-5 w-5 mt-0.5 text-[#AE0000] shrink-0" />
+            <div className="flex-1 space-y-1">
+              <span className="font-bold text-base text-[#0f1b2d] block leading-tight">
+                {endereco}
+              </span>
+              <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                Clique no botão abaixo para iniciar o GPS
+              </p>
+            </div>
           </div>
         </div>
 
