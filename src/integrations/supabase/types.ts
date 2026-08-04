@@ -2345,6 +2345,7 @@ export type Database = {
       }
       pedidos: {
         Row: {
+          adicional_retorno: number
           agendamento_id: string | null
           arquivado: boolean
           atribuido_automaticamente: boolean
@@ -2386,6 +2387,7 @@ export type Database = {
           observacoes: string | null
           origem: string
           pagamento_aprovado_em: string | null
+          retorno_maquina: boolean
           rota_id: string | null
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
@@ -2401,6 +2403,7 @@ export type Database = {
           valor_total: number
         }
         Insert: {
+          adicional_retorno?: number
           agendamento_id?: string | null
           arquivado?: boolean
           atribuido_automaticamente?: boolean
@@ -2442,6 +2445,7 @@ export type Database = {
           observacoes?: string | null
           origem?: string
           pagamento_aprovado_em?: string | null
+          retorno_maquina?: boolean
           rota_id?: string | null
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
@@ -2457,6 +2461,7 @@ export type Database = {
           valor_total?: number
         }
         Update: {
+          adicional_retorno?: number
           agendamento_id?: string | null
           arquivado?: boolean
           atribuido_automaticamente?: boolean
@@ -2498,6 +2503,7 @@ export type Database = {
           observacoes?: string | null
           origem?: string
           pagamento_aprovado_em?: string | null
+          retorno_maquina?: boolean
           rota_id?: string | null
           rota_ordem?: number | null
           status?: Database["public"]["Enums"]["pedido_status"]
@@ -3647,6 +3653,7 @@ export type Database = {
       aceitar_pedido_externo: {
         Args: { _pedido_id: string }
         Returns: {
+          adicional_retorno: number
           agendamento_id: string | null
           arquivado: boolean
           atribuido_automaticamente: boolean
@@ -3688,6 +3695,7 @@ export type Database = {
           observacoes: string | null
           origem: string
           pagamento_aprovado_em: string | null
+          retorno_maquina: boolean
           rota_id: string | null
           rota_ordem: number | null
           status: Database["public"]["Enums"]["pedido_status"]
