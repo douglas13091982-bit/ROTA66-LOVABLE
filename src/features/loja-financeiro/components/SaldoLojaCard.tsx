@@ -33,7 +33,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
   return (
     <section className="bg-card border border-border rounded-lg p-6">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider font-bold">
+        <div className="flex items-center gap-2 text-navy text-xs uppercase tracking-wider font-bold">
           <Wallet className="h-3.5 w-3.5" /> Saldo da loja
         </div>
         {negativo && (
@@ -43,7 +43,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
         )}
       </div>
 
-      <div className={`text-4xl font-bold ${negativo ? "text-destructive" : ""}`}>
+      <div className={`text-4xl font-bold ${negativo ? "text-destructive" : "text-navy"}`}>
         {saldoQ.isLoading ? "..." : brl(saldo)}
       </div>
       <p className="text-xs text-muted-foreground mt-1">
