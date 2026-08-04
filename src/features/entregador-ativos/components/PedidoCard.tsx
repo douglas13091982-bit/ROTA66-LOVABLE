@@ -152,6 +152,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         return;
       }
       if (isCartao && p.endereco_coleta) {
+        toast.info("Retorno à loja necessário para devolver a maquininha.");
         abrirRetornoLoja(p.endereco_coleta, p.id, p.numero);
       }
       refresh();
