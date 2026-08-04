@@ -211,6 +211,8 @@ export function usePedidoForm({
         itens: validItens,
         valor_produtos: valorProdutos,
         taxa_entrega: taxaFinal,
+        retorno_maquina: retornoMaquina,
+        adicional_retorno: Number(adicionalRetorno) || 0,
         taxa_por_pedido_aplicada: taxaPorPedidoAplicada,
         bonus_entregador: Number(bonus) || 0,
         valor_total: valorTotal,
