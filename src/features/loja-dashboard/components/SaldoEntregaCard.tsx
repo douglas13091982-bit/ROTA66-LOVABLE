@@ -36,7 +36,7 @@ export function SaldoEntregaCard({ lojaId }: { lojaId: string }) {
           </div>
           <div
             className={`text-2xl font-bold ${
-              negativo ? "text-red-400" : "text-emerald-400"
+              negativo ? "text-red-400" : "text-navy"
             }`}
           >
             {saldoQ.isLoading ? "—" : brl(saldo)}
