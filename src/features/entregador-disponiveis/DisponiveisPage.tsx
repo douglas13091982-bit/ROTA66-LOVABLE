@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
-import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
+
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
@@ -19,6 +19,7 @@ import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-en
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 import { AtivarPushBanner } from "./components/AtivarPushBanner";
 import { ApkUpdateBanner } from "./components/ApkUpdateBanner";
+import { GoogleMapDisponiveis } from "./components/GoogleMapDisponiveis";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
@@ -98,53 +99,81 @@ export function DisponiveisPage() {
     );
   }
 
+  const [showFilters, setShowFilters] = useState(false);
   const isListaVisivel = rotaAtivaResolvida && !temRotaAtiva && estouOnline;
 
   return (
-    <EntregadorShell
-      title="Rotas Disponíveis"
-      topFixed={
-        <>
+    <EntregadorShell title="Rotas Disponíveis" onToggleFilter={() => setShowFilters(!showFilters)}>
+      <div className="absolute inset-0 z-0">
+        <GoogleMapDisponiveis 
+          minhaPos={minhaPos} 
+          grupos={grupos} 
+          onSelecionarGrupo={(g) => {
+            // Se clicar no marcador do mapa, poderíamos abrir o detalhe do grupo
+            // Como RotasDisponiveisList já tem um Dialog interno, podemos expor uma ref ou apenas renderizar a lista
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 h-full flex flex-col pointer-events-none">
+        <div className="p-4 space-y-3 pointer-events-auto">
           <AtivarPushBanner />
           <ApkUpdateBanner />
-          <GanhoHojeCard valor={ganhoHoje} />
-          {isListaVisivel && (
-            <RotasDisponiveisHeader
-              ordenacao={ordenacao}
-              onOrdenacaoChange={setOrdenacao}
-            />
+          {showFilters && isListaVisivel && (
+            <div className="pp-reveal animate-in fade-in slide-in-from-top-4 duration-300">
+              <RotasDisponiveisHeader
+                ordenacao={ordenacao}
+                onOrdenacaoChange={(v) => {
+                  setOrdenacao(v);
+                  setShowFilters(false);
+                }}
+              />
+            </div>
           )}
-        </>
-      }
-    >
-      {!rotaAtivaResolvida ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="text-sm text-muted-foreground">Carregando…</p>
         </div>
-      ) : temRotaAtiva ? (
-        <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
-      ) : !estouOnline ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="font-display text-xl mb-2">VOCÊ ESTÁ OFFLINE</p>
-          <p className="text-sm text-muted-foreground">
-            Fique online no menu do entregador para começar a receber pedidos.
-          </p>
+
+        <div className="mt-auto pointer-events-auto">
+          {!rotaAtivaResolvida ? (
+            <div className="m-4 bg-[#1a2b4b]/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center text-white">
+              <p className="text-sm opacity-60">Carregando…</p>
+            </div>
+          ) : temRotaAtiva ? (
+            <div className="m-4">
+              <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
+            </div>
+          ) : !estouOnline ? (
+            <div className="m-4 bg-[#1a2b4b]/95 backdrop-blur-md border border-white/10 rounded-2xl p-8 text-center text-white shadow-2xl">
+              <div className="w-16 h-16 bg-[#AE0000]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-8 h-8 bg-[#AE0000] rounded-full animate-pulse" />
+              </div>
+              <p className="font-black text-2xl mb-2 tracking-tight uppercase">Você está offline</p>
+              <p className="text-sm opacity-60 leading-relaxed px-4">
+                Clique no botão <span className="text-[#AE0000] font-bold">CONECTAR</span> abaixo para começar a receber pedidos e faturar.
+              </p>
+            </div>
+          ) : (
+            <div className="max-h-[60vh] overflow-y-auto px-4 pb-32">
+              <RotasDisponiveisList
+                grupos={grupos}
+                isLoading={isLoading}
+                minhaPos={minhaPos}
+                taxaParaExibir={taxaParaExibir}
+                onAceitar={handleAceitar}
+                ordenacao={ordenacao}
+                onOrdenacaoChange={setOrdenacao}
+              />
+            </div>
+          )}
         </div>
-      ) : (
-        <RotasDisponiveisList
-          grupos={grupos}
-          isLoading={isLoading}
-          minhaPos={minhaPos}
-          taxaParaExibir={taxaParaExibir}
-          onAceitar={handleAceitar}
-          ordenacao={ordenacao}
-          onOrdenacaoChange={setOrdenacao}
-        />
-      )}
+      </div>
 
+      <div className="absolute bottom-[240px] left-0 right-0 z-20 pointer-events-none px-4">
+        <div className="pointer-events-auto">
+          <AnunciosEntregador />
+        </div>
+      </div>
 
-
-      <AnunciosEntregador />
+      
     </EntregadorShell>
   );
 }
