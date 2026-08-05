@@ -159,7 +159,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 py-4 pb-24 relative pt-16">
+        <main className="flex-1 px-4 pb-24 relative pt-16">
           <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none">
             <button 
               onClick={() => setOpen(true)}
@@ -248,7 +248,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#f8fafc]">
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#f5f7fa]">
                 <div className="flex flex-col gap-4 mb-4">
                   {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
                 </div>
@@ -265,8 +265,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
-        style={{ background: "#f8fafc" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-black/[0.03] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
+        style={{ background: "#f5f7fa" }}
       >
         <div className="flex flex-col gap-3">
           {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}
