@@ -27,10 +27,10 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
           <PartyPopper className="h-8 w-8 text-emerald-400" />
         </div>
         <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-bold">
-          Entregas Finalizadas
+          {retornoPendente ? "Entrega Pendente de Retorno" : "Entregas Finalizadas"}
         </div>
         <div className="text-sm text-muted-foreground">
-          {count} {count === 1 ? "entrega concluída" : "entregas concluídas"}
+          {retornoPendente ? "Devolva a maquininha para concluir" : `${count} ${count === 1 ? "entrega concluída" : "entregas concluídas"}`}
         </div>
         <div className="mt-3">
           <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-1">

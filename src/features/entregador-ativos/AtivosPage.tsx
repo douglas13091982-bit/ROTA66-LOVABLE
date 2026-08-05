@@ -33,7 +33,7 @@ export function AtivosPage({ destaque }: Props) {
 
   const semAtivos = !!pedidos && pedidos.length === 0;
   const mostrarFinalizado =
-    semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0 && !retornoSalvo;
+    semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0;
   const totalGanhoLote = (recentesEntregues ?? []).reduce(
     (s, p) =>
       s +
