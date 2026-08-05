@@ -64,6 +64,7 @@ import { Route as AuthenticatedEntregadorMensalidadeRouteImport } from './routes
 import { Route as AuthenticatedEntregadorHistoricoRouteImport } from './routes/_authenticated/entregador/historico'
 import { Route as AuthenticatedEntregadorDocumentosRouteImport } from './routes/_authenticated/entregador/documentos'
 import { Route as AuthenticatedEntregadorDisponiveisRouteImport } from './routes/_authenticated/entregador/disponiveis'
+import { Route as AuthenticatedEntregadorConfiguracoesRouteImport } from './routes/_authenticated/entregador/configuracoes'
 import { Route as AuthenticatedEntregadorCarteiraRouteImport } from './routes/_authenticated/entregador/carteira'
 import { Route as AuthenticatedEntregadorAtivosRouteImport } from './routes/_authenticated/entregador/ativos'
 import { Route as AuthenticatedAdminTreinamentoRouteImport } from './routes/_authenticated/admin/treinamento'
@@ -411,6 +412,12 @@ const AuthenticatedEntregadorDisponiveisRoute =
     path: '/disponiveis',
     getParentRoute: () => AuthenticatedEntregadorRouteRoute,
   } as any)
+const AuthenticatedEntregadorConfiguracoesRoute =
+  AuthenticatedEntregadorConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedEntregadorRouteRoute,
+  } as any)
 const AuthenticatedEntregadorCarteiraRoute =
   AuthenticatedEntregadorCarteiraRouteImport.update({
     id: '/carteira',
@@ -695,6 +702,7 @@ export interface FileRoutesByFullPath {
   '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
+  '/entregador/configuracoes': typeof AuthenticatedEntregadorConfiguracoesRoute
   '/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
   '/entregador/documentos': typeof AuthenticatedEntregadorDocumentosRoute
   '/entregador/historico': typeof AuthenticatedEntregadorHistoricoRoute
@@ -785,6 +793,7 @@ export interface FileRoutesByTo {
   '/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
+  '/entregador/configuracoes': typeof AuthenticatedEntregadorConfiguracoesRoute
   '/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
   '/entregador/documentos': typeof AuthenticatedEntregadorDocumentosRoute
   '/entregador/historico': typeof AuthenticatedEntregadorHistoricoRoute
@@ -881,6 +890,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/treinamento': typeof AuthenticatedAdminTreinamentoRoute
   '/_authenticated/entregador/ativos': typeof AuthenticatedEntregadorAtivosRoute
   '/_authenticated/entregador/carteira': typeof AuthenticatedEntregadorCarteiraRoute
+  '/_authenticated/entregador/configuracoes': typeof AuthenticatedEntregadorConfiguracoesRoute
   '/_authenticated/entregador/disponiveis': typeof AuthenticatedEntregadorDisponiveisRoute
   '/_authenticated/entregador/documentos': typeof AuthenticatedEntregadorDocumentosRoute
   '/_authenticated/entregador/historico': typeof AuthenticatedEntregadorHistoricoRoute
@@ -977,6 +987,7 @@ export interface FileRouteTypes {
     | '/admin/treinamento'
     | '/entregador/ativos'
     | '/entregador/carteira'
+    | '/entregador/configuracoes'
     | '/entregador/disponiveis'
     | '/entregador/documentos'
     | '/entregador/historico'
@@ -1067,6 +1078,7 @@ export interface FileRouteTypes {
     | '/admin/treinamento'
     | '/entregador/ativos'
     | '/entregador/carteira'
+    | '/entregador/configuracoes'
     | '/entregador/disponiveis'
     | '/entregador/documentos'
     | '/entregador/historico'
@@ -1162,6 +1174,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/treinamento'
     | '/_authenticated/entregador/ativos'
     | '/_authenticated/entregador/carteira'
+    | '/_authenticated/entregador/configuracoes'
     | '/_authenticated/entregador/disponiveis'
     | '/_authenticated/entregador/documentos'
     | '/_authenticated/entregador/historico'
@@ -1615,6 +1628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntregadorDisponiveisRouteImport
       parentRoute: typeof AuthenticatedEntregadorRouteRoute
     }
+    '/_authenticated/entregador/configuracoes': {
+      id: '/_authenticated/entregador/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/entregador/configuracoes'
+      preLoaderRoute: typeof AuthenticatedEntregadorConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedEntregadorRouteRoute
+    }
     '/_authenticated/entregador/carteira': {
       id: '/_authenticated/entregador/carteira'
       path: '/carteira'
@@ -1971,6 +1991,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 interface AuthenticatedEntregadorRouteRouteChildren {
   AuthenticatedEntregadorAtivosRoute: typeof AuthenticatedEntregadorAtivosRoute
   AuthenticatedEntregadorCarteiraRoute: typeof AuthenticatedEntregadorCarteiraRoute
+  AuthenticatedEntregadorConfiguracoesRoute: typeof AuthenticatedEntregadorConfiguracoesRoute
   AuthenticatedEntregadorDisponiveisRoute: typeof AuthenticatedEntregadorDisponiveisRoute
   AuthenticatedEntregadorDocumentosRoute: typeof AuthenticatedEntregadorDocumentosRoute
   AuthenticatedEntregadorHistoricoRoute: typeof AuthenticatedEntregadorHistoricoRoute
@@ -1984,6 +2005,8 @@ const AuthenticatedEntregadorRouteRouteChildren: AuthenticatedEntregadorRouteRou
   {
     AuthenticatedEntregadorAtivosRoute: AuthenticatedEntregadorAtivosRoute,
     AuthenticatedEntregadorCarteiraRoute: AuthenticatedEntregadorCarteiraRoute,
+    AuthenticatedEntregadorConfiguracoesRoute:
+      AuthenticatedEntregadorConfiguracoesRoute,
     AuthenticatedEntregadorDisponiveisRoute:
       AuthenticatedEntregadorDisponiveisRoute,
     AuthenticatedEntregadorDocumentosRoute:
