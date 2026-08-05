@@ -104,17 +104,22 @@ export function DisponiveisPage() {
     <EntregadorShell
       title="Rotas Disponíveis"
       topFixed={
-        <>
-          <AtivarPushBanner />
-          <ApkUpdateBanner />
-          <GanhoHojeCard valor={ganhoHoje} />
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <GanhoHojeCard valor={ganhoHoje} />
+            <div className="bg-[#AE0000] rounded-full px-4 py-1.5 shadow-md">
+              <span className="text-[12px] font-black text-white uppercase tracking-wider">0% TAXA</span>
+            </div>
+          </div>
           {isListaVisivel && (
             <RotasDisponiveisHeader
               ordenacao={ordenacao}
               onOrdenacaoChange={setOrdenacao}
             />
           )}
-        </>
+          <AtivarPushBanner />
+          <ApkUpdateBanner />
+        </div>
       }
     >
       {!rotaAtivaResolvida ? (

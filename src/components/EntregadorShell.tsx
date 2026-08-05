@@ -101,31 +101,23 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3 w-full">
       <button
         onClick={toggle}
         data-status-toggle
-        className="relative inline-flex items-center h-12 rounded-full p-1.5 transition-all duration-300 border border-[#d3d9e4]"
-        style={{ background: "#eef1f6", boxShadow: "inset 0 1px 2px rgba(15,27,45,0.10)" }}
+        className="w-full relative inline-flex items-center justify-center h-16 rounded-2xl transition-all duration-300 shadow-lg"
+        style={{ 
+          background: online ? "#AE0000" : "#0d2c54",
+          boxShadow: online ? "0 8px 25px -8px rgba(174,0,0,0.5)" : "0 8px 25px -8px rgba(13,44,84,0.5)"
+        }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
-        <span
-          className="grid place-items-center h-9 w-14 rounded-full transition-all duration-300"
-          style={!online ? { background: "#eef1f6" } : undefined}
-        >
-          <Power className="h-4 w-4 text-[#0f1b2d]" strokeWidth={2.5} />
-        </span>
-        <span
-          data-surface={online ? "navy" : undefined}
-          className={`px-6 h-9 grid place-items-center rounded-full text-xs font-extrabold tracking-[0.28em] transition-all duration-300 ${
-            online ? "!text-white" : "text-[#0f1b2d]/60"
-          }`}
-
-          style={online ? { background: "#0d2c54", boxShadow: "0 6px 18px -6px rgba(13,44,84,0.55)" } : undefined}
-
-        >
-          ON
-        </span>
+        <div className="flex items-center gap-3">
+          <Power className="h-6 w-6 text-white" strokeWidth={3} />
+          <span className="text-lg font-black tracking-[0.15em] uppercase text-white">
+            {online ? "DESCONECTAR" : "CONECTAR"}
+          </span>
+        </div>
       </button>
     </div>
   );
@@ -162,11 +154,10 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
-                <div className="flex flex-col items-center justify-center gap-2 mb-4">
-                  {StatusToggleLarge}
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#eef1f6]">
+                <div className="flex flex-col gap-4 mb-4">
+                  {topFixed}
                 </div>
-                {topFixed}
               </div>
             ) : (
               <div className="h-6" />
@@ -180,10 +171,12 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] pb-[env(safe-area-inset-bottom)]"
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
         style={{ background: "#0d2c54" }}
       >
-        <div className="grid grid-cols-4">
+        <div className="flex flex-col gap-3">
+          {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}
+          <div className="grid grid-cols-4">
 
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
