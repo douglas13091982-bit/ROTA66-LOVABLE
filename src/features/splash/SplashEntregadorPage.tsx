@@ -9,7 +9,7 @@ export function SplashEntregadorPage() {
   useAutoRedirectByRole();
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#0a1428] text-foreground flex flex-col">
+    <div className="relative min-h-screen w-full overflow-hidden bg-[#0d2c54] text-foreground flex flex-col">
       <SplashBackground />
 
       <div className="relative z-10 flex flex-1 flex-col items-center px-6 pt-16 pb-10 safe-area">
