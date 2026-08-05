@@ -12,18 +12,18 @@ type Props = {
 
 export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente }: Props) {
   return (
-    <div className="relative overflow-hidden rounded-2xl glass shadow-elevated p-8 text-center mb-6 border border-emerald-500/40">
+    <div className="relative overflow-hidden rounded-2xl bg-white shadow-elevated p-8 text-center mb-6 border border-emerald-500/40">
       <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl pointer-events-none" />
       <button
         onClick={onDismiss}
         aria-label="Fechar"
-        className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-card/60 transition z-10"
+        className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-gray-100 transition z-10"
       >
         <X className="h-4 w-4 text-muted-foreground" />
       </button>
       <div className="relative flex flex-col items-center gap-2">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center backdrop-blur-sm border border-emerald-400/40 shadow-[0_10px_30px_-8px_oklch(0.7_0.18_155_/_0.5)]">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-400/20 shadow-sm">
           <PartyPopper className="h-8 w-8 text-emerald-400" />
         </div>
         <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-bold">
@@ -57,14 +57,14 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
+          <div className="rounded-xl border border-border/40 bg-gray-50 p-4 space-y-3">
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 mt-0.5 text-amber-400 shrink-0" />
               <div className="flex-1 min-w-0">
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-1">
                   Endereço da Loja
                 </span>
-                <span className="font-bold text-sm text-foreground block leading-snug">
+                <span className="font-bold text-sm text-navy block leading-snug">
                   {retornoPendente.endereco}
                 </span>
               </div>

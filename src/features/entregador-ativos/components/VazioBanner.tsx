@@ -5,7 +5,7 @@ export function VazioBanner() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative overflow-hidden rounded-2xl glass shadow-soft p-12 text-center">
+    <div className="relative overflow-hidden rounded-2xl bg-white shadow-soft p-12 text-center border border-border/40">
       <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
       <Bike className="relative h-16 w-16 text-muted-foreground mx-auto mb-4" />
       <p className="relative font-display text-2xl tracking-[0.06em] mb-2">
