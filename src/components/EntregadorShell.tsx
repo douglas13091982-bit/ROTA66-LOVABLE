@@ -230,7 +230,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <nav
         data-entregador-nav
         className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
-        style={{ background: "#0d2c54" }}
+        style={{ background: "#FFFFFF" }}
       >
         <div className="flex flex-col gap-3">
           {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}
