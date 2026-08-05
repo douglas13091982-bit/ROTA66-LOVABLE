@@ -111,7 +111,7 @@ function PedidoListItemBase({
           {atrasado ? (
             <>
               <div className="p-2 rounded-xl bg-white/15">
-                <AlertTriangle className="h-4 w-4 text-white" />
+                <AlertTriangle className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] font-black text-white uppercase tracking-[0.18em] leading-none">
