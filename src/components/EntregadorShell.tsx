@@ -30,7 +30,7 @@ const NAV = [
 ] as const;
 
 
-export function EntregadorShell({ children, title, topFixed }: { children: ReactNode; title: string; topFixed?: ReactNode }) {
+export function EntregadorShell({ children, title, onToggleFilter }: { children: ReactNode; title: string; onToggleFilter?: () => void }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { online, toggle } = useEntregadorStatus();
