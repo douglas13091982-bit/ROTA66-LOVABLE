@@ -107,16 +107,16 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <button
         onClick={toggle}
         data-status-toggle
-        className="w-full relative inline-flex items-center justify-center h-16 rounded-2xl transition-all duration-300 shadow-lg"
+        className="w-full relative inline-flex items-center justify-center h-12 rounded-xl transition-all duration-300 shadow-md"
         style={{ 
           background: online ? "#AE0000" : "#0d2c54",
-          boxShadow: online ? "0 8px 25px -8px rgba(174,0,0,0.5)" : "0 8px 25px -8px rgba(13,44,84,0.5)"
+          boxShadow: online ? "0 4px 15px -5px rgba(174,0,0,0.5)" : "0 4px 15px -5px rgba(13,44,84,0.5)"
         }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
         <div className="flex items-center gap-3">
-          <Power className="h-6 w-6 text-white" strokeWidth={3} />
-          <span className="text-lg font-black tracking-[0.15em] uppercase text-white">
+          <Power className="h-5 w-5 text-white" strokeWidth={3} />
+          <span className="text-base font-black tracking-[0.1em] uppercase text-white">
             {online ? "DESCONECTAR" : "CONECTAR"}
           </span>
         </div>
