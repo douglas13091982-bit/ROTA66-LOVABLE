@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, BellRing, X } from "lucide-react";
+import { Bell, BellRing, X, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
 
@@ -12,7 +12,8 @@ export function AtivarPushBanner() {
     return window.localStorage.getItem(DISMISS_KEY) === "1";
   });
 
-  const handleDismiss = () => {
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.stopPropagation();
     try { window.localStorage.setItem(DISMISS_KEY, "1"); } catch {}
     setDismissed(true);
   };
@@ -23,6 +24,7 @@ export function AtivarPushBanner() {
   if (state === "denied") return null;
 
   const isGranted = state === "granted";
+  if (isGranted) return null;
 
   const handleAtivar = async () => {
     try {
@@ -33,38 +35,32 @@ export function AtivarPushBanner() {
     }
   };
 
-  if (isGranted) return null;
-
-
-
   return (
-    <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 flex items-start gap-3">
-      <Bell className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground">
-          Ative as notificações
-        </p>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          Receba um alerta assim que um novo pedido entrar no seu pool.
-        </p>
+    <button
+      onClick={handleAtivar}
+      disabled={busy}
+      className="relative w-full flex items-center justify-between gap-4 p-4 rounded-2xl bg-[#1a2b4b]/90 backdrop-blur-md border border-white/10 shadow-xl text-left"
+    >
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-[#AE0000] flex items-center justify-center">
+          <Bell className="h-5 w-5 text-white animate-bounce" />
+        </div>
+        <div className="text-left">
+          <p className="text-sm font-black text-white uppercase tracking-tight">Ativar Notificações</p>
+          <p className="text-[11px] text-white/60 font-medium">Receba novos pedidos instantaneamente</p>
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <ArrowRight className="h-5 w-5 text-white/40" />
         <button
           type="button"
-          onClick={handleAtivar}
-          disabled={busy}
-          className="mt-2 inline-flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 rounded-md disabled:opacity-60"
+          onClick={handleDismiss}
+          className="p-1 hover:bg-white/10 rounded-full"
         >
-          <Bell className="w-3.5 h-3.5" />
-          {busy ? "Ativando…" : "Ativar notificações"}
+          <X className="w-4 h-4 text-white/20" />
         </button>
       </div>
-      <button
-        type="button"
-        onClick={handleDismiss}
-        className="text-muted-foreground hover:text-foreground shrink-0"
-        aria-label="Fechar"
-      >
-        <X className="w-4 h-4" />
-      </button>
-    </div>
+    </button>
   );
 }
