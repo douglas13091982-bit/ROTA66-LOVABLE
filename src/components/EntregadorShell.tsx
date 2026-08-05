@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon, Settings2, Wallet } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
@@ -10,7 +10,7 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useSomPush } from "@/hooks/use-som-push";
 import { usePerfilEntregador } from "@/features/entregador-perfil/hooks/use-perfil-entregador";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
@@ -243,17 +243,15 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     <OrdenacaoToggle value={ordenacao} onChange={setOrdenacao} />
                   </div>
                 )}
-              </SheetContent>
-            </Sheet>
-          </div>
+            </SheetContent>
+          </Sheet>
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
               <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-white">
                 <div className="flex flex-col gap-4 mb-4">
                   {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
-                  <AtivarPushBanner />
-                  <ApkUpdateBanner />
+                  {/* AtivarPushBanner e ApkUpdateBanner continuam aqui */}
                 </div>
               </div>
             ) : (
