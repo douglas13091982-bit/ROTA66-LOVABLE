@@ -110,7 +110,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <button
         onClick={toggle}
         data-status-toggle
-        className="w-full relative inline-flex items-center justify-center h-12 rounded-xl transition-all duration-300 shadow-md"
+        className="w-full relative inline-flex items-center justify-center h-12 rounded-[22px] transition-all duration-300 shadow-md"
         style={{ 
           background: online ? "#0d2c54" : "#0d2c54",
           boxShadow: "0 4px 15px -5px rgba(13,44,84,0.5)"
