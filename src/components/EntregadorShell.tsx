@@ -23,7 +23,7 @@ import { useWakeLock } from "@/hooks/use-wake-lock";
 
 const NAV = [
   { to: "/entregador/disponiveis", label: "Pedidos", icon: Package },
-  { to: "/entregador/turnos", label: "Turnos", icon: CalendarClock, badgeKey: "turnos" as const },
+  { to: "/entregador/ativos", label: "Ativos", icon: Smartphone },
   { to: "/entregador/historico", label: "Histórico", icon: History },
   { to: "/entregador/perfil", label: "Perfil", icon: User },
 ] as const;
@@ -161,7 +161,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         <main className="flex-1 px-4 py-4 pb-24 relative">
           <div className="pp-reveal">
 
-            {path.startsWith("/entregador/disponiveis") ? (
+            {path.startsWith("/entregador/disponiveis") || path.startsWith("/entregador/ativos") ? (
               <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
                 <div className="flex flex-col items-center justify-center gap-2 mb-4">
                   {StatusToggleLarge}
