@@ -10,8 +10,9 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSomPush } from "@/hooks/use-som-push";
+import { usePerfilEntregador } from "@/features/entregador-perfil/hooks/use-perfil-entregador";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
 
@@ -45,6 +46,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const { isMobile } = useMobilePortraitOnly();
   const [open, setOpen] = useState(false);
   const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
+  const perfil = usePerfilEntregador(user?.id);
 
   // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
   useEffect(() => instalarLimpezaBadge(), []);
@@ -165,11 +167,35 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white">
-                <SheetHeader className="p-6 border-b border-white/10">
-                  <SheetTitle className="text-white text-left font-medium tracking-[0.3em] text-sm uppercase">MENU</SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col py-4">
+              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col">
+                <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10">
+                  <div className="relative mb-4">
+                    <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
+                      {perfil.avatarUrl ? (
+                        <img 
+                          src={perfil.avatarUrl} 
+                          alt="Avatar" 
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center">
+                          <User className="h-10 w-10 text-white/20" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <h2 className="text-lg font-black tracking-tight text-white mb-1 leading-none uppercase">
+                    {perfil.fullName || "Entregador"}
+                  </h2>
+                  <div className="flex items-center gap-2 text-white/40 text-[10px] font-medium tracking-[0.2em] uppercase">
+                    <span>ID: {user?.id.slice(0, 8)}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      4,51 <Package className="h-2 w-2" />
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col flex-1 py-4">
                   {NAV.map((item) => {
                     const active = path.startsWith(item.to);
                     const Icon = item.icon;
