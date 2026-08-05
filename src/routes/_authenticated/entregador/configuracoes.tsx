@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { usePerfilEntregador } from '@/features/entregador-perfil/hooks/use-perfil-entregador';
 import { useLojasVinculo } from '@/features/entregador-perfil/hooks/use-perfil-stats';
 import { ConfigSection } from '@/features/entregador-perfil/components/sections/ConfigSection';
+import { SegurancaSection } from '@/features/entregador-perfil/components/sections/SegurancaSection';
 
 export const Route = createFileRoute('/_authenticated/entregador/configuracoes')({
   component: ConfiguracoesPage,
@@ -28,6 +29,13 @@ function ConfiguracoesPage() {
              />
           </div>
         </div>
+
+        <div className="bg-[#0d2c54] rounded-[22px] p-1 shadow-sm border border-navy/5 overflow-hidden">
+          <div className="p-4 bg-[#0d2c54]">
+             <h2 className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-3">Segurança</h2>
+             <SegurancaSection email={user?.email} />
+          </div>
+        </div>
         
         <div className="bg-white rounded-[22px] p-6 shadow-sm border border-navy/5">
           <h2 className="text-[#0d2c54] font-black uppercase tracking-[0.2em] text-[10px] mb-4">Sobre o App</h2>
@@ -46,3 +54,4 @@ function ConfiguracoesPage() {
     </EntregadorShell>
   );
 }
+
