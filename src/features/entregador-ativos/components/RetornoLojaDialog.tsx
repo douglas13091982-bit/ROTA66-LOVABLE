@@ -85,7 +85,7 @@ export function RetornoLojaDialog() {
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative w-full max-w-md rounded-2xl glass border border-border/40 shadow-elevated p-6 space-y-4 animate-in slide-in-from-bottom-4">
+      <div className="relative w-full max-w-md rounded-2xl bg-white border border-border/40 shadow-elevated p-6 space-y-4 animate-in slide-in-from-bottom-4">
         <button
           onClick={fechar}
           aria-label="Fechar"
@@ -109,7 +109,7 @@ export function RetornoLojaDialog() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-border/40 bg-background/40 backdrop-blur-sm p-4">
+        <div className="rounded-xl border border-border/40 bg-gray-50 p-4">
           <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-bold mb-2 flex items-center gap-1.5">
             <Store className="h-4 w-4" /> Endereço de retorno à loja
           </div>
@@ -136,7 +136,7 @@ export function RetornoLojaDialog() {
         </a>
         <button
           onClick={fechar}
-          className="w-full px-5 py-3 rounded-xl border border-border/60 bg-background/40 backdrop-blur-sm font-bold uppercase text-xs tracking-[0.18em] text-muted-foreground hover:text-foreground transition-colors"
+          className="w-full px-5 py-3 rounded-xl border border-border/60 bg-white font-bold uppercase text-xs tracking-[0.18em] text-muted-foreground hover:text-foreground transition-colors shadow-sm"
         >
           Já entreguei a maquininha
         </button>
