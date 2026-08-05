@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
@@ -19,8 +19,6 @@ import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-en
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
 import { AtivarPushBanner } from "./components/AtivarPushBanner";
 import { ApkUpdateBanner } from "./components/ApkUpdateBanner";
-import { MapDisponiveis } from "@/components/entregador/MapDisponiveis";
-import { Package, Map as MapIcon, List } from "lucide-react";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
@@ -102,109 +100,51 @@ export function DisponiveisPage() {
 
   const isListaVisivel = rotaAtivaResolvida && !temRotaAtiva && estouOnline;
 
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const [grupoSelecionado, setGrupoSelecionado] = useState<GrupoPedido | null>(null);
-
   return (
     <EntregadorShell
       title="Rotas Disponíveis"
       topFixed={
-        <div className="flex flex-col gap-2">
+        <>
           <AtivarPushBanner />
           <ApkUpdateBanner />
           <GanhoHojeCard valor={ganhoHoje} />
           {isListaVisivel && (
-            <div className="flex items-center gap-2">
-              <div className="flex-1">
-                <RotasDisponiveisHeader
-                  ordenacao={ordenacao}
-                  onOrdenacaoChange={setOrdenacao}
-                />
-              </div>
-              <button
-                onClick={() => setViewMode(v => v === "map" ? "list" : "map")}
-                className="h-10 w-10 rounded-xl bg-[#0d2c54] text-white flex items-center justify-center shadow-lg border border-white/10 active:scale-95 transition-all"
-              >
-                {viewMode === "map" ? <List className="h-5 w-5" /> : <MapIcon className="h-5 w-5" />}
-              </button>
-            </div>
+            <RotasDisponiveisHeader
+              ordenacao={ordenacao}
+              onOrdenacaoChange={setOrdenacao}
+            />
           )}
-        </div>
+        </>
       }
     >
       {!rotaAtivaResolvida ? (
-        <div className="bg-white/80 backdrop-blur-md border border-border/40 rounded-3xl p-8 text-center shadow-xl">
-          <div className="flex flex-col items-center gap-3">
-            <div className="h-10 w-10 rounded-full border-4 border-[#AE0000]/20 border-t-[#AE0000] animate-spin" />
-            <p className="text-sm font-bold text-navy/60 uppercase tracking-widest">Sincronizando...</p>
-          </div>
+        <div className="bg-card border border-border rounded-lg p-6 text-center">
+          <p className="text-sm text-muted-foreground">Carregando…</p>
         </div>
       ) : temRotaAtiva ? (
-        <div className="relative z-10">
-          <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
-        </div>
+        <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
-        <div className="relative z-10 bg-white border-2 border-navy/10 rounded-[32px] p-10 text-center shadow-2xl">
-          <div className="h-20 w-20 bg-navy/5 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Package className="h-10 w-10 text-navy/20" />
-          </div>
-          <p className="font-display text-2xl text-navy mb-3 tracking-tight">VOCÊ ESTÁ OFFLINE</p>
-          <p className="text-sm text-navy/50 leading-relaxed font-medium">
-            Fique online no botão superior para começar a receber pedidos na sua região.
+        <div className="bg-card border border-border rounded-lg p-6 text-center">
+          <p className="font-display text-xl mb-2">VOCÊ ESTÁ OFFLINE</p>
+          <p className="text-sm text-muted-foreground">
+            Fique online no menu do entregador para começar a receber pedidos.
           </p>
         </div>
       ) : (
-        <div className="relative h-[calc(100vh-280px)] -mx-4 -mt-4">
-          {viewMode === "map" ? (
-            <>
-              <MapDisponiveis 
-                minhaPos={minhaPos} 
-                grupos={grupos} 
-                onSelectGrupo={setGrupoSelecionado}
-              />
-              
-              {grupos.length > 0 && (
-                <div className="absolute bottom-6 left-0 right-0 px-4 pointer-events-none">
-                  <div className="max-w-xl mx-auto pointer-events-auto">
-                    <RotasDisponiveisList
-                      grupos={grupoSelecionado ? [grupoSelecionado] : [grupos[0]]}
-                      isLoading={isLoading}
-                      minhaPos={minhaPos}
-                      taxaParaExibir={taxaParaExibir}
-                      onAceitar={handleAceitar}
-                      ordenacao={ordenacao}
-                      onOrdenacaoChange={setOrdenacao}
-                    />
-                    {grupos.length > 1 && !grupoSelecionado && (
-                      <div className="mt-2 text-center">
-                        <span className="bg-navy/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full shadow-lg">
-                          + {grupos.length - 1} pedidos próximos
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="relative z-10 px-4 pt-4 overflow-y-auto h-full pb-20">
-              <RotasDisponiveisList
-                grupos={grupos}
-                isLoading={isLoading}
-                minhaPos={minhaPos}
-                taxaParaExibir={taxaParaExibir}
-                onAceitar={handleAceitar}
-                ordenacao={ordenacao}
-                onOrdenacaoChange={setOrdenacao}
-              />
-            </div>
-          )}
-        </div>
+        <RotasDisponiveisList
+          grupos={grupos}
+          isLoading={isLoading}
+          minhaPos={minhaPos}
+          taxaParaExibir={taxaParaExibir}
+          onAceitar={handleAceitar}
+          ordenacao={ordenacao}
+          onOrdenacaoChange={setOrdenacao}
+        />
       )}
 
-      <div className="relative z-10">
-        <AnunciosEntregador />
-      </div>
+
+
+      <AnunciosEntregador />
     </EntregadorShell>
   );
 }
