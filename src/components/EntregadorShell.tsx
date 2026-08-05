@@ -159,7 +159,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 pb-24 relative pt-16">
+        <main className="flex-1 px-4 pb-24 relative pt-12">
           <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none">
             <button 
               onClick={() => setOpen(true)}
