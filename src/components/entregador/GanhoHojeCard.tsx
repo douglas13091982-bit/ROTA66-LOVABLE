@@ -22,8 +22,8 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
       </div>
       <button
         onClick={() => setHide((v) => !v)}
-        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition hover:bg-white/10 active:scale-95"
-        style={{ color: "#ffffff" }}
+        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition active:scale-95"
+        style={{ background: "#0d2c54", color: "#ffffff" }}
         aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
       >
         {hide ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
