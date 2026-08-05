@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { EntregadorShell } from "@/components/EntregadorShell";
+import { AnunciosEntregador } from "@/components/AnunciosEntregador";
+import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
@@ -9,13 +11,15 @@ import type { GrupoPedido } from "@/types/pedido";
 import { SemVinculoEstado } from "./components/SemVinculoEstado";
 import { RotaAtivaEstado } from "./components/RotaAtivaEstado";
 import { RotasDisponiveisList } from "./components/RotasDisponiveisList";
+import { RotasDisponiveisHeader } from "./components/RotasDisponiveisHeader";
 import { AguardandoAprovacaoEstado } from "./components/AguardandoAprovacaoEstado";
 import { AguardandoDocumentosEstado } from "./components/AguardandoDocumentosEstado";
 import { useEntregadorAprovacao } from "@/hooks/use-entregador-aprovacao";
 import { useEntregadorDocumentos } from "@/features/entregador-documentos/use-entregador-documentos";
 import { useOrdenacaoPedidos } from "./hooks/use-ordenacao-pedidos";
+import { AtivarPushBanner } from "./components/AtivarPushBanner";
+import { ApkUpdateBanner } from "./components/ApkUpdateBanner";
 import { GoogleMapDisponiveis } from "./components/GoogleMapDisponiveis";
-import { PedidoDrawerEntregador } from "@/components/entregador/PedidoDrawerEntregador";
 
 export function DisponiveisPage() {
   const navigate = useNavigate();
