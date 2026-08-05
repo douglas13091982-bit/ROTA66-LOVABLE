@@ -2031,7 +2031,9 @@ select,
 
 /* Exceções: card de ganhos e botão conectar do app do entregador (estilo Apple) */
 [data-ganho-hoje],
-[data-status-toggle] {
+[data-status-toggle],
+nav button[data-status-toggle],
+.entregador-theme button[data-status-toggle] {
   border-radius: 22px !important;
 }
 [data-ganho-hoje] button {
