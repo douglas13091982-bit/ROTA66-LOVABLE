@@ -33,6 +33,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { online, toggle } = useEntregadorStatus();
+  const { ganhoHoje } = usePedidosDisponiveis([]);
   const qc = useQueryClient();
   const turnosCount = useTurnosDisponiveisCount();
   useChatNaoLidasGlobal();
@@ -166,7 +167,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
             <div className="flex flex-col items-center">
               <button className="flex items-center gap-2 bg-[#1a2b4b]/80 backdrop-blur-md px-5 py-2.5 rounded-full text-white shadow-lg border border-white/10">
-                <span className="text-lg font-black tracking-tight">R$ 0,00</span>
+                <span className="text-lg font-black tracking-tight">R$ {ganhoHoje.toFixed(2).replace(".", ",")}</span>
                 <ChevronDown className="w-4 h-4 opacity-60" />
               </button>
               
