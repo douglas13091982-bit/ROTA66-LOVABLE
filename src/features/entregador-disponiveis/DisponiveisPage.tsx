@@ -134,7 +134,7 @@ export function DisponiveisPage() {
 
         <div className="mt-auto pointer-events-auto">
           {!rotaAtivaResolvida ? (
-            <div className="m-4 bg-[#1a2b4b]/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center text-white">
+            <div className="m-4 bg-white/90 backdrop-blur-md border border-[#0d2c54]/10 rounded-2xl p-6 text-center text-[#0d2c54]">
               <p className="text-sm opacity-60">Carregando…</p>
             </div>
           ) : temRotaAtiva ? (
@@ -142,12 +142,12 @@ export function DisponiveisPage() {
               <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
             </div>
           ) : !estouOnline ? (
-            <div className="m-4 bg-[#1a2b4b]/95 backdrop-blur-md border border-white/10 rounded-2xl p-8 text-center text-white shadow-2xl">
+            <div className="m-4 bg-white/95 backdrop-blur-md border border-[#0d2c54]/10 rounded-2xl p-8 text-center text-[#0d2c54] shadow-2xl">
               <div className="w-16 h-16 bg-[#AE0000]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <div className="w-8 h-8 bg-[#AE0000] rounded-full animate-pulse" />
               </div>
-              <p className="font-black text-2xl mb-2 tracking-tight uppercase">Você está offline</p>
-              <p className="text-sm opacity-60 leading-relaxed px-4">
+              <p className="font-black text-2xl mb-2 tracking-tight uppercase text-[#0d2c54]">Você está offline</p>
+              <p className="text-sm text-[#0d2c54]/60 leading-relaxed px-4">
                 Clique no botão <span className="text-[#AE0000] font-bold">CONECTAR</span> abaixo para começar a receber pedidos e faturar.
               </p>
             </div>
