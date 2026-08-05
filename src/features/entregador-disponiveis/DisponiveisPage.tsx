@@ -109,12 +109,7 @@ export function DisponiveisPage() {
           <div className="flex items-center justify-center">
             <GanhoHojeCard valor={ganhoHoje} />
           </div>
-          {isListaVisivel && (
-            <RotasDisponiveisHeader
-              ordenacao={ordenacao}
-              onOrdenacaoChange={setOrdenacao}
-            />
-          )}
+          {/* Ordenação movida para o Menu Bar */}
           <AtivarPushBanner />
           <ApkUpdateBanner />
         </div>

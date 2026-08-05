@@ -66,7 +66,7 @@ function OrdenacaoCard({ active, title, subtitle, icon, onClick, ariaSelected, a
 export function OrdenacaoToggle({ value, onChange }: Props) {
   return (
     <div
-      className="mb-4 flex gap-2"
+      className="flex flex-col gap-2"
       role="tablist"
       aria-label="Ordenar pedidos"
     >
