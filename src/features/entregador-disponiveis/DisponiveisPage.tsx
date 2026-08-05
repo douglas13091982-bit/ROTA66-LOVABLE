@@ -99,10 +99,11 @@ export function DisponiveisPage() {
     );
   }
 
+  const [showFilters, setShowFilters] = useState(false);
   const isListaVisivel = rotaAtivaResolvida && !temRotaAtiva && estouOnline;
 
   return (
-    <EntregadorShell title="Rotas Disponíveis">
+    <EntregadorShell title="Rotas Disponíveis" onToggleFilter={() => setShowFilters(!showFilters)}>
       <div className="absolute inset-0 z-0">
         <GoogleMapDisponiveis 
           minhaPos={minhaPos} 
