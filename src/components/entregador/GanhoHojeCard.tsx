@@ -22,7 +22,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
       </div>
       <button
         onClick={() => setHide((v) => !v)}
-        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition bg-white/5 hover:bg-white/10"
+        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition hover:bg-white/10",old_content:
         style={{ color: "#ffffff" }}
         aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
       >
