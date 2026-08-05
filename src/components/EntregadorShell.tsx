@@ -251,7 +251,6 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-white">
                 <div className="flex flex-col gap-4 mb-4">
                   {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
-                  {/* AtivarPushBanner e ApkUpdateBanner continuam aqui */}
                 </div>
               </div>
             ) : (
