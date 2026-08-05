@@ -278,7 +278,7 @@
   --panel-accent: var(--rota-red);
   --panel-gold: var(--rota-gold);
 
-  --panel-gradient-bg: #FFFFFF;
+  --panel-gradient-bg: #f8fafc;
 
   --panel-gradient-rail:
     linear-gradient(180deg, var(--rota-red) 0%, var(--rota-gold) 100%);
@@ -297,7 +297,7 @@
   font-family: var(--font-body);
 
   color: var(--panel-text);
-  background: #FFFFFF;
+  background: #f8fafc;
   min-height: 100vh;
 }
 
