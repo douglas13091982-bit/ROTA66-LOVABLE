@@ -297,7 +297,7 @@
   font-family: var(--font-body);
 
   color: var(--panel-text);
-  background: #f5f7fa;
+  background-color: #f5f7fa !important;
   min-height: 100vh;
 }
 
