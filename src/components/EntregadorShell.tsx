@@ -195,7 +195,7 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
         <div className="fixed bottom-[90px] inset-x-0 z-40 px-6 pointer-events-none">
           <div className="max-w-md mx-auto flex items-center gap-4 pointer-events-auto">
             <button 
-              onClick={onToggleFilter}
+              onClick={() => onToggleFilter?.()}
               className="w-14 h-14 rounded-2xl bg-[#1a2b4b]/95 backdrop-blur-md flex items-center justify-center text-white shadow-2xl border border-white/10 active:scale-95 transition-transform"
             >
               <div className="relative">
