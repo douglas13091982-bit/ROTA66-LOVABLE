@@ -188,7 +188,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
-            const badge = "badgeKey" in item ? badges[item.badgeKey] ?? 0 : 0;
+            const badge = 0;
             return (
               <Link
                 key={item.to}
