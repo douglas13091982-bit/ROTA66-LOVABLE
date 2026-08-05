@@ -31,6 +31,7 @@ const NAV = [
   { to: "/entregador/historico", label: "Histórico", icon: History },
   { to: "/entregador/perfil", label: "Perfil", icon: User },
   { to: "/entregador/carteira", label: "Carteira", icon: Wallet },
+  { to: "/entregador/configuracoes", label: "Configurações", icon: Settings2 },
 ] as const;
 
 
