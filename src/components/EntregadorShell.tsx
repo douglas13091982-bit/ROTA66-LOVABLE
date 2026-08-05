@@ -1,8 +1,8 @@
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
@@ -10,6 +10,7 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useSomPush } from "@/hooks/use-som-push";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
@@ -40,6 +41,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   useSomPush();
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
+  const [open, setOpen] = useState(false);
 
   // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
   useEffect(() => instalarLimpezaBadge(), []);
@@ -150,7 +152,50 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 py-4 pb-24 relative">
+        <main className="flex-1 px-4 py-4 pb-24 relative pt-16">
+          <div className="fixed top-4 left-4 z-50">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <button 
+                  className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#0d2c54] text-white shadow-lg active:scale-95 transition-transform"
+                >
+                  <Menu className="h-6 w-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white">
+                <SheetHeader className="p-6 border-b border-white/10">
+                  <SheetTitle className="text-white text-left font-black tracking-tighter text-xl">MENU</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col py-4">
+                  {NAV.map((item) => {
+                    const active = path.startsWith(item.to);
+                    const Icon = item.icon;
+                    const badge = "badgeKey" in item ? badges[item.badgeKey] ?? 0 : 0;
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setOpen(false)}
+                        className={`flex items-center gap-4 px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] transition-all ${
+                          active ? "bg-[#AE0000] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
+                        }`}
+                      >
+                        <div className="relative">
+                          <Icon className="h-5 w-5" strokeWidth={2} />
+                          {badge > 0 && (
+                            <span className="absolute -top-2 -right-2 min-w-[16px] h-[16px] px-1 grid place-items-center rounded-full text-[8px] font-black bg-[#AE0000] text-white ring-2 ring-[#0d2c54]">
+                              {badge > 9 ? "9+" : badge}
+                            </span>
+                          )}
+                        </div>
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
@@ -176,53 +221,6 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       >
         <div className="flex flex-col gap-3">
           {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}
-          <div className="grid grid-cols-4">
-
-          {NAV.map((item) => {
-            const active = path.startsWith(item.to);
-            const Icon = item.icon;
-            const badge = "badgeKey" in item ? badges[item.badgeKey] ?? 0 : 0;
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                data-nav-link
-                data-active={active ? "true" : "false"}
-                className={`group relative flex flex-col items-center justify-center gap-2 py-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ${
-                  active ? "text-white" : "text-white/70 hover:text-white"
-                }`}
-              >
-                {active && (
-                  <span className="absolute inset-x-1 inset-y-1" style={{ background: "#AE0000" }} />
-                )}
-
-                <div className="relative z-10">
-                  <Icon
-                    className={`h-6 w-6 transition-all duration-300 ${
-                      active ? "text-white" : "text-white/70 group-hover:text-white"
-                    }`}
-                    strokeWidth={1.75}
-                  />
-                  {badge > 0 && (
-                    <span
-                      data-nav-badge
-                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0d2c54]"
-                      style={{
-                        background: "#AE0000",
-                        boxShadow: "0 0 10px -1px rgba(174,0,0,0.9)",
-                      }}
-
-                      aria-label={`${badge} oportunidades`}
-                    >
-                      {badge > 9 ? "9+" : badge}
-                    </span>
-                  )}
-                </div>
-                <span className="relative z-10">{item.label}</span>
-              </Link>
-            );
-          })}
-          </div>
         </div>
       </nav>
 
