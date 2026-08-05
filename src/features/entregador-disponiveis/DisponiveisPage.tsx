@@ -167,6 +167,12 @@ export function DisponiveisPage() {
         </div>
       </div>
 
+      <div className="absolute bottom-[240px] left-0 right-0 z-20 pointer-events-none px-4">
+        <div className="pointer-events-auto">
+          <AnunciosEntregador />
+        </div>
+      </div>
+
       
     </EntregadorShell>
   );
