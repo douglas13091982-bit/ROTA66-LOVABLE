@@ -248,7 +248,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#f5f7fa]">
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#f5f7fa] border-none shadow-none">
                 <div className="flex flex-col gap-4 mb-4">
                   {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
                 </div>
