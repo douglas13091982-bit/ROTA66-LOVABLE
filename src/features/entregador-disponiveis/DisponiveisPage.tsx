@@ -104,16 +104,7 @@ export function DisponiveisPage() {
   return (
     <EntregadorShell
       title="Rotas Disponíveis"
-      topFixed={
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-center">
-            <GanhoHojeCard valor={ganhoHoje} />
-          </div>
-          {/* Ordenação movida para o Menu Bar */}
-          <AtivarPushBanner />
-          <ApkUpdateBanner />
-        </div>
-      }
+      topFixed={<GanhoHojeCard valor={ganhoHoje} />}
     >
       {!rotaAtivaResolvida ? (
         <div className="bg-[#0d2c54] border border-white/10 rounded-2xl p-8 text-center shadow-xl">
