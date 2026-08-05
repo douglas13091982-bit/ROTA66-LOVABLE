@@ -195,7 +195,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col py-4">
+                <div className="flex flex-col flex-1 py-4">
                   {NAV.map((item) => {
                     const active = path.startsWith(item.to);
                     const Icon = item.icon;
