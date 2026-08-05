@@ -167,15 +167,18 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col">
-                <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10">
+              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden">
+                <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
                     <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
                       {perfil.avatarUrl ? (
                         <img 
-                          src={perfil.avatarUrl} 
+                          src={perfil.avatarUrl.startsWith('http') ? perfil.avatarUrl : supabase.storage.from('avatars').getPublicUrl(perfil.avatarUrl).data.publicUrl} 
                           alt="Avatar" 
                           className="h-full w-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(perfil.fullName || 'E')}&background=random`;
+                          }}
                         />
                       ) : (
                         <div className="h-full w-full flex items-center justify-center">
