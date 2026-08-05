@@ -113,15 +113,15 @@ export function RotasDisponiveisList({
       )}
 
       {!isLoading && grupos.length === 0 && (
-        <div className="text-center py-12 px-4 rounded-3xl bg-transparent">
-          <div className="mx-auto mb-4 w-16 h-16 grid place-items-center">
-            <Package className="h-14 w-14" style={{ color: "#cbd5e1", strokeWidth: 1.4 }} />
+        <div className="text-center py-20 px-4">
+          <div className="mx-auto mb-6 w-32 h-32 grid place-items-center opacity-40">
+            <Package className="h-28 w-28" style={{ color: "#0d2c54", strokeWidth: 1 }} />
           </div>
-          <p className="text-[15px] font-semibold text-white">
-            Nenhum pedido disponível no momento
+          <p className="text-[18px] font-black text-[#0d2c54] uppercase tracking-wider">
+            Nenhuma entrega disponível
           </p>
-          <p className="text-xs mt-1.5" style={{ color: "#9ca3af" }}>
-            Assim que uma loja liberar, aparece aqui.
+          <p className="text-xs mt-2 font-medium" style={{ color: "#6b7688" }}>
+            Fique online para receber novos pedidos.
           </p>
         </div>
       )}

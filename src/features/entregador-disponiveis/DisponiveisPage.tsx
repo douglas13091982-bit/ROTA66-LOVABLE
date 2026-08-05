@@ -129,10 +129,15 @@ export function DisponiveisPage() {
       ) : temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="font-display text-xl mb-2">VOCÊ ESTÁ OFFLINE</p>
-          <p className="text-sm text-muted-foreground">
-            Fique online no menu do entregador para começar a receber pedidos.
+        <div className="text-center py-20 px-4">
+          <div className="mx-auto mb-6 w-32 h-32 grid place-items-center opacity-40">
+            <Package className="h-28 w-28" style={{ color: "#0d2c54", strokeWidth: 1 }} />
+          </div>
+          <p className="text-[18px] font-black text-[#0d2c54] uppercase tracking-wider">
+            Você está desconectado
+          </p>
+          <p className="text-xs mt-2 font-medium" style={{ color: "#6b7688" }}>
+            Clique em conectar abaixo para ver pedidos.
           </p>
         </div>
       ) : (
