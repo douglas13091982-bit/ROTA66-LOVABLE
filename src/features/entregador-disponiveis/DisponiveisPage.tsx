@@ -116,8 +116,8 @@ export function DisponiveisPage() {
       }
     >
       {!rotaAtivaResolvida ? (
-        <div className="bg-card border border-border rounded-lg p-6 text-center">
-          <p className="text-sm text-muted-foreground">Carregando…</p>
+        <div className="bg-[#0d2c54] border border-white/10 rounded-2xl p-8 text-center shadow-xl">
+          <p className="text-sm font-black text-white uppercase tracking-widest animate-pulse">Carregando…</p>
         </div>
       ) : temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />

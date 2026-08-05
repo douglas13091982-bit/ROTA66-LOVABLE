@@ -110,14 +110,14 @@ function PedidoListItemBase({
         <div className="flex items-center gap-3 min-w-0">
           {atrasado ? (
             <>
-              <div className="p-2 rounded-xl" style={{ background: "rgba(255,255,255,0.14)" }}>
-                <AlertTriangle className="h-4 w-4 " />
+              <div className="p-2 rounded-xl bg-white/15">
+                <AlertTriangle className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] font-black text-white/85 uppercase tracking-[0.18em] leading-none">
+                <span className="text-[10px] font-black text-white uppercase tracking-[0.18em] leading-none">
                   Atrasado
                 </span>
-                <span className="text-sm font-extrabold  leading-tight mt-0.5">
+                <span className="text-sm font-black text-white leading-tight mt-0.5">
                   {minutosAtraso} min
                 </span>
               </div>
@@ -142,8 +142,8 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[9px] font-bold text-white/70 uppercase tracking-[0.2em]">Ganhos</p>
-          <p className="text-2xl font-black  tracking-tight tabular-nums">
+          <p className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Ganhos</p>
+          <p className="text-2xl font-black text-white tracking-tight tabular-nums">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
