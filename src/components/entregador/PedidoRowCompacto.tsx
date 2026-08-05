@@ -71,7 +71,7 @@ function PedidoRowCompactoBase({
         >
 
           {atrasado ? (
-            <AlertTriangle className="h-6 w-6 !text-white" />
+            <AlertTriangle className="h-6 w-6 !text-yellow-400" />
           ) : (
             <Store className="h-6 w-6 !text-white" strokeWidth={1.8} />
           )}
