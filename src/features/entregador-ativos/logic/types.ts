@@ -33,4 +33,6 @@ export type PedidoAtivo = {
   codigo_entrega?: string | null;
   agendamento_id?: string | null;
   taxa_turno_entregador?: number | string | null;
+  retorno_maquina?: boolean | null;
+  adicional_retorno?: number | null;
 };
