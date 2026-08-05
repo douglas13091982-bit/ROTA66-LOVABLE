@@ -39,24 +39,24 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
   }, [pedidos]);
 
   return (
-    <div className="relative p-5 md:p-6">
+    <div className="relative p-5 md:p-6 bg-white border border-border/40 rounded-[22px] shadow-soft overflow-hidden">
       <div className="relative">
         <div className="flex flex-col items-center text-center mb-4 gap-2">
           <div>
-            <div className="text-sm uppercase tracking-[0.22em] text-white/50">Coleta agrupada</div>
-            <div className="font-display text-2xl md:text-3xl tracking-[0.06em] mt-0.5 text-white">
+            <div className="text-sm uppercase tracking-[0.22em] text-muted-foreground font-bold">Coleta agrupada</div>
+            <div className="font-display text-2xl md:text-3xl tracking-[0.06em] mt-0.5 text-navy">
               {pedidos.length} pedidos
             </div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-white/50 mt-1.5">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1.5 font-bold">
               Rota com {totalRota} paradas no total
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
-            <span className="inline-flex flex-col items-center px-4 py-2 rounded-xl bg-white/5 border border-white/10">
-              <span className="text-[9px] uppercase tracking-[0.18em] text-white/50 font-bold">
+            <span className="inline-flex flex-col items-center px-4 py-2 rounded-xl bg-gray-50 border border-border/40">
+              <span className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground font-bold">
                 Você recebe
               </span>
-              <span className="font-display text-2xl text-white leading-none mt-0.5">
+              <span className="font-display text-2xl text-navy leading-none mt-0.5">
                 R$ {total.total.toFixed(2).replace(".", ",")}
               </span>
               {total.bonus > 0 && (
@@ -70,13 +70,13 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
         </div>
 
 
-        <div className="text-[10px] uppercase tracking-[0.22em] text-white/50 mt-2 mb-1.5">
+        <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mt-2 mb-1.5 font-bold">
           Endereço de coleta
         </div>
         <div className="flex items-start gap-3 mb-4">
-          <div className="flex items-start gap-2 flex-1 min-w-0 text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white">
-            <MapPin className="h-4 w-4 mt-0.5 text-white/70 shrink-0" />
-            <span className="font-semibold">{endereco}</span>
+          <div className="flex items-start gap-2 flex-1 min-w-0 text-sm bg-gray-50 border border-border/40 rounded-lg px-3 py-2.5 text-navy">
+            <MapPin className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
+            <span className="font-bold">{endereco}</span>
           </div>
           {mapsUrl && (
             <a

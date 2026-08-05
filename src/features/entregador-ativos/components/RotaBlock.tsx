@@ -37,11 +37,11 @@ export function RotaBlock({ items, destaque }: Props) {
     const restantes = pendentesEntrega.length;
     return (
       <div className="space-y-3">
-        <div className="flex items-center justify-between glass border border-border/40 rounded-xl px-4 py-2.5 text-[10px] uppercase tracking-[0.18em]">
+        <div className="flex items-center justify-between bg-white border border-border/40 rounded-xl px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] shadow-sm">
           <span className="text-muted-foreground font-bold">
             Rota agrupada · {items.length} paradas
           </span>
-          <span className="font-bold text-primary drop-shadow-[0_2px_8px_oklch(0.55_0.21_27_/_0.4)]">
+          <span className="font-bold text-[#AE0000] drop-shadow-sm">
             Entrega {idxAtual + 1}/{items.length} · faltam {restantes}
           </span>
         </div>
