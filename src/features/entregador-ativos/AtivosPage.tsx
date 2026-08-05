@@ -33,7 +33,7 @@ export function AtivosPage({ destaque }: Props) {
 
   const semAtivos = !!pedidos && pedidos.length === 0;
   const mostrarFinalizado =
-    semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0;
+    semAtivos && !dismissedFinalizado && (recentesEntregues?.length ?? 0) > 0 && !retornoSalvo;
   const totalGanhoLote = (recentesEntregues ?? []).reduce(
     (s, p) =>
       s +
@@ -49,32 +49,15 @@ export function AtivosPage({ destaque }: Props) {
     <EntregadorShell title="Minhas Entregas">
       {isLoading && <p className="text-muted-foreground">Carregando...</p>}
 
-      {mostrarFinalizado && (
+      {(mostrarFinalizado || !!retornoSalvo) && (
         <FinalizadoBanner
-          count={recentesEntregues!.length}
+          count={recentesEntregues?.length ?? 0}
           totalGanho={totalGanhoLote}
           onDismiss={dismissFinalizado}
+          retornoPendente={retornoSalvo}
         />
       )}
 
-      {pendenteRetorno && retornoSalvo && (
-        <div className="mb-4 rounded-2xl border border-amber-400/40 bg-amber-500/15 p-4 shadow-soft">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-amber-300 font-bold mb-2">
-            Retorno à loja pendente
-          </div>
-          <p className="text-sm text-muted-foreground mb-3">
-            O pedido #{pendenteRetorno.numero} foi pago com cartão na entrega. Abra a rota de volta para devolver a maquininha.
-          </p>
-          <button
-            onClick={() =>
-              abrirRetornoLoja(retornoSalvo.endereco, retornoSalvo.pedidoId, retornoSalvo.numero)
-            }
-            className="w-full px-4 py-3 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-xs tracking-[0.16em] rounded-xl"
-          >
-            Abrir retorno à loja
-          </button>
-        </div>
-      )}
 
       {semAtivos && !mostrarFinalizado && <VazioBanner />}
 
