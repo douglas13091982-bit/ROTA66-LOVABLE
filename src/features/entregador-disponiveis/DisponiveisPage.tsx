@@ -119,6 +119,17 @@ export function DisponiveisPage() {
         <div className="p-4 space-y-3 pointer-events-auto">
           <AtivarPushBanner />
           <ApkUpdateBanner />
+          {showFilters && isListaVisivel && (
+            <div className="pp-reveal animate-in fade-in slide-in-from-top-4 duration-300">
+              <RotasDisponiveisHeader
+                ordenacao={ordenacao}
+                onOrdenacaoChange={(v) => {
+                  setOrdenacao(v);
+                  setShowFilters(false);
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="mt-auto pointer-events-auto">
