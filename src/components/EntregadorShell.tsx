@@ -103,7 +103,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
-    <div className="flex flex-col items-center gap-3 w-full">
+    <div className="flex flex-col items-center gap-3 w-full px-8">
       <button
         onClick={toggle}
         data-status-toggle
