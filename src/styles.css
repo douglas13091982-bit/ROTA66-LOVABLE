@@ -1807,10 +1807,10 @@ html.light .pedido-list-card .text-white\/30 {
 
 /* Área fixa (não rola) no topo da tela /entregador/disponiveis */
 .entregador-sticky-top {
-  background: #0f304d;
+  background: #f5f7fa;
 }
 html.light .entregador-sticky-top {
-  background: #ffffff;
+  background: #f5f7fa;
 }
 
 /* ==========================================================================
@@ -2078,7 +2078,7 @@ button[class*="bg-\[\#E01818\]"] * {
 
 /* Faixa fixa do topo (Disponíveis) */
 .entregador-theme.panel-light .entregador-sticky-top {
-  background: #ffffff;
+  background: #f5f7fa !important;
   border-bottom: none;
 }
 
