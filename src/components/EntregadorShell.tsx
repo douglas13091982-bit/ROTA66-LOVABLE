@@ -222,6 +222,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               </Link>
             );
           })}
+          </div>
         </div>
       </nav>
 
