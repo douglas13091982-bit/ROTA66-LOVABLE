@@ -298,6 +298,7 @@
 
   color: var(--panel-text);
   background-color: #f5f7fa !important;
+  background: #f5f7fa !important;
   min-height: 100vh;
 }
 

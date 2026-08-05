@@ -159,8 +159,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 pb-24 relative pt-16">
-          <div className="fixed top-0 left-0 right-0 h-16 z-50 flex items-center justify-between px-4 pointer-events-none bg-[#f5f7fa]">
+        <main className="flex-1 px-4 pb-24 relative pt-16 bg-[#f5f7fa]">
+          <div className="fixed top-0 left-0 right-0 h-16 z-[60] flex items-center justify-between px-4 pointer-events-none bg-[#f5f7fa]">
             <button 
               onClick={() => setOpen(true)}
               className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#0d2c54] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto"
