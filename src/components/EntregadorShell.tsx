@@ -7,6 +7,7 @@ import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Store, 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
+import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
