@@ -167,7 +167,7 @@ export function DisponiveisPage() {
         </div>
       </div>
 
-      <AnunciosEntregador />
+      
     </EntregadorShell>
   );
 }
