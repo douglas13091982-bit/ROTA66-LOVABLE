@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { Package } from "lucide-react";
 import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
 import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
