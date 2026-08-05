@@ -179,7 +179,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                         key={item.to}
                         to={item.to}
                         onClick={() => setOpen(false)}
-                        className={`flex items-center gap-4 px-6 py-4 text-sm font-bold uppercase tracking-[0.2em] transition-all ${
+                        className={`flex items-center gap-4 px-6 py-4 text-[13px] font-medium uppercase tracking-[0.25em] transition-all ${
                           active ? "bg-[#AE0000] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
                         }`}
                       >
