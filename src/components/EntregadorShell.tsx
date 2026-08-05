@@ -160,14 +160,14 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
         {/* Top Floating Bar (Overlay) */}
         {path.startsWith("/entregador/disponiveis") && (
           <div className="absolute top-0 inset-x-0 z-50 p-4 flex items-center justify-between">
-            <button className="w-12 h-12 rounded-full bg-[#1a2b4b]/80 backdrop-blur-md flex items-center justify-center text-white shadow-lg border border-white/10">
+            <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
               <Menu className="w-6 h-6" />
               {/* Notificação vermelha no ícone do menu se houver docs ou algo pendente */}
               <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#AE0000] rounded-full border-2 border-[#0d2c54]" />
             </button>
 
             <div className="flex flex-col items-center">
-              <button className="flex items-center gap-2 bg-[#1a2b4b]/80 backdrop-blur-md px-5 py-2.5 rounded-full text-white shadow-lg border border-white/10">
+              <button className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-5 py-2.5 rounded-full text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
                 <span className="text-lg font-black tracking-tight">R$ {ganhoHoje.toFixed(2).replace(".", ",")}</span>
                 <ChevronDown className="w-4 h-4 opacity-60" />
               </button>
@@ -179,7 +179,7 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
               </button>
             </div>
 
-            <button className="w-12 h-12 rounded-full bg-[#1a2b4b]/80 backdrop-blur-md flex items-center justify-center text-white shadow-lg border border-white/10">
+            <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
               <Store className="w-6 h-6" />
             </button>
           </div>
@@ -196,11 +196,11 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
           <div className="max-w-md mx-auto flex items-center gap-4 pointer-events-auto">
             <button 
               onClick={() => onToggleFilter?.()}
-              className="w-14 h-14 rounded-2xl bg-[#1a2b4b]/95 backdrop-blur-md flex items-center justify-center text-white shadow-2xl border border-white/10 active:scale-95 transition-transform"
+              className="w-14 h-14 rounded-2xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-2xl border border-[#0d2c54]/10 active:scale-95 transition-transform"
             >
               <div className="relative">
-                <div className="w-5 h-[2px] bg-white rounded-full mb-1" />
-                <div className="w-5 h-[2px] bg-white rounded-full mb-1" />
+                <div className="w-5 h-[2px] bg-[#0d2c54] rounded-full mb-1" />
+                <div className="w-5 h-[2px] bg-[#0d2c54] rounded-full mb-1" />
                 <div className="w-2.5 h-[2.5px] bg-[#AE0000] rounded-full absolute -top-1 -right-1" />
               </div>
             </button>
@@ -216,7 +216,7 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
               {online ? "Online" : "Conectar"}
             </button>
 
-            <button className="w-14 h-14 rounded-2xl bg-[#1a2b4b]/95 backdrop-blur-md flex items-center justify-center text-white shadow-2xl border border-white/10">
+            <button className="w-14 h-14 rounded-2xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-2xl border border-[#0d2c54]/10">
               <Package className="w-6 h-6" />
             </button>
           </div>
@@ -227,8 +227,8 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-50 border-t border-white/5 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.5)]"
-        style={{ background: "#0d2c54" }}
+        className="fixed bottom-0 inset-x-0 z-50 border-t border-black/5 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.05)]"
+        style={{ background: "#ffffff" }}
       >
         <div className="grid grid-cols-4 h-[75px]">
           {NAV.map((item) => {
@@ -240,23 +240,23 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
                 key={item.to}
                 to={item.to}
                 className={`group relative flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${
-                  active ? "bg-[#AE0000] text-white" : "text-white/60 hover:text-white"
+                  active ? "bg-[#AE0000] text-white" : "text-[#0d2c54]/60 hover:text-[#0d2c54]"
                 }`}
               >
                 <div className="relative">
                   <Icon
                     className={`h-6 w-6 transition-all duration-300 ${
-                      active ? "text-white scale-110" : "text-white/60"
+                      active ? "text-white scale-110" : "text-[#0d2c54]/60"
                     }`}
                     strokeWidth={active ? 2.5 : 2}
                   />
                   {badge > 0 && (
-                    <span className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white bg-[#AE0000] ring-2 ring-[#0d2c54]">
+                    <span className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white bg-[#AE0000] ring-2 ring-white">
                       {badge > 9 ? "9+" : badge}
                     </span>
                   )}
                 </div>
-                <span className={`text-[9px] font-black uppercase tracking-[0.15em] ${active ? "text-white" : "text-white/40"}`}>
+                <span className={`text-[9px] font-black uppercase tracking-[0.15em] ${active ? "text-white" : "text-[#0d2c54]/40"}`}>
                   {item.label}
                 </span>
               </Link>
