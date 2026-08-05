@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon, Settings2, Wallet } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
@@ -10,7 +10,7 @@ import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count"
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useSomPush } from "@/hooks/use-som-push";
 import { usePerfilEntregador } from "@/features/entregador-perfil/hooks/use-perfil-entregador";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
@@ -160,16 +160,22 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
         <main className="flex-1 px-4 py-4 pb-24 relative pt-16">
-          <div className="fixed top-4 left-4 z-50">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <button 
-                  className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#0d2c54] text-white shadow-lg active:scale-95 transition-transform"
-                >
-                  <Menu className="h-6 w-6" />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden">
+          <div className="fixed top-4 left-4 right-4 z-50 flex items-center justify-between pointer-events-none">
+            <button 
+              onClick={() => setOpen(true)}
+              className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#0d2c54] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            
+            {path.startsWith("/entregador/disponiveis") && topFixed && (
+              <div className="pointer-events-auto">
+                {topFixed}
+              </div>
+            )}
+          </div>
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden">
                 <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
                     <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
@@ -237,15 +243,14 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     <OrdenacaoToggle value={ordenacao} onChange={setOrdenacao} />
                   </div>
                 )}
-              </SheetContent>
-            </Sheet>
-          </div>
+            </SheetContent>
+          </Sheet>
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
               <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-white">
                 <div className="flex flex-col gap-4 mb-4">
-                  {topFixed}
+                  {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
                 </div>
               </div>
             ) : (
