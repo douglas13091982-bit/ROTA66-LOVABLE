@@ -17,17 +17,15 @@ function ConfiguracoesPage() {
   return (
     <EntregadorShell title="Configurações">
       <div className="max-w-md mx-auto space-y-6 pb-20">
-        <div className="bg-white rounded-[22px] p-1 shadow-sm border border-navy/5 overflow-hidden">
-          <div className="bg-[#0d2c54] p-4 rounded-t-[20px]">
-             <h2 className="text-white font-black uppercase tracking-[0.2em] text-[10px]">Ajustes do App</h2>
-          </div>
-          <div className="p-4 bg-[#0d2c54]/95">
-            <ConfigSection
-              aceitaExternos={perfil.aceitaExternos}
-              savingExternos={perfil.savingExternos}
-              onToggleExternos={perfil.toggleExternos}
-              lojas={lojas}
-            />
+        <div className="bg-[#0d2c54] rounded-[22px] p-1 shadow-sm border border-navy/5 overflow-hidden">
+          <div className="p-4 bg-[#0d2c54]">
+             <h2 className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-3">Ajustes do App</h2>
+             <ConfigSection
+               aceitaExternos={perfil.aceitaExternos}
+               savingExternos={perfil.savingExternos}
+               onToggleExternos={perfil.toggleExternos}
+               lojas={lojas}
+             />
           </div>
         </div>
         
