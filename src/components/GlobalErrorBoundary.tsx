@@ -27,7 +27,7 @@ export function GlobalErrorBoundary({
       : "Algo deu errado na nossa rota. Pode ser um problema temporário — tente recarregar ou volte para o início.");
 
   return (
-    <div className="min-h-screen bg-navy flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="max-w-lg w-full text-center">
         {/* Shield / Icon */}
         <div className="mx-auto mb-8 inline-flex items-center justify-center w-24 h-24 rounded-none bg-gradient-red shadow-red relative overflow-hidden">
