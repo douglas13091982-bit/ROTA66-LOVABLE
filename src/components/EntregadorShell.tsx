@@ -204,13 +204,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           </div>
           <div className="pp-reveal">
 
-            {path.startsWith("/entregador/disponiveis") ? (
-              <div className="h-6" />
-            ) : (
-              <div className="h-6" />
-            )}
-              <div className="h-6" />
-            )}
+            <div className="h-6" />
             {children}
           </div>
         </main>
