@@ -184,7 +184,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       ref={cardRef}
       className={`relative overflow-hidden rounded-[22px] p-4 sm:p-6 md:p-7 transition-all duration-500 ${RING_CLASS}`}
       style={{
-        background: BG,
+        background: "#FFFFFF",
         boxShadow: isLight
           ? "0 20px 60px -20px rgba(13,43,69,0.15)"
           : "0 20px 60px -20px rgba(0,0,0,0.6)",
