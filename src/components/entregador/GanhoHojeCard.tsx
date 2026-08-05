@@ -16,13 +16,13 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
   }, [hide]);
 
   return (
-    <div className="inline-flex items-center gap-4 bg-[#0d2c54] rounded-2xl px-6 py-4 shadow-xl border-2 border-white/10">
+    <div className="inline-flex items-center gap-4 bg-[#0d2c54] rounded-2xl px-6 py-4 shadow-xl border-2 border-[#0d2c54]">
       <div className="text-[24px] font-black tracking-tighter text-white tabular-nums">
         {hide ? "R$ ••••" : `R$ ${valor.toFixed(2).replace(".", ",")}`}
       </div>
       <button
         onClick={() => setHide((v) => !v)}
-        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition hover:bg-white/10"
+        className="inline-flex items-center justify-center h-10 w-10 rounded-xl transition hover:bg-white/10 active:scale-95"
         style={{ color: "#ffffff" }}
         aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
       >
