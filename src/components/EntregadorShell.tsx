@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon, Settings2 } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon, Settings2, Wallet } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
