@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, X as CloseIcon, Settings2 } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
@@ -19,6 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { instalarLimpezaBadge } from "@/lib/app-badge";
 import { useWakeLock } from "@/hooks/use-wake-lock";
+import { useOrdenacaoPedidos } from "@/features/entregador-disponiveis/hooks/use-ordenacao-pedidos";
+import { OrdenacaoToggle } from "@/features/entregador-disponiveis/components/OrdenacaoToggle";
 
 
 
@@ -42,6 +44,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const badges: Record<string, number> = { turnos: turnosCount };
   const { isMobile } = useMobilePortraitOnly();
   const [open, setOpen] = useState(false);
+  const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
 
   // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
   useEffect(() => instalarLimpezaBadge(), []);
@@ -193,6 +196,16 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     );
                   })}
                 </div>
+
+                {path.startsWith("/entregador/disponiveis") && (
+                  <div className="mt-auto p-6 border-t border-white/10">
+                    <div className="flex items-center gap-2 mb-4 text-white/40">
+                      <Settings2 className="h-4 w-4" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">Ordenação</span>
+                    </div>
+                    <OrdenacaoToggle value={ordenacao} onChange={setOrdenacao} />
+                  </div>
+                )}
               </SheetContent>
             </Sheet>
           </div>
