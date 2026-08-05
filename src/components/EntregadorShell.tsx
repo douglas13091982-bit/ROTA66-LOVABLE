@@ -167,7 +167,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white">
                 <SheetHeader className="p-6 border-b border-white/10">
-                  <SheetTitle className="text-white text-left font-black tracking-tighter text-xl">MENU</SheetTitle>
+                  <SheetTitle className="text-white text-left font-medium tracking-[0.3em] text-sm uppercase">MENU</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col py-4">
                   {NAV.map((item) => {
