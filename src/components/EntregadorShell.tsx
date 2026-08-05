@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ const NAV = [
 
 
 export function EntregadorShell({ children, title, onToggleFilter }: { children: ReactNode; title: string; onToggleFilter?: () => void }) {
+  const [showBottomNav, setShowBottomNav] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { online, toggle } = useEntregadorStatus();
@@ -160,7 +161,10 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
         {/* Top Floating Bar (Overlay) */}
         {path.startsWith("/entregador/disponiveis") && (
           <div className="absolute top-0 inset-x-0 z-50 p-4 flex items-center justify-between">
-            <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
+            <button 
+              onClick={() => setShowBottomNav(!showBottomNav)}
+              className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10 active:scale-95 transition-transform"
+            >
               <Menu className="w-6 h-6" />
               {/* Notificação vermelha no ícone do menu se houver docs ou algo pendente */}
               <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#AE0000] rounded-full border-2 border-[#0d2c54]" />
@@ -225,11 +229,17 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
 
       {/* Bottom tab bar */}
       <RetornoLojaDialog />
-      <nav
-        data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-50 border-t border-black/5 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.05)]"
-        style={{ background: "#ffffff" }}
-      >
+      {showBottomNav && (
+        <>
+          <div 
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-all duration-300 animate-in fade-in"
+            onClick={() => setShowBottomNav(false)}
+          />
+          <nav
+            data-entregador-nav
+            className="fixed bottom-0 inset-x-0 z-50 border-t border-black/5 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] animate-in slide-in-from-bottom duration-300"
+            style={{ background: "#ffffff" }}
+          >
         <div className="grid grid-cols-4 h-[75px]">
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
@@ -262,8 +272,10 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
               </Link>
             );
           })}
-        </div>
-      </nav>
+          </div>
+        </nav>
+      </>
+      )}
     </div>
   );
 }
