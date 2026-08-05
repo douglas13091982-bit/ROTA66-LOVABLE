@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, Smartphone, ArrowRight, X } from "lucide-react";
+import { Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -9,7 +9,6 @@ export function ApkUpdateBanner() {
   const [latest, setLatest] = useState<string | null>(null);
   const [baixado, setBaixado] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     try {
@@ -27,7 +26,7 @@ export function ApkUpdateBanner() {
     })();
   }, []);
 
-  if (dismissed || !latest || baixado === latest) return null;
+  if (!latest || baixado === latest) return null;
 
   const handleDownload = async () => {
     setBusy(true);
@@ -51,34 +50,23 @@ export function ApkUpdateBanner() {
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      disabled={busy}
-      className="relative w-full flex items-center justify-between gap-4 p-4 rounded-2xl bg-[#1a2b4b]/90 backdrop-blur-md border border-white/10 shadow-xl text-left"
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-[#AE0000] flex items-center justify-center">
-          <Smartphone className="h-5 w-5 text-white" />
+    <div className="mx-3 mt-2 mb-1 rounded-xl border border-yellow-400/40 bg-yellow-500/10 px-3 py-2.5 flex items-center gap-3">
+      <div className="flex-1 min-w-0">
+        <div className="text-[13px] font-bold text-yellow-700 dark:text-yellow-300">
+          Nova versão do app disponível
         </div>
-        <div className="text-left">
-          <p className="text-sm font-black text-white uppercase tracking-tight">Nova Versão Disponível</p>
-          <p className="text-[11px] text-white/60 font-medium">Toque para baixar o novo APK {latest.replace(".apk", "")}</p>
+        <div className="text-[11px] text-neutral-600 dark:text-white/60 truncate">
+          Atualize para {latest}
         </div>
       </div>
-      
-      <div className="flex items-center gap-2">
-        <ArrowRight className="h-5 w-5 text-white/40" />
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setDismissed(true);
-          }}
-          className="p-1 hover:bg-white/10 rounded-full"
-        >
-          <X className="w-4 h-4 text-white/20" />
-        </button>
-      </div>
-    </button>
+      <button
+        onClick={handleDownload}
+        disabled={busy}
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground disabled:opacity-50"
+      >
+        <Download className="h-3.5 w-3.5" />
+        {busy ? "…" : "Baixar"}
+      </button>
+    </div>
   );
 }

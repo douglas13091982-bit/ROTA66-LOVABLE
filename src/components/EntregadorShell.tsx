@@ -1,13 +1,12 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Store, ChevronDown } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone } from "lucide-react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
 import { useTurnosDisponiveisCount } from "@/hooks/use-turnos-disponiveis-count";
-import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useMobilePortraitOnly } from "@/hooks/use-mobile-check";
 import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
@@ -30,12 +29,10 @@ const NAV = [
 ] as const;
 
 
-export function EntregadorShell({ children, title, onToggleFilter }: { children: ReactNode; title: string; onToggleFilter?: () => void }) {
-  const [showBottomNav, setShowBottomNav] = useState(false);
+export function EntregadorShell({ children, title, topFixed }: { children: ReactNode; title: string; topFixed?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { online, toggle } = useEntregadorStatus();
-  const { ganhoHoje } = usePedidosDisponiveis([]);
   const qc = useQueryClient();
   const turnosCount = useTurnosDisponiveisCount();
   useChatNaoLidasGlobal();
@@ -155,92 +152,39 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
 
 
   return (
-    <div className="entregador-theme flex flex-col min-h-screen bg-white">
-      {/* Main Container */}
+    <div className="entregador-theme panel-premium panel-light flex flex-col min-h-screen">
+
+      {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
-        {/* Top Floating Bar (Overlay) */}
-        {path.startsWith("/entregador/disponiveis") && (
-          <div className="absolute top-0 inset-x-0 z-50 p-4 flex items-center justify-between">
-            <button 
-              onClick={() => setShowBottomNav(!showBottomNav)}
-              className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10 active:scale-95 transition-transform"
-            >
-              <Menu className="w-6 h-6" />
-              {/* Notificação vermelha no ícone do menu se houver docs ou algo pendente */}
-              <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-[#AE0000] rounded-full border-2 border-[#0d2c54]" />
-            </button>
+        <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-            <div className="flex flex-col items-center">
-              <button className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-5 py-2.5 rounded-full text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
-                <span className="text-lg font-black tracking-tight">R$ {ganhoHoje.toFixed(2).replace(".", ",")}</span>
-                <ChevronDown className="w-4 h-4 opacity-60" />
-              </button>
-              
-              <button className="mt-2 flex items-center gap-1.5 bg-[#AE0000] px-3 py-1 rounded-full text-white shadow-md border border-white/10 animate-pulse">
-                <span className="text-[10px] font-black uppercase tracking-wider">% 0% de Taxa</span>
-                <span className="text-[10px] font-bold opacity-80">| Ativar</span>
-                <ChevronDown className="w-3 h-3 rotate-[-90deg]" />
-              </button>
-            </div>
+        <main className="flex-1 px-4 py-4 pb-24 relative">
+          <div className="pp-reveal">
 
-            <button className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-lg border border-[#0d2c54]/10">
-              <Store className="w-6 h-6" />
-            </button>
+            {path.startsWith("/entregador/disponiveis") ? (
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
+                <div className="flex flex-col items-center justify-center gap-2 mb-4">
+                  {StatusToggleLarge}
+                </div>
+                {topFixed}
+              </div>
+            ) : (
+              <div className="h-6" />
+            )}
+            {children}
           </div>
-        )}
-
-        <main className="flex-1 relative overflow-hidden">
-          {children}
         </main>
       </div>
 
-      {/* Bottom Floating Control (Only on Disponiveis) */}
-      {path.startsWith("/entregador/disponiveis") && (
-        <div className="fixed bottom-[90px] inset-x-0 z-40 px-6 pointer-events-none">
-          <div className="max-w-md mx-auto flex items-center gap-4 pointer-events-auto">
-            <button 
-              onClick={() => onToggleFilter?.()}
-              className="w-14 h-14 rounded-2xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-2xl border border-[#0d2c54]/10 active:scale-95 transition-transform"
-            >
-              <div className="relative">
-                <div className="w-5 h-[2px] bg-[#0d2c54] rounded-full mb-1" />
-                <div className="w-5 h-[2px] bg-[#0d2c54] rounded-full mb-1" />
-                <div className="w-2.5 h-[2.5px] bg-[#AE0000] rounded-full absolute -top-1 -right-1" />
-              </div>
-            </button>
-
-            <button
-              onClick={toggle}
-              className={`flex-1 h-16 rounded-3xl flex items-center justify-center text-2xl font-black uppercase tracking-widest text-white shadow-2xl border-b-4 transition-all active:scale-95 ${
-                online 
-                  ? "bg-[#22c55e] border-[#16a34a] shadow-[0_0_30px_rgba(34,197,94,0.4)]" 
-                  : "bg-[#AE0000] border-[#8F0000] shadow-[0_0_30px_rgba(174,0,0,0.4)]"
-              }`}
-            >
-              {online ? "Online" : "Conectar"}
-            </button>
-
-            <button className="w-14 h-14 rounded-2xl bg-white/95 backdrop-blur-md flex items-center justify-center text-[#0d2c54] shadow-2xl border border-[#0d2c54]/10">
-              <Package className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Bottom tab bar */}
+      {/* Bottom tab bar - mobile only */}
       <RetornoLojaDialog />
-      {showBottomNav && (
-        <>
-          <div 
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-all duration-300 animate-in fade-in"
-            onClick={() => setShowBottomNav(false)}
-          />
-          <nav
-            data-entregador-nav
-            className="fixed bottom-0 inset-x-0 z-50 border-t border-black/5 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.05)] animate-in slide-in-from-bottom duration-300"
-            style={{ background: "#ffffff" }}
-          >
-        <div className="grid grid-cols-4 h-[75px]">
+      <nav
+        data-entregador-nav
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] pb-[env(safe-area-inset-bottom)]"
+        style={{ background: "#0d2c54" }}
+      >
+        <div className="grid grid-cols-4">
+
           {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
@@ -249,33 +193,45 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
               <Link
                 key={item.to}
                 to={item.to}
-                className={`group relative flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${
-                  active ? "bg-[#AE0000] text-white" : "text-[#0d2c54]/60 hover:text-[#0d2c54]"
+                data-nav-link
+                data-active={active ? "true" : "false"}
+                className={`group relative flex flex-col items-center justify-center gap-2 py-3.5 text-[10px] font-semibold uppercase tracking-[0.22em] transition-all duration-300 ${
+                  active ? "text-white" : "text-white/70 hover:text-white"
                 }`}
               >
-                <div className="relative">
+                {active && (
+                  <span className="absolute inset-x-1 inset-y-1" style={{ background: "#AE0000" }} />
+                )}
+
+                <div className="relative z-10">
                   <Icon
                     className={`h-6 w-6 transition-all duration-300 ${
-                      active ? "text-white scale-110" : "text-[#0d2c54]/60"
+                      active ? "text-white" : "text-white/70 group-hover:text-white"
                     }`}
-                    strokeWidth={active ? 2.5 : 2}
+                    strokeWidth={1.75}
                   />
                   {badge > 0 && (
-                    <span className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white bg-[#AE0000] ring-2 ring-white">
+                    <span
+                      data-nav-badge
+                      className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 grid place-items-center rounded-full text-[9px] font-bold text-white animate-pulse ring-2 ring-[#0d2c54]"
+                      style={{
+                        background: "#AE0000",
+                        boxShadow: "0 0 10px -1px rgba(174,0,0,0.9)",
+                      }}
+
+                      aria-label={`${badge} oportunidades`}
+                    >
                       {badge > 9 ? "9+" : badge}
                     </span>
                   )}
                 </div>
-                <span className={`text-[9px] font-black uppercase tracking-[0.15em] ${active ? "text-white" : "text-[#0d2c54]/40"}`}>
-                  {item.label}
-                </span>
+                <span className="relative z-10">{item.label}</span>
               </Link>
             );
           })}
-          </div>
-        </nav>
-      </>
-      )}
+        </div>
+      </nav>
+
     </div>
   );
 }

@@ -19,7 +19,7 @@ export function GlobalErrorBoundary({
   const router = useRouter();
 
   const isNotFound = statusCode === 404;
-  const displayTitle = title || (isNotFound ? "500" : "500");
+  const displayTitle = title || (isNotFound ? "ROTA NÃO ENCONTRADA" : "BURACO NO ASFALTO");
   const displayDescription =
     description ||
     (isNotFound
@@ -27,54 +27,73 @@ export function GlobalErrorBoundary({
       : "Algo deu errado na nossa rota. Pode ser um problema temporário — tente recarregar ou volte para o início.");
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
       <div className="max-w-lg w-full text-center">
         {/* Shield / Icon */}
-        <div className="mx-auto mb-8 inline-flex items-center justify-center w-24 h-24 rounded-none bg-gradient-red shadow-red relative overflow-hidden">
-          <div className="absolute inset-0 bg-red-600 opacity-20 animate-pulse" />
-          <AlertTriangle className="h-12 w-12 text-white relative z-10" strokeWidth={1.5} />
+        <div className="mx-auto mb-8 inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-red shadow-red">
+          {isNotFound ? (
+            <Radio className="h-12 w-12 text-primary-foreground" strokeWidth={1.5} />
+          ) : (
+            <AlertTriangle className="h-12 w-12 text-primary-foreground" strokeWidth={1.5} />
+          )}
         </div>
 
         {/* Status code */}
-        <div className="font-display text-8xl md:text-9xl text-red-600 mb-2 leading-none">
-          500
+        <div className="font-display text-7xl md:text-8xl text-gradient-red mb-2">
+          {statusCode}
         </div>
 
         {/* Title */}
-        <h1 className="font-display text-3xl md:text-4xl tracking-[0.05em] mb-6 text-white uppercase">
-          BURACO NO ASFALTO
+        <h1 className="font-display text-3xl md:text-4xl tracking-wide mb-4">
+          {displayTitle}
         </h1>
 
         {/* Description */}
-        <p className="text-white/60 text-base md:text-lg leading-relaxed mb-10 max-w-sm mx-auto">
-          Algo deu errado na nossa rota. Pode ser um problema temporário — tente recarregar ou volte para o início.
+        <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-8">
+          {displayDescription}
         </p>
 
+        {/* Error detail (dev only) */}
+        {error && import.meta.env.DEV && (
+          <div className="mb-8 text-left">
+            <details className="group">
+              <summary className="cursor-pointer text-xs uppercase tracking-widest text-muted-foreground font-bold mb-2 select-none">
+                Detalhes técnicos
+              </summary>
+              <pre className="mt-2 text-xs bg-card border border-border rounded-md p-4 overflow-auto text-muted-foreground">
+                {error.message}
+                {"\n\n"}
+                {error.stack}
+              </pre>
+            </details>
+          </div>
+        )}
+
         {/* Actions */}
-        <div className="flex flex-col items-center gap-3 w-full max-w-[280px] mx-auto">
+        <div className="flex flex-wrap justify-center gap-3">
           {reset && (
             <button
               onClick={() => {
                 router.invalidate();
                 reset();
               }}
-              className="w-full inline-flex items-center justify-center gap-3 bg-red-600 px-6 py-4 rounded-none font-bold uppercase tracking-[0.15em] text-sm text-white hover:bg-red-700 transition-colors shadow-lg"
+              className="inline-flex items-center gap-2 bg-gradient-red shadow-red px-6 py-3 rounded-md font-bold uppercase tracking-wider text-sm text-primary-foreground hover:opacity-90 transition-opacity"
             >
               <RotateCcw className="h-4 w-4" />
-              TENTAR NOVAMENTE
+              Tentar novamente
             </button>
           )}
           <Link
             to="/"
-            className="w-full inline-flex items-center justify-center gap-3 border border-white/20 px-6 py-4 rounded-none font-bold uppercase tracking-[0.15em] text-sm text-white hover:bg-white/5 transition-colors"
+            className="inline-flex items-center gap-2 border-2 border-foreground/20 px-6 py-3 rounded-md font-bold uppercase tracking-wider text-sm hover:border-primary hover:text-primary transition-colors"
           >
             <Home className="h-4 w-4" />
-            VOLTAR PARA HOME
+            Voltar para home
           </Link>
         </div>
 
         {/* Footer hint */}
-        <div className="mt-20 text-[10px] text-white/30 uppercase tracking-[0.3em] font-medium">
+        <div className="mt-12 text-xs text-muted-foreground uppercase tracking-widest">
           ROTA 66 — Entregas e Coletas
         </div>
       </div>

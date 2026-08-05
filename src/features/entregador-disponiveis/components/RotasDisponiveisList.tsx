@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Package, Loader2 } from "lucide-react";
+import { Package } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -109,10 +109,7 @@ export function RotasDisponiveisList({
   return (
     <div className="max-w-xl mx-auto">
       {isLoading && grupos.length === 0 && (
-        <div className="text-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-white/20 mx-auto" />
-          <p className="text-xs text-white/40 mt-3 font-medium uppercase tracking-widest">Buscando rotas...</p>
-        </div>
+        <p className="text-sm px-1" style={{ color: "#374151" }}>Carregando pedidos...</p>
       )}
 
       {!isLoading && grupos.length === 0 && (
