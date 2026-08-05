@@ -112,8 +112,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
         data-status-toggle
         className="w-full relative inline-flex items-center justify-center h-12 rounded-[22px] transition-all duration-300 shadow-md"
         style={{ 
-          background: online ? "#0d2c54" : "#0d2c54",
-          boxShadow: "0 4px 15px -5px rgba(13,44,84,0.5)"
+          background: online ? "#0d2c54" : "#AE0000",
+          boxShadow: online ? "0 4px 15px -5px rgba(13,44,84,0.5)" : "0 4px 15px -5px rgba(174,0,0,0.5)"
         }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
