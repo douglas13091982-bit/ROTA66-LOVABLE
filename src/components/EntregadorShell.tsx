@@ -162,7 +162,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") || path.startsWith("/entregador/ativos") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-3">
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-6 pb-4 bg-white/80 backdrop-blur-lg border-b border-navy/5">
                 <div className="flex flex-col items-center justify-center gap-2 mb-4">
                   {StatusToggleLarge}
                 </div>
@@ -180,8 +180,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <RetornoLojaDialog />
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/[0.08] pb-[env(safe-area-inset-bottom)]"
-        style={{ background: "#0d2c54" }}
+        className="fixed bottom-0 inset-x-0 z-40 border-t border-white/10 pb-[env(safe-area-inset-bottom)]"
+        style={{ background: "#0d2c54", boxShadow: "0 -4px 20px rgba(0,0,0,0.3)" }}
       >
         <div className="grid grid-cols-4">
 
