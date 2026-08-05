@@ -50,19 +50,22 @@ export function ApkUpdateBanner() {
   };
 
   return (
-    <div className="mx-3 mt-2 mb-1 rounded-xl border border-yellow-400/40 bg-yellow-500/10 px-3 py-2.5 flex items-center gap-3">
+    <div className="mx-3 mt-2 mb-1 rounded-2xl border border-[#0d2c54]/20 bg-[#0d2c54] p-4 flex items-center gap-4 shadow-lg shadow-[#0d2c54]/10">
+      <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+        <Download className="h-5 w-5 text-white" />
+      </div>
       <div className="flex-1 min-w-0">
-        <div className="text-[13px] font-bold text-yellow-700 dark:text-yellow-300">
-          Nova versão do app disponível
+        <div className="text-sm font-black text-white uppercase tracking-wider">
+          Nova versão disponível
         </div>
-        <div className="text-[11px] text-neutral-600 dark:text-white/60 truncate">
-          Atualize para {latest}
+        <div className="text-[11px] text-white/60 truncate uppercase tracking-widest mt-0.5">
+          {latest}
         </div>
       </div>
       <button
         onClick={handleDownload}
         disabled={busy}
-        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground disabled:opacity-50"
+        className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-[#AE0000] px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-white disabled:opacity-50 shadow-lg shadow-[#AE0000]/20 active:scale-95 transition-transform"
       >
         <Download className="h-3.5 w-3.5" />
         {busy ? "…" : "Baixar"}
