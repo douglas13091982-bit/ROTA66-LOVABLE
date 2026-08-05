@@ -205,12 +205,10 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-4 pb-3 bg-[#eef1f6]">
-                <div className="flex flex-col gap-4 mb-4">
-                  {topFixed}
-                </div>
-              </div>
+              <div className="h-6" />
             ) : (
+              <div className="h-6" />
+            )}
               <div className="h-6" />
             )}
             {children}
