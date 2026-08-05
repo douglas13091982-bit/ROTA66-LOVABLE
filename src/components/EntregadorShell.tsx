@@ -154,7 +154,7 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
 
 
   return (
-    <div className="entregador-theme flex flex-col min-h-screen bg-[#0d2c54]">
+    <div className="entregador-theme flex flex-col min-h-screen bg-white">
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 relative">
         {/* Top Floating Bar (Overlay) */}

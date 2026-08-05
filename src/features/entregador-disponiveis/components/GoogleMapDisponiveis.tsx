@@ -5,17 +5,16 @@ import { Loader2 } from "lucide-react";
 
 const MAPS_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 
-const DARK_MAP_STYLE: any[] = [
-  { elementType: "geometry", stylers: [{ color: "#0d2c54" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#0d2c54" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#94a3b8" }] },
-  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#cbd5e1" }] },
-  { featureType: "poi", elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-  { featureType: "poi.business", stylers: [{ visibility: "off" }] },
-  { featureType: "road", elementType: "geometry", stylers: [{ color: "#1a3b6e" }] },
-  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#0d2c54" }] },
-  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#1e40af" }] },
-  { featureType: "water", elementType: "geometry", stylers: [{ color: "#0a2140" }] },
+const LIGHT_MAP_STYLE: any[] = [
+  { elementType: "geometry", stylers: [{ color: "#ebe3cd" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#523735" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#f5f1e6" }] },
+  { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#c9b2a6" }] },
+  { featureType: "poi", elementType: "geometry", stylers: [{ color: "#dfd2ae" }] },
+  { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#93817c" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#f5f1e6" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#f8c967" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#17263c" }] },
 ];
 
 interface Props {
@@ -54,7 +53,7 @@ export const GoogleMapDisponiveis = memo(({ minhaPos, grupos, onSelecionarGrupo 
       center: minhaPos || { lat: -15.78, lng: -47.93 },
       zoom: 15,
       disableDefaultUI: true,
-      styles: DARK_MAP_STYLE,
+      styles: LIGHT_MAP_STYLE,
     });
   }, [mapsLoaded]);
 
@@ -126,10 +125,10 @@ export const GoogleMapDisponiveis = memo(({ minhaPos, grupos, onSelecionarGrupo 
   }, [grupos, onSelecionarGrupo]);
 
   return (
-    <div className="relative w-full h-full bg-[#0d2c54]">
+    <div className="relative w-full h-full bg-white">
       <div ref={mapDivRef} className="w-full h-full" />
       {!mapsLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#0d2c54]">
+        <div className="absolute inset-0 flex items-center justify-center bg-white">
           <Loader2 className="w-8 h-8 animate-spin text-white opacity-20" />
         </div>
       )}
