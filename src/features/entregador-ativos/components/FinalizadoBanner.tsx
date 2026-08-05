@@ -12,7 +12,7 @@ type Props = {
 
 export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente }: Props) {
   return (
-    <div className="relative overflow-hidden rounded-2xl glass shadow-elevated p-8 text-center mb-6 border border-emerald-500/40">
+    <div className="relative overflow-hidden rounded-2xl bg-white shadow-elevated p-8 text-center mb-6 border border-emerald-500/40">
       <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl pointer-events-none" />
       <button
@@ -57,7 +57,7 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4 space-y-3">
+          <div className="rounded-xl border border-border/40 bg-gray-50 p-4 space-y-3">
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 mt-0.5 text-amber-400 shrink-0" />
               <div className="flex-1 min-w-0">
