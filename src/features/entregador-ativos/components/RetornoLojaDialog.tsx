@@ -116,7 +116,7 @@ export function RetornoLojaDialog() {
           <div className="flex items-start gap-3">
             <MapPin className="h-5 w-5 mt-0.5 text-[#AE0000] shrink-0" />
             <div className="flex-1 space-y-1">
-              <span className="font-bold text-base text-[#0f1b2d] block leading-tight">
+              <span className="font-bold text-base text-navy block leading-tight">
                 {endereco}
               </span>
               <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">

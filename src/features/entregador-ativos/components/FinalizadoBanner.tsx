@@ -18,12 +18,12 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
       <button
         onClick={onDismiss}
         aria-label="Fechar"
-        className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-card/60 transition z-10"
+        className="absolute top-3 right-3 p-1.5 rounded-md hover:bg-gray-100 transition z-10"
       >
         <X className="h-4 w-4 text-muted-foreground" />
       </button>
       <div className="relative flex flex-col items-center gap-2">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center backdrop-blur-sm border border-emerald-400/40 shadow-[0_10px_30px_-8px_oklch(0.7_0.18_155_/_0.5)]">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-400/20 shadow-sm">
           <PartyPopper className="h-8 w-8 text-emerald-400" />
         </div>
         <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-bold">
@@ -64,7 +64,7 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-1">
                   Endereço da Loja
                 </span>
-                <span className="font-bold text-sm text-foreground block leading-snug">
+                <span className="font-bold text-sm text-navy block leading-snug">
                   {retornoPendente.endereco}
                 </span>
               </div>
