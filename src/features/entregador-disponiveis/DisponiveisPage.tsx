@@ -106,7 +106,9 @@ export function DisponiveisPage() {
       title="Rotas Disponíveis"
       topFixed={
         <div className="flex flex-col gap-4">
-          <GanhoHojeCard valor={ganhoHoje} />
+          <div className="flex items-center justify-center">
+            <GanhoHojeCard valor={ganhoHoje} />
+          </div>
           {isListaVisivel && (
             <RotasDisponiveisHeader
               ordenacao={ordenacao}
