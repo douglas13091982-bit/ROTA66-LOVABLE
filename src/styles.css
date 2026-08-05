@@ -2029,6 +2029,15 @@ select,
   border-radius: 0 !important;
 }
 
+/* Exceções: card de ganhos e botão conectar do app do entregador (estilo Apple) */
+[data-ganho-hoje],
+[data-status-toggle] {
+  border-radius: 22px !important;
+}
+[data-ganho-hoje] button {
+  border-radius: 14px !important;
+}
+
 /* ===========================================================
    TEXTO BRANCO EM BOTÕES VERMELHOS (tema claro dos painéis)
    =========================================================== */
