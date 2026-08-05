@@ -159,10 +159,3 @@ export function DisponiveisPage() {
     </EntregadorShell>
   );
 }
-
-
-
-      <AnunciosEntregador />
-    </EntregadorShell>
-  );
-}
