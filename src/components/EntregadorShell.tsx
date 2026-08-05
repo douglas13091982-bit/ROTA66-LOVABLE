@@ -194,7 +194,10 @@ export function EntregadorShell({ children, title, onToggleFilter }: { children:
       {path.startsWith("/entregador/disponiveis") && (
         <div className="fixed bottom-[90px] inset-x-0 z-40 px-6 pointer-events-none">
           <div className="max-w-md mx-auto flex items-center gap-4 pointer-events-auto">
-            <button className="w-14 h-14 rounded-2xl bg-[#1a2b4b]/95 backdrop-blur-md flex items-center justify-center text-white shadow-2xl border border-white/10">
+            <button 
+              onClick={onToggleFilter}
+              className="w-14 h-14 rounded-2xl bg-[#1a2b4b]/95 backdrop-blur-md flex items-center justify-center text-white shadow-2xl border border-white/10 active:scale-95 transition-transform"
+            >
               <div className="relative">
                 <div className="w-5 h-[2px] bg-white rounded-full mb-1" />
                 <div className="w-5 h-[2px] bg-white rounded-full mb-1" />
