@@ -1,3 +1,5 @@
+import { useState, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { norm } from "../logic/group";
 import type { PedidoAtivo } from "../logic/types";
 import { ColetaConsolidadaCard } from "./ColetaConsolidadaCard";
@@ -9,6 +11,19 @@ type Props = {
 };
 
 export function RotaBlock({ items, destaque }: Props) {
+  const qc = useQueryClient();
+  const [coletaFixada, setColetaFixada] = useState(false);
+
+  const coletaRef = items[0];
+  const mesmaColeta = useMemo(() => 
+    items.every((p) => norm(p.endereco_coleta) === norm(coletaRef.endereco_coleta)),
+    [items, coletaRef.endereco_coleta]
+  );
+
+  const pendentesColeta = items.filter((p) => p.status === "em_rota");
+  const pendentesEntrega = items.filter((p) => p.status === "coletado");
+
+  // Se tem apenas 1 item, usa o PedidoCard padrão (que já tem sua própria lógica de fixação)
   if (items.length === 1) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -17,20 +32,27 @@ export function RotaBlock({ items, destaque }: Props) {
     );
   }
 
-  const coletaRef = items[0];
-  const mesmaColeta = items.every(
-    (p) => norm(p.endereco_coleta) === norm(coletaRef.endereco_coleta),
-  );
+  // Fase 1: Coleta Agrupada
+  // Mantemos esta fase se houver algo para coletar OU se o entregador acabou de coletar e ainda não saiu
+  if (mesmaColeta && (pendentesColeta.length > 0 || coletaFixada)) {
+    // Se fixado mas já coletou, mostra os que foram coletados para ver os códigos
+    const pedidosParaMostrar = pendentesColeta.length > 0 ? pendentesColeta : pendentesEntrega;
 
-  const pendentesColeta = items.filter((p) => p.status === "em_rota");
-  const pendentesEntrega = items.filter((p) => p.status === "coletado");
-
-  // Fase 1: ainda há pedidos para coletar e todos compartilham o mesmo ponto de coleta
-  if (mesmaColeta && pendentesColeta.length > 0) {
-    return <ColetaConsolidadaCard pedidos={pendentesColeta} totalRota={items.length} />;
+    return (
+      <ColetaConsolidadaCard
+        pedidos={pedidosParaMostrar}
+        totalRota={items.length}
+        onSairDoLocal={() => {
+          setColetaFixada(false);
+          qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+        }}
+        // Avisa que a coleta foi iniciada para fixar o componente
+        onColetar={() => setColetaFixada(true)}
+      />
+    );
   }
 
-  // Fase 2: já coletou tudo. Mostra entregas UMA por vez (a próxima na sequência).
+  // Fase 2: Entregas (uma por vez)
   if (pendentesEntrega.length > 0) {
     const proxima = pendentesEntrega[0];
     const idxAtual = items.findIndex((p) => p.id === proxima.id);

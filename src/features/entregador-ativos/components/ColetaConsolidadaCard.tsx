@@ -11,9 +11,13 @@ import type { PedidoAtivo } from "../logic/types";
 type Props = {
   pedidos: PedidoAtivo[];
   totalRota: number;
+  onSairDoLocal?: () => void;
+  onColetar?: () => void;
 };
 
-export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
+export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onColetar }: Props) {
+
+
   const [revealed, setRevealed] = useState(false);
   const qc = useQueryClient();
   const ref = pedidos[0];
@@ -110,20 +114,19 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
             onClick={() => {
               void (async () => {
                 setRevealed(true);
+                onColetar?.();
+
                 for (const p of pedidos) {
                   await supabase.rpc("entregador_chegou_coleta" as never, {
                     _pedido_id: p.id,
                   } as never);
-                  const { error } = await supabase.rpc(
+                  await supabase.rpc(
                     "entregador_confirmar_coleta" as never,
                     { _pedido_id: p.id } as never,
                   );
-                  if (error) {
-                    toast.error(error.message);
-                    return;
-                  }
                 }
                 toast.success("Coleta registrada! Siga para a entrega.");
+
 
               })();
             }}
@@ -165,6 +168,19 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
             <p className="text-[11px] text-white/50 text-center pt-1">
               Mostre estes códigos para a loja confirmar os {pedidos.length} pedidos.
             </p>
+            {onSairDoLocal && (
+              <button
+                onClick={onSairDoLocal}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98] mt-4"
+                style={{
+                  background: "#AE0000",
+                }}
+              >
+                <span>Sair do local</span>
+                <Navigation className="h-5 w-5 rotate-90" />
+              </button>
+            )}
+
           </div>
         )}
       </div>
