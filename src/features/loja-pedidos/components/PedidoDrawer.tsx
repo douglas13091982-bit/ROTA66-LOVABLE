@@ -268,7 +268,7 @@ export function PedidoDrawer({
                     onUpdateDetalhe({ ...detalhe, status: "cancelado", arquivado: true });
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold uppercase text-xs tracking-wider "
+                className="inline-flex items-center gap-1.5 px-3 py-2 border border-[#AE0000] text-[#AE0000] hover:bg-[#AE0000] hover:text-white font-bold uppercase text-xs tracking-wider transition-colors"
               >
                 <X className="h-3.5 w-3.5" /> Cancelar pedido
               </button>
