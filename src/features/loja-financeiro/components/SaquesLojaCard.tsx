@@ -10,17 +10,17 @@ import { i18nConfig } from "@/lib/i18n-config";
 const brl = (v: number) => formatCurrency(v);
 
 function StatusBadge({ status }: { status: SaqueLojaRow["status"] }) {
+  if (status === 'pago') return null;
   const map: Record<string, { cls: string; label: string; icon: any }> = {
-    solicitado: { cls: "bg-yellow-500/15 text-yellow-500", label: "Pendente", icon: Clock },
-    pago: { cls: "bg-green-500/15 text-green-500", label: "Pago", icon: CheckCircle2 },
+    solicitado: { cls: "bg-yellow-500/15 text-yellow-600", label: "Pendente", icon: Clock },
     rejeitado: { cls: "bg-destructive/15 text-destructive", label: "Rejeitado", icon: XCircle },
     cancelado: { cls: "bg-muted text-muted-foreground", label: "Cancelado", icon: XCircle },
   };
   const c = map[status] ?? map.solicitado;
   const Icon = c.icon;
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${c.cls}`}>
-      <Icon className="h-3 w-3" /> {c.label}
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${c.cls}`}>
+       {c.label}
     </span>
   );
 }
