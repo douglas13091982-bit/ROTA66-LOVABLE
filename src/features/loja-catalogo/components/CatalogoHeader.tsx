@@ -84,7 +84,7 @@ export function CatalogoHeader({
     <header className="sticky top-0 z-30">
       {/* Topbar navy */}
       <div className="cc-topbar">
-        <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-4 py-3.5 flex items-center gap-3">
           {loja.cidade ? (
             <Link
               to="/clientes/$cidade"
@@ -124,7 +124,7 @@ export function CatalogoHeader({
       </div>
 
       <div className="cc-hero-bg border-b border-border">
-        <div className="max-w-2xl mx-auto px-4 pt-4 pb-3">
+        <div className="max-w-6xl mx-auto px-4 pt-4 pb-3">
           <div className="flex items-start gap-4">
             {loja.logo_url ? (
               <div className="relative shrink-0">
@@ -172,7 +172,7 @@ export function CatalogoHeader({
 
 
         {categorias.length > 0 && !busca && (
-          <div className="max-w-2xl mx-auto pb-3.5 relative">
+          <div className="max-w-6xl mx-auto pb-3.5 relative">
             <div className="flex gap-2.5 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
               <button
                 onClick={() => {
