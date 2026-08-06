@@ -89,19 +89,22 @@ export function FinanceiroPage() {
   return (
     <LojaShell title="Financeiro">
       <div className="space-y-6 w-full">
-        <Tabs defaultValue="saldo" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex mb-4">
-            <TabsTrigger value="saldo" className="flex items-center gap-2">
-              <Wallet className="w-4 h-4" />
-              <span>Saldo & Recarga</span>
-            </TabsTrigger>
-            <TabsTrigger value="vendas" className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              <span>Vendas & Saques</span>
-            </TabsTrigger>
+        {/* Top Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+          <SaldoLojaCard lojaId={loja.id} />
+          <SaquesLojaCard lojaId={loja.id} />
+        </div>
+
+        {/* Bottom Section with Tabs */}
+        <Tabs defaultValue="resumo" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex mb-4">
             <TabsTrigger value="resumo" className="flex items-center gap-2">
               <History className="w-4 h-4" />
-              <span>Resumo & Planos</span>
+              <span>Resumo</span>
+            </TabsTrigger>
+            <TabsTrigger value="mensalidade" className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              <span>Mensalidade</span>
             </TabsTrigger>
             <TabsTrigger value="taxas" className="flex items-center gap-2">
               <Receipt className="w-4 h-4" />
@@ -109,19 +112,7 @@ export function FinanceiroPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="saldo" className="mt-0">
-            <div className="max-w-4xl">
-              <SaldoLojaCard lojaId={loja.id} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="vendas" className="mt-0">
-            <div className="max-w-4xl">
-              <SaquesLojaCard lojaId={loja.id} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="resumo" className="space-y-6 mt-0 max-w-4xl">
+          <TabsContent value="resumo" className="space-y-6 mt-0 w-full">
             <ResumoCards
               totalAberto={totalAberto}
               totalPago={totalPago}
@@ -133,6 +124,9 @@ export function FinanceiroPage() {
               }}
             />
             <InfoPrazo prazo={prazo} />
+          </TabsContent>
+
+          <TabsContent value="mensalidade" className="space-y-6 mt-0 w-full">
             <MensalidadesTabela
               loading={loading}
               mensalidades={mensalidades}
@@ -143,7 +137,7 @@ export function FinanceiroPage() {
             />
           </TabsContent>
 
-          <TabsContent value="taxas" className="space-y-6 mt-0 max-w-4xl">
+          <TabsContent value="taxas" className="space-y-6 mt-0 w-full">
             <CobrancasTabela
               loading={loading}
               cobrancas={cobrancas}
