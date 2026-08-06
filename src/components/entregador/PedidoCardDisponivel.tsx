@@ -122,10 +122,10 @@ function BadgeBonus({ valor }: { valor: number }) {
     <div
       className="mt-4 inline-flex items-center gap-2.5 px-6 py-2.5 text-lg font-black uppercase tracking-[0.18em] rounded-2xl border-2"
       style={{
-        background: "var(--gradient-gold)",
-        color: "oklch(0.15 0.02 60)",
-        borderColor: "oklch(0.88 0.14 80 / 0.8)",
-        boxShadow: "0 10px 30px -8px oklch(0.78 0.16 75 / 0.6)",
+        background: "#0d2c54",
+        color: "#fff",
+        borderColor: "rgba(255,255,255,0.2)",
+        boxShadow: "0 10px 30px -8px rgba(13, 44, 84, 0.4)",
       }}
     >
       <TrendingUp className="h-6 w-6 stroke-[3]" />
