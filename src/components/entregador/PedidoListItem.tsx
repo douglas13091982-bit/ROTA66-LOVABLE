@@ -114,10 +114,10 @@ function PedidoListItemBase({
                 <AlertTriangle className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] font-black text-white uppercase tracking-[0.18em] leading-none">
+                <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] leading-none">
                   Atrasado
                 </span>
-                <span className="text-sm font-black text-white leading-tight mt-0.5">
+                <span className="text-lg font-black text-white leading-tight mt-1">
                   {minutosAtraso} min
                 </span>
               </div>
@@ -142,8 +142,8 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[10px] font-black text-white uppercase tracking-[0.25em] mb-1">Ganhos</p>
-          <p className="text-4xl font-black text-white tracking-tighter tabular-nums leading-none">
+          <p className="text-[11px] font-black text-white uppercase tracking-[0.25em] mb-1.5">Ganhos</p>
+          <p className="text-5xl font-black text-white tracking-tighter tabular-nums leading-none">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>

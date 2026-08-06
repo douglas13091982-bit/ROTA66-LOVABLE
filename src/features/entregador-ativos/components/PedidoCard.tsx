@@ -319,7 +319,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           {/* Você recebe */}
           <div className="text-center py-2">
             <div
-              className="text-[11px] font-semibold uppercase tracking-[0.24em]"
+              className="text-[13px] font-bold uppercase tracking-[0.24em]"
               style={{ color: MUTED }}
             >
               Você recebe
