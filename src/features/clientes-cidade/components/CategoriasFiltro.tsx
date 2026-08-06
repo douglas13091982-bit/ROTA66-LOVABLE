@@ -54,8 +54,15 @@ interface Props {
   onChange: (v: string) => void;
 }
 
-export function CategoriasFiltro({ value, onChange }: Props) {
-  const { categorias } = useLojaCategorias();
+export function CategoriasFiltro({ value, onChange, lojas = [] }: Props & { lojas?: any[] }) {
+  const { categorias: todasCategorias } = useLojaCategorias();
+  
+  // Filtrar apenas categorias que possuem pelo menos uma loja na cidade atual
+  const categoriasComLojas = todasCategorias.filter(cat => 
+    lojas.some(loja => loja.categoria === cat.value)
+  );
+
+  const categorias = categoriasComLojas;
   return (
     <div className="max-w-6xl mx-auto pb-4 pt-1 relative">
       <div

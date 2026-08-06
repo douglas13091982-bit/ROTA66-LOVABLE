@@ -29,7 +29,11 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
           busca={busca}
           onBuscaChange={setBusca}
         />
-        <CategoriasFiltro value={categoriaFiltro} onChange={setCategoriaFiltro} />
+        <CategoriasFiltro 
+          value={categoriaFiltro} 
+          onChange={setCategoriaFiltro} 
+          lojas={lojas} 
+        />
       </header>
 
       <main className="max-w-6xl mx-auto px-4 pt-5">
