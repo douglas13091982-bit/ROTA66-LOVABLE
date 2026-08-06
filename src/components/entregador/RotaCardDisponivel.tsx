@@ -120,10 +120,16 @@ export function RotaCardDisponivel({
           </div>
           {totalBonus > 0 && (
             <div
-              className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 text-sm font-bold uppercase tracking-[0.18em] rounded-full border"
-              style={{ background: "var(--gradient-gold)", color: "oklch(0.15 0.02 60)", borderColor: "oklch(0.88 0.14 80 / 0.6)", boxShadow: "0 8px 24px -6px oklch(0.78 0.16 75 / 0.5)" }}
+              className="mt-4 inline-flex items-center gap-2.5 px-6 py-2.5 text-lg font-black uppercase tracking-[0.18em] rounded-2xl border-2"
+              style={{ 
+                background: "var(--gradient-gold)", 
+                color: "oklch(0.15 0.02 60)", 
+                borderColor: "oklch(0.88 0.14 80 / 0.8)", 
+                boxShadow: "0 10px 30px -8px oklch(0.78 0.16 75 / 0.6)" 
+              }}
             >
-              <TrendingUp className="h-4 w-4" />+ R$ {totalBonus.toFixed(2)}
+              <TrendingUp className="h-6 w-6 stroke-[3]" />
+              <span>+ R$ {totalBonus.toFixed(2).replace(".", ",")} BÔNUS</span>
             </div>
           )}
           <div className="flex items-center justify-center gap-2 mt-3 text-base font-semibold text-white/85">
