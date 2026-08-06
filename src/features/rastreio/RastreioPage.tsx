@@ -39,11 +39,11 @@ export function RastreioPage({ pedidoId }: { pedidoId: string }) {
           clienteNome={data.cliente_nome}
           entregadorNome={data.entregador_nome}
           entregadorFoto={data.entregador_foto}
+          codigoEntrega={data.codigo_entrega}
+          isColetado={isColetado}
         />
 
-        {isColetado && data.codigo_entrega && (
-          <CodigoEntregaCard codigo={data.codigo_entrega} />
-        )}
+        {/* CodigoEntregaCard removido daqui, integrado no Header */}
 
         {isEntregue && <EntregueCard confirmadaEm={data.entrega_confirmada_em} />}
 

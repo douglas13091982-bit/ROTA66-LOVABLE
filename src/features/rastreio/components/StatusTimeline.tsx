@@ -22,7 +22,7 @@ export function StatusTimeline({
     currentStepIdx = STATUS_STEPS.findIndex((s) => s.key === "a_caminho");
   }
   return (
-    <div className="bg-white border border-[#0d2c54]/10 rounded-none p-5 shadow-sm">
+    <div className="bg-white border border-[#0d2c54]/10 rounded-none p-5 shadow-sm mt-2">
       <p className="text-xs uppercase tracking-wider text-[#0d2c54]/50 font-bold mb-4">Status do pedido</p>
       <div className="space-y-3">
         {STATUS_STEPS.map((step, idx) => {
