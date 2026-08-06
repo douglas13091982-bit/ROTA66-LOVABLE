@@ -108,7 +108,7 @@ export function PagamentoMpMensalidadeDialog({
           </button>
         </div>
 
-        <div className="p-4 space-y-4 overflow-y-auto">
+        <div className="p-4 space-y-3 overflow-y-auto">
           {!mensId || mConsolidar.isPending ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Calculando mensalidade…
@@ -149,7 +149,7 @@ export function PagamentoMpMensalidadeDialog({
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-3">
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                     E-mail do pagador *
@@ -208,8 +208,8 @@ export function PagamentoMpMensalidadeDialog({
                   src={`data:image/png;base64,${resultado.qr_code_base64}`}
                   alt="QR Code"
                   className="mx-auto bg-white p-2 rounded-md"
-                  width={240}
-                  height={240}
+                  width={190}
+                  height={190}
                 />
               )}
               <div className="space-y-1">
