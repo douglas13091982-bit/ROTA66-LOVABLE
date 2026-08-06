@@ -81,7 +81,7 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {items.map((p) => (
-        <article key={p.id} className="cc-card rounded-2xl p-3 flex items-center gap-3.5">
+        <article key={p.id} className="cc-card rounded-2xl p-3 flex items-center gap-3.5 h-full">
           <div className="cc-img-wrap h-[92px] w-[92px] rounded-xl shrink-0 relative">
             {p.imagem_url ? (
               <img src={p.imagem_url} alt={p.nome} loading="lazy" className="h-full w-full object-cover" />
