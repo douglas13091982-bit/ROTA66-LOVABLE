@@ -581,11 +581,11 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 inputMode="numeric"
                 pattern="[0-9]*"
               >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} className="h-14 w-12 text-3xl font-black text-[#0f1b2d] border-[#0f1b2d]/30 bg-white" />
-                  <InputOTPSlot index={1} className="h-14 w-12 text-3xl font-black text-[#0f1b2d] border-[#0f1b2d]/30 bg-white" />
-                  <InputOTPSlot index={2} className="h-14 w-12 text-3xl font-black text-[#0f1b2d] border-[#0f1b2d]/30 bg-white" />
-                  <InputOTPSlot index={3} className="h-14 w-12 text-3xl font-black text-[#0f1b2d] border-[#0f1b2d]/30 bg-white" />
+                <InputOTPGroup className="gap-2">
+                  <InputOTPSlot index={0} className="rounded-md border-l" />
+                  <InputOTPSlot index={1} className="rounded-md border-l" />
+                  <InputOTPSlot index={2} className="rounded-md border-l" />
+                  <InputOTPSlot index={3} className="rounded-md border-l" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
