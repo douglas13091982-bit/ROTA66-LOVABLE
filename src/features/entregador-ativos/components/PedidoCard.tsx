@@ -238,7 +238,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         </div>
       </div>
 
-      <div className="my-4 sm:my-5 h-px" style={{ background: DIVIDER }} />
+      <div className="my-6 sm:my-8 h-px" style={{ background: DIVIDER }} />
 
       {/* Cliente / Loja */}
       <div className="flex items-center gap-3">
@@ -266,12 +266,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
 
 
-      <div className="my-5 h-px" style={{ background: DIVIDER }} />
+      <div className="my-8 h-px" style={{ background: DIVIDER }} />
 
       {/* Endereço */}
       <div>
         <div
-          className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
+          className="text-[13px] font-black uppercase tracking-[0.2em] mb-4"
           style={{ color: MUTED }}
         >
           {isColeta ? "Endereço de coleta" : "Endereço de entrega"}

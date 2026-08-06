@@ -150,7 +150,7 @@ function PedidoListItemBase({
       </div>
 
       {/* Body */}
-      <div className="p-5 space-y-5">
+      <div className="p-5 space-y-7">
         {/* Timeline: loja → cliente */}
         <div className="relative">
           <div
@@ -179,7 +179,7 @@ function PedidoListItemBase({
             </div>
           </div>
 
-          <div className="h-4" />
+          <div className="h-6" />
 
           {/* Cliente (entrega) */}
           <div className="flex items-start gap-4 relative">
