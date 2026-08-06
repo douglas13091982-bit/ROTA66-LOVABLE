@@ -59,7 +59,7 @@ export function RotaBlock({ items, destaque }: Props) {
     const restantes = pendentesEntrega.length;
     return (
       <div className="space-y-3">
-        <div className="flex items-center justify-between bg-white border border-border/40 rounded-xl px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] shadow-sm">
+        <div className="flex items-center justify-between bg-white border border-border/40 rounded-xl px-4 py-2.5 text-[10px] uppercase tracking-wider shadow-sm">
           <span className="text-muted-foreground font-bold">
             Rota agrupada · {items.length} paradas
           </span>

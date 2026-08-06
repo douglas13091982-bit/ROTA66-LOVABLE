@@ -302,7 +302,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               }}
             >
               <MapIcon className="h-5 w-5" style={{ color: RED }} />
-              <span className="text-[10px] font-bold tracking-[0.14em] mt-1" style={{ color: TEXT, opacity: 0.8 }}>
+              <span className="text-[10px] font-bold tracking-wider mt-1" style={{ color: TEXT, opacity: 0.8 }}>
                 MAPA
               </span>
             </a>
@@ -447,13 +447,13 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               }}
             >
               <div
-                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-normal mb-2 font-bold"
+                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider mb-2 font-bold"
                 style={{ color: MUTED }}
               >
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta
               </div>
               <div
-                className="font-display text-6xl tracking-[0.4em] mb-2 select-all"
+                className="font-display text-6xl tracking-wider mb-2 select-all"
                 style={{ color: RED }}
               >
                 {codigoColeta}
@@ -480,6 +480,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
         ) : !revealedEntrega ? (
           <CtaButton
+            className="tracking-wider uppercase"
             onClick={() => {
               void (async () => {
                 setRevealedEntrega(true);
