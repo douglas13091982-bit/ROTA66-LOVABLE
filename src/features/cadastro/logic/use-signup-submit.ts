@@ -21,7 +21,7 @@ type Deps = {
   contratoAtivo: ContratoAtivo;
   contratoLoading: boolean;
   indicadorId?: string | null;
-  indicadorTipo?: "entregador" | "revendedor" | null;
+  indicadorTipo?: "entregador" | null;
   redirectTo?: string;
 };
 
@@ -82,7 +82,7 @@ export function useSignupSubmit({ role, form, contratoAtivo, contratoLoading, in
         cidade: cidadeNome,
         estado: cidadeUf,
         indicado_por_entregador_id: indicadorTipo === "entregador" ? indicadorId || null : null,
-        revendedor_id: indicadorTipo === "revendedor" ? indicadorId || null : null,
+        
       } as any)
       .select("id")
       .single();

@@ -26,11 +26,9 @@ import { Route as Char91DotwellKnownChar93WebAppOriginAssociationRouteImport } f
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRouteImport } from './routes/[.well-known]/assetlinks[.]json'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as AuthenticatedRevendedorRouteRouteImport } from './routes/_authenticated/revendedor/route'
 import { Route as AuthenticatedLojaRouteRouteImport } from './routes/_authenticated/loja/route'
 import { Route as AuthenticatedEntregadorRouteRouteImport } from './routes/_authenticated/entregador/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
-import { Route as AuthenticatedRevendedorIndexRouteImport } from './routes/_authenticated/revendedor/index'
 import { Route as AuthenticatedLojaIndexRouteImport } from './routes/_authenticated/loja/index'
 import { Route as AuthenticatedEntregadorIndexRouteImport } from './routes/_authenticated/entregador/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -40,10 +38,6 @@ import { Route as ApiPublicMpWebhookPlataformaRouteImport } from './routes/api/p
 import { Route as ApiPublicMpWebhookEntregadorRouteImport } from './routes/api/public/mp-webhook-entregador'
 import { Route as ApiPublicMpWebhookRouteImport } from './routes/api/public/mp-webhook'
 import { Route as ApiPublicManifestDotwebmanifestRouteImport } from './routes/api/public/manifest[.]webmanifest'
-import { Route as AuthenticatedRevendedorPerfilRouteImport } from './routes/_authenticated/revendedor/perfil'
-import { Route as AuthenticatedRevendedorLojasRouteImport } from './routes/_authenticated/revendedor/lojas'
-import { Route as AuthenticatedRevendedorGanhosRouteImport } from './routes/_authenticated/revendedor/ganhos'
-import { Route as AuthenticatedRevendedorCobrancasRouteImport } from './routes/_authenticated/revendedor/cobrancas'
 import { Route as AuthenticatedLojaTreinamentoRouteImport } from './routes/_authenticated/loja/treinamento'
 import { Route as AuthenticatedLojaSuporteRouteImport } from './routes/_authenticated/loja/suporte'
 import { Route as AuthenticatedLojaPromocoesRouteImport } from './routes/_authenticated/loja/promocoes'
@@ -71,11 +65,9 @@ import { Route as AuthenticatedAdminTreinamentoRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authenticated/admin/suporte'
 import { Route as AuthenticatedAdminSonsAlertaRouteImport } from './routes/_authenticated/admin/sons-alerta'
-import { Route as AuthenticatedAdminSaquesRevendedoresRouteImport } from './routes/_authenticated/admin/saques-revendedores'
 import { Route as AuthenticatedAdminSaquesLojasRouteImport } from './routes/_authenticated/admin/saques-lojas'
 import { Route as AuthenticatedAdminSaquesEntregadoresRouteImport } from './routes/_authenticated/admin/saques-entregadores'
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
-import { Route as AuthenticatedAdminRevendedoresRouteImport } from './routes/_authenticated/admin/revendedores'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
@@ -192,12 +184,6 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedRevendedorRouteRoute =
-  AuthenticatedRevendedorRouteRouteImport.update({
-    id: '/revendedor',
-    path: '/revendedor',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedLojaRouteRoute = AuthenticatedLojaRouteRouteImport.update({
   id: '/loja',
   path: '/loja',
@@ -214,12 +200,6 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedRevendedorIndexRoute =
-  AuthenticatedRevendedorIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
 const AuthenticatedLojaIndexRoute = AuthenticatedLojaIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -268,30 +248,6 @@ const ApiPublicManifestDotwebmanifestRoute =
     id: '/api/public/manifest.webmanifest',
     path: '/api/public/manifest.webmanifest',
     getParentRoute: () => rootRouteImport,
-  } as any)
-const AuthenticatedRevendedorPerfilRoute =
-  AuthenticatedRevendedorPerfilRouteImport.update({
-    id: '/perfil',
-    path: '/perfil',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorLojasRoute =
-  AuthenticatedRevendedorLojasRouteImport.update({
-    id: '/lojas',
-    path: '/lojas',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorGanhosRoute =
-  AuthenticatedRevendedorGanhosRouteImport.update({
-    id: '/ganhos',
-    path: '/ganhos',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorCobrancasRoute =
-  AuthenticatedRevendedorCobrancasRouteImport.update({
-    id: '/cobrancas',
-    path: '/cobrancas',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
   } as any)
 const AuthenticatedLojaTreinamentoRoute =
   AuthenticatedLojaTreinamentoRouteImport.update({
@@ -454,12 +410,6 @@ const AuthenticatedAdminSonsAlertaRoute =
     path: '/sons-alerta',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminSaquesRevendedoresRoute =
-  AuthenticatedAdminSaquesRevendedoresRouteImport.update({
-    id: '/saques-revendedores',
-    path: '/saques-revendedores',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminSaquesLojasRoute =
   AuthenticatedAdminSaquesLojasRouteImport.update({
     id: '/saques-lojas',
@@ -476,12 +426,6 @@ const AuthenticatedAdminRoteirizacaoRoute =
   AuthenticatedAdminRoteirizacaoRouteImport.update({
     id: '/roteirizacao',
     path: '/roteirizacao',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminRevendedoresRoute =
-  AuthenticatedAdminRevendedoresRouteImport.update({
-    id: '/revendedores',
-    path: '/revendedores',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminPlanosRoute =
@@ -656,7 +600,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/loja': typeof AuthenticatedLojaRouteRouteWithChildren
-  '/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -691,11 +634,9 @@ export interface FileRoutesByFullPath {
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -723,10 +664,6 @@ export interface FileRoutesByFullPath {
   '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -736,7 +673,6 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/loja/': typeof AuthenticatedLojaIndexRoute
-  '/revendedor/': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -782,11 +718,9 @@ export interface FileRoutesByTo {
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -814,10 +748,6 @@ export interface FileRoutesByTo {
   '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -827,7 +757,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/entregador': typeof AuthenticatedEntregadorIndexRoute
   '/loja': typeof AuthenticatedLojaIndexRoute
-  '/revendedor': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -844,7 +773,6 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/_authenticated/loja': typeof AuthenticatedLojaRouteRouteWithChildren
-  '/_authenticated/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -879,11 +807,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/_authenticated/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/_authenticated/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/_authenticated/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/_authenticated/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/_authenticated/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/_authenticated/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -911,10 +837,6 @@ export interface FileRoutesById {
   '/_authenticated/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/_authenticated/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/_authenticated/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/_authenticated/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/_authenticated/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/_authenticated/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/_authenticated/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -924,7 +846,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/_authenticated/loja/': typeof AuthenticatedLojaIndexRoute
-  '/_authenticated/revendedor/': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -941,7 +862,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
-    | '/revendedor'
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
@@ -976,11 +896,9 @@ export interface FileRouteTypes {
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
-    | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
     | '/admin/saques-lojas'
-    | '/admin/saques-revendedores'
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -1008,10 +926,6 @@ export interface FileRouteTypes {
     | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
-    | '/revendedor/cobrancas'
-    | '/revendedor/ganhos'
-    | '/revendedor/lojas'
-    | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1021,7 +935,6 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/entregador/'
     | '/loja/'
-    | '/revendedor/'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesByTo: FileRoutesByTo
@@ -1067,11 +980,9 @@ export interface FileRouteTypes {
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
-    | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
     | '/admin/saques-lojas'
-    | '/admin/saques-revendedores'
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -1099,10 +1010,6 @@ export interface FileRouteTypes {
     | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
-    | '/revendedor/cobrancas'
-    | '/revendedor/ganhos'
-    | '/revendedor/lojas'
-    | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1112,7 +1019,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
-    | '/revendedor'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   id:
@@ -1128,7 +1034,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/entregador'
     | '/_authenticated/loja'
-    | '/_authenticated/revendedor'
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
@@ -1163,11 +1068,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/password-reset'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
-    | '/_authenticated/admin/revendedores'
     | '/_authenticated/admin/roteirizacao'
     | '/_authenticated/admin/saques-entregadores'
     | '/_authenticated/admin/saques-lojas'
-    | '/_authenticated/admin/saques-revendedores'
     | '/_authenticated/admin/sons-alerta'
     | '/_authenticated/admin/suporte'
     | '/_authenticated/admin/tarifas'
@@ -1195,10 +1098,6 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/promocoes'
     | '/_authenticated/loja/suporte'
     | '/_authenticated/loja/treinamento'
-    | '/_authenticated/revendedor/cobrancas'
-    | '/_authenticated/revendedor/ganhos'
-    | '/_authenticated/revendedor/lojas'
-    | '/_authenticated/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1208,7 +1107,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/entregador/'
     | '/_authenticated/loja/'
-    | '/_authenticated/revendedor/'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesById: FileRoutesById
@@ -1362,13 +1260,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/revendedor': {
-      id: '/_authenticated/revendedor'
-      path: '/revendedor'
-      fullPath: '/revendedor'
-      preLoaderRoute: typeof AuthenticatedRevendedorRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/loja': {
       id: '/_authenticated/loja'
       path: '/loja'
@@ -1389,13 +1280,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/revendedor/': {
-      id: '/_authenticated/revendedor/'
-      path: '/'
-      fullPath: '/revendedor/'
-      preLoaderRoute: typeof AuthenticatedRevendedorIndexRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
     '/_authenticated/loja/': {
       id: '/_authenticated/loja/'
@@ -1459,34 +1343,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/manifest.webmanifest'
       preLoaderRoute: typeof ApiPublicManifestDotwebmanifestRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/revendedor/perfil': {
-      id: '/_authenticated/revendedor/perfil'
-      path: '/perfil'
-      fullPath: '/revendedor/perfil'
-      preLoaderRoute: typeof AuthenticatedRevendedorPerfilRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/lojas': {
-      id: '/_authenticated/revendedor/lojas'
-      path: '/lojas'
-      fullPath: '/revendedor/lojas'
-      preLoaderRoute: typeof AuthenticatedRevendedorLojasRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/ganhos': {
-      id: '/_authenticated/revendedor/ganhos'
-      path: '/ganhos'
-      fullPath: '/revendedor/ganhos'
-      preLoaderRoute: typeof AuthenticatedRevendedorGanhosRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/cobrancas': {
-      id: '/_authenticated/revendedor/cobrancas'
-      path: '/cobrancas'
-      fullPath: '/revendedor/cobrancas'
-      preLoaderRoute: typeof AuthenticatedRevendedorCobrancasRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
     '/_authenticated/loja/treinamento': {
       id: '/_authenticated/loja/treinamento'
@@ -1677,13 +1533,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSonsAlertaRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/saques-revendedores': {
-      id: '/_authenticated/admin/saques-revendedores'
-      path: '/saques-revendedores'
-      fullPath: '/admin/saques-revendedores'
-      preLoaderRoute: typeof AuthenticatedAdminSaquesRevendedoresRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/saques-lojas': {
       id: '/_authenticated/admin/saques-lojas'
       path: '/saques-lojas'
@@ -1703,13 +1552,6 @@ declare module '@tanstack/react-router' {
       path: '/roteirizacao'
       fullPath: '/admin/roteirizacao'
       preLoaderRoute: typeof AuthenticatedAdminRoteirizacaoRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/revendedores': {
-      id: '/_authenticated/admin/revendedores'
-      path: '/revendedores'
-      fullPath: '/admin/revendedores'
-      preLoaderRoute: typeof AuthenticatedAdminRevendedoresRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/planos': {
@@ -1929,11 +1771,9 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
-  AuthenticatedAdminRevendedoresRoute: typeof AuthenticatedAdminRevendedoresRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
   AuthenticatedAdminSaquesEntregadoresRoute: typeof AuthenticatedAdminSaquesEntregadoresRoute
   AuthenticatedAdminSaquesLojasRoute: typeof AuthenticatedAdminSaquesLojasRoute
-  AuthenticatedAdminSaquesRevendedoresRoute: typeof AuthenticatedAdminSaquesRevendedoresRoute
   AuthenticatedAdminSonsAlertaRoute: typeof AuthenticatedAdminSonsAlertaRoute
   AuthenticatedAdminSuporteRoute: typeof AuthenticatedAdminSuporteRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
@@ -1969,13 +1809,10 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminPasswordResetRoute: AuthenticatedAdminPasswordResetRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
-    AuthenticatedAdminRevendedoresRoute: AuthenticatedAdminRevendedoresRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
     AuthenticatedAdminSaquesEntregadoresRoute:
       AuthenticatedAdminSaquesEntregadoresRoute,
     AuthenticatedAdminSaquesLojasRoute: AuthenticatedAdminSaquesLojasRoute,
-    AuthenticatedAdminSaquesRevendedoresRoute:
-      AuthenticatedAdminSaquesRevendedoresRoute,
     AuthenticatedAdminSonsAlertaRoute: AuthenticatedAdminSonsAlertaRoute,
     AuthenticatedAdminSuporteRoute: AuthenticatedAdminSuporteRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,
@@ -2067,34 +1904,10 @@ const AuthenticatedLojaRouteRouteWithChildren =
     AuthenticatedLojaRouteRouteChildren,
   )
 
-interface AuthenticatedRevendedorRouteRouteChildren {
-  AuthenticatedRevendedorCobrancasRoute: typeof AuthenticatedRevendedorCobrancasRoute
-  AuthenticatedRevendedorGanhosRoute: typeof AuthenticatedRevendedorGanhosRoute
-  AuthenticatedRevendedorLojasRoute: typeof AuthenticatedRevendedorLojasRoute
-  AuthenticatedRevendedorPerfilRoute: typeof AuthenticatedRevendedorPerfilRoute
-  AuthenticatedRevendedorIndexRoute: typeof AuthenticatedRevendedorIndexRoute
-}
-
-const AuthenticatedRevendedorRouteRouteChildren: AuthenticatedRevendedorRouteRouteChildren =
-  {
-    AuthenticatedRevendedorCobrancasRoute:
-      AuthenticatedRevendedorCobrancasRoute,
-    AuthenticatedRevendedorGanhosRoute: AuthenticatedRevendedorGanhosRoute,
-    AuthenticatedRevendedorLojasRoute: AuthenticatedRevendedorLojasRoute,
-    AuthenticatedRevendedorPerfilRoute: AuthenticatedRevendedorPerfilRoute,
-    AuthenticatedRevendedorIndexRoute: AuthenticatedRevendedorIndexRoute,
-  }
-
-const AuthenticatedRevendedorRouteRouteWithChildren =
-  AuthenticatedRevendedorRouteRoute._addFileChildren(
-    AuthenticatedRevendedorRouteRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedEntregadorRouteRoute: typeof AuthenticatedEntregadorRouteRouteWithChildren
   AuthenticatedLojaRouteRoute: typeof AuthenticatedLojaRouteRouteWithChildren
-  AuthenticatedRevendedorRouteRoute: typeof AuthenticatedRevendedorRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -2102,8 +1915,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntregadorRouteRoute:
     AuthenticatedEntregadorRouteRouteWithChildren,
   AuthenticatedLojaRouteRoute: AuthenticatedLojaRouteRouteWithChildren,
-  AuthenticatedRevendedorRouteRoute:
-    AuthenticatedRevendedorRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

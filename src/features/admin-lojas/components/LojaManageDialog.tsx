@@ -10,7 +10,7 @@ import { EntregadoresDaLoja } from "./EntregadoresDaLoja";
 import { StatusSection } from "./StatusSection";
 import { CatalogoSection } from "./CatalogoSection";
 import { PlanoSelectSection } from "./PlanoSelectSection";
-import { RevendedorSelectSection } from "./RevendedorSelectSection";
+import { useState, useEffect } from "react";
 import { CidadeSelectSection } from "./CidadeSelectSection";
 import { CriadoPorSelectSection } from "./CriadoPorSelectSection";
 
@@ -79,11 +79,6 @@ export function LojaManageDialog({
             onChanged={onChanged}
           />
 
-          <RevendedorSelectSection
-            lojaId={l.id}
-            revendedorIdAtual={l.revendedor_id ?? null}
-            onChanged={onChanged}
-          />
 
           <CriadoPorSelectSection
             lojaId={l.id}
