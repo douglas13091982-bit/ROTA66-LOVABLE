@@ -13,9 +13,10 @@ import { ResumoCards } from "./components/ResumoCards";
 import { InfoPrazo } from "./components/InfoPrazo";
 import { MensalidadesTabela } from "./components/MensalidadesTabela";
 import { CobrancasTabela } from "./components/CobrancasTabela";
-
 import { SaldoLojaCard } from "./components/SaldoLojaCard";
 import { SaquesLojaCard } from "./components/SaquesLojaCard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Wallet, Receipt, CreditCard, History } from "lucide-react";
 
 
 export function FinanceiroPage() {
@@ -88,38 +89,65 @@ export function FinanceiroPage() {
   return (
     <LojaShell title="Financeiro">
       <div className="space-y-6 max-w-4xl">
-        <SaldoLojaCard lojaId={loja.id} />
-        <SaquesLojaCard lojaId={loja.id} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SaldoLojaCard lojaId={loja.id} />
+          <SaquesLojaCard lojaId={loja.id} />
+        </div>
 
-        <ResumoCards
-          totalAberto={totalAberto}
-          totalPago={totalPago}
-          mensalidadeValor={mensalidadeValor}
-          prox={proxFallback}
-          onAntecipar={() => {
-            setMpMensId(null);
-            setMpOpen(true);
-          }}
-        />
-        <InfoPrazo prazo={prazo} />
-        <MensalidadesTabela
-          loading={loading}
-          mensalidades={mensalidades}
-          mensAbertas={mensAbertas}
-          mensAberto={mensAberto}
-          pixHabilitado
-          onDialog={handleDialog}
-        />
-        <CobrancasTabela
-          loading={loading}
-          cobrancas={cobrancas}
-          cobAbertas={cobAbertas}
-          cobAberto={cobAberto}
-          pixHabilitado={pixHabilitado}
-          onDialog={setDialog}
-          onPagarMp={(id) => setMpCobId(id)}
-          onPagarTudoMp={() => setMpFaturaOpen(true)}
-        />
+        <Tabs defaultValue="resumo" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex mb-4">
+            <TabsTrigger value="resumo" className="flex items-center gap-2">
+              <Wallet className="w-4 h-4" />
+              <span>Resumo</span>
+            </TabsTrigger>
+            <TabsTrigger value="mensalidade" className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              <span>Mensalidade</span>
+            </TabsTrigger>
+            <TabsTrigger value="taxas" className="flex items-center gap-2">
+              <Receipt className="w-4 h-4" />
+              <span>Taxas</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="resumo" className="space-y-6 mt-0">
+            <ResumoCards
+              totalAberto={totalAberto}
+              totalPago={totalPago}
+              mensalidadeValor={mensalidadeValor}
+              prox={proxFallback}
+              onAntecipar={() => {
+                setMpMensId(null);
+                setMpOpen(true);
+              }}
+            />
+            <InfoPrazo prazo={prazo} />
+          </TabsContent>
+
+          <TabsContent value="mensalidade" className="space-y-6 mt-0">
+            <MensalidadesTabela
+              loading={loading}
+              mensalidades={mensalidades}
+              mensAbertas={mensAbertas}
+              mensAberto={mensAberto}
+              pixHabilitado
+              onDialog={handleDialog}
+            />
+          </TabsContent>
+
+          <TabsContent value="taxas" className="space-y-6 mt-0">
+            <CobrancasTabela
+              loading={loading}
+              cobrancas={cobrancas}
+              cobAbertas={cobAbertas}
+              cobAberto={cobAberto}
+              pixHabilitado={pixHabilitado}
+              onDialog={setDialog}
+              onPagarMp={(id) => setMpCobId(id)}
+              onPagarTudoMp={() => setMpFaturaOpen(true)}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
 
       <PagamentoMpFaturaDialog
