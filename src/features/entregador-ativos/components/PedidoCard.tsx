@@ -190,7 +190,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
         <div className="min-w-0">
           <div
-            className="text-[10px] font-semibold uppercase tracking-[0.22em]"
+            className="text-[10px] font-semibold uppercase tracking-normal"
             style={{ color: MUTED }}
           >
             Pedido
@@ -207,7 +207,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           {isColeta && countdown.text ? (
             <>
               <div
-                className="text-[9px] font-semibold uppercase tracking-[0.16em] whitespace-nowrap"
+                className="text-[9px] font-semibold uppercase tracking-normal whitespace-nowrap"
                 style={{ color: MUTED }}
               >
                 Tempo p/ chegar
@@ -223,14 +223,14 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             </>
           ) : (
             <div
-              className="text-[10px] font-semibold uppercase tracking-[0.18em]"
+              className="text-[10px] font-semibold uppercase tracking-normal"
               style={{ color: MUTED }}
             >
               {isColeta ? "Coleta" : "Entrega"}
             </div>
           )}
           <span
-            className="mt-1 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.16em] rounded-full border whitespace-nowrap"
+            className="mt-1 px-2.5 py-1 text-[9px] font-bold uppercase tracking-normal rounded-full border whitespace-nowrap"
             style={{ color: stagePillColor, borderColor: stagePillColor }}
           >
             {stagePillLabel}
@@ -271,7 +271,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       {/* Endereço */}
       <div>
         <div
-          className="text-[13px] font-black uppercase tracking-[0.2em] mb-4"
+          className="text-[13px] font-black uppercase tracking-normal mb-4"
           style={{ color: MUTED }}
         >
           {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
@@ -319,7 +319,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           {/* Você recebe */}
           <div className="text-center py-2">
             <div
-              className="text-[13px] font-bold uppercase tracking-[0.24em]"
+              className="text-[13px] font-bold uppercase tracking-normal"
               style={{ color: MUTED }}
             >
               Você recebe
@@ -331,7 +331,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               R$ {liquido.toFixed(2).replace(".", ",")}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
-              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold uppercase tracking-[0.14em] rounded-full">
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold uppercase tracking-normal rounded-full">
                 <TrendingUp className="h-4 w-4" />
                 +R$ {Number(p.bonus_entregador).toFixed(2)} bônus
               </div>
@@ -447,7 +447,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               }}
             >
               <div
-                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.22em] mb-2 font-bold"
+                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-normal mb-2 font-bold"
                 style={{ color: MUTED }}
               >
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta
@@ -466,7 +466,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
               <button
                 onClick={sairDoLocal}
-                className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
+                className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold uppercase text-[14px] tracking-normal text-white transition-all active:scale-[0.98]"
                 style={{
                   background: "#AE0000",
                   boxShadow: "0 14px 32px -10px rgba(174,0,0,0.55)",
