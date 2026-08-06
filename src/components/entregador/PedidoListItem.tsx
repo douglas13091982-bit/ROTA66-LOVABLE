@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, Store, MapPin, ArrowRight, CreditCard } from "lucide-react";
+import { AlertTriangle, Store, MapPin, ArrowRight, CreditCard, TrendingUp } from "lucide-react";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { resumirEnderecoEntrega } from "@/lib/endereco";
 
