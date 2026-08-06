@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Wallet, ArrowRight, AlertTriangle } from "lucide-react";
 import { useSaldoLoja } from "@/features/loja-financeiro/hooks/use-saldo-loja";
+import { formatCurrency } from "@/lib/format/currency";
 
 function brl(v: number) {
   return formatCurrency(v);

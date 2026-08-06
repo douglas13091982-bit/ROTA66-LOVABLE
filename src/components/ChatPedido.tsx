@@ -8,6 +8,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Loader2, Send, MessageCircle, Store, Bike, X } from "lucide-react";
 import { toast } from "sonner";
+import { i18nConfig } from "@/lib/i18n-config";
 
 
 export type ChatSenderRole = "entregador" | "loja";

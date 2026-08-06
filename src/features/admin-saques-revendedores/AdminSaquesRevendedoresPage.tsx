@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Copy, Check } from "lucide-react";
+import { i18nConfig } from "@/lib/i18n-config";
 
 type Saque = {
   id: string;
