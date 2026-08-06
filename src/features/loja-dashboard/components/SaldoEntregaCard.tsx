@@ -3,7 +3,7 @@ import { Wallet, ArrowRight, AlertTriangle } from "lucide-react";
 import { useSaldoLoja } from "@/features/loja-financeiro/hooks/use-saldo-loja";
 
 function brl(v: number) {
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return formatCurrency(v);
 }
 
 export function SaldoEntregaCard({ lojaId }: { lojaId: string }) {

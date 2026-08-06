@@ -17,7 +17,7 @@ export function TurnoCard({ t, onChange }: { t: TurnoRow; onChange: () => void }
           <CalendarClock className="h-5 w-5 text-primary" />
           <div>
             <div className="font-display text-lg leading-tight">
-              {data.toLocaleDateString("pt-BR", {
+              {datatoLocaleDateString(i18nConfig.locale, {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSaldoLoja } from "../hooks/use-saldo-loja";
 
 const brl = (v: number) =>
-  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  formatCurrency(v);
 
 const VALORES_SUGERIDOS = [50, 100, 200, 500, 1000];
 

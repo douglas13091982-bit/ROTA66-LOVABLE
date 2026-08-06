@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
 
-const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const brl = (v: number) => formatCurrency(v);
 
 function StatusBadge({ status }: { status: SaqueLojaRow["status"] }) {
   const map: Record<string, { cls: string; label: string; icon: any }> = {
@@ -183,7 +183,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
                 <div className="min-w-0">
                   <div className="font-semibold">{brl(Number(s.valor))}</div>
                   <div className="text-[11px] text-muted-foreground truncate">
-                    {new Date(s.solicitado_em).toLocaleString("pt-BR")} · {s.pix_chave}
+                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave}
                   </div>
                   {s.motivo_rejeicao && (
                     <div className="text-[11px] text-destructive">Motivo: {s.motivo_rejeicao}</div>

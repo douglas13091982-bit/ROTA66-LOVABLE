@@ -24,18 +24,22 @@ export function formatCurrencyValue(value: number | null | undefined): string {
   return NO_SYMBOL_FORMATTER.format(value);
 }
 
+
 /** Converte string formatada em number. Retorna null se inválido. */
 export function parseCurrency(input: string | null | undefined): number | null {
   if (!input) return null;
   
   // Limpa o símbolo da moeda e espaços
   const symbol = i18nConfig.currencySymbol;
+  // Escapa o símbolo $ para regex
+  const escapedSymbol = symbol.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
   const cleaned = input
-    .replace(new RegExp(`\\s|${symbol.replace("$", "\\$")}`, "gi"), "")
+    .replace(new RegExp(`\\s|${escapedSymbol}`, "gi"), "")
     .replace(i18nConfig.locale === "pt-BR" ? /\./g : /,/g, "")
     .replace(i18nConfig.locale === "pt-BR" ? "," : ".", ".");
     
   const n = Number(cleaned);
   return Number.isFinite(n) ? n : null;
 }
+
 
