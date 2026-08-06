@@ -168,11 +168,11 @@ function PedidoListItemBase({
             </div>
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-[14px] font-black text-[#0f1b2d] uppercase tracking-wide truncate">
+                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-wide truncate">
                   {nomeLoja}
                 </h3>
               </div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+              <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
                 {bairroLoja || "Loja"}
                 {kmLoja && <span className="ml-1.5 text-[#6B7688]">· {kmLoja} km</span>}
               </p>
@@ -192,19 +192,19 @@ function PedidoListItemBase({
             <div className="flex-1 min-w-0 pt-1">
               {ehRota ? (
                 <>
-                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight">
-                    {grupo.items.length} entregas agrupadas
+                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-tight">
+                    {grupo.items.length} ENTREGAS AGRUPADAS
                   </h3>
-                  <p className="text-[11px] font-medium mt-0.5" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-bold mt-1 uppercase tracking-wide" style={{ color: BRAND.gray }}>
                     Endereços liberados após aceitar
                   </p>
                 </>
               ) : (
                 <>
-                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight truncate">
+                  <h3 className="text-lg font-bold text-[#0f1b2d] leading-tight truncate">
                     {endereco || "Cliente"}
                   </h3>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
                     Cliente
                     {distEntrega && <span className="ml-1.5 text-[#6B7688]">· {distEntrega} km</span>}
                   </p>

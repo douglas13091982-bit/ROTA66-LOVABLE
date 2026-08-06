@@ -249,7 +249,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-base truncate uppercase" style={{ color: TEXT }}>
+          <div className="font-black text-xl truncate uppercase" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
 
@@ -283,7 +283,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             <MapPin className="h-5 w-5" style={{ color: RED }} />
           </div>
-          <div className="flex-1 min-w-0 text-[15px] leading-snug font-medium" style={{ color: TEXT }}>
+          <div className="flex-1 min-w-0 text-lg leading-tight font-bold" style={{ color: TEXT }}>
             {endereco}
             {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
           </div>
