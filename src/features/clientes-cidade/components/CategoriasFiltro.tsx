@@ -115,7 +115,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
           );
         })}
       </div>
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 mp-fade" />
+      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 mp-fade md:hidden" />
     </div>
   );
 }
