@@ -253,7 +253,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-base truncate" style={{ color: TEXT }}>
+          <div className="font-bold text-base truncate uppercase" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
 
