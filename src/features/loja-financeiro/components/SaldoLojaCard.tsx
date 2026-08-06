@@ -89,7 +89,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
           <button
             onClick={gerarPix}
             disabled={criando}
-            className="w-full py-3 rounded-md font-bold uppercase tracking-wider text-sm bg-gradient-red shadow-red text-primary-foreground inline-flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs bg-red-600 hover:bg-red-700 shadow-md shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {criando && <Loader2 className="h-4 w-4 animate-spin" />}
             Recarregar via PIX
