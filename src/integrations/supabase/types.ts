@@ -4352,6 +4352,8 @@ export type Database = {
           created_at: string
           endereco_entrega: string
           entrega_confirmada_em: string
+          entregador_foto: string
+          entregador_nome: string
           id: string
           loja_nome: string
           numero: number
