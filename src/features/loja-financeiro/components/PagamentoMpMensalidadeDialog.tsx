@@ -99,8 +99,9 @@ export function PagamentoMpMensalidadeDialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-card border border-border rounded-xl max-w-md w-full max-h-[95vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4">
+      <div className="bg-card border border-border rounded-xl max-w-md w-full mt-2 sm:mt-4 max-h-[92vh] flex flex-col">
+
         <div className="flex items-center justify-between p-3 border-b border-border shrink-0">
           <h3 className="font-display text-lg">Pagar mensalidade</h3>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
