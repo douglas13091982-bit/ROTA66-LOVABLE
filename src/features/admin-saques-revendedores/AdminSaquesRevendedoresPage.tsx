@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Copy, Check } from "lucide-react";
+import { i18nConfig } from "@/lib/i18n-config";
 
 type Saque = {
   id: string;
@@ -128,7 +129,7 @@ export function AdminSaquesRevendedoresContent() {
                     <span className="text-muted-foreground font-normal text-xs">({s.revendedor_email})</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Solicitado em {new Date(s.created_at).toLocaleString("pt-BR")}
+                    Solicitado em {new Date(s.created_at).toLocaleString(i18nConfig.locale)}
                   </div>
                   <div className="mt-2 flex items-center gap-2 flex-wrap text-sm">
                     <span className="text-muted-foreground">PIX:</span>

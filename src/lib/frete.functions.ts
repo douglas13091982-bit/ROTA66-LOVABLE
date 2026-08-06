@@ -1,3 +1,4 @@
+import { i18nConfig } from "./i18n-config";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -102,7 +103,7 @@ export const reverseGeocode = createServerFn({ method: "POST" })
     }
     try {
       const resp = await fetch(
-        `${gatewayUrl}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=pt-BR`,
+        `${gatewayUrl}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=${i18nConfig.locale}`,
         {
           headers: {
             Authorization: `Bearer ${apiKey}`,

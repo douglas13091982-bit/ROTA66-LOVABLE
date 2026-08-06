@@ -13,6 +13,7 @@ import { InstallPrompt } from "@/components/InstallPrompt";
 import { AndroidApkRedirect } from "@/components/AndroidApkRedirect";
 import { registerAppServiceWorker } from "@/lib/register-sw";
 
+import { i18nConfig } from "@/lib/i18n-config";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -97,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang={i18nConfig.locale}>
       <head>
         <script
           dangerouslySetInnerHTML={{

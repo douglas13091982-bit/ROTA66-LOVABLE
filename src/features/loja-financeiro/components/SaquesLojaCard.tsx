@@ -4,8 +4,10 @@ import { Wallet, Send, CheckCircle2, XCircle, Clock, Save } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
+import { formatCurrency } from "@/lib/format/currency";
+import { i18nConfig } from "@/lib/i18n-config";
 
-const brl = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const brl = (v: number) => formatCurrency(v);
 
 function StatusBadge({ status }: { status: SaqueLojaRow["status"] }) {
   const map: Record<string, { cls: string; label: string; icon: any }> = {
@@ -112,7 +114,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
       </div>
 
       <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 px-3 py-2 text-xs">
-        ⚠️ Mantenha sempre pelo menos <strong>R$ 20,00</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+        ⚠️ Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
       </div>
 
       <div className="space-y-2">
@@ -145,7 +147,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         <input
           value={valor}
           onChange={(e) => setValor(e.target.value)}
-          placeholder="Valor a sacar (R$)"
+          placeholder={`Valor a sacar (${i18nConfig.currencySymbol})`}
           inputMode="decimal"
           className="px-3 py-2 rounded-md border border-border bg-background text-sm"
         />
@@ -183,7 +185,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
                 <div className="min-w-0">
                   <div className="font-semibold">{brl(Number(s.valor))}</div>
                   <div className="text-[11px] text-muted-foreground truncate">
-                    {new Date(s.solicitado_em).toLocaleString("pt-BR")} · {s.pix_chave}
+                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave}
                   </div>
                   {s.motivo_rejeicao && (
                     <div className="text-[11px] text-destructive">Motivo: {s.motivo_rejeicao}</div>

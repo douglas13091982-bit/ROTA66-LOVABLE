@@ -1,10 +1,12 @@
-const DATE_TIME = new Intl.DateTimeFormat("pt-BR", {
+import { i18nConfig } from "../i18n-config";
+
+const DATE_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
   dateStyle: "short",
   timeStyle: "short",
 });
 
-const DATE_ONLY = new Intl.DateTimeFormat("pt-BR", { dateStyle: "short" });
-const TIME_ONLY = new Intl.DateTimeFormat("pt-BR", { timeStyle: "short" });
+const DATE_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { dateStyle: "short" });
+const TIME_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { timeStyle: "short" });
 
 type DateInput = Date | string | number | null | undefined;
 
@@ -34,11 +36,17 @@ export function formatRelative(input: DateInput, now: Date = new Date()): string
   const d = toDate(input);
   if (!d) return "";
   const diffMs = now.getTime() - d.getTime();
-  if (diffMs < 60_000) return "agora";
+  
+  const isPt = i18nConfig.locale === "pt-BR";
+  const nowStr = isPt ? "agora" : "ahora";
+  const agoStr = isPt ? "há" : "hace";
+  
+  if (diffMs < 60_000) return nowStr;
   const minutes = Math.floor(diffMs / 60_000);
-  if (minutes < 60) return `há ${minutes} min`;
+  if (minutes < 60) return `${agoStr} ${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `há ${hours} h`;
+  if (hours < 24) return `${agoStr} ${hours} h`;
   const days = Math.floor(hours / 24);
-  return `há ${days} d`;
+  const daysStr = isPt ? "d" : "d"; // Em espanhol 'd' também é comum para 'días'
+  return `${agoStr} ${days} ${daysStr}`;
 }
