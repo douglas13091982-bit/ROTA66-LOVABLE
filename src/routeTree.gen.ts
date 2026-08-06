@@ -65,11 +65,9 @@ import { Route as AuthenticatedAdminTreinamentoRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminTarifasRouteImport } from './routes/_authenticated/admin/tarifas'
 import { Route as AuthenticatedAdminSuporteRouteImport } from './routes/_authenticated/admin/suporte'
 import { Route as AuthenticatedAdminSonsAlertaRouteImport } from './routes/_authenticated/admin/sons-alerta'
-import { Route as AuthenticatedAdminSaquesRevendedoresRouteImport } from './routes/_authenticated/admin/saques-revendedores'
 import { Route as AuthenticatedAdminSaquesLojasRouteImport } from './routes/_authenticated/admin/saques-lojas'
 import { Route as AuthenticatedAdminSaquesEntregadoresRouteImport } from './routes/_authenticated/admin/saques-entregadores'
 import { Route as AuthenticatedAdminRoteirizacaoRouteImport } from './routes/_authenticated/admin/roteirizacao'
-import { Route as AuthenticatedAdminRevendedoresRouteImport } from './routes/_authenticated/admin/revendedores'
 import { Route as AuthenticatedAdminPlanosRouteImport } from './routes/_authenticated/admin/planos'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminPasswordResetRouteImport } from './routes/_authenticated/admin/password-reset'
@@ -412,12 +410,6 @@ const AuthenticatedAdminSonsAlertaRoute =
     path: '/sons-alerta',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminSaquesRevendedoresRoute =
-  AuthenticatedAdminSaquesRevendedoresRouteImport.update({
-    id: '/saques-revendedores',
-    path: '/saques-revendedores',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminSaquesLojasRoute =
   AuthenticatedAdminSaquesLojasRouteImport.update({
     id: '/saques-lojas',
@@ -434,12 +426,6 @@ const AuthenticatedAdminRoteirizacaoRoute =
   AuthenticatedAdminRoteirizacaoRouteImport.update({
     id: '/roteirizacao',
     path: '/roteirizacao',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminRevendedoresRoute =
-  AuthenticatedAdminRevendedoresRouteImport.update({
-    id: '/revendedores',
-    path: '/revendedores',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminPlanosRoute =
@@ -648,11 +634,9 @@ export interface FileRoutesByFullPath {
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -734,11 +718,9 @@ export interface FileRoutesByTo {
   '/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -825,11 +807,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/password-reset': typeof AuthenticatedAdminPasswordResetRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/planos': typeof AuthenticatedAdminPlanosRoute
-  '/_authenticated/admin/revendedores': typeof AuthenticatedAdminRevendedoresRoute
   '/_authenticated/admin/roteirizacao': typeof AuthenticatedAdminRoteirizacaoRoute
   '/_authenticated/admin/saques-entregadores': typeof AuthenticatedAdminSaquesEntregadoresRoute
   '/_authenticated/admin/saques-lojas': typeof AuthenticatedAdminSaquesLojasRoute
-  '/_authenticated/admin/saques-revendedores': typeof AuthenticatedAdminSaquesRevendedoresRoute
   '/_authenticated/admin/sons-alerta': typeof AuthenticatedAdminSonsAlertaRoute
   '/_authenticated/admin/suporte': typeof AuthenticatedAdminSuporteRoute
   '/_authenticated/admin/tarifas': typeof AuthenticatedAdminTarifasRoute
@@ -916,11 +896,9 @@ export interface FileRouteTypes {
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
-    | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
     | '/admin/saques-lojas'
-    | '/admin/saques-revendedores'
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -1002,11 +980,9 @@ export interface FileRouteTypes {
     | '/admin/password-reset'
     | '/admin/pedidos'
     | '/admin/planos'
-    | '/admin/revendedores'
     | '/admin/roteirizacao'
     | '/admin/saques-entregadores'
     | '/admin/saques-lojas'
-    | '/admin/saques-revendedores'
     | '/admin/sons-alerta'
     | '/admin/suporte'
     | '/admin/tarifas'
@@ -1092,11 +1068,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/password-reset'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/planos'
-    | '/_authenticated/admin/revendedores'
     | '/_authenticated/admin/roteirizacao'
     | '/_authenticated/admin/saques-entregadores'
     | '/_authenticated/admin/saques-lojas'
-    | '/_authenticated/admin/saques-revendedores'
     | '/_authenticated/admin/sons-alerta'
     | '/_authenticated/admin/suporte'
     | '/_authenticated/admin/tarifas'
@@ -1559,13 +1533,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSonsAlertaRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/saques-revendedores': {
-      id: '/_authenticated/admin/saques-revendedores'
-      path: '/saques-revendedores'
-      fullPath: '/admin/saques-revendedores'
-      preLoaderRoute: typeof AuthenticatedAdminSaquesRevendedoresRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/saques-lojas': {
       id: '/_authenticated/admin/saques-lojas'
       path: '/saques-lojas'
@@ -1585,13 +1552,6 @@ declare module '@tanstack/react-router' {
       path: '/roteirizacao'
       fullPath: '/admin/roteirizacao'
       preLoaderRoute: typeof AuthenticatedAdminRoteirizacaoRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/revendedores': {
-      id: '/_authenticated/admin/revendedores'
-      path: '/revendedores'
-      fullPath: '/admin/revendedores'
-      preLoaderRoute: typeof AuthenticatedAdminRevendedoresRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/planos': {
@@ -1811,11 +1771,9 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminPasswordResetRoute: typeof AuthenticatedAdminPasswordResetRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminPlanosRoute: typeof AuthenticatedAdminPlanosRoute
-  AuthenticatedAdminRevendedoresRoute: typeof AuthenticatedAdminRevendedoresRoute
   AuthenticatedAdminRoteirizacaoRoute: typeof AuthenticatedAdminRoteirizacaoRoute
   AuthenticatedAdminSaquesEntregadoresRoute: typeof AuthenticatedAdminSaquesEntregadoresRoute
   AuthenticatedAdminSaquesLojasRoute: typeof AuthenticatedAdminSaquesLojasRoute
-  AuthenticatedAdminSaquesRevendedoresRoute: typeof AuthenticatedAdminSaquesRevendedoresRoute
   AuthenticatedAdminSonsAlertaRoute: typeof AuthenticatedAdminSonsAlertaRoute
   AuthenticatedAdminSuporteRoute: typeof AuthenticatedAdminSuporteRoute
   AuthenticatedAdminTarifasRoute: typeof AuthenticatedAdminTarifasRoute
@@ -1851,13 +1809,10 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminPasswordResetRoute: AuthenticatedAdminPasswordResetRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminPlanosRoute: AuthenticatedAdminPlanosRoute,
-    AuthenticatedAdminRevendedoresRoute: AuthenticatedAdminRevendedoresRoute,
     AuthenticatedAdminRoteirizacaoRoute: AuthenticatedAdminRoteirizacaoRoute,
     AuthenticatedAdminSaquesEntregadoresRoute:
       AuthenticatedAdminSaquesEntregadoresRoute,
     AuthenticatedAdminSaquesLojasRoute: AuthenticatedAdminSaquesLojasRoute,
-    AuthenticatedAdminSaquesRevendedoresRoute:
-      AuthenticatedAdminSaquesRevendedoresRoute,
     AuthenticatedAdminSonsAlertaRoute: AuthenticatedAdminSonsAlertaRoute,
     AuthenticatedAdminSuporteRoute: AuthenticatedAdminSuporteRoute,
     AuthenticatedAdminTarifasRoute: AuthenticatedAdminTarifasRoute,
