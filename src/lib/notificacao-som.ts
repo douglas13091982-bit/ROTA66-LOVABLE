@@ -243,9 +243,8 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     const rep = Math.max(1, Math.min(10, cfg.repeticoes ?? 1));
     if (rep > 1) {
       src.loop = true;
-      // O loop do Web Audio API é infinito, então precisamos de um timer para parar
-      // ou confiar que o usuário vai fechar o popup. 
-      // Para evitar que toque para sempre se o arquivo for curto, vamos limitar.
+      // O loop do Web Audio API é infinito por padrão quando src.loop = true.
+      // Paramos o som quando o popup fecha ou o usuário clica em "PARAR SOM".
     }
 
     const gain = ctx.createGain();
