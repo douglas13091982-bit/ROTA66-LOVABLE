@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet, VolumeX } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -13,6 +13,7 @@ import { useChatNaoLidasGlobal } from "@/hooks/use-chat-nao-lidas";
 import { usePushNotifications } from "@/hooks/use-push-notifications";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useSomPush } from "@/hooks/use-som-push";
+import { useSomStatus } from "@/hooks/use-som-status";
 import { usePerfilEntregador } from "@/features/entregador-perfil/hooks/use-perfil-entregador";
 import { RetornoLojaDialog } from "@/features/entregador-ativos/components/RetornoLojaDialog";
 
@@ -50,6 +51,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   const [open, setOpen] = useState(false);
   const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
   const perfil = usePerfilEntregador(user?.id);
+  const { playing, stop } = useSomStatus();
 
   // Zera o contador do ícone do app (badge) ao abrir e ao voltar ao primeiro plano
   useEffect(() => instalarLimpezaBadge(), []);
@@ -169,6 +171,16 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               <Menu className="h-6 w-6" />
             </button>
             
+            {playing && (
+              <button
+                onClick={stop}
+                className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#AE0000] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto animate-pulse"
+              >
+                <VolumeX className="h-5 w-5" />
+                <span className="text-[10px] font-black uppercase tracking-widest">PARAR SOM</span>
+              </button>
+            )}
+
             {path.startsWith("/entregador/disponiveis") && topFixed && (
               <div className="pointer-events-auto">
                 {topFixed}

@@ -36,6 +36,7 @@ export const SOM_BUCKET = "notificacao-som";
 
 let currentAudioCtx: AudioContext | null = null;
 let currentSource: AudioBufferSourceNode | null = null;
+let isPlayingInternal = false;
 
 // AudioContext principal usado tanto para o beep sintético quanto para
 // tocar o MP3 pré-carregado via Web Audio API (contorna restrições de
@@ -162,9 +163,14 @@ export function instalarDesbloqueioAutomatico() {
 }
 
 export function pararNotificacao() {
+  isPlayingInternal = false;
+  window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
   try {
     if (currentSource) {
-      try { currentSource.stop(); } catch {}
+      try {
+        currentSource.onended = null;
+        currentSource.stop();
+      } catch {}
       try { currentSource.disconnect(); } catch {}
       currentSource = null;
     }
@@ -207,7 +213,17 @@ export function tocarBeepSintetico(cfg: ConfigNotificacaoSom) {
       gain.gain.exponentialRampToValueAtTime(0.01, start + dur);
       osc.start(start);
       osc.stop(start + dur);
+      if (i === rep - 1) {
+        osc.onended = () => {
+          if (currentAudioCtx === ctx) {
+            isPlayingInternal = false;
+            window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
+          }
+        };
+      }
     }
+    isPlayingInternal = true;
+    window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: true } }));
   } catch {}
 }
 
@@ -222,6 +238,15 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     pararNotificacao();
     const src = ctx.createBufferSource();
     src.buffer = unlockedAudioBuffer;
+    
+    // Suporte a repetições para o arquivo de áudio
+    const rep = Math.max(1, Math.min(10, cfg.repeticoes ?? 1));
+    if (rep > 1) {
+      src.loop = true;
+      // O loop do Web Audio API é infinito por padrão quando src.loop = true.
+      // Paramos o som quando o popup fecha ou o usuário clica em "PARAR SOM".
+    }
+
     const gain = ctx.createGain();
     gain.gain.value = Math.max(0, Math.min(1, cfg.volume));
     src.connect(gain);
@@ -230,8 +255,14 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     currentSource = src;
     currentAudioCtx = ctx;
     src.onended = () => {
-      if (currentSource === src) currentSource = null;
+      if (currentSource === src) {
+        currentSource = null;
+        isPlayingInternal = false;
+        window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
+      }
     };
+    isPlayingInternal = true;
+    window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: true } }));
     return true;
   } catch {
     return false;
