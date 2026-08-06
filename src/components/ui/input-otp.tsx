@@ -8,15 +8,17 @@ const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
 >(({ className, containerClassName, ...props }, ref) => (
-  <OTPInput
-    ref={ref}
-    containerClassName={cn(
-      "flex items-center gap-2 has-[:disabled]:opacity-50 select-none",
-      containerClassName,
-    )}
-    className={cn("disabled:cursor-not-allowed text-transparent caret-transparent", className)}
-    {...props}
-  />
+  <div className="relative">
+    <OTPInput
+      ref={ref}
+      containerClassName={cn(
+        "flex items-center gap-2 has-[:disabled]:opacity-50 select-none",
+        containerClassName,
+      )}
+      className={cn("disabled:cursor-not-allowed opacity-0 absolute inset-0 w-full h-full z-20", className)}
+      {...props}
+    />
+  </div>
 ));
 InputOTP.displayName = "InputOTP";
 
