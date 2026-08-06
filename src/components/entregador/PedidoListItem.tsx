@@ -247,7 +247,7 @@ function PedidoListItemBase({
             {totalBonus > 0 && (
               <span
                 className="text-[14px] font-black uppercase tracking-[0.15em] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2"
-                style={{ background: "#AE0000", color: "#fff" }}
+                style={{ background: "#0d2c54", color: "#fff" }}
               >
                 <TrendingUp className="h-4 w-4" />
                 + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
