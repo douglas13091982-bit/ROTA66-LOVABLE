@@ -257,16 +257,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             {p.cliente_nome}
           </div>
 
-          {p.cliente_telefone && (
-            <a
-              href={`tel:${p.cliente_telefone}`}
-              className="inline-flex items-center gap-1.5 font-semibold text-[13px] mt-0.5 truncate max-w-full"
-              style={{ color: RED }}
-            >
-              <Phone className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{p.cliente_telefone}</span>
-            </a>
-          )}
         </div>
         <div className="shrink-0">
           <ChatPedidoButton
