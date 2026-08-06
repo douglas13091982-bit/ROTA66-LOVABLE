@@ -179,6 +179,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100]">
                 <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
+                    <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5 flex items-center justify-center">
                       <AvatarImg 
                         src={perfil.avatarUrl} 
                         alt="Avatar" 
@@ -189,6 +190,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                           </div>
                         }
                       />
+                    </div>
                   </div>
                   <h2 className="text-lg font-black tracking-tight text-white mb-1 leading-none uppercase">
                     {perfil.fullName || "Entregador"}
