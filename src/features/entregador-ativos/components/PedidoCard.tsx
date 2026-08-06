@@ -582,10 +582,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 pattern="[0-9]*"
               >
                 <InputOTPGroup>
-                  <InputOTPSlot index={0} className="h-14 w-12 text-2xl" />
-                  <InputOTPSlot index={1} className="h-14 w-12 text-2xl" />
-                  <InputOTPSlot index={2} className="h-14 w-12 text-2xl" />
-                  <InputOTPSlot index={3} className="h-14 w-12 text-2xl" />
+                  <InputOTPSlot index={0} className="h-14 w-12 text-2xl text-[#0f1b2d]" />
+                  <InputOTPSlot index={1} className="h-14 w-12 text-2xl text-[#0f1b2d]" />
+                  <InputOTPSlot index={2} className="h-14 w-12 text-2xl text-[#0f1b2d]" />
+                  <InputOTPSlot index={3} className="h-14 w-12 text-2xl text-[#0f1b2d]" />
                 </InputOTPGroup>
               </InputOTP>
             </div>
