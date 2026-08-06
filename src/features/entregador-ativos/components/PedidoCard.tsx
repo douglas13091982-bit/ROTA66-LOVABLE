@@ -79,14 +79,10 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
     await supabase.rpc("entregador_chegou_coleta" as never, {
       _pedido_id: p.id,
     } as never);
-    const { error } = await supabase.rpc("entregador_confirmar_coleta" as never, {
+    await supabase.rpc("entregador_confirmar_coleta" as never, {
       _pedido_id: p.id,
     } as never);
-    if (error) {
-      toast.error(error.message);
-      setColetaFixada(false);
-      return;
-    }
+
     toast.success(`Coleta registrada! Código: ${p.codigo_coleta ?? "—"}`);
   }
 

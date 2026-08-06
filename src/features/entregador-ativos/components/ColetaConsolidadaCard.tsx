@@ -114,16 +114,13 @@ export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
                   await supabase.rpc("entregador_chegou_coleta" as never, {
                     _pedido_id: p.id,
                   } as never);
-                  const { error } = await supabase.rpc(
+                  await supabase.rpc(
                     "entregador_confirmar_coleta" as never,
                     { _pedido_id: p.id } as never,
                   );
-                  if (error) {
-                    toast.error(error.message);
-                    return;
-                  }
                 }
                 toast.success("Coleta registrada! Siga para a entrega.");
+
 
               })();
             }}
