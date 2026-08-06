@@ -83,7 +83,7 @@ export function CadastroPage({
             {role === "loja_admin" && refCodigo && (
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[13px] text-emerald-200">
                 {indicador
-                  ? <>Indicado por <strong>{indicador.fullName || indicador.nome || (indicador.tipo === "revendedor" ? "revendedor parceiro" : "entregador parceiro")}</strong> ({refCodigo})</>
+                  ? <>Indicado por <strong>{indicador.fullName || indicador.nome || "entregador parceiro"}</strong> ({refCodigo})</>
                   : <>Validando código <strong>{refCodigo}</strong>…</>}
               </div>
             )}
