@@ -181,7 +181,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
                       {perfil.avatarUrl ? (
                         <img 
-                          src={perfil.avatarUrl.startsWith('http') ? perfil.avatarUrl : supabase.storage.from('perfil').getPublicUrl(perfil.avatarUrl).data.publicUrl} 
+                          src={perfil.avatarUrl.startsWith('http') ? perfil.avatarUrl : supabase.storage.from('avatars').getPublicUrl(perfil.avatarUrl).data.publicUrl} 
                           alt="Avatar" 
                           className="h-full w-full object-cover"
                           onError={(e) => {
