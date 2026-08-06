@@ -480,7 +480,6 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
         ) : !revealedEntrega ? (
           <CtaButton
-            className="tracking-wider uppercase"
             onClick={() => {
               void (async () => {
                 setRevealedEntrega(true);
@@ -554,7 +553,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             }}
           >
             <div
-              className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.22em] font-bold"
+              className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider font-bold"
               style={{ color: MUTED }}
             >
               <KeyRound className="h-3.5 w-3.5" /> Digite o código do cliente
@@ -623,7 +622,7 @@ function Stat({
     >
       {icon}
       <div
-        className="text-[10px] font-semibold uppercase tracking-[0.18em] mt-2"
+        className="text-[10px] font-semibold uppercase tracking-wider mt-2"
         style={{ color: mutedColor ?? "#8FA3B8" }}
       >
         {label}
