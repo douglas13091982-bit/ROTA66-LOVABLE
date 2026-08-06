@@ -33,24 +33,29 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-white border border-border rounded-xl p-6 shadow-sm h-full flex flex-col">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-navy text-xs uppercase tracking-wider font-bold">
-          <Wallet className="h-3.5 w-3.5" /> Saldo da loja
+    <section className="bg-white border border-border rounded-2xl p-8 shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-slate-50 rounded-xl">
+            <Wallet className="h-6 w-6 text-navy" />
+          </div>
+          <div>
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Saldo da Loja</h3>
+            <p className="text-[11px] text-muted-foreground">Recarga pré-paga para entregas</p>
+          </div>
         </div>
         {negativo && (
-          <span className="inline-flex items-center rounded-full bg-destructive/15 text-destructive border border-destructive/30 px-2 py-0.5 text-[10px] font-bold uppercase">
-            Saldo negativo
+          <span className="inline-flex items-center rounded-full bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+            Saldo insuficiente
           </span>
         )}
       </div>
 
-      <div className={`text-5xl font-bold mt-2 ${negativo ? "text-destructive" : "text-navy"}`}>
+      <div className={`text-5xl font-black ${negativo ? "text-destructive" : "text-navy"}`}>
         {saldoQ.isLoading ? "..." : brl(saldo)}
       </div>
-      <p className="text-[11px] leading-relaxed text-muted-foreground mt-3 max-w-[280px]">
-        A cada entrega concluída, o valor da taxa é debitado deste saldo e creditado
-        ao entregador. Mantenha um saldo positivo para evitar bloqueios.
+      <p className="text-[11px] leading-relaxed text-muted-foreground/80 mt-6 max-w-[320px]">
+        O valor de cada entrega é debitado deste saldo. Mantenha-o sempre positivo para que sua loja continue visível.
       </p>
 
       {!recarga && (
