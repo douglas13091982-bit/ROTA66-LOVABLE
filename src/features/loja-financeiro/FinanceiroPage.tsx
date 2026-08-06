@@ -90,7 +90,7 @@ export function FinanceiroPage() {
     <LojaShell title="Financeiro">
       <div className="space-y-6 w-full">
         {/* Top Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
           <SaldoLojaCard lojaId={loja.id} />
           <SaquesLojaCard lojaId={loja.id} />
         </div>
