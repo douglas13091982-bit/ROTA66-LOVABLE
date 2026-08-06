@@ -90,7 +90,7 @@ function PedidoRowCompactoBase({
         </div>
 
         <div className="text-right shrink-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] !text-white/75">
+          <p className="text-[11px] font-bold uppercase tracking-normal !text-white/75">
             Ganhos
           </p>
           <p className="text-[28px] font-black !text-white tracking-tight tabular-nums leading-none mt-1">

@@ -159,7 +159,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                     <span className="text-xs uppercase tracking-[0.18em] text-white/50 font-black">
                       Coleta
                     </span>
-                    <span className="font-display text-5xl md:text-6xl tracking-[0.3em] text-[#AE0000] select-all leading-none font-black">
+                    <span className="font-display text-5xl md:text-6xl tracking-normal text-[#AE0000] select-all leading-none font-black">
                       {p.codigo_coleta ?? codigo}
                     </span>
                   </div>
