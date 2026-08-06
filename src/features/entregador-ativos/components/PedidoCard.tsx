@@ -238,7 +238,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
         </div>
       </div>
 
-      <div className="my-4 sm:my-5 h-px" style={{ background: DIVIDER }} />
+      <div className="my-6 sm:my-8 h-px" style={{ background: DIVIDER }} />
 
       {/* Cliente / Loja */}
       <div className="flex items-center gap-3">
@@ -249,7 +249,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-base truncate uppercase" style={{ color: TEXT }}>
+          <div className="font-black text-xl truncate uppercase" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
 
@@ -266,12 +266,12 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
 
 
-      <div className="my-5 h-px" style={{ background: DIVIDER }} />
+      <div className="my-8 h-px" style={{ background: DIVIDER }} />
 
       {/* Endereço */}
       <div>
         <div
-          className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
+          className="text-[13px] font-black uppercase tracking-[0.2em] mb-4"
           style={{ color: MUTED }}
         >
           {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
@@ -283,7 +283,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             <MapPin className="h-5 w-5" style={{ color: RED }} />
           </div>
-          <div className="flex-1 min-w-0 text-[15px] leading-snug font-medium" style={{ color: TEXT }}>
+          <div className="flex-1 min-w-0 text-lg leading-tight font-bold" style={{ color: TEXT }}>
             {endereco}
             {!isColeta && p.complemento ? `, ${p.complemento}` : ""}
           </div>
@@ -319,7 +319,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           {/* Você recebe */}
           <div className="text-center py-2">
             <div
-              className="text-[11px] font-semibold uppercase tracking-[0.24em]"
+              className="text-[13px] font-bold uppercase tracking-[0.24em]"
               style={{ color: MUTED }}
             >
               Você recebe

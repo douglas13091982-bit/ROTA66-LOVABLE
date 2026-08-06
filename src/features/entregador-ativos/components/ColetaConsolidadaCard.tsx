@@ -47,20 +47,20 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
       <div className="relative">
         <div className="flex flex-col items-center text-center mb-4 gap-2">
           <div>
-            <div className="text-sm uppercase tracking-[0.22em] text-muted-foreground font-bold">Coleta agrupada</div>
-            <div className="font-display text-2xl md:text-3xl tracking-[0.06em] mt-0.5 text-navy">
+            <div className="text-base uppercase tracking-[0.22em] text-muted-foreground font-black">Coleta agrupada</div>
+            <div className="font-display text-4xl md:text-5xl tracking-[0.06em] mt-1 text-navy font-black">
               {pedidos.length} pedidos
             </div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground mt-1.5 font-bold">
+            <div className="text-xs uppercase tracking-[0.18em] text-muted-foreground mt-2 font-bold">
               Rota com {totalRota} paradas no total
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
             <span className="inline-flex flex-col items-center px-4 py-2 rounded-xl bg-gray-50 border border-border/40">
-              <span className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground font-bold">
+              <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground font-black">
                 Você recebe
               </span>
-              <span className="font-display text-2xl text-navy leading-none mt-0.5">
+              <span className="font-display text-4xl text-navy leading-none mt-1 font-black">
                 R$ {total.total.toFixed(2).replace(".", ",")}
               </span>
               {total.bonus > 0 && (
@@ -74,11 +74,11 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
         </div>
 
 
-        <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mt-2 mb-1.5 font-bold">
+        <div className="text-[13px] uppercase tracking-[0.22em] text-muted-foreground mt-4 mb-2 font-black">
           Endereço de coleta
         </div>
         <div className="flex items-start gap-3 mb-4">
-          <div className="flex items-start gap-2 flex-1 min-w-0 text-sm bg-gray-50 border border-border/40 rounded-lg px-3 py-2.5 text-navy">
+          <div className="flex items-start gap-2 flex-1 min-w-0 text-lg bg-gray-50 border border-border/40 rounded-lg px-4 py-3 text-navy">
             <MapPin className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
             <span className="font-bold">{endereco}</span>
           </div>
@@ -137,8 +137,8 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
 
         ) : (
           <div className="rounded-xl border border-white/10 bg-white/5 p-5 space-y-3">
-            <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.22em] text-white/50 mb-2 font-bold">
-              <KeyRound className="h-3.5 w-3.5" /> Confirmação de coleta
+            <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.22em] text-white/60 mb-3 font-black">
+              <KeyRound className="h-4 w-4" /> Confirmação de coleta
             </div>
             {[...pedidos]
               .sort((a, b) => Number(a.numero) - Number(b.numero))
@@ -148,18 +148,18 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                   className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-4 py-3"
                 >
                   <div className="flex flex-col">
-                    <span className="text-[9px] uppercase tracking-[0.18em] text-white/50 font-bold">
+                    <span className="text-xs uppercase tracking-[0.18em] text-white/50 font-black">
                       Pedido
                     </span>
-                    <span className="font-display text-2xl md:text-3xl tracking-[0.06em] leading-none text-white select-all">
+                    <span className="font-display text-4xl md:text-5xl tracking-[0.06em] leading-none text-white select-all font-black">
                       #{p.numero}
                     </span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-[9px] uppercase tracking-[0.18em] text-white/50 font-bold">
+                    <span className="text-xs uppercase tracking-[0.18em] text-white/50 font-black">
                       Coleta
                     </span>
-                    <span className="font-display text-3xl md:text-4xl tracking-[0.3em] text-[#AE0000] select-all leading-none">
+                    <span className="font-display text-5xl md:text-6xl tracking-[0.3em] text-[#AE0000] select-all leading-none font-black">
                       {p.codigo_coleta ?? codigo}
                     </span>
                   </div>

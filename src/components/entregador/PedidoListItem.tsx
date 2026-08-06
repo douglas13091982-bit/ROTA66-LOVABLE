@@ -114,10 +114,10 @@ function PedidoListItemBase({
                 <AlertTriangle className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] font-black text-white uppercase tracking-[0.18em] leading-none">
+                <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] leading-none">
                   Atrasado
                 </span>
-                <span className="text-sm font-black text-white leading-tight mt-0.5">
+                <span className="text-lg font-black text-white leading-tight mt-1">
                   {minutosAtraso} min
                 </span>
               </div>
@@ -142,15 +142,15 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[10px] font-black text-white uppercase tracking-[0.25em] mb-1">Ganhos</p>
-          <p className="text-4xl font-black text-white tracking-tighter tabular-nums leading-none">
+          <p className="text-[11px] font-black text-white uppercase tracking-[0.25em] mb-1.5">Ganhos</p>
+          <p className="text-5xl font-black text-white tracking-tighter tabular-nums leading-none">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
       </div>
 
       {/* Body */}
-      <div className="p-5 space-y-5">
+      <div className="p-5 space-y-7">
         {/* Timeline: loja → cliente */}
         <div className="relative">
           <div
@@ -168,18 +168,18 @@ function PedidoListItemBase({
             </div>
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-[14px] font-black text-[#0f1b2d] uppercase tracking-wide truncate">
+                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-wide truncate">
                   {nomeLoja}
                 </h3>
               </div>
-              <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+              <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
                 {bairroLoja || "Loja"}
                 {kmLoja && <span className="ml-1.5 text-[#6B7688]">· {kmLoja} km</span>}
               </p>
             </div>
           </div>
 
-          <div className="h-4" />
+          <div className="h-6" />
 
           {/* Cliente (entrega) */}
           <div className="flex items-start gap-4 relative">
@@ -192,19 +192,19 @@ function PedidoListItemBase({
             <div className="flex-1 min-w-0 pt-1">
               {ehRota ? (
                 <>
-                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight">
-                    {grupo.items.length} entregas agrupadas
+                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-tight">
+                    {grupo.items.length} ENTREGAS AGRUPADAS
                   </h3>
-                  <p className="text-[11px] font-medium mt-0.5" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-bold mt-1 uppercase tracking-wide" style={{ color: BRAND.gray }}>
                     Endereços liberados após aceitar
                   </p>
                 </>
               ) : (
                 <>
-                  <h3 className="text-[13px] font-bold text-[#0f1b2d] leading-tight truncate">
+                  <h3 className="text-lg font-bold text-[#0f1b2d] leading-tight truncate">
                     {endereco || "Cliente"}
                   </h3>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider mt-0.5" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
                     Cliente
                     {distEntrega && <span className="ml-1.5 text-[#6B7688]">· {distEntrega} km</span>}
                   </p>
