@@ -1,4 +1,4 @@
-import { Check, Copy, Loader2, Wallet } from "lucide-react";
+import { Check, Copy, Loader2, Wallet, History } from "lucide-react";
 import { useState } from "react";
 import { useSaldoLoja } from "../hooks/use-saldo-loja";
 import { formatCurrency } from "@/lib/format/currency";
