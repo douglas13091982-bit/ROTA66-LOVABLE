@@ -125,7 +125,7 @@ function PedidoListItemBase({
           ) : (
             <>
               <span
-                className="text-[10px] font-black text-white/70 uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg"
+                className="text-[10px] font-black text-white/70 uppercase tracking-normal px-2.5 py-1 rounded-lg"
                 style={{ background: "rgba(255,255,255,0.08)" }}
               >
                 #{principal.numero}
