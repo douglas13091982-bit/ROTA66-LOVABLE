@@ -142,8 +142,8 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[9px] font-black text-white uppercase tracking-[0.2em]">Ganhos</p>
-          <p className="text-2xl font-black text-white tracking-tight tabular-nums">
+          <p className="text-[10px] font-black text-white uppercase tracking-[0.25em] mb-1">Ganhos</p>
+          <p className="text-4xl font-black text-white tracking-tighter tabular-nums leading-none">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
