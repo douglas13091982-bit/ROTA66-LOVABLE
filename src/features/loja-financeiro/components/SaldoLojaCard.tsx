@@ -164,33 +164,35 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
 
       {!!movsQ.data?.length && (
         <div className="mt-6">
-          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
-            Últimos movimentos
+          <div className="text-xs font-bold uppercase tracking-wider text-navy mb-4 flex items-center gap-2">
+            <History className="h-4 w-4" /> Últimos movimentos
           </div>
-          <ul className="divide-y divide-border max-h-64 overflow-y-auto">
-            {movsQ.data!.map((m) => {
-              const positivo = m.valor > 0;
-              return (
-                <li key={m.id} className="py-2 flex items-center justify-between text-sm">
-                  <div className="min-w-0 pr-3">
-                    <div className="truncate">{m.descricao ?? m.tipo}</div>
-                    <div className="text-[10px] text-muted-foreground">
-                      {new Date(m.created_at).toLocaleString("pt-BR")}
+          <div className="bg-background border border-border rounded-lg overflow-hidden">
+            <ul className="divide-y divide-border max-h-[400px] overflow-y-auto">
+              {movsQ.data!.map((m) => {
+                const positivo = m.valor > 0;
+                return (
+                  <li key={m.id} className="p-4 flex items-center justify-between text-sm hover:bg-muted/30 transition-colors">
+                    <div className="min-w-0 pr-3">
+                      <div className="font-semibold text-navy truncate">{m.descricao ?? m.tipo}</div>
+                      <div className="text-[11px] text-muted-foreground mt-1">
+                        {new Date(m.created_at).toLocaleString("pt-BR")}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`font-bold ${positivo ? "text-green-600" : "text-destructive"}`}>
-                      {positivo ? "+" : ""}
-                      {brl(m.valor)}
+                    <div className="text-right">
+                      <div className={`font-bold text-base ${positivo ? "text-green-600" : "text-destructive"}`}>
+                        {positivo ? "+" : ""}
+                        {brl(m.valor)}
+                      </div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">
+                        Saldo: {brl(m.saldo_apos)}
+                      </div>
                     </div>
-                    <div className="text-[10px] text-muted-foreground">
-                      Saldo: {brl(m.saldo_apos)}
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       )}
     </section>
