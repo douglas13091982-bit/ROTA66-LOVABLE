@@ -21,7 +21,7 @@ type Deps = {
   contratoAtivo: ContratoAtivo;
   contratoLoading: boolean;
   indicadorId?: string | null;
-  indicadorTipo?: "entregador" | "revendedor" | null;
+  indicadorTipo?: "entregador" | null;
   redirectTo?: string;
 };
 
