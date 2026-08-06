@@ -171,26 +171,26 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       )}
 
-      <div className="pt-2 border-t border-border">
-        <div className="text-xs font-bold uppercase text-muted-foreground mb-2">Últimos saques</div>
+      <div className="pt-8 border-t border-border">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Últimos saques</div>
         {saquesQ.isLoading ? (
-          <div className="text-xs text-muted-foreground">Carregando…</div>
+          <div className="text-[10px] text-muted-foreground">Carregando…</div>
         ) : (saquesQ.data ?? []).length === 0 ? (
-          <div className="text-xs text-muted-foreground">Nenhum saque ainda.</div>
+          <div className="text-[10px] text-muted-foreground">Nenhum saque ainda.</div>
         ) : (
-          <div className="space-y-2">
-            {(saquesQ.data ?? []).map((s) => (
-              <div key={s.id} className="flex items-center justify-between text-sm bg-background border border-border rounded-md px-3 py-2">
+          <div className="space-y-4">
+            {(saquesQ.data ?? []).slice(0, 3).map((s) => (
+              <div key={s.id} className="flex items-center justify-between group">
                 <div className="min-w-0">
-                  <div className="font-semibold">{brl(Number(s.valor))}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">
-                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave}
+                  <div className="text-lg font-bold text-navy/80">{brl(Number(s.valor))}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave.slice(0, 4)}***
                   </div>
-                  {s.motivo_rejeicao && (
-                    <div className="text-[11px] text-destructive">Motivo: {s.motivo_rejeicao}</div>
-                  )}
                 </div>
-                <StatusBadge status={s.status} />
+                <div className="flex flex-col items-end gap-1">
+                  <StatusBadge status={s.status} />
+                  {s.status === 'pago' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-tighter">Pago</span>}
+                </div>
               </div>
             ))}
           </div>
