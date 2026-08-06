@@ -1,3 +1,4 @@
+import { i18nConfig } from "./i18n-config";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 

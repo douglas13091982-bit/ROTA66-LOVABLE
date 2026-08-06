@@ -47,5 +47,6 @@ export function formatRelative(input: DateInput, now: Date = new Date()): string
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${agoStr} ${hours} h`;
   const days = Math.floor(hours / 24);
-  return `${agoStr} ${days} d`;
+  const daysStr = isPt ? "d" : "d"; // Em espanhol 'd' também é comum para 'días'
+  return `${agoStr} ${days} ${daysStr}`;
 }

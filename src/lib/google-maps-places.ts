@@ -1,3 +1,4 @@
+import { i18nConfig } from "./i18n-config";
 const BROWSER_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as
   | string
   | undefined;
