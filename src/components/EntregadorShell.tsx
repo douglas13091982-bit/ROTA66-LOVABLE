@@ -159,7 +159,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 pb-24 relative pt-16 bg-[#f5f7fa]">
+        <main className="flex-1 px-4 pb-24 relative pt-16 bg-[#f5f7fa] isolation-auto">
           <div className="fixed top-0 left-0 right-0 h-16 z-[60] flex items-center justify-between px-4 pointer-events-none bg-[#f5f7fa]">
             <button 
               onClick={() => setOpen(true)}
@@ -175,7 +175,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             )}
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden">
+            <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100]">
                 <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
                     <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
