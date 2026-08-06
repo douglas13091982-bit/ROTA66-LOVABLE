@@ -33,53 +33,56 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-white border border-border rounded-xl p-6 shadow-sm h-full flex flex-col">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-navy text-xs uppercase tracking-wider font-bold">
-          <Wallet className="h-3.5 w-3.5" /> Saldo da loja
+    <section className="bg-white border border-border rounded-2xl p-8 shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-slate-50 rounded-xl">
+            <Wallet className="h-6 w-6 text-navy" />
+          </div>
+          <div>
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Saldo da Loja</h3>
+            <p className="text-[11px] text-muted-foreground">Recarga pré-paga para entregas</p>
+          </div>
         </div>
         {negativo && (
-          <span className="inline-flex items-center rounded-full bg-destructive/15 text-destructive border border-destructive/30 px-2 py-0.5 text-[10px] font-bold uppercase">
-            Saldo negativo
+          <span className="inline-flex items-center rounded-full bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+            Saldo insuficiente
           </span>
         )}
       </div>
 
-      <div className={`text-5xl font-bold mt-2 ${negativo ? "text-destructive" : "text-navy"}`}>
+      <div className={`text-5xl font-black ${negativo ? "text-destructive" : "text-navy"}`}>
         {saldoQ.isLoading ? "..." : brl(saldo)}
       </div>
-      <p className="text-[11px] leading-relaxed text-muted-foreground mt-3 max-w-[280px]">
-        A cada entrega concluída, o valor da taxa é debitado deste saldo e creditado
-        ao entregador. Mantenha um saldo positivo para evitar bloqueios.
+      <p className="text-[11px] leading-relaxed text-muted-foreground/80 mt-6 max-w-[320px]">
+        O valor de cada entrega é debitado deste saldo. Mantenha-o sempre positivo para que sua loja continue visível.
       </p>
 
       {!recarga && (
-        <div className="mt-5 space-y-3">
+        <div className="mt-8 space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
               Valor da recarga
             </label>
-            <div className="flex gap-2">
-              <span className="inline-flex items-center px-3 rounded-md border border-border bg-background text-sm">
-                {i18nConfig.currencySymbol}
-              </span>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-navy font-bold">{i18nConfig.currencySymbol}</span>
               <input
                 type="number"
                 min={5}
                 step="0.01"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+                className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-lg font-bold text-navy focus:bg-white focus:ring-2 focus:ring-navy/5 transition-all outline-none"
                 placeholder="0,00"
               />
             </div>
-            <div className="flex flex-wrap gap-1.5 mt-2">
+            <div className="flex flex-wrap gap-2 mt-4">
               {VALORES_SUGERIDOS.map((v) => (
                 <button
                   key={v}
                   type="button"
                   onClick={() => setValor(String(v))}
-                  className="px-2.5 py-1 rounded-md border border-border bg-background hover:bg-muted text-xs font-bold"
+                  className="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[11px] font-bold text-navy/70 transition-colors"
                 >
                   {i18nConfig.currencySymbol} {v}
                 </button>
@@ -89,10 +92,10 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
           <button
             onClick={gerarPix}
             disabled={criando}
-            className="w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs bg-red-600 hover:bg-red-700 shadow-md shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
+            className="w-full h-14 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {criando && <Loader2 className="h-4 w-4 animate-spin" />}
-            Recarregar via PIX
+            Gerar QR Code PIX
           </button>
         </div>
       )}
@@ -163,35 +166,38 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
       )}
 
       {!!movsQ.data?.length && (
-        <div className="mt-8 pt-6 border-t border-border">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-            Últimos movimentos
+        <div className="mt-8 pt-8 border-t border-slate-100">
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Últimos movimentos
+            </div>
+            <History className="h-3.5 w-3.5 text-muted-foreground/40" />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {movsQ.data!.slice(0, 5).map((m) => {
               const positivo = m.valor > 0;
               return (
-                <div key={m.id} className="flex items-center justify-between text-sm group">
+                <div key={m.id} className="flex items-center justify-between group">
                   <div className="min-w-0 pr-3">
-                    <div className="font-medium text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
+                    <div className="text-[13px] font-bold text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      {new Date(m.created_at).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(m.created_at).toLocaleString(i18nConfig.locale, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-bold text-sm ${positivo ? "text-green-600" : "text-destructive"}`}>
+                    <div className={`text-[15px] font-black ${positivo ? "text-green-600" : "text-destructive"}`}>
                       {positivo ? "+" : ""}{brl(m.valor)}
                     </div>
-                    <div className="text-[9px] text-muted-foreground mt-0.5 font-medium">
-                      Saldo: {brl(m.saldo_apos)}
+                    <div className="text-[9px] text-muted-foreground mt-0.5 font-bold uppercase tracking-tighter">
+                      Final: {brl(m.saldo_apos)}
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          <button className="mt-6 w-full text-[10px] font-bold uppercase tracking-widest text-navy/60 hover:text-destructive transition-colors flex items-center justify-center gap-2">
-            Ver todos os movimentos <span className="text-lg">›</span>
+          <button className="mt-8 w-full text-[10px] font-bold uppercase tracking-widest text-navy/40 hover:text-navy transition-all flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-slate-50">
+            Ver extrato completo <span className="text-lg">›</span>
           </button>
         </div>
       )}
