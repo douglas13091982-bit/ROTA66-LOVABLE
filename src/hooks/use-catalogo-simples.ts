@@ -14,7 +14,11 @@ export function useCatalogoSimples(lojaId: string) {
         .order("nome", { ascending: true });
 
       if (error) throw error;
-      return data as { id: string; nome: string; preco: number }[];
+      return (data as any[] || []).map(p => ({
+        id: String(p.id),
+        nome: String(p.nome),
+        preco: Number(p.preco || 0)
+      })) as { id: string; nome: string; preco: number }[];
     },
     staleTime: 60000,
   });
