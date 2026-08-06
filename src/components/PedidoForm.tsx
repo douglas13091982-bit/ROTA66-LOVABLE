@@ -11,6 +11,7 @@ import {
   User,
   FileText,
   CreditCard,
+  ChevronDown,
 } from "lucide-react";
 import { AddressAutocomplete } from "@/components/AddressAutocomplete";
 import {
@@ -21,6 +22,13 @@ import {
   useClientesAutocomplete,
   type ClienteSugestao,
 } from "@/hooks/use-clientes-autocomplete";
+import { useCatalogoSimples } from "@/hooks/use-catalogo-simples";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const INPUT_CLS =
   "w-full h-12 px-3.5 bg-background/60 border border-border rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-primary/50 transition";
@@ -180,6 +188,7 @@ export function PedidoForm({
       {/* Itens + iFood */}
       <div className={CARD_CLS}>
         <ItensSection
+          lojaId={lojaId}
           itens={form.itens}
           onUpdate={form.updateItem}
           onAdd={form.addItem}
@@ -492,11 +501,13 @@ function SecaoEnderecoColeta({
 }
 
 function ItensSection({
+  lojaId,
   itens,
   onUpdate,
   onAdd,
   onRemove,
 }: {
+  lojaId: string;
   itens: { nome: string; qtd: number; preco: number }[];
   onUpdate: (
     idx: number,
@@ -505,6 +516,8 @@ function ItensSection({
   onAdd: () => void;
   onRemove: (idx: number) => void;
 }) {
+  const { data: catalogo } = useCatalogoSimples(lojaId);
+  const temCatalogo = catalogo && catalogo.length > 0;
   return (
     <div>
       <div className="flex items-center justify-between gap-3 mb-2">
@@ -523,17 +536,52 @@ function ItensSection({
             key={idx}
             className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.25rem] gap-2 items-center sm:grid-cols-[minmax(0,1fr)_6rem_6rem_2.25rem]"
           >
-            <div className="relative col-span-full min-w-0 sm:col-span-1">
-              <FieldIcon>
-                <Package className="h-4 w-4" />
-              </FieldIcon>
-              <input
-                className={INPUT_ICON_CLS}
-                placeholder="Descrição do item"
-                value={it.nome}
-                onChange={(e) => onUpdate(idx, { nome: e.target.value })}
-                maxLength={120}
-              />
+            <div className="relative col-span-full min-w-0 sm:col-span-1 flex gap-1">
+              <div className="relative flex-1">
+                <FieldIcon>
+                  <Package className="h-4 w-4" />
+                </FieldIcon>
+                <input
+                  className={INPUT_ICON_CLS}
+                  placeholder="Descrição do item"
+                  value={it.nome}
+                  onChange={(e) => onUpdate(idx, { nome: e.target.value })}
+                  maxLength={120}
+                />
+              </div>
+
+              {temCatalogo && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="h-12 px-2 border border-border rounded-xl bg-background/60 hover:bg-accent transition flex items-center justify-center text-muted-foreground"
+                      title="Selecionar do catálogo"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[280px] max-h-[300px] overflow-auto">
+                    {catalogo.map((prod) => (
+                      <DropdownMenuItem
+                        key={prod.id}
+                        onSelect={() => {
+                          onUpdate(idx, {
+                            nome: prod.nome,
+                            preco: Number(prod.preco),
+                          });
+                        }}
+                        className="flex flex-col items-start gap-0.5 py-2 cursor-pointer"
+                      >
+                        <span className="font-bold text-sm">{prod.nome}</span>
+                        <span className="text-xs text-primary font-medium">
+                          R$ {Number(prod.preco).toFixed(2)}
+                        </span>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
 
             <input
