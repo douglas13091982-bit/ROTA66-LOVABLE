@@ -34,10 +34,10 @@ export function RastreioHeader({
 
         {entregadorNome && (
           <div className="flex flex-col items-center gap-2 pt-2 animate-in fade-in slide-in-from-top-4 duration-500">
-            <Avatar className="h-16 w-16 border-2 border-[#AE0000]/20">
+            <Avatar className="h-24 w-24 border-2 border-[#AE0000]/20 shadow-xl">
               <AvatarImage src={entregadorFoto || undefined} alt={entregadorNome} className="object-cover" />
               <AvatarFallback className="bg-gray-100 text-[#0d2c54]">
-                <User className="h-8 w-8" />
+                <User className="h-12 w-12" />
               </AvatarFallback>
             </Avatar>
             <div className="text-center">
