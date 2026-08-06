@@ -73,7 +73,7 @@ export function loadGoogleMaps(): Promise<void> {
       libraries: "places",
       loading: "async",
       callback: "__lovableInitMaps",
-      language: "pt-BR",
+      language: i18nConfig.locale,
       region: "BR",
     });
     if (TRACKING_ID) params.set("channel", TRACKING_ID);
@@ -105,7 +105,7 @@ export async function fetchAutocompleteAddressSuggestions(
       input,
       sessionToken: token,
       includedRegionCodes: ["br"],
-      language: "pt-BR",
+      language: i18nConfig.locale,
       region: "BR",
     });
 
@@ -127,7 +127,7 @@ export async function fetchPlaceDetails(
   await loadGoogleMaps();
   const places = await (window as any).google.maps.importLibrary("places");
   const { Place } = places;
-  const place = new Place({ id: suggestion.placeId, requestedLanguage: "pt-BR" });
+  const place = new Place({ id: suggestion.placeId, requestedLanguage: i18nConfig.locale });
   await place.fetchFields({
     fields: ["formattedAddress", "addressComponents", "location", "displayName"],
   });

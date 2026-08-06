@@ -16,7 +16,7 @@ export const reverseGeocode = createServerFn({ method: "GET" })
     if (!apiKey || !connKey) {
       return { address: null as string | null, cidade: null as string | null, uf: null as string | null, error: "missing_credentials" };
     }
-    const url = `${GATEWAY_URL}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=pt-BR`;
+    const url = `${GATEWAY_URL}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=${i18nConfig.locale}`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
