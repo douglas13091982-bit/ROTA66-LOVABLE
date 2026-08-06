@@ -1,6 +1,8 @@
 import { Check, Copy, Loader2, Wallet } from "lucide-react";
 import { useState } from "react";
 import { useSaldoLoja } from "../hooks/use-saldo-loja";
+import { formatCurrency } from "@/lib/format/currency";
+import { i18nConfig } from "@/lib/i18n-config";
 
 const brl = (v: number) =>
   formatCurrency(v);
@@ -59,7 +61,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
             </label>
             <div className="flex gap-2">
               <span className="inline-flex items-center px-3 rounded-md border border-border bg-background text-sm">
-                R$
+                {i18nConfig.currencySymbol}
               </span>
               <input
                 type="number"
@@ -79,7 +81,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
                   onClick={() => setValor(String(v))}
                   className="px-2.5 py-1 rounded-md border border-border bg-background hover:bg-muted text-xs font-bold"
                 >
-                  R$ {v}
+                  {i18nConfig.currencySymbol} {v}
                 </button>
               ))}
             </div>

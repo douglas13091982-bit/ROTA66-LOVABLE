@@ -128,7 +128,7 @@ export function AdminSaquesRevendedoresContent() {
                     <span className="text-muted-foreground font-normal text-xs">({s.revendedor_email})</span>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Solicitado em {new Date(s.created_at)toLocaleString(i18nConfig.locale)}
+                    Solicitado em {new Date(s.created_at).toLocaleString(i18nConfig.locale)}
                   </div>
                   <div className="mt-2 flex items-center gap-2 flex-wrap text-sm">
                     <span className="text-muted-foreground">PIX:</span>
