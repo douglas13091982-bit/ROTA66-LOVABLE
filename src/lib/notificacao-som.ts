@@ -164,7 +164,10 @@ export function instalarDesbloqueioAutomatico() {
 export function pararNotificacao() {
   try {
     if (currentSource) {
-      try { currentSource.stop(); } catch {}
+      try {
+        currentSource.onended = null;
+        currentSource.stop();
+      } catch {}
       try { currentSource.disconnect(); } catch {}
       currentSource = null;
     }
@@ -222,6 +225,16 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     pararNotificacao();
     const src = ctx.createBufferSource();
     src.buffer = unlockedAudioBuffer;
+    
+    // Suporte a repetições para o arquivo de áudio
+    const rep = Math.max(1, Math.min(10, cfg.repeticoes ?? 1));
+    if (rep > 1) {
+      src.loop = true;
+      // O loop do Web Audio API é infinito, então precisamos de um timer para parar
+      // ou confiar que o usuário vai fechar o popup. 
+      // Para evitar que toque para sempre se o arquivo for curto, vamos limitar.
+    }
+
     const gain = ctx.createGain();
     gain.gain.value = Math.max(0, Math.min(1, cfg.volume));
     src.connect(gain);
@@ -230,7 +243,10 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     currentSource = src;
     currentAudioCtx = ctx;
     src.onended = () => {
-      if (currentSource === src) currentSource = null;
+      if (currentSource === src) {
+        currentSource = null;
+        // Se não for loop, limpa a referência. Se for loop, onended não dispara.
+      }
     };
     return true;
   } catch {

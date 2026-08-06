@@ -73,7 +73,7 @@ export function usePopupNotificacao(grupos: GrupoPedido[]) {
       if (somCfg.audio_path && !somPronto) return;
       lastSeenKeyRef.current = currentKey;
       setPopupOpen(true);
-      tocarNotificacao(somCfg);
+      tocarNotificacao({ ...somCfg, repeticoes: 1 }); // Apenas 1 vez para evitar loop infinito de áudio longo
     }
   }, [currentKey, somCfg, somPronto]);
 
