@@ -136,7 +136,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [mensagens, open]);
+  }, [mensagens, open, viewportH]);
 
   // Marcar como lidas as mensagens recebidas
   useEffect(() => {
