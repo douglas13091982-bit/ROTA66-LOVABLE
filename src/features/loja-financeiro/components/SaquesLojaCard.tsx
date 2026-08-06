@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { Wallet, Send, CheckCircle2, XCircle, Clock, Save } from "lucide-react";
+import { Wallet, Send, CheckCircle2, XCircle, Clock, Save, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
