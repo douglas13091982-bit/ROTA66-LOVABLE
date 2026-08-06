@@ -33,7 +33,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-card border border-border rounded-lg p-6">
+    <section className="bg-white border border-border rounded-xl p-6 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-navy text-xs uppercase tracking-wider font-bold">
           <Wallet className="h-3.5 w-3.5" /> Saldo da loja
@@ -45,10 +45,10 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
         )}
       </div>
 
-      <div className={`text-4xl font-bold ${negativo ? "text-destructive" : "text-navy"}`}>
+      <div className={`text-5xl font-bold mt-2 ${negativo ? "text-destructive" : "text-navy"}`}>
         {saldoQ.isLoading ? "..." : brl(saldo)}
       </div>
-      <p className="text-xs text-muted-foreground mt-1">
+      <p className="text-[11px] leading-relaxed text-muted-foreground mt-3 max-w-[280px]">
         A cada entrega concluída, o valor da taxa é debitado deste saldo e creditado
         ao entregador. Mantenha um saldo positivo para evitar bloqueios.
       </p>
@@ -89,7 +89,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
           <button
             onClick={gerarPix}
             disabled={criando}
-            className="w-full py-3 rounded-md font-bold uppercase tracking-wider text-sm bg-gradient-red shadow-red text-primary-foreground inline-flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs bg-red-600 hover:bg-red-700 shadow-md shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {criando && <Loader2 className="h-4 w-4 animate-spin" />}
             Recarregar via PIX
@@ -163,36 +163,36 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
       )}
 
       {!!movsQ.data?.length && (
-        <div className="mt-6">
-          <div className="text-xs font-bold uppercase tracking-wider text-navy mb-4 flex items-center gap-2">
-            <History className="h-4 w-4" /> Últimos movimentos
+        <div className="mt-8 pt-6 border-t border-border">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
+            Últimos movimentos
           </div>
-          <div className="bg-background border border-border rounded-lg overflow-hidden">
-            <ul className="divide-y divide-border max-h-[400px] overflow-y-auto">
-              {movsQ.data!.map((m) => {
-                const positivo = m.valor > 0;
-                return (
-                  <li key={m.id} className="p-4 flex items-center justify-between text-sm hover:bg-muted/30 transition-colors">
-                    <div className="min-w-0 pr-3">
-                      <div className="font-semibold text-navy truncate">{m.descricao ?? m.tipo}</div>
-                      <div className="text-[11px] text-muted-foreground mt-1">
-                        {new Date(m.created_at).toLocaleString("pt-BR")}
-                      </div>
+          <div className="space-y-4">
+            {movsQ.data!.slice(0, 5).map((m) => {
+              const positivo = m.valor > 0;
+              return (
+                <div key={m.id} className="flex items-center justify-between text-sm group">
+                  <div className="min-w-0 pr-3">
+                    <div className="font-medium text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">
+                      {new Date(m.created_at).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </div>
-                    <div className="text-right">
-                      <div className={`font-bold text-base ${positivo ? "text-green-600" : "text-destructive"}`}>
-                        {positivo ? "+" : ""}
-                        {brl(m.valor)}
-                      </div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5">
-                        Saldo: {brl(m.saldo_apos)}
-                      </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-bold text-sm ${positivo ? "text-green-600" : "text-destructive"}`}>
+                      {positivo ? "+" : ""}{brl(m.valor)}
                     </div>
-                  </li>
-                );
-              })}
-            </ul>
+                    <div className="text-[9px] text-muted-foreground mt-0.5 font-medium">
+                      Saldo: {brl(m.saldo_apos)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
+          <button className="mt-6 w-full text-[10px] font-bold uppercase tracking-widest text-navy/60 hover:text-destructive transition-colors flex items-center justify-center gap-2">
+            Ver todos os movimentos <span className="text-lg">›</span>
+          </button>
         </div>
       )}
     </section>

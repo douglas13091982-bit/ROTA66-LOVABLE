@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { Wallet, Send, CheckCircle2, XCircle, Clock, Save } from "lucide-react";
+import { Wallet, Send, CheckCircle2, XCircle, Clock, Save, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
@@ -10,17 +10,17 @@ import { i18nConfig } from "@/lib/i18n-config";
 const brl = (v: number) => formatCurrency(v);
 
 function StatusBadge({ status }: { status: SaqueLojaRow["status"] }) {
+  if (status === 'pago') return null;
   const map: Record<string, { cls: string; label: string; icon: any }> = {
-    solicitado: { cls: "bg-yellow-500/15 text-yellow-500", label: "Pendente", icon: Clock },
-    pago: { cls: "bg-green-500/15 text-green-500", label: "Pago", icon: CheckCircle2 },
+    solicitado: { cls: "bg-yellow-500/15 text-yellow-600", label: "Pendente", icon: Clock },
     rejeitado: { cls: "bg-destructive/15 text-destructive", label: "Rejeitado", icon: XCircle },
     cancelado: { cls: "bg-muted text-muted-foreground", label: "Cancelado", icon: XCircle },
   };
   const c = map[status] ?? map.solicitado;
   const Icon = c.icon;
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${c.cls}`}>
-      <Icon className="h-3 w-3" /> {c.label}
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${c.cls}`}>
+       {c.label}
     </span>
   );
 }
@@ -86,7 +86,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-card border border-border rounded-lg p-6 space-y-5">
+    <section className="bg-white border border-border rounded-xl p-6 space-y-5 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider font-bold">
           <Wallet className="h-3.5 w-3.5" /> Carteira de vendas
@@ -95,8 +95,8 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
       </div>
 
       <div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground">Disponível para saque</div>
-        <div className="text-3xl font-bold">{resumoQ.isLoading ? "…" : brl(saldo)}</div>
+        <div className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Disponível para saque</div>
+        <div className="text-4xl font-bold text-navy/40 mt-1">{resumoQ.isLoading ? "…" : brl(saldo)}</div>
         {(resumo?.saldo_bruto ?? 0) > saldo && (
           <div className="mt-2 grid gap-1 text-[11px] text-muted-foreground">
             <div className="flex justify-between"><span>Saldo bruto</span><span className="font-mono">{brl(Number(resumo?.saldo_bruto ?? 0))}</span></div>
@@ -113,51 +113,55 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       </div>
 
-      <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 px-3 py-2 text-xs">
-        ⚠️ Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+      <div className="rounded-xl border border-yellow-500/20 bg-yellow-50/50 p-4 flex items-start gap-3">
+        <div className="p-1.5 bg-yellow-500/20 rounded-full shrink-0">
+          <Clock className="h-3 w-3 text-yellow-600" />
+        </div>
+        <div className="text-[11px] leading-relaxed text-yellow-700">
+          Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+      <div className="space-y-3">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           Chave PIX para receber
         </label>
         <div className="flex gap-2">
           <input
             value={pix}
             onChange={(e) => setPix(e.target.value)}
-            placeholder="CPF, e-mail, telefone ou chave aleatória"
-            className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+            placeholder="CPF, e-mail, telefone..."
+            className="flex-1 px-4 py-3 rounded-xl border border-border bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-red-100 transition-all outline-none"
           />
           <button
             type="button"
             disabled={!pixMudou || !pix.trim() || salvarPixM.isPending}
             onClick={() => salvarPixM.mutate(pix)}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-border text-xs font-bold uppercase tracking-wider disabled:opacity-50"
-            title="Salvar como chave padrão"
+            className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-border bg-white text-[10px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-all disabled:opacity-50 shadow-sm"
           >
-            <Save className="h-3.5 w-3.5" /> Salvar
+            <Copy className="h-3.5 w-3.5" /> Copiar
           </button>
         </div>
-        {pixSalvo && !pixMudou && (
-          <p className="text-[11px] text-muted-foreground">Chave PIX salva.</p>
-        )}
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <input
-          value={valor}
-          onChange={(e) => setValor(e.target.value)}
-          placeholder={`Valor a sacar (${i18nConfig.currencySymbol})`}
-          inputMode="decimal"
-          className="px-3 py-2 rounded-md border border-border bg-background text-sm"
-        />
+      <div className="flex gap-2 pt-2">
+        <div className="flex-1 relative">
+          <input
+            value={valor}
+            onChange={(e) => setValor(e.target.value)}
+            placeholder={`Valor a sacar (${i18nConfig.currencySymbol})`}
+            inputMode="decimal"
+            className="w-full px-4 py-4 rounded-xl border border-border bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-red-100 transition-all outline-none pr-20"
+          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground">BRL</div>
+        </div>
         <button
           type="button"
           disabled={!pode || solicitarM.isPending || !pix.trim() || !valor}
           onClick={handleSolicitar}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-red-400 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest disabled:opacity-50 transition-all shadow-lg shadow-red-100 active:scale-95"
         >
-          <Send className="h-3.5 w-3.5" /> Solicitar saque
+          <Send className="h-4 w-4" /> Solicitar saque
         </button>
       </div>
       {!pode && !resumoQ.isLoading && (
@@ -172,26 +176,26 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       )}
 
-      <div className="pt-2 border-t border-border">
-        <div className="text-xs font-bold uppercase text-muted-foreground mb-2">Últimos saques</div>
+      <div className="pt-8 border-t border-border">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">Últimos saques</div>
         {saquesQ.isLoading ? (
-          <div className="text-xs text-muted-foreground">Carregando…</div>
+          <div className="text-[10px] text-muted-foreground">Carregando…</div>
         ) : (saquesQ.data ?? []).length === 0 ? (
-          <div className="text-xs text-muted-foreground">Nenhum saque ainda.</div>
+          <div className="text-[10px] text-muted-foreground">Nenhum saque ainda.</div>
         ) : (
-          <div className="space-y-2">
-            {(saquesQ.data ?? []).map((s) => (
-              <div key={s.id} className="flex items-center justify-between text-sm bg-background border border-border rounded-md px-3 py-2">
+          <div className="space-y-4">
+            {(saquesQ.data ?? []).slice(0, 3).map((s) => (
+              <div key={s.id} className="flex items-center justify-between group">
                 <div className="min-w-0">
-                  <div className="font-semibold">{brl(Number(s.valor))}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">
-                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave}
+                  <div className="text-lg font-bold text-navy/80">{brl(Number(s.valor))}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave.slice(0, 4)}***
                   </div>
-                  {s.motivo_rejeicao && (
-                    <div className="text-[11px] text-destructive">Motivo: {s.motivo_rejeicao}</div>
-                  )}
                 </div>
-                <StatusBadge status={s.status} />
+                <div className="flex flex-col items-end gap-1">
+                  <StatusBadge status={s.status} />
+                  {s.status === 'pago' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-tighter">Pago</span>}
+                </div>
               </div>
             ))}
           </div>

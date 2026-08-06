@@ -89,73 +89,80 @@ export function FinanceiroPage() {
   return (
     <LojaShell title="Financeiro">
       <div className="space-y-6 w-full">
-        <Tabs defaultValue="saldo" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex mb-4">
-            <TabsTrigger value="saldo" className="flex items-center gap-2">
-              <Wallet className="w-4 h-4" />
-              <span>Saldo & Recarga</span>
-            </TabsTrigger>
-            <TabsTrigger value="vendas" className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              <span>Vendas & Saques</span>
-            </TabsTrigger>
-            <TabsTrigger value="resumo" className="flex items-center gap-2">
-              <History className="w-4 h-4" />
-              <span>Resumo & Planos</span>
-            </TabsTrigger>
-            <TabsTrigger value="taxas" className="flex items-center gap-2">
-              <Receipt className="w-4 h-4" />
-              <span>Taxas</span>
-            </TabsTrigger>
-          </TabsList>
+        {/* Top Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
+          <SaldoLojaCard lojaId={loja.id} />
+          <SaquesLojaCard lojaId={loja.id} />
+        </div>
 
-          <TabsContent value="saldo" className="mt-0">
-            <div className="max-w-4xl">
-              <SaldoLojaCard lojaId={loja.id} />
+        {/* Bottom Section with Tabs */}
+        <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+          <Tabs defaultValue="resumo" className="w-full">
+            <div className="flex w-full mb-8 border-b border-border">
+              <TabsList className="bg-transparent border-none p-0 h-auto rounded-none w-full justify-start gap-8">
+                <TabsTrigger 
+                  value="resumo" 
+                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                >
+                  <History className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Resumo</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="mensalidade" 
+                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                >
+                  <CreditCard className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Mensalidade</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="taxas" 
+                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                >
+                  <Receipt className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-widest">Taxas</span>
+                </TabsTrigger>
+              </TabsList>
             </div>
-          </TabsContent>
 
-          <TabsContent value="vendas" className="mt-0">
-            <div className="max-w-4xl">
-              <SaquesLojaCard lojaId={loja.id} />
-            </div>
-          </TabsContent>
+            <TabsContent value="resumo" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <ResumoCards
+                totalAberto={totalAberto}
+                totalPago={totalPago}
+                mensalidadeValor={mensalidadeValor}
+                prox={proxFallback}
+                onAntecipar={() => {
+                  setMpMensId(null);
+                  setMpOpen(true);
+                }}
+              />
+              <InfoPrazo prazo={prazo} />
+            </TabsContent>
 
-          <TabsContent value="resumo" className="space-y-6 mt-0 max-w-4xl">
-            <ResumoCards
-              totalAberto={totalAberto}
-              totalPago={totalPago}
-              mensalidadeValor={mensalidadeValor}
-              prox={proxFallback}
-              onAntecipar={() => {
-                setMpMensId(null);
-                setMpOpen(true);
-              }}
-            />
-            <InfoPrazo prazo={prazo} />
-            <MensalidadesTabela
-              loading={loading}
-              mensalidades={mensalidades}
-              mensAbertas={mensAbertas}
-              mensAberto={mensAberto}
-              pixHabilitado
-              onDialog={handleDialog}
-            />
-          </TabsContent>
+            <TabsContent value="mensalidade" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <MensalidadesTabela
+                loading={loading}
+                mensalidades={mensalidades}
+                mensAbertas={mensAbertas}
+                mensAberto={mensAberto}
+                pixHabilitado
+                onDialog={handleDialog}
+              />
+            </TabsContent>
 
-          <TabsContent value="taxas" className="space-y-6 mt-0 max-w-4xl">
-            <CobrancasTabela
-              loading={loading}
-              cobrancas={cobrancas}
-              cobAbertas={cobAbertas}
-              cobAberto={cobAberto}
-              pixHabilitado={pixHabilitado}
-              onDialog={setDialog}
-              onPagarMp={(id) => setMpCobId(id)}
-              onPagarTudoMp={() => setMpFaturaOpen(true)}
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="taxas" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <CobrancasTabela
+                loading={loading}
+                cobrancas={cobrancas}
+                cobAbertas={cobAbertas}
+                cobAberto={cobAberto}
+                pixHabilitado={pixHabilitado}
+                onDialog={setDialog}
+                onPagarMp={(id) => setMpCobId(id)}
+                onPagarTudoMp={() => setMpFaturaOpen(true)}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
 
       <PagamentoMpFaturaDialog
