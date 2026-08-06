@@ -59,32 +59,30 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
       </p>
 
       {!recarga && (
-        <div className="mt-5 space-y-3">
+        <div className="mt-8 space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
               Valor da recarga
             </label>
-            <div className="flex gap-2">
-              <span className="inline-flex items-center px-3 rounded-md border border-border bg-background text-sm">
-                {i18nConfig.currencySymbol}
-              </span>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-navy font-bold">{i18nConfig.currencySymbol}</span>
               <input
                 type="number"
                 min={5}
                 step="0.01"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
-                className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+                className="w-full h-14 pl-12 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-lg font-bold text-navy focus:bg-white focus:ring-2 focus:ring-navy/5 transition-all outline-none"
                 placeholder="0,00"
               />
             </div>
-            <div className="flex flex-wrap gap-1.5 mt-2">
+            <div className="flex flex-wrap gap-2 mt-4">
               {VALORES_SUGERIDOS.map((v) => (
                 <button
                   key={v}
                   type="button"
                   onClick={() => setValor(String(v))}
-                  className="px-2.5 py-1 rounded-md border border-border bg-background hover:bg-muted text-xs font-bold"
+                  className="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[11px] font-bold text-navy/70 transition-colors"
                 >
                   {i18nConfig.currencySymbol} {v}
                 </button>
@@ -94,10 +92,10 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
           <button
             onClick={gerarPix}
             disabled={criando}
-            className="w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs bg-red-600 hover:bg-red-700 shadow-md shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
+            className="w-full h-14 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200 text-white inline-flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-[0.98]"
           >
             {criando && <Loader2 className="h-4 w-4 animate-spin" />}
-            Recarregar via PIX
+            Gerar QR Code PIX
           </button>
         </div>
       )}
