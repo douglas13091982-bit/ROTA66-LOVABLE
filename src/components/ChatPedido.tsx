@@ -255,10 +255,22 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
         </div>
 
 
-        <form onSubmit={enviar} className="shrink-0 flex items-end gap-2 p-2.5 border-t border-[#e4e8ef] bg-white pb-[max(0.625rem,env(safe-area-inset-bottom))]">
+        <form 
+          onSubmit={enviar} 
+          className="shrink-0 flex items-end gap-2 p-2.5 border-t border-[#e4e8ef] bg-white pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+          style={viewportH ? { position: 'sticky', bottom: 0 } : {}}
+        >
           <textarea
             value={texto}
             onChange={(e) => setTexto(e.target.value)}
+            onFocus={(e) => {
+              // No mobile, forçar scroll para o final quando ganhar foco
+              setTimeout(() => {
+                if (scrollRef.current) {
+                  scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+                }
+              }, 300);
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
