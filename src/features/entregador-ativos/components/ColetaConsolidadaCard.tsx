@@ -114,6 +114,8 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
             onClick={() => {
               void (async () => {
                 setRevealed(true);
+                onColetar?.();
+
                 for (const p of pedidos) {
                   await supabase.rpc("entregador_chegou_coleta" as never, {
                     _pedido_id: p.id,
