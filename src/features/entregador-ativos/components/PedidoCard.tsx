@@ -190,7 +190,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
         <div className="min-w-0">
           <div
-            className="text-[10px] font-semibold uppercase tracking-normal"
+            className="text-[10px] font-semibold uppercase tracking-wider"
             style={{ color: MUTED }}
           >
             Pedido
@@ -249,7 +249,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           <User className="h-5 w-5" style={{ color: RED }} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-black text-xl truncate uppercase" style={{ color: TEXT }}>
+          <div className="font-black text-xl truncate uppercase tracking-wider" style={{ color: TEXT }}>
             {p.cliente_nome}
           </div>
 
@@ -271,7 +271,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       {/* Endereço */}
       <div>
         <div
-          className="text-[13px] font-black uppercase tracking-normal mb-4"
+          className="text-[13px] font-black uppercase tracking-wider mb-4"
           style={{ color: MUTED }}
         >
           {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
@@ -302,7 +302,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               }}
             >
               <MapIcon className="h-5 w-5" style={{ color: RED }} />
-              <span className="text-[10px] font-bold tracking-[0.14em] mt-1" style={{ color: TEXT, opacity: 0.8 }}>
+              <span className="text-[10px] font-bold tracking-wider mt-1" style={{ color: TEXT, opacity: 0.8 }}>
                 MAPA
               </span>
             </a>
@@ -319,7 +319,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           {/* Você recebe */}
           <div className="text-center py-2">
             <div
-              className="text-[13px] font-bold uppercase tracking-normal"
+              className="text-[13px] font-bold uppercase tracking-wider"
               style={{ color: MUTED }}
             >
               Você recebe
@@ -447,13 +447,13 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               }}
             >
               <div
-                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-normal mb-2 font-bold"
+                className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider mb-2 font-bold"
                 style={{ color: MUTED }}
               >
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta
               </div>
               <div
-                className="font-display text-6xl tracking-[0.4em] mb-2 select-all"
+                className="font-display text-6xl tracking-wider mb-2 select-all"
                 style={{ color: RED }}
               >
                 {codigoColeta}
@@ -553,7 +553,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
             }}
           >
             <div
-              className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.22em] font-bold"
+              className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-wider font-bold"
               style={{ color: MUTED }}
             >
               <KeyRound className="h-3.5 w-3.5" /> Digite o código do cliente
@@ -622,7 +622,7 @@ function Stat({
     >
       {icon}
       <div
-        className="text-[10px] font-semibold uppercase tracking-[0.18em] mt-2"
+        className="text-[10px] font-semibold uppercase tracking-wider mt-2"
         style={{ color: mutedColor ?? "#8FA3B8" }}
       >
         {label}

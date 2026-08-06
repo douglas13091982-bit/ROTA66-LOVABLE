@@ -47,17 +47,17 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
       <div className="relative">
         <div className="flex flex-col items-center text-center mb-4 gap-2">
           <div>
-            <div className="text-base uppercase tracking-normal text-muted-foreground font-black">Coleta agrupada</div>
+            <div className="text-base uppercase tracking-wider text-muted-foreground font-black">Coleta agrupada</div>
             <div className="font-display text-4xl md:text-5xl tracking-[0.06em] mt-1 text-navy font-black">
               {pedidos.length} pedidos
             </div>
-            <div className="text-xs uppercase tracking-normal text-muted-foreground mt-2 font-bold">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground mt-2 font-bold">
               Rota com {totalRota} paradas no total
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
             <span className="inline-flex flex-col items-center px-4 py-2 rounded-xl bg-gray-50 border border-border/40">
-              <span className="text-[11px] uppercase tracking-normal text-muted-foreground font-black">
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-black">
                 Você recebe
               </span>
               <span className="font-display text-4xl text-navy leading-none mt-1 font-black">
@@ -74,7 +74,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
         </div>
 
 
-        <div className="text-[13px] uppercase tracking-normal text-muted-foreground mt-4 mb-2 font-black">
+        <div className="text-[13px] uppercase tracking-wider text-muted-foreground mt-4 mb-2 font-black">
           Endereço de coleta
         </div>
         <div className="flex items-start gap-3 mb-4">
@@ -159,7 +159,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                     <span className="text-xs uppercase tracking-[0.18em] text-white/50 font-black">
                       Coleta
                     </span>
-                    <span className="font-display text-5xl md:text-6xl tracking-[0.3em] text-[#AE0000] select-all leading-none font-black">
+                    <span className="font-display text-5xl md:text-6xl tracking-normal text-[#AE0000] select-all leading-none font-black">
                       {p.codigo_coleta ?? codigo}
                     </span>
                   </div>

@@ -98,13 +98,13 @@ function CabecalhoPedido({ pedido }: { pedido: PedidoDisponivel }) {
   return (
     <div className="flex items-start justify-between mb-4 gap-3">
       <div>
-        <div className="pp-num text-2xl tracking-[0.04em] text-white font-semibold">#{pedido.numero}</div>
+        <div className="pp-num text-2xl tracking-wider text-white font-semibold">#{pedido.numero}</div>
         <div className="pp-eyebrow mt-1">
           {formatDateTime(pedido.created_at)}
         </div>
       </div>
       <span
-        className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] rounded-full border"
+        className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full border"
         style={
           pedido._externo
             ? { background: "oklch(0.78 0.16 75 / 0.15)", color: "oklch(0.88 0.14 80)", borderColor: "oklch(0.78 0.16 75 / 0.45)" }
@@ -120,7 +120,7 @@ function CabecalhoPedido({ pedido }: { pedido: PedidoDisponivel }) {
 function BadgeBonus({ valor }: { valor: number }) {
   return (
     <div
-      className="mt-4 inline-flex items-center gap-2.5 px-6 py-2.5 text-lg font-black uppercase tracking-[0.18em] rounded-2xl border-2"
+      className="mt-4 inline-flex items-center gap-2.5 px-6 py-2.5 text-lg font-black uppercase tracking-wider rounded-2xl border-2"
       style={{
         background: "#0d2c54",
         color: "#fff",
@@ -163,7 +163,7 @@ export function BotaoRecusar({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="px-3 h-14 text-white/75 font-semibold uppercase text-xs tracking-[0.22em] rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white active:scale-[0.97] transition-all duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] flex items-center justify-center gap-1.5 basis-1/3"
+      className="px-3 h-14 text-white/75 font-semibold uppercase text-xs tracking-wider rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:text-white active:scale-[0.97] transition-all duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] flex items-center justify-center gap-1.5 basis-1/3"
     >
       <XCircle className="h-4 w-4" />
       Recusar
@@ -188,7 +188,7 @@ export function BotaoAceitar({
     <button
       onClick={onClick}
       disabled={expirou}
-      className="flex-1 min-w-0 px-3 h-14 whitespace-nowrap font-semibold uppercase text-sm sm:text-base tracking-[0.18em] rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all"
+      className="flex-1 min-w-0 px-3 h-14 whitespace-nowrap font-semibold uppercase text-sm sm:text-base tracking-wider rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all"
       style={{
         background: "linear-gradient(135deg, #AE0000, #8A0000)",
         boxShadow: "0 8px 22px -8px rgba(221, 0, 8, 0.7)",

@@ -78,10 +78,10 @@ function PedidoRowCompactoBase({
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-xl font-black !text-white uppercase tracking-tight truncate leading-tight">
+          <h3 className="text-xl font-black !text-white uppercase tracking-wider truncate leading-tight">
             {principal.loja_nome || "Loja"}
           </h3>
-          <p className="text-sm font-semibold uppercase tracking-wide mt-1 truncate !text-white/75">
+          <p className="text-sm font-semibold uppercase tracking-wider mt-1 truncate !text-white/75">
             {principal.loja_bairro || `#${principal.numero}`}
             {kmLoja && <span className="mx-1.5">·</span>}
             {kmLoja && <span>{kmLoja} KM</span>}
@@ -90,10 +90,10 @@ function PedidoRowCompactoBase({
         </div>
 
         <div className="text-right shrink-0">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] !text-white/75">
+          <p className="text-[11px] font-bold uppercase tracking-normal !text-white/75">
             Ganhos
           </p>
-          <p className="text-[28px] font-black !text-white tracking-tight tabular-nums leading-none mt-1">
+          <p className="text-[28px] font-black !text-white tracking-normal tabular-nums leading-none mt-1">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
