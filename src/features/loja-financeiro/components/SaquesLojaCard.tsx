@@ -86,7 +86,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-card border border-border rounded-lg p-6 space-y-5">
+    <section className="bg-white border border-border rounded-xl p-6 space-y-5 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider font-bold">
           <Wallet className="h-3.5 w-3.5" /> Carteira de vendas
