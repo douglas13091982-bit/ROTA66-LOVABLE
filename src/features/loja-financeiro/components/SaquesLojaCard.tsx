@@ -131,7 +131,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
               className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-navy hover:bg-navy/5 rounded-lg transition-colors disabled:opacity-30"
               title="Salvar chave PIX"
             >
-              <Save className={`h-5 w-5 ${salvandoPix ? 'animate-pulse' : ''}`} />
+              <Save className={`h-5 w-5 ${salvarPixM.isPending ? 'animate-pulse' : ''}`} />
             </button>
           </div>
         </div>
