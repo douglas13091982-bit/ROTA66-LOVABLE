@@ -29,7 +29,7 @@ export function RastreioPage({ pedidoId }: { pedidoId: string }) {
   const isColetado = data.status === "coletado";
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <div className="max-w-lg mx-auto p-5 space-y-5">
         <RastreioHeader
           logoUrl={logoUrl}
