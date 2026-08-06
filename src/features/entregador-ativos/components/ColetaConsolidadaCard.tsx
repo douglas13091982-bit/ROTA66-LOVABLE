@@ -11,9 +11,11 @@ import type { PedidoAtivo } from "../logic/types";
 type Props = {
   pedidos: PedidoAtivo[];
   totalRota: number;
+  onSairDoLocal?: () => void;
 };
 
-export function ColetaConsolidadaCard({ pedidos, totalRota }: Props) {
+export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal }: Props) {
+
   const [revealed, setRevealed] = useState(false);
   const qc = useQueryClient();
   const ref = pedidos[0];
