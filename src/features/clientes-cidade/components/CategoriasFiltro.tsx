@@ -57,9 +57,9 @@ interface Props {
 export function CategoriasFiltro({ value, onChange }: Props) {
   const { categorias } = useLojaCategorias();
   return (
-    <div className="max-w-2xl mx-auto pb-4 pt-1 relative">
+    <div className="max-w-6xl mx-auto pb-4 pt-1 relative">
       <div
-        className="flex overflow-x-auto px-4 snap-x scroll-smooth"
+        className="flex overflow-x-auto md:flex-wrap md:justify-center px-4 snap-x scroll-smooth scrollbar-hide"
         style={{ scrollbarWidth: "none" }}
       >
         {categorias.map((c, i) => {
@@ -115,7 +115,7 @@ export function CategoriasFiltro({ value, onChange }: Props) {
           );
         })}
       </div>
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 mp-fade" />
+      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 mp-fade md:hidden" />
     </div>
   );
 }
