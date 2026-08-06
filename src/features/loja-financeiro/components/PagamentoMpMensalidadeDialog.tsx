@@ -100,15 +100,15 @@ export function PagamentoMpMensalidadeDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-      <div className="bg-card border border-border rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="bg-card border border-border rounded-xl max-w-md w-full max-h-[95vh] flex flex-col">
+        <div className="flex items-center justify-between p-3 border-b border-border shrink-0">
           <h3 className="font-display text-lg">Pagar mensalidade</h3>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 overflow-y-auto">
           {!mensId || mConsolidar.isPending ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Calculando mensalidade…
@@ -129,63 +129,70 @@ export function PagamentoMpMensalidadeDialog({
               <div className="flex gap-2">
                 <button
                   onClick={() => setMetodo("pix")}
-                  className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${
-                    metodo === "pix" ? "bg-primary/10 border-primary text-primary" : "border-border text-muted-foreground"
+                  className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
+                    metodo === "pix" 
+                      ? "bg-[#AE0000]/10 border-[#AE0000] text-[#AE0000]" 
+                      : "border-border text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   <QrCode className="h-4 w-4" /> PIX
                 </button>
                 <button
                   onClick={() => setMetodo("cartao")}
-                  className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 ${
-                    metodo === "cartao" ? "bg-primary/10 border-primary text-primary" : "border-border text-muted-foreground"
+                  className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
+                    metodo === "cartao" 
+                      ? "bg-[#AE0000]/10 border-[#AE0000] text-[#AE0000]" 
+                      : "border-border text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   <CreditCard className="h-4 w-4" /> Cartão
                 </button>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  E-mail do pagador *
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
-                />
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+                    E-mail do pagador *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                  />
+                </div>
+
+                {metodo === "pix" && (
+                  <>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+                        Nome do pagador
+                      </label>
+                      <input
+                        value={nome}
+                        onChange={(e) => setNome(e.target.value)}
+                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+                        CPF ou CNPJ
+                      </label>
+                      <input
+                        value={doc}
+                        onChange={(e) => setDoc(e.target.value)}
+                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-              {metodo === "pix" && (
-                <>
-                  <div className="space-y-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Nome do pagador
-                    </label>
-                    <input
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      CPF ou CNPJ
-                    </label>
-                    <input
-                      value={doc}
-                      onChange={(e) => setDoc(e.target.value)}
-                      className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm"
-                    />
-                  </div>
-                </>
-              )}
 
               <button
                 onClick={() => mGerar.mutate()}
                 disabled={!email || mGerar.isPending}
-                className="w-full px-4 py-2.5 bg-gradient-red shadow-red text-primary-foreground font-bold uppercase text-sm tracking-wider rounded-md hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 bg-[#AE0000] text-white font-bold uppercase text-sm tracking-widest rounded-md hover:bg-[#8e0000] disabled:opacity-50 flex items-center justify-center gap-2 mt-2 transition-all shadow-md"
               >
                 {mGerar.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {metodo === "pix" ? "Gerar QR Code PIX" : "Pagar com cartão"}
