@@ -96,6 +96,10 @@ export function FinanceiroPage() {
           totalPago={totalPago}
           mensalidadeValor={mensalidadeValor}
           prox={proxFallback}
+          onAntecipar={() => {
+            setMpMensId(null);
+            setMpOpen(true);
+          }}
         />
         <InfoPrazo prazo={prazo} />
         <MensalidadesTabela
