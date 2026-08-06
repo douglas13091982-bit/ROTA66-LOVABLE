@@ -114,7 +114,7 @@ function PedidoListItemBase({
                 <AlertTriangle className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] leading-none">
+                <span className="text-[11px] font-black text-white uppercase tracking-normal leading-none">
                   Atrasado
                 </span>
                 <span className="text-lg font-black text-white leading-tight mt-1">
@@ -132,7 +132,7 @@ function PedidoListItemBase({
               </span>
               {ehRota && (
                 <span
-                  className="text-[10px] font-black uppercase tracking-[0.18em] px-2 py-1 rounded-lg"
+                  className="text-[10px] font-black uppercase tracking-normal px-2 py-1 rounded-lg"
                   style={{ background: BRAND.red, color: "#fff" }}
                 >
                   Rota · {grupo.items.length}
@@ -142,7 +142,7 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[11px] font-black text-white uppercase tracking-[0.25em] mb-1.5">Ganhos</p>
+          <p className="text-[11px] font-black text-white uppercase tracking-normal mb-1.5">Ganhos</p>
           <p className="text-5xl font-black text-white tracking-tighter tabular-nums leading-none">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
@@ -220,7 +220,7 @@ function PedidoListItemBase({
             className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
             style={{ background: "#f1f3f7", border: "1px solid #e4e8ef" }}
           >
-            <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
+            <span className="text-[9px] font-black uppercase tracking-normal mb-1" style={{ color: BRAND.gray }}>
               Distância
             </span>
             <span className="text-base font-black text-[#0f1b2d] tabular-nums">
@@ -232,7 +232,7 @@ function PedidoListItemBase({
             className="rounded-2xl px-3 py-3 flex flex-col items-center justify-center"
             style={{ background: "#f1f3f7", border: "1px solid #e4e8ef" }}
           >
-            <span className="text-[9px] font-black uppercase tracking-[0.18em] mb-1" style={{ color: BRAND.gray }}>
+            <span className="text-[9px] font-black uppercase tracking-normal mb-1" style={{ color: BRAND.gray }}>
               Chamada
             </span>
             <span className="text-base font-black text-[#0f1b2d] tabular-nums">
@@ -246,7 +246,7 @@ function PedidoListItemBase({
           <div className="flex flex-wrap items-center gap-2">
             {totalBonus > 0 && (
               <span
-                className="text-[14px] font-black uppercase tracking-[0.15em] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2"
+                className="text-[14px] font-black uppercase tracking-normal px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2"
                 style={{ background: "#0d2c54", color: "#fff" }}
               >
                 <TrendingUp className="h-4 w-4" />
@@ -255,7 +255,7 @@ function PedidoListItemBase({
             )}
             {ehCartao && (
               <span
-                className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-lg"
+                className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-normal px-2.5 py-1 rounded-lg"
                 style={{ background: "#0d2c54", color: "#fff" }}
               >
                 <CreditCard className="h-3 w-3" /> Retornar
@@ -270,7 +270,7 @@ function PedidoListItemBase({
             <button
               type="button"
               onClick={onRecusar}
-              className="h-14 px-5 text-[12px] font-black uppercase tracking-[0.18em] active:scale-[0.98] transition-transform duration-150 select-none shrink-0"
+              className="h-14 px-5 text-[12px] font-black uppercase tracking-normal active:scale-[0.98] transition-transform duration-150 select-none shrink-0"
               style={{
                 background: "#ffffff",
                 color: BRAND.navy,
@@ -350,7 +350,7 @@ function BotaoAceitarPress({
       onPointerCancel={stop}
       onContextMenu={(e) => e.preventDefault()}
       data-surface="red"
-      className="relative w-full h-14 text-white text-[13px] font-black uppercase tracking-[0.22em] active:scale-[0.98] transition-transform duration-150 overflow-hidden select-none flex items-center justify-center gap-3"
+      className="relative w-full h-14 text-white text-[13px] font-black uppercase tracking-normal active:scale-[0.98] transition-transform duration-150 overflow-hidden select-none flex items-center justify-center gap-3"
       style={{
         background: BRAND.red,
         borderRadius: 18,
