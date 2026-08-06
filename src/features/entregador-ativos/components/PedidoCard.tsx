@@ -195,7 +195,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
           >
             Pedido
           </div>
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl leading-none mt-1 truncate" style={{ color: TEXT }}>
+          <div className="font-display text-3xl sm:text-4xl md:text-5xl leading-none mt-1 truncate" style={{ color: TEXT }}>
             #{p.numero}
           </div>
           <div className="text-[11px] mt-2" style={{ color: MUTED }}>
@@ -325,7 +325,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               Você recebe
             </div>
             <div
-              className="font-display text-5xl sm:text-6xl md:text-7xl leading-none mt-2 tabular-nums break-all"
+              className="font-display text-4xl sm:text-5xl md:text-6xl leading-none mt-2 tabular-nums break-all"
               style={{ color: isLight ? "#10B981" : "#34D399" }}
             >
               R$ {liquido.toFixed(2).replace(".", ",")}
@@ -453,7 +453,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta
               </div>
               <div
-                className="font-display text-6xl tracking-wider mb-2 select-all"
+                className="font-display text-4xl tracking-wider mb-2 select-all"
                 style={{ color: RED }}
               >
                 {codigoColeta}
