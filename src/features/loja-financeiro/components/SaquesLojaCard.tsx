@@ -113,8 +113,13 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         </p>
       </div>
 
-      <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-200 px-3 py-2 text-xs">
-        ⚠️ Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+      <div className="rounded-xl border border-yellow-500/20 bg-yellow-50/50 p-4 flex items-start gap-3">
+        <div className="p-1.5 bg-yellow-500/20 rounded-full shrink-0">
+          <Clock className="h-3 w-3 text-yellow-600" />
+        </div>
+        <div className="text-[11px] leading-relaxed text-yellow-700">
+          Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
+        </div>
       </div>
 
       <div className="space-y-3">
