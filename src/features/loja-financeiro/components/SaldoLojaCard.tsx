@@ -45,10 +45,10 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
         )}
       </div>
 
-      <div className={`text-4xl font-bold ${negativo ? "text-destructive" : "text-navy"}`}>
+      <div className={`text-5xl font-bold mt-2 ${negativo ? "text-destructive" : "text-navy"}`}>
         {saldoQ.isLoading ? "..." : brl(saldo)}
       </div>
-      <p className="text-xs text-muted-foreground mt-1">
+      <p className="text-[11px] leading-relaxed text-muted-foreground mt-3 max-w-[280px]">
         A cada entrega concluída, o valor da taxa é debitado deste saldo e creditado
         ao entregador. Mantenha um saldo positivo para evitar bloqueios.
       </p>

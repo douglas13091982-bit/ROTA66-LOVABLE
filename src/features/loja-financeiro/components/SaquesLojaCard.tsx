@@ -95,8 +95,8 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
       </div>
 
       <div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground">Disponível para saque</div>
-        <div className="text-3xl font-bold">{resumoQ.isLoading ? "…" : brl(saldo)}</div>
+        <div className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Disponível para saque</div>
+        <div className="text-4xl font-bold text-navy/40 mt-1">{resumoQ.isLoading ? "…" : brl(saldo)}</div>
         {(resumo?.saldo_bruto ?? 0) > saldo && (
           <div className="mt-2 grid gap-1 text-[11px] text-muted-foreground">
             <div className="flex justify-between"><span>Saldo bruto</span><span className="font-mono">{brl(Number(resumo?.saldo_bruto ?? 0))}</span></div>

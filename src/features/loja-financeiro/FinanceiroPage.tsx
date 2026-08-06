@@ -97,22 +97,33 @@ export function FinanceiroPage() {
 
         {/* Bottom Section with Tabs */}
         <Tabs defaultValue="resumo" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex mb-4">
-            <TabsTrigger value="resumo" className="flex items-center gap-2">
-              <History className="w-4 h-4" />
-              <span>Resumo</span>
-            </TabsTrigger>
-            <TabsTrigger value="mensalidade" className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4" />
-              <span>Mensalidade</span>
-            </TabsTrigger>
-            <TabsTrigger value="taxas" className="flex items-center gap-2">
-              <Receipt className="w-4 h-4" />
-              <span>Taxas</span>
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center w-full mb-6">
+            <TabsList className="bg-white border border-border p-1 h-auto rounded-xl shadow-sm">
+              <TabsTrigger 
+                value="resumo" 
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-red-50 data-[state=active]:text-destructive data-[state=active]:shadow-none transition-all"
+              >
+                <History className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-widest">Resumo</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="mensalidade" 
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-red-50 data-[state=active]:text-destructive data-[state=active]:shadow-none transition-all"
+              >
+                <CreditCard className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-widest">Mensalidade</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="taxas" 
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg data-[state=active]:bg-red-50 data-[state=active]:text-destructive data-[state=active]:shadow-none transition-all"
+              >
+                <Receipt className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-widest">Taxas</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="resumo" className="space-y-6 mt-0 w-full">
+          <TabsContent value="resumo" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
             <ResumoCards
               totalAberto={totalAberto}
               totalPago={totalPago}
@@ -126,7 +137,7 @@ export function FinanceiroPage() {
             <InfoPrazo prazo={prazo} />
           </TabsContent>
 
-          <TabsContent value="mensalidade" className="space-y-6 mt-0 w-full">
+          <TabsContent value="mensalidade" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
             <MensalidadesTabela
               loading={loading}
               mensalidades={mensalidades}
@@ -137,7 +148,7 @@ export function FinanceiroPage() {
             />
           </TabsContent>
 
-          <TabsContent value="taxas" className="space-y-6 mt-0 w-full">
+          <TabsContent value="taxas" className="space-y-6 mt-0 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
             <CobrancasTabela
               loading={loading}
               cobrancas={cobrancas}
