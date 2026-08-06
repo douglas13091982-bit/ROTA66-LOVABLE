@@ -611,17 +611,28 @@ function BonusSection({
 }) {
   const valores = Array.from({ length: 10 }, (_, i) => (i + 1) * 2);
   const btn = (ativo: boolean) =>
-    `h-11 rounded-xl text-sm font-medium border transition ${
+    `h-12 rounded-xl text-base transition-all ${
       ativo
-        ? "bg-primary text-primary-foreground border-primary font-bold"
-        : "border-border bg-background/60 text-foreground hover:border-primary/50"
+        ? "bg-primary text-primary-foreground border-primary font-black scale-[1.05] shadow-lg ring-2 ring-primary/20"
+        : "border-border bg-background/60 text-foreground hover:border-primary/50 font-medium"
     }`;
   return (
     <div>
-      <label className={LABEL_CLS}>Bônus para o entregador</label>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <button type="button" onClick={() => setBonus(0)} className={btn(bonus === 0)}>
-          Sem bônus
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <label className={LABEL_CLS + " mb-0"}>Bônus para o entregador</label>
+        {bonus > 0 && (
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary animate-pulse">
+            Destacado
+          </span>
+        )}
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+        <button
+          type="button"
+          onClick={() => setBonus(0)}
+          className={btn(bonus === 0)}
+        >
+          Nenhum
         </button>
         {valores.map((v) => (
           <button
@@ -630,7 +641,7 @@ function BonusSection({
             onClick={() => setBonus(v)}
             className={btn(bonus === v)}
           >
-            +R$ {v},00
+            + R$ {v}
           </button>
         ))}
       </div>
