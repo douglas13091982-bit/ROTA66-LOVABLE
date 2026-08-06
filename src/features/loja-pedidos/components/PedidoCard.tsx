@@ -82,7 +82,7 @@ export function PedidoCard({
                 }}
                 title="Cancelar pedido"
                 aria-label={`Cancelar pedido #${p.numero}`}
-                className="inline-flex items-center justify-center h-6 w-6 border border-transparent text-[#AE0000] hover:bg-[#AE0000]/10 hover:border-[#AE0000] transition-colors"
+                className="inline-flex items-center justify-center h-6 w-6 border border-[#AE0000] text-[#AE0000] hover:bg-[#AE0000] hover:text-white transition-colors"
               >
                 <X className="h-4 w-4" strokeWidth={2.5} />
               </button>
