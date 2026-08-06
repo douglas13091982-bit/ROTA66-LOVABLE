@@ -117,47 +117,46 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
         ⚠️ Mantenha sempre pelo menos <strong>{brl(RESERVA_MIN)}</strong> em saldo para conseguir chamar entregadores. Esse mesmo saldo é usado para pagar as entregas.
       </div>
 
-      <div className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+      <div className="space-y-3">
+        <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           Chave PIX para receber
         </label>
         <div className="flex gap-2">
           <input
             value={pix}
             onChange={(e) => setPix(e.target.value)}
-            placeholder="CPF, e-mail, telefone ou chave aleatória"
-            className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+            placeholder="CPF, e-mail, telefone..."
+            className="flex-1 px-4 py-3 rounded-xl border border-border bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-red-100 transition-all outline-none"
           />
           <button
             type="button"
             disabled={!pixMudou || !pix.trim() || salvarPixM.isPending}
             onClick={() => salvarPixM.mutate(pix)}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-md border border-border text-xs font-bold uppercase tracking-wider disabled:opacity-50"
-            title="Salvar como chave padrão"
+            className="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-border bg-white text-[10px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-all disabled:opacity-50 shadow-sm"
           >
-            <Save className="h-3.5 w-3.5" /> Salvar
+            <Copy className="h-3.5 w-3.5" /> Copiar
           </button>
         </div>
-        {pixSalvo && !pixMudou && (
-          <p className="text-[11px] text-muted-foreground">Chave PIX salva.</p>
-        )}
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-        <input
-          value={valor}
-          onChange={(e) => setValor(e.target.value)}
-          placeholder={`Valor a sacar (${i18nConfig.currencySymbol})`}
-          inputMode="decimal"
-          className="px-3 py-2 rounded-md border border-border bg-background text-sm"
-        />
+      <div className="flex gap-2 pt-2">
+        <div className="flex-1 relative">
+          <input
+            value={valor}
+            onChange={(e) => setValor(e.target.value)}
+            placeholder={`Valor a sacar (${i18nConfig.currencySymbol})`}
+            inputMode="decimal"
+            className="w-full px-4 py-4 rounded-xl border border-border bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-red-100 transition-all outline-none pr-20"
+          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground">BRL</div>
+        </div>
         <button
           type="button"
           disabled={!pode || solicitarM.isPending || !pix.trim() || !valor}
           onClick={handleSolicitar}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-red-400 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest disabled:opacity-50 transition-all shadow-lg shadow-red-100 active:scale-95"
         >
-          <Send className="h-3.5 w-3.5" /> Solicitar saque
+          <Send className="h-4 w-4" /> Solicitar saque
         </button>
       </div>
       {!pode && !resumoQ.isLoading && (
