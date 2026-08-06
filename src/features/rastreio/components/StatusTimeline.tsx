@@ -10,9 +10,17 @@ export function StatusTimeline({
   let currentStepIdx = STATUS_STEPS.findIndex((s) =>
     (s.matches as readonly string[]).includes(status),
   );
+  const coletadoIdx = STATUS_STEPS.findIndex((s) => s.key === "coletado");
   const chegouIdx = STATUS_STEPS.findIndex((s) => s.key === "chegou");
-  if (status === "entregue") currentStepIdx = STATUS_STEPS.length - 1;
-  else if (chegouEntrega) currentStepIdx = chegouIdx;
+
+  if (status === "entregue") {
+    currentStepIdx = STATUS_STEPS.length - 1;
+  } else if (chegouEntrega) {
+    currentStepIdx = chegouIdx;
+  } else if (status === "coletado") {
+    // Quando o status é 'coletado', ele passou pela etapa 'Coletado' e agora está 'A caminho'
+    currentStepIdx = STATUS_STEPS.findIndex((s) => s.key === "a_caminho");
+  }
   return (
     <div className="bg-white border border-[#0d2c54]/10 rounded-none p-5 shadow-sm">
       <p className="text-xs uppercase tracking-wider text-[#0d2c54]/50 font-bold mb-4">Status do pedido</p>

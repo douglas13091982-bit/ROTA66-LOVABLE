@@ -27,6 +27,12 @@ export const STATUS_STEPS = [
   },
   {
     key: "coletado",
+    label: "Coletado",
+    icon: Truck,
+    matches: [] as string[],
+  },
+  {
+    key: "a_caminho",
     label: "A caminho",
     icon: Truck,
     matches: ["coletado"],
