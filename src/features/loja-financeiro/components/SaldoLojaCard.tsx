@@ -166,35 +166,38 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
       )}
 
       {!!movsQ.data?.length && (
-        <div className="mt-8 pt-6 border-t border-border">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-            Últimos movimentos
+        <div className="mt-8 pt-8 border-t border-slate-100">
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Últimos movimentos
+            </div>
+            <History className="h-3.5 w-3.5 text-muted-foreground/40" />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-5">
             {movsQ.data!.slice(0, 5).map((m) => {
               const positivo = m.valor > 0;
               return (
-                <div key={m.id} className="flex items-center justify-between text-sm group">
+                <div key={m.id} className="flex items-center justify-between group">
                   <div className="min-w-0 pr-3">
-                    <div className="font-medium text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
+                    <div className="text-[13px] font-bold text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      {new Date(m.created_at).toLocaleString("pt-BR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(m.created_at).toLocaleString(i18nConfig.locale, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-bold text-sm ${positivo ? "text-green-600" : "text-destructive"}`}>
+                    <div className={`text-[15px] font-black ${positivo ? "text-green-600" : "text-destructive"}`}>
                       {positivo ? "+" : ""}{brl(m.valor)}
                     </div>
-                    <div className="text-[9px] text-muted-foreground mt-0.5 font-medium">
-                      Saldo: {brl(m.saldo_apos)}
+                    <div className="text-[9px] text-muted-foreground mt-0.5 font-bold uppercase tracking-tighter">
+                      Final: {brl(m.saldo_apos)}
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          <button className="mt-6 w-full text-[10px] font-bold uppercase tracking-widest text-navy/60 hover:text-destructive transition-colors flex items-center justify-center gap-2">
-            Ver todos os movimentos <span className="text-lg">›</span>
+          <button className="mt-8 w-full text-[10px] font-bold uppercase tracking-widest text-navy/40 hover:text-navy transition-all flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-slate-50">
+            Ver extrato completo <span className="text-lg">›</span>
           </button>
         </div>
       )}
