@@ -37,6 +37,8 @@ export function RastreioPage({ pedidoId }: { pedidoId: string }) {
           lojaNome={data.loja_nome}
           numero={data.numero}
           clienteNome={data.cliente_nome}
+          entregadorNome={data.entregador_nome}
+          entregadorFoto={data.entregador_foto}
         />
 
         {isColetado && data.codigo_entrega && (
