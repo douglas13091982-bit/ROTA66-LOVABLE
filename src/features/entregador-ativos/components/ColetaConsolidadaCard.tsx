@@ -12,9 +12,11 @@ type Props = {
   pedidos: PedidoAtivo[];
   totalRota: number;
   onSairDoLocal?: () => void;
+  onColetar?: () => void;
 };
 
-export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal }: Props) {
+export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onColetar }: Props) {
+
 
   const [revealed, setRevealed] = useState(false);
   const qc = useQueryClient();
