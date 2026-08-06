@@ -59,7 +59,7 @@ export function useSomPush() {
         tocarNotificacao({ ...somCfg!, audio_path: null });
         return;
       }
-      tocarNotificacao(somCfg!);
+      tocarNotificacao({ ...somCfg!, repeticoes: 1 });
     }
     navigator.serviceWorker.addEventListener("message", onMessage);
     return () => navigator.serviceWorker.removeEventListener("message", onMessage);
