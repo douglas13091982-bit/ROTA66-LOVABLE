@@ -13,7 +13,7 @@ import { ResumoCards } from "./components/ResumoCards";
 import { InfoPrazo } from "./components/InfoPrazo";
 import { MensalidadesTabela } from "./components/MensalidadesTabela";
 import { CobrancasTabela } from "./components/CobrancasTabela";
-import { PreviaSemanaCard } from "./components/PreviaSemanaCard";
+
 import { SaldoLojaCard } from "./components/SaldoLojaCard";
 import { SaquesLojaCard } from "./components/SaquesLojaCard";
 
@@ -109,15 +109,6 @@ export function FinanceiroPage() {
           mensAberto={mensAberto}
           pixHabilitado
           onDialog={handleDialog}
-        />
-        <PreviaSemanaCard
-          lojaId={loja.id}
-          taxaPorPedido={Number(
-            (loja as any).plano?.taxa_por_pedido ??
-              (loja as any).taxa_por_pedido ??
-              0,
-          )}
-          planoMensalAtivo={Boolean((loja as any).plano_mensal_ativo)}
         />
         <CobrancasTabela
           loading={loading}
