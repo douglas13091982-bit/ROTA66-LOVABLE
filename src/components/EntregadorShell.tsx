@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet } from "lucide-react";
+import { AvatarImg } from "@/components/AvatarImg";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useEntregadorStatus } from "@/hooks/use-entregador-status";
@@ -178,21 +179,17 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100]">
                 <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
-                    <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5">
-                      {perfil.avatarUrl ? (
-                        <img 
-                          src={perfil.avatarUrl.startsWith('http') ? perfil.avatarUrl : supabase.storage.from('perfil').getPublicUrl(perfil.avatarUrl).data.publicUrl} 
-                          alt="Avatar" 
-                          className="h-full w-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(perfil.fullName || 'E')}&background=0d2c54&color=fff`;
-                          }}
-                        />
-                      ) : (
-                        <div className="h-full w-full flex items-center justify-center">
-                          <User className="h-10 w-10 text-white/20" />
-                        </div>
-                      )}
+                    <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5 flex items-center justify-center">
+                      <AvatarImg 
+                        src={perfil.avatarUrl} 
+                        alt="Avatar" 
+                        className="h-full w-full object-cover"
+                        fallback={
+                          <div className="h-full w-full flex items-center justify-center">
+                            <User className="h-10 w-10 text-white/20" />
+                          </div>
+                        }
+                      />
                     </div>
                   </div>
                   <h2 className="text-lg font-black tracking-tight text-white mb-1 leading-none uppercase">
