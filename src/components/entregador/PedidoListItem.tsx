@@ -114,7 +114,7 @@ function PedidoListItemBase({
                 <AlertTriangle className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[11px] font-black text-white uppercase tracking-normal leading-none">
+                <span className="text-[11px] font-black text-white uppercase tracking-wider leading-none">
                   Atrasado
                 </span>
                 <span className="text-lg font-black text-white leading-tight mt-1">
@@ -142,8 +142,8 @@ function PedidoListItemBase({
           )}
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[11px] font-black text-white uppercase tracking-normal mb-1.5">Ganhos</p>
-          <p className="text-5xl font-black text-white tracking-tighter tabular-nums leading-none">
+          <p className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">Ganhos</p>
+          <p className="text-5xl font-black text-white tracking-normal tabular-nums leading-none">
             R$ {total.toFixed(2).replace(".", ",")}
           </p>
         </div>
@@ -168,11 +168,11 @@ function PedidoListItemBase({
             </div>
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-normal truncate">
+                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-wider truncate">
                   {nomeLoja}
                 </h3>
               </div>
-              <p className="text-sm font-semibold uppercase tracking-normal mt-1" style={{ color: BRAND.gray }}>
+              <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
                 {bairroLoja || "Loja"}
                 {kmLoja && <span className="ml-1.5 text-[#6B7688]">· {kmLoja} km</span>}
               </p>
@@ -192,7 +192,7 @@ function PedidoListItemBase({
             <div className="flex-1 min-w-0 pt-1">
               {ehRota ? (
                 <>
-                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-normal">
+                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-wider">
                     {grupo.items.length} ENTREGAS AGRUPADAS
                   </h3>
                   <p className="text-sm font-bold mt-1 uppercase tracking-normal" style={{ color: BRAND.gray }}>
