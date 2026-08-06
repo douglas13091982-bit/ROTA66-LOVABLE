@@ -173,7 +173,7 @@ export function CatalogoHeader({
 
         {categorias.length > 0 && !busca && (
           <div className="max-w-6xl mx-auto pb-3.5 relative">
-            <div className="flex gap-2.5 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
+            <div className="flex flex-wrap md:justify-center gap-2.5 overflow-x-auto cc-scroll-x px-4 pb-1 snap-x scroll-smooth">
               <button
                 onClick={() => {
                   setCatAtiva("");
