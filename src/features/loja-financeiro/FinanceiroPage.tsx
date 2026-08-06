@@ -98,28 +98,29 @@ export function FinanceiroPage() {
         {/* Bottom Section with Tabs */}
         <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
           <Tabs defaultValue="resumo" className="w-full">
-            <div className="flex w-full mb-8 border-b border-border">
-              <TabsList className="bg-transparent border-none p-0 h-auto rounded-none w-full justify-start gap-8">
+            <div className="flex w-full mb-8 bg-slate-50/50 rounded-xl p-1.5 border border-slate-200/60">
+              <TabsList className="bg-transparent border-none p-0 h-auto rounded-none w-full flex justify-between gap-1">
                 <TabsTrigger 
                   value="resumo" 
-                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-none data-[state=active]:bg-white data-[state=active]:text-navy data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-slate-200/50 transition-all text-muted-foreground"
                 >
                   <History className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Resumo</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">Resumo</span>
+                  <div className="ml-auto data-[state=active]:block hidden w-1.5 h-1.5 rounded-full bg-destructive" />
                 </TabsTrigger>
                 <TabsTrigger 
                   value="mensalidade" 
-                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-none data-[state=active]:bg-white data-[state=active]:text-navy data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-slate-200/50 transition-all text-muted-foreground"
                 >
                   <CreditCard className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Mensalidade</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">Mensalidade</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="taxas" 
-                  className="flex items-center gap-2 px-0 py-4 rounded-none border-b-2 border-transparent data-[state=active]:border-destructive data-[state=active]:bg-transparent data-[state=active]:text-navy data-[state=active]:shadow-none transition-all"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-none data-[state=active]:bg-white data-[state=active]:text-navy data-[state=active]:shadow-sm data-[state=active]:ring-1 data-[state=active]:ring-slate-200/50 transition-all text-muted-foreground"
                 >
                   <Receipt className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase tracking-widest">Taxas</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">Taxas</span>
                 </TabsTrigger>
               </TabsList>
             </div>
