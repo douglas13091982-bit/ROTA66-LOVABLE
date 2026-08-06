@@ -20,10 +20,16 @@ export const STATUS_STEPS = [
     matches: ["pronto"],
   },
   {
-    key: "coletado",
+    key: "a_caminho_coleta",
     label: "A caminho da Coleta",
     icon: Truck,
     matches: ["em_rota"],
+  },
+  {
+    key: "coletado",
+    label: "A caminho",
+    icon: Truck,
+    matches: ["coletado"],
   },
   {
     key: "chegou",
@@ -49,4 +55,6 @@ export type RastreioData = {
   chegou_entrega_at: string | null;
   endereco_entrega: string;
   complemento: string | null;
+  entregador_nome?: string | null;
+  entregador_foto?: string | null;
 };
