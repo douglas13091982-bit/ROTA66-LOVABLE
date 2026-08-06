@@ -168,11 +168,11 @@ function PedidoListItemBase({
             </div>
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-wide truncate">
+                <h3 className="text-xl font-black text-[#0f1b2d] uppercase tracking-normal truncate">
                   {nomeLoja}
                 </h3>
               </div>
-              <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
+              <p className="text-sm font-semibold uppercase tracking-normal mt-1" style={{ color: BRAND.gray }}>
                 {bairroLoja || "Loja"}
                 {kmLoja && <span className="ml-1.5 text-[#6B7688]">· {kmLoja} km</span>}
               </p>
@@ -192,10 +192,10 @@ function PedidoListItemBase({
             <div className="flex-1 min-w-0 pt-1">
               {ehRota ? (
                 <>
-                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-tight">
+                  <h3 className="text-lg font-black text-[#0f1b2d] leading-tight uppercase tracking-normal">
                     {grupo.items.length} ENTREGAS AGRUPADAS
                   </h3>
-                  <p className="text-sm font-bold mt-1 uppercase tracking-wide" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-bold mt-1 uppercase tracking-normal" style={{ color: BRAND.gray }}>
                     Endereços liberados após aceitar
                   </p>
                 </>
@@ -204,7 +204,7 @@ function PedidoListItemBase({
                   <h3 className="text-lg font-bold text-[#0f1b2d] leading-tight truncate">
                     {endereco || "Cliente"}
                   </h3>
-                  <p className="text-sm font-semibold uppercase tracking-wider mt-1" style={{ color: BRAND.gray }}>
+                  <p className="text-sm font-semibold uppercase tracking-normal mt-1" style={{ color: BRAND.gray }}>
                     Cliente
                     {distEntrega && <span className="ml-1.5 text-[#6B7688]">· {distEntrega} km</span>}
                   </p>

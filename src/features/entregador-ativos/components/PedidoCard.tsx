@@ -271,7 +271,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       {/* Endereço */}
       <div>
         <div
-          className="text-[13px] font-black uppercase tracking-[0.2em] mb-4"
+          className="text-[13px] font-black uppercase tracking-normal mb-4"
           style={{ color: MUTED }}
         >
           {isColeta ? "Endereço de coleta" : "Endereço de entrega"}
