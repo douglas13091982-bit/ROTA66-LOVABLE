@@ -1,7 +1,9 @@
 import { norm } from "../logic/group";
+import { useQueryClient } from "@tanstack/react-query";
 import type { PedidoAtivo } from "../logic/types";
 import { ColetaConsolidadaCard } from "./ColetaConsolidadaCard";
 import { PedidoCard } from "./PedidoCard";
+
 
 type Props = {
   items: PedidoAtivo[];
@@ -9,6 +11,8 @@ type Props = {
 };
 
 export function RotaBlock({ items, destaque }: Props) {
+  const qc = useQueryClient();
+
   if (items.length === 1) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -27,8 +31,17 @@ export function RotaBlock({ items, destaque }: Props) {
 
   // Fase 1: ainda há pedidos para coletar e todos compartilham o mesmo ponto de coleta
   if (mesmaColeta && pendentesColeta.length > 0) {
-    return <ColetaConsolidadaCard pedidos={pendentesColeta} totalRota={items.length} />;
+    return (
+      <ColetaConsolidadaCard
+        pedidos={pendentesColeta}
+        totalRota={items.length}
+        onSairDoLocal={() => {
+          qc.invalidateQueries({ queryKey: ["pedidos-ativos"] });
+        }}
+      />
+    );
   }
+
 
   // Fase 2: já coletou tudo. Mostra entregas UMA por vez (a próxima na sequência).
   if (pendentesEntrega.length > 0) {

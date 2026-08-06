@@ -164,6 +164,19 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal }: Pro
             <p className="text-[11px] text-white/50 text-center pt-1">
               Mostre estes códigos para a loja confirmar os {pedidos.length} pedidos.
             </p>
+            {onSairDoLocal && (
+              <button
+                onClick={onSairDoLocal}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98] mt-4"
+                style={{
+                  background: "#AE0000",
+                }}
+              >
+                <span>Sair do local</span>
+                <Navigation className="h-5 w-5 rotate-90" />
+              </button>
+            )}
+
           </div>
         )}
       </div>
