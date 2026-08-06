@@ -49,7 +49,7 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
 
   if (layout === "lista") {
     return (
-      <div className="cc-card rounded-2xl px-4">
+      <div className="cc-card rounded-2xl px-4 grid grid-cols-1 md:grid-cols-2 gap-x-6">
         {items.map((p, i) => (
           <div
             key={p.id}
@@ -79,7 +79,7 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {items.map((p) => (
         <article key={p.id} className="cc-card rounded-2xl p-3 flex items-center gap-3.5">
           <div className="cc-img-wrap h-[92px] w-[92px] rounded-xl shrink-0 relative">
