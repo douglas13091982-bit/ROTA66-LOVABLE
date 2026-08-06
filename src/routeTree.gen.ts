@@ -26,11 +26,9 @@ import { Route as Char91DotwellKnownChar93WebAppOriginAssociationRouteImport } f
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRouteImport } from './routes/[.well-known]/assetlinks[.]json'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as AuthenticatedRevendedorRouteRouteImport } from './routes/_authenticated/revendedor/route'
 import { Route as AuthenticatedLojaRouteRouteImport } from './routes/_authenticated/loja/route'
 import { Route as AuthenticatedEntregadorRouteRouteImport } from './routes/_authenticated/entregador/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
-import { Route as AuthenticatedRevendedorIndexRouteImport } from './routes/_authenticated/revendedor/index'
 import { Route as AuthenticatedLojaIndexRouteImport } from './routes/_authenticated/loja/index'
 import { Route as AuthenticatedEntregadorIndexRouteImport } from './routes/_authenticated/entregador/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -40,10 +38,6 @@ import { Route as ApiPublicMpWebhookPlataformaRouteImport } from './routes/api/p
 import { Route as ApiPublicMpWebhookEntregadorRouteImport } from './routes/api/public/mp-webhook-entregador'
 import { Route as ApiPublicMpWebhookRouteImport } from './routes/api/public/mp-webhook'
 import { Route as ApiPublicManifestDotwebmanifestRouteImport } from './routes/api/public/manifest[.]webmanifest'
-import { Route as AuthenticatedRevendedorPerfilRouteImport } from './routes/_authenticated/revendedor/perfil'
-import { Route as AuthenticatedRevendedorLojasRouteImport } from './routes/_authenticated/revendedor/lojas'
-import { Route as AuthenticatedRevendedorGanhosRouteImport } from './routes/_authenticated/revendedor/ganhos'
-import { Route as AuthenticatedRevendedorCobrancasRouteImport } from './routes/_authenticated/revendedor/cobrancas'
 import { Route as AuthenticatedLojaTreinamentoRouteImport } from './routes/_authenticated/loja/treinamento'
 import { Route as AuthenticatedLojaSuporteRouteImport } from './routes/_authenticated/loja/suporte'
 import { Route as AuthenticatedLojaPromocoesRouteImport } from './routes/_authenticated/loja/promocoes'
@@ -192,12 +186,6 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedRevendedorRouteRoute =
-  AuthenticatedRevendedorRouteRouteImport.update({
-    id: '/revendedor',
-    path: '/revendedor',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedLojaRouteRoute = AuthenticatedLojaRouteRouteImport.update({
   id: '/loja',
   path: '/loja',
@@ -214,12 +202,6 @@ const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedRevendedorIndexRoute =
-  AuthenticatedRevendedorIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
 const AuthenticatedLojaIndexRoute = AuthenticatedLojaIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -268,30 +250,6 @@ const ApiPublicManifestDotwebmanifestRoute =
     id: '/api/public/manifest.webmanifest',
     path: '/api/public/manifest.webmanifest',
     getParentRoute: () => rootRouteImport,
-  } as any)
-const AuthenticatedRevendedorPerfilRoute =
-  AuthenticatedRevendedorPerfilRouteImport.update({
-    id: '/perfil',
-    path: '/perfil',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorLojasRoute =
-  AuthenticatedRevendedorLojasRouteImport.update({
-    id: '/lojas',
-    path: '/lojas',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorGanhosRoute =
-  AuthenticatedRevendedorGanhosRouteImport.update({
-    id: '/ganhos',
-    path: '/ganhos',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
-  } as any)
-const AuthenticatedRevendedorCobrancasRoute =
-  AuthenticatedRevendedorCobrancasRouteImport.update({
-    id: '/cobrancas',
-    path: '/cobrancas',
-    getParentRoute: () => AuthenticatedRevendedorRouteRoute,
   } as any)
 const AuthenticatedLojaTreinamentoRoute =
   AuthenticatedLojaTreinamentoRouteImport.update({
@@ -656,7 +614,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/loja': typeof AuthenticatedLojaRouteRouteWithChildren
-  '/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -723,10 +680,6 @@ export interface FileRoutesByFullPath {
   '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -736,7 +689,6 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/loja/': typeof AuthenticatedLojaIndexRoute
-  '/revendedor/': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -814,10 +766,6 @@ export interface FileRoutesByTo {
   '/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -827,7 +775,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/entregador': typeof AuthenticatedEntregadorIndexRoute
   '/loja': typeof AuthenticatedLojaIndexRoute
-  '/revendedor': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -844,7 +791,6 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/entregador': typeof AuthenticatedEntregadorRouteRouteWithChildren
   '/_authenticated/loja': typeof AuthenticatedLojaRouteRouteWithChildren
-  '/_authenticated/revendedor': typeof AuthenticatedRevendedorRouteRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/assetlinks.json': typeof Char91DotwellKnownChar93AssetlinksChar91DotChar93jsonRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -911,10 +857,6 @@ export interface FileRoutesById {
   '/_authenticated/loja/promocoes': typeof AuthenticatedLojaPromocoesRoute
   '/_authenticated/loja/suporte': typeof AuthenticatedLojaSuporteRoute
   '/_authenticated/loja/treinamento': typeof AuthenticatedLojaTreinamentoRoute
-  '/_authenticated/revendedor/cobrancas': typeof AuthenticatedRevendedorCobrancasRoute
-  '/_authenticated/revendedor/ganhos': typeof AuthenticatedRevendedorGanhosRoute
-  '/_authenticated/revendedor/lojas': typeof AuthenticatedRevendedorLojasRoute
-  '/_authenticated/revendedor/perfil': typeof AuthenticatedRevendedorPerfilRoute
   '/api/public/manifest.webmanifest': typeof ApiPublicManifestDotwebmanifestRoute
   '/api/public/mp-webhook': typeof ApiPublicMpWebhookRouteWithChildren
   '/api/public/mp-webhook-entregador': typeof ApiPublicMpWebhookEntregadorRoute
@@ -924,7 +866,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/_authenticated/loja/': typeof AuthenticatedLojaIndexRoute
-  '/_authenticated/revendedor/': typeof AuthenticatedRevendedorIndexRoute
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
 }
@@ -941,7 +882,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
-    | '/revendedor'
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
@@ -1008,10 +948,6 @@ export interface FileRouteTypes {
     | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
-    | '/revendedor/cobrancas'
-    | '/revendedor/ganhos'
-    | '/revendedor/lojas'
-    | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1021,7 +957,6 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/entregador/'
     | '/loja/'
-    | '/revendedor/'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesByTo: FileRoutesByTo
@@ -1099,10 +1034,6 @@ export interface FileRouteTypes {
     | '/loja/promocoes'
     | '/loja/suporte'
     | '/loja/treinamento'
-    | '/revendedor/cobrancas'
-    | '/revendedor/ganhos'
-    | '/revendedor/lojas'
-    | '/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1112,7 +1043,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
-    | '/revendedor'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   id:
@@ -1128,7 +1058,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/entregador'
     | '/_authenticated/loja'
-    | '/_authenticated/revendedor'
     | '/.mcp/list-tools'
     | '/.well-known/assetlinks.json'
     | '/.well-known/oauth-protected-resource'
@@ -1195,10 +1124,6 @@ export interface FileRouteTypes {
     | '/_authenticated/loja/promocoes'
     | '/_authenticated/loja/suporte'
     | '/_authenticated/loja/treinamento'
-    | '/_authenticated/revendedor/cobrancas'
-    | '/_authenticated/revendedor/ganhos'
-    | '/_authenticated/revendedor/lojas'
-    | '/_authenticated/revendedor/perfil'
     | '/api/public/manifest.webmanifest'
     | '/api/public/mp-webhook'
     | '/api/public/mp-webhook-entregador'
@@ -1208,7 +1133,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/entregador/'
     | '/_authenticated/loja/'
-    | '/_authenticated/revendedor/'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
   fileRoutesById: FileRoutesById
@@ -1362,13 +1286,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/revendedor': {
-      id: '/_authenticated/revendedor'
-      path: '/revendedor'
-      fullPath: '/revendedor'
-      preLoaderRoute: typeof AuthenticatedRevendedorRouteRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/loja': {
       id: '/_authenticated/loja'
       path: '/loja'
@@ -1389,13 +1306,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/revendedor/': {
-      id: '/_authenticated/revendedor/'
-      path: '/'
-      fullPath: '/revendedor/'
-      preLoaderRoute: typeof AuthenticatedRevendedorIndexRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
     '/_authenticated/loja/': {
       id: '/_authenticated/loja/'
@@ -1459,34 +1369,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/manifest.webmanifest'
       preLoaderRoute: typeof ApiPublicManifestDotwebmanifestRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/revendedor/perfil': {
-      id: '/_authenticated/revendedor/perfil'
-      path: '/perfil'
-      fullPath: '/revendedor/perfil'
-      preLoaderRoute: typeof AuthenticatedRevendedorPerfilRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/lojas': {
-      id: '/_authenticated/revendedor/lojas'
-      path: '/lojas'
-      fullPath: '/revendedor/lojas'
-      preLoaderRoute: typeof AuthenticatedRevendedorLojasRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/ganhos': {
-      id: '/_authenticated/revendedor/ganhos'
-      path: '/ganhos'
-      fullPath: '/revendedor/ganhos'
-      preLoaderRoute: typeof AuthenticatedRevendedorGanhosRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
-    }
-    '/_authenticated/revendedor/cobrancas': {
-      id: '/_authenticated/revendedor/cobrancas'
-      path: '/cobrancas'
-      fullPath: '/revendedor/cobrancas'
-      preLoaderRoute: typeof AuthenticatedRevendedorCobrancasRouteImport
-      parentRoute: typeof AuthenticatedRevendedorRouteRoute
     }
     '/_authenticated/loja/treinamento': {
       id: '/_authenticated/loja/treinamento'
@@ -2067,34 +1949,10 @@ const AuthenticatedLojaRouteRouteWithChildren =
     AuthenticatedLojaRouteRouteChildren,
   )
 
-interface AuthenticatedRevendedorRouteRouteChildren {
-  AuthenticatedRevendedorCobrancasRoute: typeof AuthenticatedRevendedorCobrancasRoute
-  AuthenticatedRevendedorGanhosRoute: typeof AuthenticatedRevendedorGanhosRoute
-  AuthenticatedRevendedorLojasRoute: typeof AuthenticatedRevendedorLojasRoute
-  AuthenticatedRevendedorPerfilRoute: typeof AuthenticatedRevendedorPerfilRoute
-  AuthenticatedRevendedorIndexRoute: typeof AuthenticatedRevendedorIndexRoute
-}
-
-const AuthenticatedRevendedorRouteRouteChildren: AuthenticatedRevendedorRouteRouteChildren =
-  {
-    AuthenticatedRevendedorCobrancasRoute:
-      AuthenticatedRevendedorCobrancasRoute,
-    AuthenticatedRevendedorGanhosRoute: AuthenticatedRevendedorGanhosRoute,
-    AuthenticatedRevendedorLojasRoute: AuthenticatedRevendedorLojasRoute,
-    AuthenticatedRevendedorPerfilRoute: AuthenticatedRevendedorPerfilRoute,
-    AuthenticatedRevendedorIndexRoute: AuthenticatedRevendedorIndexRoute,
-  }
-
-const AuthenticatedRevendedorRouteRouteWithChildren =
-  AuthenticatedRevendedorRouteRoute._addFileChildren(
-    AuthenticatedRevendedorRouteRouteChildren,
-  )
-
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   AuthenticatedEntregadorRouteRoute: typeof AuthenticatedEntregadorRouteRouteWithChildren
   AuthenticatedLojaRouteRoute: typeof AuthenticatedLojaRouteRouteWithChildren
-  AuthenticatedRevendedorRouteRoute: typeof AuthenticatedRevendedorRouteRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -2102,8 +1960,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntregadorRouteRoute:
     AuthenticatedEntregadorRouteRouteWithChildren,
   AuthenticatedLojaRouteRoute: AuthenticatedLojaRouteRouteWithChildren,
-  AuthenticatedRevendedorRouteRoute:
-    AuthenticatedRevendedorRouteRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
