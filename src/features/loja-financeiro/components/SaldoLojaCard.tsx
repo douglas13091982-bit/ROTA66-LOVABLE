@@ -33,7 +33,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
   };
 
   return (
-    <section className="bg-card border border-border rounded-lg p-6">
+    <section className="bg-white border border-border rounded-xl p-6 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-navy text-xs uppercase tracking-wider font-bold">
           <Wallet className="h-3.5 w-3.5" /> Saldo da loja
