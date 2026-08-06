@@ -21,9 +21,9 @@ export const STATUS_STEPS = [
   },
   {
     key: "coletado",
-    label: "A caminho",
+    label: "A caminho da Coleta",
     icon: Truck,
-    matches: ["em_rota", "coletado"],
+    matches: ["em_rota"],
   },
   {
     key: "chegou",
