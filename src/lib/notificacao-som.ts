@@ -36,6 +36,7 @@ export const SOM_BUCKET = "notificacao-som";
 
 let currentAudioCtx: AudioContext | null = null;
 let currentSource: AudioBufferSourceNode | null = null;
+let isPlayingInternal = false;
 
 // AudioContext principal usado tanto para o beep sintético quanto para
 // tocar o MP3 pré-carregado via Web Audio API (contorna restrições de
@@ -162,6 +163,8 @@ export function instalarDesbloqueioAutomatico() {
 }
 
 export function pararNotificacao() {
+  isPlayingInternal = false;
+  window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
   try {
     if (currentSource) {
       try {
@@ -210,7 +213,17 @@ export function tocarBeepSintetico(cfg: ConfigNotificacaoSom) {
       gain.gain.exponentialRampToValueAtTime(0.01, start + dur);
       osc.start(start);
       osc.stop(start + dur);
+      if (i === rep - 1) {
+        osc.onended = () => {
+          if (currentAudioCtx === ctx) {
+            isPlayingInternal = false;
+            window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
+          }
+        };
+      }
     }
+    isPlayingInternal = true;
+    window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: true } }));
   } catch {}
 }
 
@@ -245,9 +258,12 @@ function tocarArquivoPreCarregado(cfg: ConfigNotificacaoSom): boolean {
     src.onended = () => {
       if (currentSource === src) {
         currentSource = null;
-        // Se não for loop, limpa a referência. Se for loop, onended não dispara.
+        isPlayingInternal = false;
+        window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: false } }));
       }
     };
+    isPlayingInternal = true;
+    window.dispatchEvent(new CustomEvent("notificacao-som:status", { detail: { playing: true } }));
     return true;
   } catch {
     return false;
