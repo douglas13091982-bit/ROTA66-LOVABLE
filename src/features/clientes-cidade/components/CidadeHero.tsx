@@ -53,7 +53,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema }: Props) {
     <div>
       {/* Barra superior navy */}
       <div className="mp-topbar">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Select
             value={
               cidades.some(
@@ -106,7 +106,7 @@ export function CidadeHero({ cidade, uf, logoUrl, nomeSistema }: Props) {
       </div>
 
       {/* Logo + tagline */}
-      <div className="max-w-2xl mx-auto px-6 pt-4 pb-1">
+      <div className="max-w-6xl mx-auto px-6 pt-4 pb-1">
         <div className="flex justify-center">
           <img src={logoUrl} alt={nomeSistema} className="h-20 w-auto object-contain" />
         </div>

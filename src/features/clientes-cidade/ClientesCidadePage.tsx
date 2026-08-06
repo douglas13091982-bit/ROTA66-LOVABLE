@@ -32,7 +32,7 @@ export function ClientesCidadePage({ cidade, uf }: Props) {
         <CategoriasFiltro value={categoriaFiltro} onChange={setCategoriaFiltro} />
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 pt-5">
+      <main className="max-w-6xl mx-auto px-4 pt-5">
         <AtivarPushClienteBanner />
         <LojasList lojas={filtradas} isLoading={isLoading} cidade={cidade} />
       </main>

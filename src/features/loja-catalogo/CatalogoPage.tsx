@@ -136,7 +136,7 @@ export function CatalogoPage({ slug }: { slug: string }) {
 
       {lojaFechada && <LojaFechadaBanner horario={horario} />}
 
-      <main className="max-w-2xl mx-auto px-4 pt-5 pb-24">
+      <main className="max-w-6xl mx-auto px-4 pt-5 pb-24">
         <CatalogoListagem
           produtos={produtos ?? []}
           produtosFiltrados={produtosFiltrados}

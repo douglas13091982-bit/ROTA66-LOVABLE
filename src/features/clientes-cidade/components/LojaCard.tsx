@@ -41,7 +41,7 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
     <Link
       to="/c/$slug"
       params={{ slug: loja.slug }}
-      className="mp-card flex w-full items-center overflow-hidden rounded-sm active:scale-[0.995] transition"
+      className="mp-card flex w-full items-center overflow-hidden rounded-sm active:scale-[0.995] transition h-full"
     >
       {loja.logo_url ? (
         <img

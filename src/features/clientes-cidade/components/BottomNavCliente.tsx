@@ -78,7 +78,7 @@ export function BottomNavCliente({ cidade, uf }: Props) {
         className="fixed bottom-0 inset-x-0 z-40 border-t pb-[env(safe-area-inset-bottom)]"
         style={{ background: "#faf8f5", borderColor: "rgba(15,37,66,0.12)" }}
       >
-        <div className="grid grid-cols-5 mx-auto max-w-2xl">
+        <div className="grid grid-cols-5 mx-auto max-w-6xl">
           {items.map((item, i) => {
             const Icon = item.icon;
             return (
