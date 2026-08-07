@@ -5,6 +5,7 @@ import { EntregadorShell } from "@/components/EntregadorShell";
 import { AnunciosEntregador } from "@/components/AnunciosEntregador";
 import { GanhoHojeCard } from "@/components/entregador/GanhoHojeCard";
 import { useGeolocalizacao } from "@/hooks/use-geolocalizacao";
+import { useBranding } from "@/hooks/use-branding";
 import { usePedidosDisponiveis } from "@/hooks/use-pedidos-disponiveis";
 import { useAcoesPedido } from "@/hooks/use-acoes-pedido";
 import { usePopupNotificacao } from "@/hooks/use-popup-notificacao";
@@ -24,6 +25,7 @@ import { ApkUpdateBanner } from "./components/ApkUpdateBanner";
 export function DisponiveisPage() {
   const navigate = useNavigate();
   const { posicao: minhaPos } = useGeolocalizacao();
+  const { logoUrl, nomeSistema } = useBranding();
   const { dismissed, aceitarGrupo } = useAcoesPedido();
   const { ordenacao, setOrdenacao } = useOrdenacaoPedidos();
   const {
@@ -120,8 +122,12 @@ export function DisponiveisPage() {
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
         <div className="text-center py-20 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="mb-8 w-44 h-44 grid place-items-center bg-[#f8f9fb] rounded-[48px]">
-            <Package className="h-24 w-24 text-[#0d2c54]/20" strokeWidth={1} />
+          <div className="mb-8 w-44 h-44 grid place-items-center bg-white rounded-[48px]">
+            <img 
+              src={logoUrl} 
+              alt={nomeSistema} 
+              className="h-32 w-32 object-contain opacity-20 grayscale brightness-0" 
+            />
           </div>
           <h2 className="text-[22px] font-black text-[#0d2c54] tracking-tight mb-2">
             Nenhuma entrega disponível
