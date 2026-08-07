@@ -159,7 +159,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
       {/* Main - mobile only, no sidebar */}
       <div className="flex-1 flex flex-col min-w-0 relative">
-        <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
+        <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-0" />
 
         <main className="flex-1 px-6 pb-32 relative pt-20 bg-white isolation-auto">
           <div className="fixed top-0 left-0 right-0 h-20 z-[60] flex items-center justify-between px-6 pointer-events-none bg-white">
