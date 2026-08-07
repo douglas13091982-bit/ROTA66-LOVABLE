@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet, VolumeX } from "lucide-react";
+import { Package, History, User, CalendarClock, Power, Smartphone, Menu, Settings2, Wallet, VolumeX, Bell, ChevronRight } from "lucide-react";
 import { AvatarImg } from "@/components/AvatarImg";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -113,21 +113,20 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
   }, [user?.id, qc]);
 
   const StatusToggleLarge = (
-    <div className="flex flex-col items-center gap-3 w-full px-8">
+    <div className="flex flex-col items-center gap-3 w-full px-4">
       <button
         onClick={toggle}
         data-status-toggle
-        className="w-full relative inline-flex items-center justify-center h-14 rounded-[22px] transition-all duration-300 shadow-md"
+        className="w-full relative inline-flex items-center justify-center h-16 rounded-full transition-all duration-300 shadow-xl shadow-[#AE0000]/20"
         style={{ 
           background: online ? "#0d2c54" : "#AE0000",
-          boxShadow: online ? "0 4px 15px -5px rgba(13,44,84,0.5)" : "0 4px 15px -5px rgba(174,0,0,0.5)"
         }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
         <div className="flex items-center gap-3">
-          <Power className="h-5 w-5 text-white" strokeWidth={3} />
-          <span className="text-base font-black tracking-[0.1em] uppercase text-white">
-            {online ? "DESCONECTAR" : "CONECTAR"}
+          <Power className="h-6 w-6 text-white" strokeWidth={3} />
+          <span className="text-[15px] font-black tracking-[0.1em] uppercase text-white">
+            {online ? "FICAR OFFLINE" : "FICAR ONLINE"}
           </span>
         </div>
       </button>
@@ -162,13 +161,13 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
 
-        <main className="flex-1 px-4 pb-24 relative pt-16 bg-[#f5f7fa] isolation-auto">
-          <div className="fixed top-0 left-0 right-0 h-16 z-[60] flex items-center justify-between px-4 pointer-events-none bg-[#f5f7fa]">
+        <main className="flex-1 px-6 pb-32 relative pt-20 bg-white isolation-auto">
+          <div className="fixed top-0 left-0 right-0 h-20 z-[60] flex items-center justify-between px-6 pointer-events-none bg-white">
             <button 
               onClick={() => setOpen(true)}
-              className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#0d2c54] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto"
+              className="flex items-center justify-center h-12 w-12 text-[#0d2c54] active:scale-95 transition-transform pointer-events-auto"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-8 w-8" />
             </button>
             
             {playing && (
@@ -181,11 +180,30 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               </button>
             )}
 
-            {path.startsWith("/entregador/disponiveis") && topFixed && (
-              <div className="pointer-events-auto">
-                {topFixed}
-              </div>
-            )}
+            <div className="flex items-center gap-2 pointer-events-auto">
+              {playing && (
+                <button
+                  onClick={stop}
+                  className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#AE0000] text-white shadow-lg active:scale-95 transition-transform animate-pulse"
+                >
+                  <VolumeX className="h-5 w-5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">PARAR SOM</span>
+                </button>
+              )}
+              
+              {topFixed && (
+                <div className="pointer-events-auto">
+                  {topFixed}
+                </div>
+              )}
+
+              <button className="flex items-center justify-center h-12 w-12 text-[#0d2c54] relative active:scale-95 transition-transform pointer-events-auto">
+                <div className="relative">
+                  <Bell className="h-7 w-7" />
+                  <div className="absolute top-0 right-0 h-2.5 w-2.5 bg-[#AE0000] rounded-full border-2 border-white" />
+                </div>
+              </button>
+            </div>
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100]">
@@ -257,7 +275,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="pp-reveal">
 
             {path.startsWith("/entregador/disponiveis") ? (
-              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-0 pb-3 bg-[#f5f7fa] border-none shadow-none">
+              <div className="entregador-sticky-top sticky top-0 z-30 -mx-4 px-4 pt-0 pb-3 bg-white border-none shadow-none">
                 <div className="flex flex-col gap-4 mb-4">
                   {/* GanhoHojeCard movido para o topo fixo alinhado ao menu */}
                 </div>
@@ -275,7 +293,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <nav
         data-entregador-nav
         className="fixed bottom-0 inset-x-0 z-40 border-t border-black/[0.03] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
-        style={{ background: "#f5f7fa" }}
+        style={{ background: "#ffffff" }}
       >
         <div className="flex flex-col gap-3">
           {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}

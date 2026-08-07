@@ -113,21 +113,21 @@ export function DisponiveisPage() {
         </div>
       )}
       {!rotaAtivaResolvida ? (
-        <div className="bg-[#0d2c54] border border-white/10 rounded-2xl p-8 text-center shadow-xl">
-          <p className="text-sm font-black text-white uppercase tracking-widest animate-pulse">Carregando…</p>
+        <div className="bg-white rounded-3xl p-8 text-center">
+          <p className="text-sm font-black text-[#0d2c54] uppercase tracking-widest animate-pulse">Carregando…</p>
         </div>
       ) : temRotaAtiva ? (
         <RotaAtivaEstado onVerRota={() => navigate({ to: "/entregador/ativos" })} />
       ) : !estouOnline ? (
-        <div className="text-center py-20 px-4">
-          <div className="mx-auto mb-6 w-32 h-32 grid place-items-center opacity-40">
-            <Package className="h-28 w-28" style={{ color: "#0d2c54", strokeWidth: 1 }} />
+        <div className="text-center py-20 px-4 flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="mb-8 w-44 h-44 grid place-items-center bg-[#f8f9fb] rounded-[48px]">
+            <Package className="h-24 w-24 text-[#0d2c54]/20" strokeWidth={1} />
           </div>
-          <p className="text-[18px] font-black text-[#0d2c54] uppercase tracking-wider">
-            Você está desconectado
-          </p>
-          <p className="text-xs mt-2 font-medium" style={{ color: "#6b7688" }}>
-            Clique em conectar abaixo para ver pedidos.
+          <h2 className="text-[22px] font-black text-[#0d2c54] tracking-tight mb-2">
+            Nenhuma entrega disponível
+          </h2>
+          <p className="text-[15px] font-medium text-[#6b7688]">
+            Fique online para receber novos pedidos.
           </p>
         </div>
       ) : (
