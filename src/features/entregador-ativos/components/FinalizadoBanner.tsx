@@ -48,7 +48,7 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
               <Store className="h-4 w-4 text-amber-400" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#AE0000] uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-[#e3000f] uppercase tracking-wider">
                 Devolução da Maquininha
               </h3>
               <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest">
@@ -74,7 +74,7 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
               target="_blank"
               rel="noopener noreferrer"
               href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(retornoPendente.endereco)}`}
-              className="w-full px-5 py-4 bg-[#AE0000] shadow-[0_8px_20px_-4px_rgba(174,0,0,0.4)] text-white font-bold uppercase text-[11px] tracking-[0.2em] rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+              className="w-full px-5 py-4 bg-[#e3000f] shadow-[0_8px_20px_-4px_rgba(227,0,15,0.4)] text-white font-bold uppercase text-[11px] tracking-[0.2em] rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
             >
               <Navigation className="h-4 w-4" /> Abrir GPS de Volta
             </a>

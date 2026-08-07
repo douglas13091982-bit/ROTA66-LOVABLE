@@ -9,7 +9,7 @@ export function ApkUploadCard({ uploading, onUpload }: Props) {
   return (
     <div className="bg-white border border-[#e2e6ec] p-6" style={{ boxShadow: "0 10px 30px -12px rgba(15,27,45,0.25)" }}>
       <div className="flex items-start gap-4 mb-5">
-        <div className="h-12 w-12 bg-[#AE0000] flex items-center justify-center shrink-0">
+        <div className="h-12 w-12 bg-[#e3000f] flex items-center justify-center shrink-0">
           <Smartphone className="h-6 w-6" style={{ color: "#ffffff" }} />
         </div>
         <div>
@@ -22,7 +22,7 @@ export function ApkUploadCard({ uploading, onUpload }: Props) {
       </div>
 
       <label className="block">
-        <div className="flex items-center justify-center gap-2 px-4 py-4 border-2 border-dashed border-[#c3cad6] cursor-pointer hover:border-[#AE0000] transition-colors text-[#0f1b2d]">
+        <div className="flex items-center justify-center gap-2 px-4 py-4 border-2 border-dashed border-[#c3cad6] cursor-pointer hover:border-[#e3000f] transition-colors text-[#0f1b2d]">
           <Upload className="h-4 w-4" />
           <span className="text-sm font-bold uppercase tracking-wider">
             {uploading ? "Enviando…" : "Selecionar arquivo .apk"}

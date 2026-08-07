@@ -65,7 +65,7 @@ export function ApkUpdateBanner() {
       <button
         onClick={handleDownload}
         disabled={busy}
-        className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-[#AE0000] px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-white disabled:opacity-50 shadow-lg shadow-[#AE0000]/20 active:scale-95 transition-transform"
+        className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-[#e3000f] px-4 py-2 text-[11px] font-black uppercase tracking-[0.1em] text-white disabled:opacity-50 shadow-lg shadow-[#e3000f]/20 active:scale-95 transition-transform"
       >
         <Download className="h-3.5 w-3.5" />
         {busy ? "…" : "Baixar"}

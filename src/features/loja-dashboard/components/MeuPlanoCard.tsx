@@ -55,7 +55,7 @@ export function MeuPlanoCard({ lojaId, planoIdAtual }: Props) {
               setSelected(planoIdAtual);
               setEditing(true);
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3.5 py-2 bg-[#AE0000] hover:bg-[#8d0000] !text-white border border-[#8d0000] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3.5 py-2 bg-[#e3000f] hover:bg-[#8d0000] !text-white border border-[#8d0000] transition-colors"
           >
             <Pencil className="h-3.5 w-3.5" /> Trocar
           </button>

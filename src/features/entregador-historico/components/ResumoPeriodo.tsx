@@ -19,15 +19,15 @@ export function ResumoPeriodo({
         <div className="flex min-w-0 items-center justify-between gap-2">
           <div
             className="min-w-0 truncate font-display text-[22px] sm:text-[28px] leading-none"
-            style={{ color: "#E01818" }}
+            style={{ color: "#e3000f" }}
           >
             R$ {totalPeriodo.toFixed(2)}
           </div>
           <div
             className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 rounded-full grid place-items-center"
-            style={{ background: "rgba(224,24,24,0.12)", border: "1px solid rgba(224,24,24,0.35)" }}
+            style={{ background: "rgba(227,0,15,0.12)", border: "1px solid rgba(227,0,15,0.35)" }}
           >
-            <CircleDollarSign className="h-5 w-5" style={{ color: "#E01818" }} />
+            <CircleDollarSign className="h-5 w-5" style={{ color: "#e3000f" }} />
           </div>
         </div>
       </div>
@@ -42,9 +42,9 @@ export function ResumoPeriodo({
           </div>
           <div
             className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 rounded-full grid place-items-center"
-            style={{ background: "rgba(224,24,24,0.10)", border: "1px solid rgba(224,24,24,0.30)" }}
+            style={{ background: "rgba(227,0,15,0.10)", border: "1px solid rgba(227,0,15,0.30)" }}
           >
-            <ShoppingBag className="h-5 w-5" style={{ color: "#E01818" }} />
+            <ShoppingBag className="h-5 w-5" style={{ color: "#e3000f" }} />
           </div>
         </div>
       </div>

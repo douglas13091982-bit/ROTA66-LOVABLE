@@ -132,7 +132,7 @@ export function PagamentoMpMensalidadeDialog({
                   onClick={() => setMetodo("pix")}
                   className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
                     metodo === "pix" 
-                      ? "bg-[#AE0000]/10 border-[#AE0000] text-[#AE0000]" 
+                      ? "bg-[#e3000f]/10 border-[#e3000f] text-[#e3000f]" 
                       : "border-border text-muted-foreground hover:bg-muted"
                   }`}
                 >
@@ -142,7 +142,7 @@ export function PagamentoMpMensalidadeDialog({
                   onClick={() => setMetodo("cartao")}
                   className={`flex-1 px-3 py-2 rounded-md border text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
                     metodo === "cartao" 
-                      ? "bg-[#AE0000]/10 border-[#AE0000] text-[#AE0000]" 
+                      ? "bg-[#e3000f]/10 border-[#e3000f] text-[#e3000f]" 
                       : "border-border text-muted-foreground hover:bg-muted"
                   }`}
                 >
@@ -160,7 +160,7 @@ export function PagamentoMpMensalidadeDialog({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                    className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#e3000f] outline-none"
                   />
                 </div>
 
@@ -173,7 +173,7 @@ export function PagamentoMpMensalidadeDialog({
                       <input
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
-                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#e3000f] outline-none"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -183,7 +183,7 @@ export function PagamentoMpMensalidadeDialog({
                       <input
                         value={doc}
                         onChange={(e) => setDoc(e.target.value)}
-                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#AE0000] outline-none"
+                        className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:ring-1 focus:ring-[#e3000f] outline-none"
                       />
                     </div>
                   </>
@@ -193,7 +193,7 @@ export function PagamentoMpMensalidadeDialog({
               <button
                 onClick={() => mGerar.mutate()}
                 disabled={!email || mGerar.isPending}
-                className="w-full px-4 py-3 bg-[#AE0000] text-white font-bold uppercase text-sm tracking-widest rounded-md hover:bg-[#8e0000] disabled:opacity-50 flex items-center justify-center gap-2 mt-2 transition-all shadow-md"
+                className="w-full px-4 py-3 bg-[#e3000f] text-white font-bold uppercase text-sm tracking-widest rounded-md hover:bg-[#8e0000] disabled:opacity-50 flex items-center justify-center gap-2 mt-2 transition-all shadow-md"
               >
                 {mGerar.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {metodo === "pix" ? "Gerar QR Code PIX" : "Pagar com cartão"}

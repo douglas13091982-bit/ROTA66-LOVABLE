@@ -12,7 +12,7 @@ export function EnderecoEntregaCard({ endereco, complemento }: Props) {
         Endereço de entrega
       </div>
       <div className="flex items-start gap-2">
-        <MapPin className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
+        <MapPin className="h-4 w-4 mt-0.5 text-[#e3000f] shrink-0" />
         <span className="font-medium leading-tight">
           {endereco}
           {complemento ? ` (${complemento})` : ""}

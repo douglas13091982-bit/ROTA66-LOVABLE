@@ -18,7 +18,7 @@ export function ApkList({ apks, loading, busyName, onRefresh, onDownload, onDele
         <h3 className="font-display text-lg tracking-wide text-[#0f1b2d]">Versões hospedadas</h3>
         <button
           onClick={onRefresh}
-          className="text-xs font-bold uppercase tracking-widest text-[#AE0000] hover:text-[#8a0000] inline-flex items-center gap-1"
+          className="text-xs font-bold uppercase tracking-widest text-[#e3000f] hover:text-[#8a0000] inline-flex items-center gap-1"
         >
           <RefreshCw className="h-3.5 w-3.5" />
           Atualizar

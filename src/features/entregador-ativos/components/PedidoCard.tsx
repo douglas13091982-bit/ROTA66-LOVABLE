@@ -157,7 +157,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
   // Paleta Rota 66 (theme-aware) — app do entregador usa tema claro
   const isLight = true;
-  const RED = "#AE0000";
+  const RED = "#e3000f";
   const BG = isLight ? "#FFFFFF" : "#0D2B45";
   const TEXT = isLight ? "#0f1b2d" : "#FFFFFF";
   const MUTED = isLight ? "#6B7688" : "#8FA3B8";
@@ -167,7 +167,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
   const ICON_CIRCLE_BG = isLight ? "#FDECEC" : "transparent";
   const RING_CLASS = isDestaque
     ? isLight
-      ? "ring-4 ring-[#AE0000]/15"
+      ? "ring-4 ring-[#e3000f]/15"
       : "ring-4 ring-white/20"
     : "";
 
@@ -468,8 +468,8 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 onClick={sairDoLocal}
                 className="mt-4 w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold uppercase text-[14px] tracking-normal text-white transition-all active:scale-[0.98]"
                 style={{
-                  background: "#AE0000",
-                  boxShadow: "0 14px 32px -10px rgba(174,0,0,0.55)",
+                  background: "#e3000f",
+                  boxShadow: "0 14px 32px -10px rgba(227,0,15,0.55)",
                 }}
               >
                 <span>Sair do local</span>
@@ -647,8 +647,8 @@ function CtaButton({
       onClick={onClick}
       className="group w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold uppercase text-[15px] tracking-[0.16em] text-white transition-all active:scale-[0.98]"
       style={{
-        background: "#AE0000",
-        boxShadow: "0 14px 32px -10px rgba(174,0,0,0.55)",
+        background: "#e3000f",
+        boxShadow: "0 14px 32px -10px rgba(227,0,15,0.55)",
       }}
     >
       <span>{children}</span>

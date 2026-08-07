@@ -22,7 +22,7 @@ export function OportunidadesSection({ loading, disponiveis, onAceitar }: Props)
       <div
         className="rounded-xl p-4 flex items-center gap-4 shadow-card"
         style={{
-          background: "linear-gradient(100deg, #7E0000 0%, #AE0000 100%)",
+          background: "linear-gradient(100deg, #7E0000 0%, #e3000f 100%)",
           border: "1px solid rgba(255,255,255,0.10)",
         }}
       >

@@ -16,7 +16,7 @@ export function VazioBanner() {
       </p>
       <button
         onClick={() => navigate({ to: "/entregador/disponiveis", replace: true })}
-        className="relative w-full px-4 py-3 rounded-xl bg-[#AE0000] !text-white font-bold uppercase text-xs tracking-[0.16em]"
+        className="relative w-full px-4 py-3 rounded-xl bg-[#e3000f] !text-white font-bold uppercase text-xs tracking-[0.16em]"
       >
         Ver pedidos disponíveis
       </button>

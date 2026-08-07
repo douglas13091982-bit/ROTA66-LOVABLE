@@ -770,7 +770,7 @@ html.light .panel-premium [data-nav-badge] * {
   color: #ffffff;
 }
 .panel-premium.panel-light aside .pp-nav-active {
-  background: linear-gradient(90deg, #e01818, #b81111);
+  background: linear-gradient(90deg, #e3000f, #b81111);
   box-shadow: 0 10px 24px -12px oklch(0.55 0.26 25 / 0.75);
 }
 .panel-premium.panel-light aside .pp-nav-active::before { display: none; }
@@ -803,7 +803,7 @@ html.light .panel-premium [data-nav-badge] * {
   color: #ffffff;
 }
 .panel-premium.panel-light .pp-disc-accent:not(aside *) {
-  background: linear-gradient(135deg, #e01818, #b81111);
+  background: linear-gradient(135deg, #e3000f, #b81111);
   border-color: #b81111;
   color: #ffffff;
 }
@@ -1814,41 +1814,41 @@ html.light .entregador-sticky-top {
 }
 
 /* ==========================================================================
-   ENTREGADOR — vermelho customizado (#AE0000)
+   ENTREGADOR — vermelho customizado (#e3000f)
    Escopa o override apenas ao app do entregador (EntregadorShell root).
    Reescreve os tokens semânticos e a paleta red-* do Tailwind v4 usada
    por classes utilitárias (bg-red-*, text-red-*, border-red-*).
    ========================================================================== */
 .entregador-theme {
-  --rota-red: #AE0000;
+  --rota-red: #e3000f;
   --rota-red-dark: #8A0000;
-  --primary: #AE0000;
-  --accent: #AE0000;
-  --destructive: #AE0000;
-  --ring: #AE0000;
+  --primary: #e3000f;
+  --accent: #e3000f;
+  --destructive: #e3000f;
+  --ring: #e3000f;
 
   --color-red-50: #fdecec;
   --color-red-100: #f9c9c9;
   --color-red-200: #f19a9a;
   --color-red-300: #e46a6a;
   --color-red-400: #cc3535;
-  --color-red-500: #AE0000;
-  --color-red-600: #AE0000;
+  --color-red-500: #e3000f;
+  --color-red-600: #e3000f;
   --color-red-700: #8A0000;
   --color-red-800: #6d0000;
   --color-red-900: #500000;
   --color-red-950: #350000;
 
   /* Tons próximos ao vermelho — laranja / rosa / rose / fúcsia
-     também assumem a família #AE0000. (Amber permanece intocado
+     também assumem a família #e3000f. (Amber permanece intocado
      por ser o amarelo de aviso.) */
   --color-orange-50: #fdecec;
   --color-orange-100: #f9c9c9;
   --color-orange-200: #f19a9a;
   --color-orange-300: #e46a6a;
   --color-orange-400: #cc3535;
-  --color-orange-500: #AE0000;
-  --color-orange-600: #AE0000;
+  --color-orange-500: #e3000f;
+  --color-orange-600: #e3000f;
   --color-orange-700: #8A0000;
   --color-orange-800: #6d0000;
   --color-orange-900: #500000;
@@ -1858,8 +1858,8 @@ html.light .entregador-sticky-top {
   --color-pink-200: #f19a9a;
   --color-pink-300: #e46a6a;
   --color-pink-400: #cc3535;
-  --color-pink-500: #AE0000;
-  --color-pink-600: #AE0000;
+  --color-pink-500: #e3000f;
+  --color-pink-600: #e3000f;
   --color-pink-700: #8A0000;
   --color-pink-800: #6d0000;
   --color-pink-900: #500000;
@@ -1869,8 +1869,8 @@ html.light .entregador-sticky-top {
   --color-rose-200: #f19a9a;
   --color-rose-300: #e46a6a;
   --color-rose-400: #cc3535;
-  --color-rose-500: #AE0000;
-  --color-rose-600: #AE0000;
+  --color-rose-500: #e3000f;
+  --color-rose-600: #e3000f;
   --color-rose-700: #8A0000;
   --color-rose-800: #6d0000;
   --color-rose-900: #500000;
@@ -1880,8 +1880,8 @@ html.light .entregador-sticky-top {
   --color-fuchsia-200: #f19a9a;
   --color-fuchsia-300: #e46a6a;
   --color-fuchsia-400: #cc3535;
-  --color-fuchsia-500: #AE0000;
-  --color-fuchsia-600: #AE0000;
+  --color-fuchsia-500: #e3000f;
+  --color-fuchsia-600: #e3000f;
   --color-fuchsia-700: #8A0000;
   --color-fuchsia-800: #6d0000;
   --color-fuchsia-900: #500000;
@@ -2056,16 +2056,16 @@ nav button[data-status-toggle],
 .panel-premium.panel-light .pp-cta *,
 button[class*="bg-\[oklch\(0\.55_0\.26_25\)\]"],
 button[class*="bg-\[oklch\(0\.55_0\.26_25\)\]"] *,
-button[class*="bg-\[\#AE0000\]"],
-button[class*="bg-\[\#AE0000\]"] *,
-button[class*="bg-\[\#E01818\]"],
-button[class*="bg-\[\#E01818\]"] * {
+button[class*="bg-\[\#e3000f\]"],
+button[class*="bg-\[\#e3000f\]"] *,
+button[class*="bg-\[\#e3000f\]"],
+button[class*="bg-\[\#e3000f\]"] * {
   color: #ffffff !important;
 }
 
 /* ===========================================================
    ENTREGADOR — TEMA CLARO (mesma paleta dos painéis)
-   Fundo branco/cinza claro + texto navy + vermelho #AE0000.
+   Fundo branco/cinza claro + texto navy + vermelho #e3000f.
    A barra inferior segue navy (equivalente à sidebar dos painéis).
    =========================================================== */
 .entregador-theme.panel-light {
@@ -2124,10 +2124,10 @@ button[class*="bg-\[\#E01818\]"] * {
 .entregador-theme.panel-light .bg-muted { background-color: #eef1f6 !important; }
 
 /* Em superfícies vermelhas/navy o texto continua branco */
-.entregador-theme.panel-light [class*="bg-[#AE0000]"],
-.entregador-theme.panel-light [class*="bg-[#AE0000]"] *,
-.entregador-theme.panel-light [class*="bg-[#E01818]"],
-.entregador-theme.panel-light [class*="bg-[#E01818]"] *,
+.entregador-theme.panel-light [class*="bg-[#e3000f]"],
+.entregador-theme.panel-light [class*="bg-[#e3000f]"] *,
+.entregador-theme.panel-light [class*="bg-[#e3000f]"],
+.entregador-theme.panel-light [class*="bg-[#e3000f]"] *,
 .entregador-theme.panel-light [class*="bg-gradient-red"],
 .entregador-theme.panel-light [class*="bg-gradient-red"] *,
 .entregador-theme.panel-light [class*="bg-primary"]:not([class*="bg-primary/"]),
@@ -2182,7 +2182,7 @@ button[class*="bg-\[\#E01818\]"] * {
   box-shadow: none;
 }
 .entregador-theme.panel-light [role="tab"][data-surface="navy"] { background: #0d2c54 !important; }
-.entregador-theme.panel-light [role="tab"][data-surface="red"] { background: #AE0000 !important; }
+.entregador-theme.panel-light [role="tab"][data-surface="red"] { background: #e3000f !important; }
 
 /* Restaura texto branco sobre superfícies escuras do app do entregador
    (nav inferior e pílulas navy/vermelhas), acima de qualquer override claro. */

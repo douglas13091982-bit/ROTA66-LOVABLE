@@ -56,7 +56,7 @@ export function PedidoCard({
           onOpenDetalhe(p);
         }
       }}
-      className={`group relative w-full text-left bg-card border-2 border-[#0d2c54] shadow-[4px_4px_0_0_rgba(13,44,84,1)] hover:shadow-[6px_6px_0_0_rgba(174,0,0,0.9)] hover:border-[#AE0000] transition-all duration-150 flex flex-col ${
+      className={`group relative w-full text-left bg-card border-2 border-[#0d2c54] shadow-[4px_4px_0_0_rgba(13,44,84,1)] hover:shadow-[6px_6px_0_0_rgba(227,0,15,0.9)] hover:border-[#e3000f] transition-all duration-150 flex flex-col ${
         lojaControla ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"
       } ${dragId === p.id ? "opacity-50" : ""}`}
     >
@@ -82,7 +82,7 @@ export function PedidoCard({
                 }}
                 title="Cancelar pedido"
                 aria-label={`Cancelar pedido #${p.numero}`}
-                className="inline-flex items-center justify-center h-6 w-6 border border-[#AE0000] !text-[#AE0000] hover:!bg-[#AE0000] hover:!text-white transition-colors"
+                className="inline-flex items-center justify-center h-6 w-6 border border-[#e3000f] !text-[#e3000f] hover:!bg-[#e3000f] hover:!text-white transition-colors"
               >
                 <X className="h-4 w-4" strokeWidth={2.5} />
               </button>
@@ -113,12 +113,12 @@ export function PedidoCard({
         {p.status === "em_rota" && p.codigo_coleta && (
           <div
             className="px-2 py-1.5 border"
-            style={{ borderColor: "#AE000033", backgroundColor: "#fdf6f6" }}
+            style={{ borderColor: "#e3000f33", backgroundColor: "#fdf6f6" }}
           >
             <span className="block text-[9px] font-bold uppercase tracking-[0.18em] text-[#0d2c54]/60">
               Cód. coleta
             </span>
-            <span className="inline-flex items-center gap-1 font-mono text-[15px] font-bold tracking-[0.2em] text-[#AE0000]">
+            <span className="inline-flex items-center gap-1 font-mono text-[15px] font-bold tracking-[0.2em] text-[#e3000f]">
               <KeyRound className="h-3.5 w-3.5" />
               {p.codigo_coleta}
             </span>

@@ -12,7 +12,7 @@ export function RotaAtivaEstado({ onVerRota }: { onVerRota: () => void }) {
       </p>
       <button
         onClick={onVerRota}
-        className="px-5 py-2.5 bg-[#AE0000] !text-white font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90 transition-opacity"
+        className="px-5 py-2.5 bg-[#e3000f] !text-white font-bold uppercase text-xs tracking-wider rounded-md hover:opacity-90 transition-opacity"
       >
         Ver minha rota
       </button>

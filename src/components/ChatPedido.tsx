@@ -240,7 +240,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
                   <div
                     className={`max-w-[78%] px-3 py-2 text-sm leading-snug ${
                       meu
-                        ? "bg-[#AE0000] !text-white"
+                        ? "bg-[#e3000f] !text-white"
                         : "bg-white border border-[#e4e8ef] text-[#0f1b2d]"
                     }`}
                   >
@@ -282,12 +282,12 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
             rows={1}
             maxLength={2000}
             disabled={enviando}
-            className="flex-1 resize-none border border-[#e4e8ef] bg-[#f5f7fa] px-3 py-2 text-sm text-[#0f1b2d] placeholder:text-[#8a97a8] focus:outline-none focus:border-[#AE0000] max-h-24"
+            className="flex-1 resize-none border border-[#e4e8ef] bg-[#f5f7fa] px-3 py-2 text-sm text-[#0f1b2d] placeholder:text-[#8a97a8] focus:outline-none focus:border-[#e3000f] max-h-24"
           />
           <button
             type="submit"
             disabled={enviando || !texto.trim()}
-            className="shrink-0 h-9 w-9 flex items-center justify-center bg-[#AE0000] !text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="shrink-0 h-9 w-9 flex items-center justify-center bg-[#e3000f] !text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             aria-label="Enviar"
           >
             {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

@@ -97,7 +97,7 @@ export function RetornoLojaDialog() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <CreditCard className="h-5 w-5 text-amber-400" />
-            <h2 className="text-lg font-bold text-[#AE0000]">Volte para a loja com a maquininha</h2>
+            <h2 className="text-lg font-bold text-[#e3000f]">Volte para a loja com a maquininha</h2>
           </div>
           {state.numero && (
             <div className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300 mb-2">
@@ -114,7 +114,7 @@ export function RetornoLojaDialog() {
             <Store className="h-4 w-4" /> Endereço de retorno à loja
           </div>
           <div className="flex items-start gap-3">
-            <MapPin className="h-5 w-5 mt-0.5 text-[#AE0000] shrink-0" />
+            <MapPin className="h-5 w-5 mt-0.5 text-[#e3000f] shrink-0" />
             <div className="flex-1 space-y-1">
               <span className="font-bold text-base text-navy block leading-tight">
                 {endereco}

@@ -37,7 +37,7 @@ export function PerfilHeader({ fullName, idCurto, avatarUrl, uploading, onPickFi
         </button>
         <div
           className="absolute bottom-0 right-0 h-11 w-11 rounded-full flex items-center justify-center border-4 border-[color:var(--background)]"
-          style={{ background: "#E01818" }}
+          style={{ background: "#e3000f" }}
         >
           <BadgeCheck className="h-5 w-5 text-white" strokeWidth={2.5} />
         </div>
