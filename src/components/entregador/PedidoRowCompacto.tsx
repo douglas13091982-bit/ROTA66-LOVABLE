@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { AlertTriangle, Store } from "lucide-react";
+import { useSomStatus } from "@/hooks/use-som-status";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
@@ -31,6 +32,7 @@ function PedidoRowCompactoBase({
   onAbrir,
   minutosAtraso = 0,
 }: Props) {
+  const { stop: pararSom } = useSomStatus();
   const principal = grupo.items[0];
   const atrasado = minutosAtraso >= ATRASO_POOL_MINUTOS;
   const total = useMemo(
@@ -47,7 +49,10 @@ function PedidoRowCompactoBase({
   return (
     <button
       type="button"
-      onClick={() => onAbrir(grupo)}
+      onClick={() => {
+        pararSom();
+        onAbrir(grupo);
+      }}
       data-surface="red"
       className="relative w-full mb-3 overflow-hidden text-left active:scale-[0.99] transition-transform duration-150"
       style={{

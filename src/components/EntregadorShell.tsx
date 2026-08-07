@@ -172,15 +172,6 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             
 
             <div className="flex items-center gap-2 pointer-events-auto">
-              {playing && (
-                <button
-                  onClick={stop}
-                  className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#e3000f] text-white shadow-lg active:scale-95 transition-transform animate-pulse"
-                >
-                  <VolumeX className="h-5 w-5" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">PARAR SOM</span>
-                </button>
-              )}
               
               {topFixed && (
                 <div className="pointer-events-auto">
