@@ -190,7 +190,7 @@ export function BotaoAceitar({
       disabled={expirou}
       className="flex-1 min-w-0 px-3 h-14 whitespace-nowrap font-semibold uppercase text-sm sm:text-base tracking-wider rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-white transition-all"
       style={{
-        background: "linear-gradient(135deg, #AE0000, #8A0000)",
+        background: "linear-gradient(135deg, #e3000f, #8A0000)",
         boxShadow: "0 8px 22px -8px rgba(221, 0, 8, 0.7)",
       }}
     >

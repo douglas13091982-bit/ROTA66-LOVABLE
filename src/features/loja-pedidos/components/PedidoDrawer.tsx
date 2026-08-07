@@ -84,7 +84,7 @@ export function PedidoDrawer({
       >
         <SheetHeader className="pb-4 border-b border-[#e4e8ef]">
           <SheetTitle className="pp-title-page text-3xl text-[#0f1b2d] flex items-center justify-between gap-3">
-            <span>Pedido <span className="text-[#AE0000]">#{detalhe.numero}</span></span>
+            <span>Pedido <span className="text-[#e3000f]">#{detalhe.numero}</span></span>
             <div className="flex items-center gap-2">
               {detalhe.origem === "ifood" && (
                 <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em]  bg-red-600 text-white">
@@ -105,8 +105,8 @@ export function PedidoDrawer({
         <div className="space-y-5 text-sm pp-reveal pt-5">
           <div className="pp-card p-4 space-y-2">
             <div className="pp-eyebrow">Cliente</div>
-            <div className="flex items-center gap-2 text-[#0f1b2d]"><User className="h-4 w-4 text-[#AE0000]" /> {detalhe.cliente_nome}</div>
-            <div className="flex items-center gap-2 text-[#0f1b2d]"><Phone className="h-4 w-4 text-[#AE0000]" /> {detalhe.cliente_telefone}</div>
+            <div className="flex items-center gap-2 text-[#0f1b2d]"><User className="h-4 w-4 text-[#e3000f]" /> {detalhe.cliente_nome}</div>
+            <div className="flex items-center gap-2 text-[#0f1b2d]"><Phone className="h-4 w-4 text-[#e3000f]" /> {detalhe.cliente_telefone}</div>
           </div>
 
           <div className="pp-card p-4 space-y-2">
@@ -116,7 +116,7 @@ export function PedidoDrawer({
                 : "Endereço"}
             </div>
             <div className="flex items-start gap-2 text-[#0f1b2d]">
-              <MapPin className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
+              <MapPin className="h-4 w-4 mt-0.5 text-[#e3000f] shrink-0" />
               <span>
                 {(detalhe as any).tipo_entrega === "retirada"
                   ? "Cliente retira o pedido na loja (sem entregador)"
@@ -130,7 +130,7 @@ export function PedidoDrawer({
             <div className="pp-card p-4 space-y-2">
               <div className="pp-eyebrow">Observações</div>
               <div className="flex items-start gap-2 text-[#0f1b2d]">
-                <FileText className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
+                <FileText className="h-4 w-4 mt-0.5 text-[#e3000f] shrink-0" />
                 <span className="whitespace-pre-wrap">{detalhe.observacoes}</span>
               </div>
             </div>
@@ -146,7 +146,7 @@ export function PedidoDrawer({
                       {it.quantidade ? `${it.quantidade}× ` : ""}{it.nome ?? it.descricao ?? "Item"}
                     </span>
                     {it.preco != null && (
-                      <span className="pp-num text-sm text-[#AE0000]">R$ {Number(it.preco).toFixed(2)}</span>
+                      <span className="pp-num text-sm text-[#e3000f]">R$ {Number(it.preco).toFixed(2)}</span>
                     )}
                   </div>
                 ))}
@@ -173,24 +173,24 @@ export function PedidoDrawer({
             </div>
             <div className="flex items-center justify-between pl-3 text-xs">
               <span className="text-[#6b7688]">↳ Entregador recebe</span>
-              <span className="pp-num text-[#AE0000]">R$ {freteEntregador.toFixed(2)}</span>
+              <span className="pp-num text-[#e3000f]">R$ {freteEntregador.toFixed(2)}</span>
             </div>
 
             {bonus > 0 && (
               <div className="flex items-center justify-between">
                 <span className="text-[#6b7688]">Bônus ao entregador</span>
-                <span className="pp-num text-[#AE0000]">+ R$ {bonus.toFixed(2)}</span>
+                <span className="pp-num text-[#e3000f]">+ R$ {bonus.toFixed(2)}</span>
               </div>
             )}
             <div className="flex items-center justify-between pt-3 mt-1 border-t border-[#e4e8ef]">
               <span className="pp-eyebrow">Total</span>
-              <span className="pp-num text-3xl text-[#AE0000]">R$ {Number(detalhe.valor_total).toFixed(2)}</span>
+              <span className="pp-num text-3xl text-[#e3000f]">R$ {Number(detalhe.valor_total).toFixed(2)}</span>
             </div>
           </div>
 
           {detalhe.codigo_coleta && detalhe.status !== "entregue" && detalhe.status !== "cancelado" && (
-            <div className="pp-card p-4 space-y-3 border border-[#AE0000]/25 bg-white shadow-[0_1px_8px_rgba(15,27,45,0.06)]">
-              <div className="pp-eyebrow flex items-center gap-2" style={{ color: "#AE0000" }}>
+            <div className="pp-card p-4 space-y-3 border border-[#e3000f]/25 bg-white shadow-[0_1px_8px_rgba(15,27,45,0.06)]">
+              <div className="pp-eyebrow flex items-center gap-2" style={{ color: "#e3000f" }}>
                 <KeyRound className="h-3.5 w-3.5" /> Código de coleta (confira com o entregador)
               </div>
               <div className="flex justify-center gap-2">
@@ -198,7 +198,7 @@ export function PedidoDrawer({
                   <div
                     key={i}
                     className="h-12 w-10 flex items-center justify-center border text-2xl font-mono font-bold tracking-wide"
-                    style={{ borderColor: "#AE000033", backgroundColor: "#fdf6f6", color: "#AE0000" }}
+                    style={{ borderColor: "#e3000f33", backgroundColor: "#fdf6f6", color: "#e3000f" }}
                   >
                     {d}
                   </div>
@@ -220,14 +220,14 @@ export function PedidoDrawer({
             <div className="pp-card p-4 space-y-3">
               <div className="pp-eyebrow">Rastreio do cliente</div>
               <div className="flex items-center gap-2 text-xs">
-                <span className="pp-num font-mono bg-[#f7f9fc] px-2.5 py-1 border border-[#e4e8ef] text-[#AE0000] tracking-widest">{detalhe.codigo_entrega}</span>
+                <span className="pp-num font-mono bg-[#f7f9fc] px-2.5 py-1 border border-[#e4e8ef] text-[#e3000f] tracking-widest">{detalhe.codigo_entrega}</span>
                 <span className="text-[#6b7688]">código de confirmação</span>
               </div>
               <a
                 href={`${window.location.origin}/rastreio/${detalhe.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-[#AE0000] hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs text-[#e3000f] hover:underline"
               >
                 <MapPin className="h-3 w-3" /> Abrir link de rastreio
               </a>
@@ -268,7 +268,7 @@ export function PedidoDrawer({
                     onUpdateDetalhe({ ...detalhe, status: "cancelado", arquivado: true });
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-2 border border-[#AE0000] !text-[#AE0000] hover:!bg-[#AE0000] hover:!text-white font-bold uppercase text-xs tracking-wider transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-2 border border-[#e3000f] !text-[#e3000f] hover:!bg-[#e3000f] hover:!text-white font-bold uppercase text-xs tracking-wider transition-colors"
               >
                 <X className="h-3.5 w-3.5" /> Cancelar pedido
               </button>

@@ -19,7 +19,7 @@ export function ApkListItem({ apk: a, isLatest, busy, onDownload, onDelete }: Pr
         <div className="font-bold truncate flex items-center gap-2 text-[#0f1b2d]">
           {a.name}
           {isLatest && (
-            <span className="text-[9px] px-2 py-0.5 bg-[#AE0000] !text-white uppercase tracking-widest font-bold">
+            <span className="text-[9px] px-2 py-0.5 bg-[#e3000f] !text-white uppercase tracking-widest font-bold">
               mais recente
             </span>
           )}
@@ -31,7 +31,7 @@ export function ApkListItem({ apk: a, isLatest, busy, onDownload, onDelete }: Pr
       <button
         onClick={() => onDownload(a.name)}
         disabled={busy}
-        className="p-2 hover:bg-[#f2f4f7] text-[#5a6675] hover:text-[#AE0000] disabled:opacity-50"
+        className="p-2 hover:bg-[#f2f4f7] text-[#5a6675] hover:text-[#e3000f] disabled:opacity-50"
         title="Baixar"
       >
         <Download className="h-4 w-4" />
@@ -39,7 +39,7 @@ export function ApkListItem({ apk: a, isLatest, busy, onDownload, onDelete }: Pr
       <button
         onClick={() => onDelete(a.name)}
         disabled={busy}
-        className="p-2 hover:bg-[#f2f4f7] text-[#5a6675] hover:text-[#AE0000] disabled:opacity-50"
+        className="p-2 hover:bg-[#f2f4f7] text-[#5a6675] hover:text-[#e3000f] disabled:opacity-50"
         title="Remover"
       >
         <Trash2 className="h-4 w-4" />

@@ -15,8 +15,8 @@ export function EntregueCard({ confirmadaEm }: { confirmadaEm: string | null }) 
 
 export function CanceladoCard() {
   return (
-    <div className="rounded-none border-2 border-[#AE0000] bg-red-50 p-5 text-center">
-      <p className="font-display text-2xl text-[#AE0000] font-bold">Pedido cancelado</p>
+    <div className="rounded-none border-2 border-[#e3000f] bg-red-50 p-5 text-center">
+      <p className="font-display text-2xl text-[#e3000f] font-bold">Pedido cancelado</p>
     </div>
   );
 }

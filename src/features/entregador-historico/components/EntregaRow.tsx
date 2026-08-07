@@ -21,9 +21,9 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
     <div className="flex items-center gap-3 px-3 py-3 rounded-2xl border border-white/10 bg-white/[0.03] transition-colors duration-200 active:bg-white/[0.06]">
       <div
         className="h-11 w-11 shrink-0 rounded-full grid place-items-center"
-        style={{ background: "rgba(224,24,24,0.12)", border: "1px solid rgba(224,24,24,0.30)" }}
+        style={{ background: "rgba(227,0,15,0.12)", border: "1px solid rgba(227,0,15,0.30)" }}
       >
-        <PackageCheck className="h-5 w-5" style={{ color: "#E01818" }} />
+        <PackageCheck className="h-5 w-5" style={{ color: "#e3000f" }} />
       </div>
 
       <div className="min-w-0 flex-1">
@@ -34,7 +34,7 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
           <span className="text-[12px] text-white/55">{hora}</span>
           <span
             className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md"
-            style={{ background: "rgba(224,24,24,0.15)", color: "#E01818" }}
+            style={{ background: "rgba(227,0,15,0.15)", color: "#e3000f" }}
           >
             Concluído
           </span>

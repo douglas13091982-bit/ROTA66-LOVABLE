@@ -77,7 +77,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Mais Próximos"
         subtitle="Ver pedidos próximos"
         icon={<MapPin className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-[#AE0000] shadow-md shadow-[#AE0000]/35 ring-1 ring-[#AE0000]/40"
+        activeClasses="bg-[#e3000f] shadow-md shadow-[#e3000f]/35 ring-1 ring-[#e3000f]/40"
       />
       <OrdenacaoCard
         active={value === "valor"}
@@ -86,7 +86,7 @@ export function OrdenacaoToggle({ value, onChange }: Props) {
         title="Maior Valor"
         subtitle="Ver maior valor"
         icon={<Trophy className="h-3.5 w-3.5" strokeWidth={2.5} />}
-        activeClasses="bg-[#AE0000] shadow-md shadow-[#AE0000]/35 ring-1 ring-[#AE0000]/40"
+        activeClasses="bg-[#e3000f] shadow-md shadow-[#e3000f]/35 ring-1 ring-[#e3000f]/40"
       />
     </div>
   );

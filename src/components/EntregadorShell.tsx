@@ -117,9 +117,9 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <button
         onClick={toggle}
         data-status-toggle
-        className="w-full relative inline-flex items-center justify-center h-16 rounded-[22px] transition-all duration-300 shadow-xl shadow-[#AE0000]/20"
+        className="w-full relative inline-flex items-center justify-center h-16 rounded-[22px] transition-all duration-300 shadow-xl shadow-[#e3000f]/20"
         style={{ 
-          background: online ? "#0d2c54" : "#AE0000",
+          background: online ? "#0d2c54" : "#e3000f",
         }}
         aria-label={online ? "Ficar offline" : "Ficar online"}
       >
@@ -139,7 +139,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="entregador-theme panel-premium panel-light min-h-screen flex items-center justify-center p-6">
         <div className="flex flex-col items-center text-center max-w-sm">
           <div className="h-20 w-20 rounded-3xl grid place-items-center mb-6"
-            style={{ background: "linear-gradient(135deg, #AE0000, #6D0000)" }}
+            style={{ background: "linear-gradient(135deg, #e3000f, #6D0000)" }}
           >
             <Smartphone className="h-10 w-10 text-white" />
           </div>
@@ -173,7 +173,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             {playing && (
               <button
                 onClick={stop}
-                className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#AE0000] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto animate-pulse"
+                className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#e3000f] text-white shadow-lg active:scale-95 transition-transform pointer-events-auto animate-pulse"
               >
                 <VolumeX className="h-5 w-5" />
                 <span className="text-[10px] font-black uppercase tracking-widest">PARAR SOM</span>
@@ -184,7 +184,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               {playing && (
                 <button
                   onClick={stop}
-                  className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#AE0000] text-white shadow-lg active:scale-95 transition-transform animate-pulse"
+                  className="flex items-center justify-center h-10 px-4 gap-2 rounded-xl bg-[#e3000f] text-white shadow-lg active:scale-95 transition-transform animate-pulse"
                 >
                   <VolumeX className="h-5 w-5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">PARAR SOM</span>
@@ -200,7 +200,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
               <button className="flex items-center justify-center h-12 w-12 text-[#0d2c54] relative active:scale-95 transition-transform pointer-events-auto">
                 <div className="relative">
                   <Bell className="h-7 w-7" />
-                  <div className="absolute top-0 right-0 h-2.5 w-2.5 bg-[#AE0000] rounded-full border-2 border-white" />
+                  <div className="absolute top-0 right-0 h-2.5 w-2.5 bg-[#e3000f] rounded-full border-2 border-white" />
                 </div>
               </button>
             </div>
@@ -244,13 +244,13 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                         to={item.to}
                         onClick={() => setOpen(false)}
                         className={`flex items-center gap-4 px-6 py-4 text-[13px] font-medium uppercase tracking-[0.25em] transition-all ${
-                          active ? "bg-[#AE0000] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
+                          active ? "bg-[#e3000f] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
                         }`}
                       >
                         <div className="relative">
                           <Icon className="h-5 w-5" strokeWidth={2} />
                           {badge > 0 && (
-                            <span className="absolute -top-2 -right-2 min-w-[16px] h-[16px] px-1 grid place-items-center rounded-full text-[8px] font-black bg-[#AE0000] text-white ring-2 ring-[#0d2c54]">
+                            <span className="absolute -top-2 -right-2 min-w-[16px] h-[16px] px-1 grid place-items-center rounded-full text-[8px] font-black bg-[#e3000f] text-white ring-2 ring-[#0d2c54]">
                               {badge > 9 ? "9+" : badge}
                             </span>
                           )}

@@ -19,7 +19,7 @@ type Props = {
 
 // Paleta de marca Rota 66
 const BRAND = {
-  red: "#AE0000",
+  red: "#e3000f",
   navy: "#0D2B45",
   navySoft: "#FFFFFF",
   gray: "#6B7688",
@@ -185,7 +185,7 @@ function PedidoListItemBase({
           <div className="flex items-start gap-4 relative">
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: "rgba(174,0,0,0.10)", border: "1px solid rgba(174,0,0,0.25)" }}
+              style={{ background: "rgba(227,0,15,0.10)", border: "1px solid rgba(227,0,15,0.25)" }}
             >
               <MapPin className="h-5 w-5" style={{ color: BRAND.red }} />
             </div>
@@ -354,7 +354,7 @@ function BotaoAceitarPress({
       style={{
         background: BRAND.red,
         borderRadius: 18,
-        boxShadow: "0 12px 28px -12px rgba(174,0,0,0.55)",
+        boxShadow: "0 12px 28px -12px rgba(227,0,15,0.55)",
       }}
     >
       <span className="relative z-10">{progresso > 0 ? "Segure..." : label}</span>

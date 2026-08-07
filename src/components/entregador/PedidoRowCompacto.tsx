@@ -12,7 +12,7 @@ type Props = {
   minutosAtraso?: number;
 };
 
-const BRAND = { red: "#AE0000", redDeep: "#8F0000" } as const;
+const BRAND = { red: "#e3000f", redDeep: "#8F0000" } as const;
 
 function kmAteLoja(p: PedidoDisponivel, minhaPos: LatLng | null): string | null {
   if (!minhaPos || p.endereco_coleta_lat == null || p.endereco_coleta_lng == null) return null;
@@ -53,7 +53,7 @@ function PedidoRowCompactoBase({
       style={{
         background: BRAND.red,
         borderRadius: 18,
-        boxShadow: "0 10px 24px -14px rgba(174,0,0,0.55)",
+        boxShadow: "0 10px 24px -14px rgba(227,0,15,0.55)",
       }}
     >
       {/* onda decorativa à direita */}

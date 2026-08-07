@@ -16,7 +16,7 @@ function Cell({
 }) {
   return (
     <div className="flex-1 flex flex-col items-center gap-2 py-1">
-      <Icon className="h-6 w-6" strokeWidth={2} style={{ color: "#E01818" }} />
+      <Icon className="h-6 w-6" strokeWidth={2} style={{ color: "#e3000f" }} />
       <div className="text-[26px] font-extrabold leading-none tracking-tight text-white">
         {value}
       </div>

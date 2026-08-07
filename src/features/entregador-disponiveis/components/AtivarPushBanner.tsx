@@ -53,7 +53,7 @@ export function AtivarPushBanner() {
           type="button"
           onClick={handleAtivar}
           disabled={busy}
-          className="mt-3 inline-flex items-center gap-2 bg-[#AE0000] text-white text-[11px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-xl disabled:opacity-60 shadow-lg shadow-[#AE0000]/20 active:scale-95 transition-transform"
+          className="mt-3 inline-flex items-center gap-2 bg-[#e3000f] text-white text-[11px] font-black uppercase tracking-[0.1em] px-4 py-2 rounded-xl disabled:opacity-60 shadow-lg shadow-[#e3000f]/20 active:scale-95 transition-transform"
         >
           <Bell className="w-3.5 h-3.5" />
           {busy ? "Ativando…" : "Ativar notificações"}

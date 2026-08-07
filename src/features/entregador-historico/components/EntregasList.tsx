@@ -38,7 +38,7 @@ export function EntregasList({ listagem }: { listagem: PedidoHistorico[] }) {
         </span>
         <span
           className="text-[13px] font-bold uppercase tracking-[0.04em]"
-          style={{ color: "#E01818" }}
+          style={{ color: "#e3000f" }}
         >
           {listagem.length} {listagem.length === 1 ? "registro" : "registros"}
         </span>
@@ -72,7 +72,7 @@ export function EntregasList({ listagem }: { listagem: PedidoHistorico[] }) {
           type="button"
           onClick={() => setExpandido((v) => !v)}
           className="mt-4 w-full flex items-center justify-center gap-2 py-2 text-[15px] font-bold"
-          style={{ color: "#E01818" }}
+          style={{ color: "#e3000f" }}
         >
           {expandido ? "Ver menos" : "Ver todos os registros"}
           <ChevronRight className={`h-4 w-4 ${expandido ? "-rotate-90" : ""}`} />

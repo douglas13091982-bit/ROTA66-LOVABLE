@@ -19,8 +19,8 @@ export function PeriodoToggle({
           style={
             periodo === p
               ? {
-                  background: "linear-gradient(100deg, #E01818 0%, #AE0000 100%)",
-                  boxShadow: "0 8px 20px -10px rgba(224,24,24,0.8)",
+                  background: "linear-gradient(100deg, #e3000f 0%, #e3000f 100%)",
+                  boxShadow: "0 8px 20px -10px rgba(227,0,15,0.8)",
                 }
               : undefined
           }

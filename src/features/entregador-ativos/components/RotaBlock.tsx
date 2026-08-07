@@ -63,7 +63,7 @@ export function RotaBlock({ items, destaque }: Props) {
           <span className="text-muted-foreground font-bold">
             Rota agrupada · {items.length} paradas
           </span>
-          <span className="font-bold text-[#AE0000] drop-shadow-sm">
+          <span className="font-bold text-[#e3000f] drop-shadow-sm">
             Entrega {idxAtual + 1}/{items.length} · faltam {restantes}
           </span>
         </div>

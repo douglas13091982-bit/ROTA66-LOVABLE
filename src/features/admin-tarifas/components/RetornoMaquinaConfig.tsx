@@ -71,7 +71,7 @@ export function RetornoMaquinaConfig() {
           type="button"
           onClick={salvar}
           disabled={salvando}
-          className="h-11 px-5 bg-[#AE0000] font-bold uppercase tracking-wider !text-white disabled:opacity-50"
+          className="h-11 px-5 bg-[#e3000f] font-bold uppercase tracking-wider !text-white disabled:opacity-50"
         >
           {salvando ? "Salvando..." : "Salvar"}
         </button>

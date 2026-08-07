@@ -96,7 +96,7 @@ export function PrimaryBtn({
       disabled={disabled}
       className="w-full px-4 py-3 rounded-xl text-white text-[12px] font-bold uppercase tracking-[0.18em] disabled:opacity-50 active:scale-[0.98] transition-transform"
       style={{
-        background: "linear-gradient(135deg, #AE0000, #8A0000)",
+        background: "linear-gradient(135deg, #e3000f, #8A0000)",
         boxShadow: "0 8px 22px -8px oklch(0.55 0.22 27 / 0.7)",
       }}
     >

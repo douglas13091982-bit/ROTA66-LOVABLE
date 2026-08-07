@@ -49,7 +49,7 @@ export function MenuList({ openSection, setOpenSection, renderSection }: Props) 
           <div key={m.key}>
             {isLink ? (
               <Link to={m.to!} className={ROW_CLS}>
-                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#E01818" }} />
+                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#e3000f" }} />
                 <span className="flex-1 text-[17px] text-white">{m.label}</span>
                 <ChevronRight className="h-5 w-5 text-white/45" />
               </Link>
@@ -59,7 +59,7 @@ export function MenuList({ openSection, setOpenSection, renderSection }: Props) 
                 onClick={() => setOpenSection(isOpen ? null : (m.key as SectionKey))}
                 className={ROW_CLS}
               >
-                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#E01818" }} />
+                <Icon className="h-[22px] w-[22px] shrink-0" strokeWidth={2} style={{ color: "#e3000f" }} />
                 <span className="flex-1 text-[17px] text-white">{m.label}</span>
                 <ChevronRight
                   className={`h-5 w-5 text-white/45 transition-transform ${isOpen ? "rotate-90" : ""}`}

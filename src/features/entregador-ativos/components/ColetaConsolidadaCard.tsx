@@ -79,7 +79,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
         </div>
         <div className="flex items-start gap-3 mb-4">
           <div className="flex items-start gap-2 flex-1 min-w-0 text-lg bg-gray-50 border border-border/40 rounded-lg px-4 py-3 text-navy">
-            <MapPin className="h-4 w-4 mt-0.5 text-[#AE0000] shrink-0" />
+            <MapPin className="h-4 w-4 mt-0.5 text-[#e3000f] shrink-0" />
             <span className="font-bold">{endereco}</span>
           </div>
           {mapsUrl && (
@@ -93,7 +93,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                 }
               }}
               aria-label="Abrir rota no mapa"
-              className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-[#AE0000] text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
+              className="shrink-0 flex flex-col items-center justify-center w-16 h-16 rounded-xl bg-[#e3000f] text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-300"
             >
               <Navigation className="h-6 w-6" />
               <span className="text-[9px] font-bold uppercase tracking-[0.16em] mt-0.5">Mapa</span>
@@ -130,7 +130,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
 
               })();
             }}
-            className="w-full px-5 py-4 bg-[#AE0000] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full px-5 py-4 bg-[#e3000f] text-white font-bold uppercase text-sm tracking-[0.18em] rounded-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
           >
             Coletar pedidos
           </button>
@@ -159,7 +159,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                     <span className="text-xs uppercase tracking-[0.18em] text-white/50 font-black">
                       Coleta
                     </span>
-                    <span className="font-display text-3xl md:text-4xl tracking-normal text-[#AE0000] select-all leading-none font-black">
+                    <span className="font-display text-3xl md:text-4xl tracking-normal text-[#e3000f] select-all leading-none font-black">
                       {p.codigo_coleta ?? codigo}
                     </span>
                   </div>
@@ -173,7 +173,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                 onClick={onSairDoLocal}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold uppercase text-[14px] tracking-[0.16em] text-white transition-all active:scale-[0.98] mt-4"
                 style={{
-                  background: "#AE0000",
+                  background: "#e3000f",
                 }}
               >
                 <span>Sair do local</span>
