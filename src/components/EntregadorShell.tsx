@@ -165,7 +165,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
           <div className="fixed top-0 left-0 right-0 h-20 z-[60] flex items-center justify-between px-6 pointer-events-none bg-white">
             <button 
               onClick={() => setOpen(true)}
-              className="flex items-center justify-center h-12 w-12 text-[#0d2c54] active:scale-95 transition-transform pointer-events-auto"
+              className="flex items-center justify-center h-12 w-12 text-[#e3000f] active:scale-95 transition-transform pointer-events-auto"
             >
               <Menu className="h-8 w-8" />
             </button>
@@ -197,7 +197,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 </div>
               )}
 
-              <button className="flex items-center justify-center h-12 w-12 text-[#0d2c54] relative active:scale-95 transition-transform pointer-events-auto">
+              <button className="flex items-center justify-center h-12 w-12 text-[#e3000f] relative active:scale-95 transition-transform pointer-events-auto">
                 <div className="relative">
                   <Bell className="h-7 w-7" />
                   <div className="absolute top-0 right-0 h-2.5 w-2.5 bg-[#e3000f] rounded-full border-2 border-white" />
