@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Wallet, ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const STORAGE_KEY = "entregador:hide-ganho-dia";
 
@@ -16,18 +17,19 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
   }, [hide]);
 
   return (
-    <div data-ganho-hoje className="inline-flex items-center gap-3 bg-[#0d2c54] rounded-[22px] px-4 py-2 shadow-xl border-2 border-[#0d2c54]">
-      <div className="text-[18px] font-black tracking-tighter tabular-nums" style={{ color: "#ffffff" }}>
-        {hide ? "R$ ••••" : `R$ ${valor.toFixed(2).replace(".", ",")}`}
+    <Link 
+      to="/entregador/carteira"
+      data-ganho-hoje 
+      className="inline-flex items-center gap-3 bg-[#0d2c54] rounded-full pl-4 pr-5 py-2.5 shadow-xl shadow-[#0d2c54]/20 active:scale-95 transition-transform"
+    >
+      <Wallet className="h-5 w-5 text-white" strokeWidth={2.5} />
+      <div className="flex flex-col -gap-1">
+        <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest leading-none">Saldo disponível</span>
+        <div className="text-[17px] font-black tracking-tighter tabular-nums leading-none text-white">
+          {hide ? "R$ ••••" : `R$ ${valor.toFixed(2).replace(".", ",")}`}
+        </div>
       </div>
-      <button
-        onClick={() => setHide((v) => !v)}
-        className="inline-flex items-center justify-center h-8 w-8 rounded-xl transition active:scale-95"
-        style={{ background: "#0d2c54", color: "#ffffff" }}
-        aria-label={hide ? "Mostrar valor" : "Ocultar valor"}
-      >
-        {hide ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-      </button>
-    </div>
+      <ChevronRight className="h-4 w-4 text-white/40 ml-1" />
+    </Link>
   );
 }
