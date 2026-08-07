@@ -20,7 +20,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
     <Link 
       to="/entregador/carteira"
       data-ganho-hoje 
-      className="inline-flex items-center gap-3 bg-[#0d2c54] rounded-full pl-4 pr-5 py-2.5 shadow-xl shadow-[#0d2c54]/20 active:scale-95 transition-transform"
+      className="inline-flex items-center gap-3 bg-[#e3000f] rounded-full pl-4 pr-5 py-2.5 shadow-xl shadow-[#e3000f]/20 active:scale-95 transition-transform"
     >
       <Wallet className="h-5 w-5 text-white" strokeWidth={2.5} />
       <div className="flex flex-col -gap-1">
