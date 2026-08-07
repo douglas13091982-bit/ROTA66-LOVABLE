@@ -24,7 +24,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
     >
       <Wallet className="h-5 w-5 text-white" strokeWidth={2.5} />
       <div className="flex flex-col -gap-1">
-        <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest leading-none">Saldo disponível</span>
+        <span className="text-[9px] font-bold text-white uppercase tracking-widest leading-none">Saldo disponível</span>
         <div className="text-[17px] font-black tracking-tighter tabular-nums leading-none text-white">
           {hide ? "R$ ••••" : `R$ ${valor.toFixed(2).replace(".", ",")}`}
         </div>
