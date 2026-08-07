@@ -83,7 +83,7 @@ function PedidoRowCompactoBase({
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-xl font-black !text-white uppercase tracking-wider truncate leading-tight">
+          <h3 className="text-base font-black !text-white uppercase tracking-normal truncate leading-tight">
             {principal.loja_nome || "Loja"}
           </h3>
           <p className="text-sm font-semibold uppercase tracking-wider mt-1 truncate !text-white/75">
