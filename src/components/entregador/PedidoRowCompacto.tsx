@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { AlertTriangle, Store } from "lucide-react";
+import { useSomStatus } from "@/hooks/use-som-status";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
