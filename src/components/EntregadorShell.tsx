@@ -207,12 +207,17 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                   <h2 className="text-lg font-black tracking-tight text-white mb-1 leading-none uppercase">
                     {perfil.fullName || "Entregador"}
                   </h2>
-                  <div className="flex items-center gap-2 text-white/40 text-[10px] font-medium tracking-[0.2em] uppercase">
-                    <span>ID: {user?.id.slice(0, 8)}</span>
-                    <span>•</span>
-                    <span className="flex items-center gap-1">
-                      4,51 <Package className="h-2 w-2" />
+                  <div className="flex flex-col items-center gap-1 text-white/40 text-[10px] font-medium tracking-[0.2em] uppercase">
+                    <span className="text-[9px] normal-case text-white/60 italic font-serif leading-tight text-center max-w-[200px]">
+                      o SENHOR é MEU PASTOR E NADA ME FALTARÁ
                     </span>
+                    <div className="flex items-center gap-2">
+                      <span>ID: {user?.id.slice(0, 8)}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1">
+                        4,51 <Package className="h-2 w-2" />
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col flex-1 py-4">
