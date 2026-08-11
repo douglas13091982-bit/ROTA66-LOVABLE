@@ -8,7 +8,7 @@ const STORAGE_KEY = "rota66:apk-redirect-visto";
 // - iPhone/desktop
 // - dentro do TWA/APK instalado (display-mode standalone, ou referrer android-app://)
 // - se o usuário já foi redirecionado uma vez (flag em localStorage)
-// - se já está numa rota "de app" (/baixar-app, /login, /cadastro, /reset-password, /rastreio, /c/, /loja/, /calcular-frete, /clientes, /entregador, /loja/, /admin, área autenticada)
+// - se já está numa rota "de app" (/baixar-app, /login, /cadastro, /reset-password, /rastreio, /c/, /loja/, /calcular-frete, /clientes, /entregador, /loja/, /admin, /revendedor, área autenticada)
 export function AndroidApkRedirect() {
   const router = useRouter();
 
