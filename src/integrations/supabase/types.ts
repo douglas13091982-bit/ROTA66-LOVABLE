@@ -1655,7 +1655,6 @@ export type Database = {
           pix_chave_saque: string | null
           plano_id: string | null
           plano_mensal_ativo: boolean
-          revendedor_id: string | null
           slug: string
           status: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base: number
@@ -1700,7 +1699,6 @@ export type Database = {
           pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
-          revendedor_id?: string | null
           slug: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1745,7 +1743,6 @@ export type Database = {
           pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
-          revendedor_id?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1777,10 +1774,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "lojas_revendedor_id_fkey"
-            columns: ["revendedor_id"]
             isOneToOne: false
-            referencedRelation: "revendedores"
             referencedColumns: ["user_id"]
           },
         ]
@@ -3088,7 +3082,6 @@ export type Database = {
         }
         Relationships: []
       }
-      revendedor_cobrancas: {
         Row: {
           competencia: string
           created_at: string
@@ -3103,7 +3096,6 @@ export type Database = {
           pago: boolean
           pago_em: string | null
           receita_base: number
-          revendedor_id: string
           updated_at: string
           valor_mensalidade: number
           valor_percentual: number
@@ -3124,7 +3116,6 @@ export type Database = {
           pago?: boolean
           pago_em?: string | null
           receita_base?: number
-          revendedor_id: string
           updated_at?: string
           valor_mensalidade?: number
           valor_percentual?: number
@@ -3145,7 +3136,6 @@ export type Database = {
           pago?: boolean
           pago_em?: string | null
           receita_base?: number
-          revendedor_id?: string
           updated_at?: string
           valor_mensalidade?: number
           valor_percentual?: number
@@ -3154,15 +3144,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "revendedor_cobrancas_revendedor_id_fkey"
-            columns: ["revendedor_id"]
             isOneToOne: false
-            referencedRelation: "revendedores"
             referencedColumns: ["user_id"]
           },
         ]
       }
-      revendedor_saques: {
         Row: {
           created_at: string
           id: string
@@ -3172,7 +3158,6 @@ export type Database = {
           pago_em: string | null
           pix_chave: string
           rejeitado_em: string | null
-          revendedor_user_id: string
           status: string
           updated_at: string
           valor: number
@@ -3186,7 +3171,6 @@ export type Database = {
           pago_em?: string | null
           pix_chave: string
           rejeitado_em?: string | null
-          revendedor_user_id: string
           status?: string
           updated_at?: string
           valor: number
@@ -3200,14 +3184,12 @@ export type Database = {
           pago_em?: string | null
           pix_chave?: string
           rejeitado_em?: string | null
-          revendedor_user_id?: string
           status?: string
           updated_at?: string
           valor?: number
         }
         Relationships: []
       }
-      revendedores: {
         Row: {
           ativo: boolean
           codigo_indicacao: string | null
@@ -3830,7 +3812,6 @@ export type Database = {
           id: string
         }[]
       }
-      buscar_revendedor_por_codigo: {
         Args: { _codigo: string }
         Returns: {
           nome: string
@@ -3891,7 +3872,6 @@ export type Database = {
           expira_em: string
           loja_nome: string
           status: Database["public"]["Enums"]["convite_loja_status"]
-          tem_revendedor_alvo: boolean
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
@@ -4003,10 +3983,8 @@ export type Database = {
         Returns: undefined
       }
       franqueado_do_colaborador: { Args: { _uid: string }; Returns: string }
-      gerar_cobrancas_revendedores_mensal: { Args: never; Returns: undefined }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
-      gerar_codigo_revendedor: { Args: never; Returns: string }
       gerar_faturas_franquia: { Args: never; Returns: number }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
@@ -4127,7 +4105,6 @@ export type Database = {
         Args: { _loja_id: string; _user_id: string }
         Returns: boolean
       }
-      is_revendedor_da_loja: { Args: { _loja_id: string }; Returns: boolean }
       is_valid_cnpj: { Args: { _cnpj: string }; Returns: boolean }
       is_valid_cpf: { Args: { _cpf: string }; Returns: boolean }
       listar_admins: {
@@ -4505,7 +4482,6 @@ export type Database = {
         | "entregador"
         | "cliente"
         | "admin"
-        | "revendedor"
       convite_loja_status: "pendente" | "aceito" | "expirado" | "cancelado"
       entregador_credito_tipo:
         | "recarga"
@@ -4713,7 +4689,6 @@ export const Constants = {
         "entregador",
         "cliente",
         "admin",
-        "revendedor",
       ],
       convite_loja_status: ["pendente", "aceito", "expirado", "cancelado"],
       entregador_credito_tipo: [
