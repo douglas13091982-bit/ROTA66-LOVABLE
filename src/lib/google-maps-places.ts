@@ -107,6 +107,7 @@ export async function fetchAutocompleteAddressSuggestions(
       await AutocompleteSuggestion.fetchAutocompleteSuggestions({
         input,
         sessionToken: token,
+        includedRegionCodes: ["br"],
         language: i18nConfig.locale,
         region: "BR",
       });
@@ -122,8 +123,12 @@ export async function fetchAutocompleteAddressSuggestions(
 
     return { suggestions, sessionToken: token };
   } catch (err: any) {
-    console.error("[Google Maps Autocomplete Error]:", err);
-    throw err;
+    if (err?.message?.includes("blocked") || err?.toString()?.includes("referer")) {
+      console.warn("[Google Maps] Referer bloqueado no preview. Isso é normal se a chave estiver restrita ao domínio de produção. Tente testar no domínio oficial ou verifique as restrições no console do Google Cloud.");
+    } else {
+      console.error("[Google Maps Autocomplete Error]:", err);
+    }
+    return { suggestions: [], sessionToken: token };
   }
 }
 
