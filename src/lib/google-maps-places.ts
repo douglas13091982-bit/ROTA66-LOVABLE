@@ -101,25 +101,35 @@ export async function fetchAutocompleteAddressSuggestions(
   const places = await (window as any).google.maps.importLibrary("places");
   const { AutocompleteSuggestion, AutocompleteSessionToken } = places;
   const token = sessionToken ?? new AutocompleteSessionToken();
-  const { suggestions: result } =
-    await AutocompleteSuggestion.fetchAutocompleteSuggestions({
-      input,
-      sessionToken: token,
-      includedRegionCodes: ["br"],
-      language: i18nConfig.locale,
-      region: "BR",
-    });
+  
+  try {
+    const { suggestions: result } =
+      await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input,
+        sessionToken: token,
+        includedRegionCodes: ["br"],
+        language: i18nConfig.locale,
+        region: "BR",
+      });
 
-  const suggestions: AddressSuggestion[] = (result ?? [])
-    .map((s: any) => s.placePrediction)
-    .filter(Boolean)
-    .map((p: any) => ({
-      placeId: p.placeId,
-      primary: p.mainText?.text ?? p.text?.text ?? "",
-      secondary: p.secondaryText?.text ?? "",
-    }));
+    const suggestions: AddressSuggestion[] = (result ?? [])
+      .map((s: any) => s.placePrediction)
+      .filter(Boolean)
+      .map((p: any) => ({
+        placeId: p.placeId,
+        primary: p.mainText?.text ?? p.text?.text ?? "",
+        secondary: p.secondaryText?.text ?? "",
+      }));
 
-  return { suggestions, sessionToken: token };
+    return { suggestions, sessionToken: token };
+  } catch (err: any) {
+    if (err?.message?.includes("blocked") || err?.toString()?.includes("referer")) {
+      console.warn("[Google Maps] Referer bloqueado no preview. Isso é normal se a chave estiver restrita ao domínio de produção. Tente testar no domínio oficial ou verifique as restrições no console do Google Cloud.");
+    } else {
+      console.error("[Google Maps Autocomplete Error]:", err);
+    }
+    return { suggestions: [], sessionToken: token };
+  }
 }
 
 export async function fetchPlaceDetails(
