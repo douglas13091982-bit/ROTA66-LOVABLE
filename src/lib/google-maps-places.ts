@@ -105,7 +105,7 @@ export async function fetchAutocompleteAddressSuggestions(
     await AutocompleteSuggestion.fetchAutocompleteSuggestions({
       input,
       sessionToken: token,
-      // includedRegionCodes: ["br"], // Removido para teste de abrangência
+      includedRegionCodes: ["BR"],
       language: i18nConfig.locale,
       region: "BR",
     });
