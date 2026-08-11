@@ -101,25 +101,30 @@ export async function fetchAutocompleteAddressSuggestions(
   const places = await (window as any).google.maps.importLibrary("places");
   const { AutocompleteSuggestion, AutocompleteSessionToken } = places;
   const token = sessionToken ?? new AutocompleteSessionToken();
-  const { suggestions: result } =
-    await AutocompleteSuggestion.fetchAutocompleteSuggestions({
-      input,
-      sessionToken: token,
-      // includedRegionCodes: ["BR"], // Desabilitado para garantir abrangência total na busca
-      language: i18nConfig.locale,
-      region: "BR",
-    });
+  
+  try {
+    const { suggestions: result } =
+      await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input,
+        sessionToken: token,
+        language: i18nConfig.locale,
+        region: "BR",
+      });
 
-  const suggestions: AddressSuggestion[] = (result ?? [])
-    .map((s: any) => s.placePrediction)
-    .filter(Boolean)
-    .map((p: any) => ({
-      placeId: p.placeId,
-      primary: p.mainText?.text ?? p.text?.text ?? "",
-      secondary: p.secondaryText?.text ?? "",
-    }));
+    const suggestions: AddressSuggestion[] = (result ?? [])
+      .map((s: any) => s.placePrediction)
+      .filter(Boolean)
+      .map((p: any) => ({
+        placeId: p.placeId,
+        primary: p.mainText?.text ?? p.text?.text ?? "",
+        secondary: p.secondaryText?.text ?? "",
+      }));
 
-  return { suggestions, sessionToken: token };
+    return { suggestions, sessionToken: token };
+  } catch (err: any) {
+    console.error("[Google Maps Autocomplete Error]:", err);
+    throw err;
+  }
 }
 
 export async function fetchPlaceDetails(
