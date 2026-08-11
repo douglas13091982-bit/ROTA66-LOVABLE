@@ -3707,7 +3707,6 @@ export type Database = {
           expira_em: string
           loja_nome: string
           status: Database["public"]["Enums"]["convite_loja_status"]
-          tem_revendedor_alvo: boolean
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
@@ -4318,7 +4317,6 @@ export type Database = {
         | "entregador"
         | "cliente"
         | "admin"
-        | "revendedor"
       convite_loja_status: "pendente" | "aceito" | "expirado" | "cancelado"
       entregador_credito_tipo:
         | "recarga"
@@ -4526,7 +4524,6 @@ export const Constants = {
         "entregador",
         "cliente",
         "admin",
-        "revendedor",
       ],
       convite_loja_status: ["pendente", "aceito", "expirado", "cancelado"],
       entregador_credito_tipo: [
