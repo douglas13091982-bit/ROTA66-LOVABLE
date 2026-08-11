@@ -1773,10 +1773,6 @@ export type Database = {
             referencedRelation: "planos_loja"
             referencedColumns: ["id"]
           },
-          {
-            isOneToOne: false
-            referencedColumns: ["user_id"]
-          },
         ]
       }
       lojas_enderecos_coleta: {
@@ -3082,161 +3078,6 @@ export type Database = {
         }
         Relationships: []
       }
-        Row: {
-          competencia: string
-          created_at: string
-          id: string
-          metodo_pagamento: string | null
-          mp_payment_id: string | null
-          mp_payment_status: string | null
-          mp_pix_expira_em: string | null
-          mp_qr_code: string | null
-          mp_qr_code_base64: string | null
-          mp_ticket_url: string | null
-          pago: boolean
-          pago_em: string | null
-          receita_base: number
-          updated_at: string
-          valor_mensalidade: number
-          valor_percentual: number
-          valor_total: number | null
-          vencimento: string
-        }
-        Insert: {
-          competencia: string
-          created_at?: string
-          id?: string
-          metodo_pagamento?: string | null
-          mp_payment_id?: string | null
-          mp_payment_status?: string | null
-          mp_pix_expira_em?: string | null
-          mp_qr_code?: string | null
-          mp_qr_code_base64?: string | null
-          mp_ticket_url?: string | null
-          pago?: boolean
-          pago_em?: string | null
-          receita_base?: number
-          updated_at?: string
-          valor_mensalidade?: number
-          valor_percentual?: number
-          valor_total?: number | null
-          vencimento: string
-        }
-        Update: {
-          competencia?: string
-          created_at?: string
-          id?: string
-          metodo_pagamento?: string | null
-          mp_payment_id?: string | null
-          mp_payment_status?: string | null
-          mp_pix_expira_em?: string | null
-          mp_qr_code?: string | null
-          mp_qr_code_base64?: string | null
-          mp_ticket_url?: string | null
-          pago?: boolean
-          pago_em?: string | null
-          receita_base?: number
-          updated_at?: string
-          valor_mensalidade?: number
-          valor_percentual?: number
-          valor_total?: number | null
-          vencimento?: string
-        }
-        Relationships: [
-          {
-            isOneToOne: false
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-        Row: {
-          created_at: string
-          id: string
-          motivo_rejeicao: string | null
-          observacoes: string | null
-          observacoes_admin: string | null
-          pago_em: string | null
-          pix_chave: string
-          rejeitado_em: string | null
-          status: string
-          updated_at: string
-          valor: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          motivo_rejeicao?: string | null
-          observacoes?: string | null
-          observacoes_admin?: string | null
-          pago_em?: string | null
-          pix_chave: string
-          rejeitado_em?: string | null
-          status?: string
-          updated_at?: string
-          valor: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          motivo_rejeicao?: string | null
-          observacoes?: string | null
-          observacoes_admin?: string | null
-          pago_em?: string | null
-          pix_chave?: string
-          rejeitado_em?: string | null
-          status?: string
-          updated_at?: string
-          valor?: number
-        }
-        Relationships: []
-      }
-        Row: {
-          ativo: boolean
-          codigo_indicacao: string | null
-          created_at: string
-          dia_vencimento: number
-          documento: string | null
-          email: string
-          mensalidade_valor: number
-          nome: string
-          observacoes: string | null
-          percentual_receita: number
-          telefone: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          ativo?: boolean
-          codigo_indicacao?: string | null
-          created_at?: string
-          dia_vencimento?: number
-          documento?: string | null
-          email: string
-          mensalidade_valor?: number
-          nome: string
-          observacoes?: string | null
-          percentual_receita?: number
-          telefone?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          ativo?: boolean
-          codigo_indicacao?: string | null
-          created_at?: string
-          dia_vencimento?: number
-          documento?: string | null
-          email?: string
-          mensalidade_valor?: number
-          nome?: string
-          observacoes?: string | null
-          percentual_receita?: number
-          telefone?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       suporte_mensagens: {
         Row: {
           autor_id: string
@@ -3812,12 +3653,6 @@ export type Database = {
           id: string
         }[]
       }
-        Args: { _codigo: string }
-        Returns: {
-          nome: string
-          user_id: string
-        }[]
-      }
       calcular_prazo_coleta_min: { Args: { _dist_km: number }; Returns: number }
       calcular_tarifa_global: { Args: { _km: number }; Returns: number }
       calcular_taxa_publica: {
@@ -3872,6 +3707,7 @@ export type Database = {
           expira_em: string
           loja_nome: string
           status: Database["public"]["Enums"]["convite_loja_status"]
+          tem_revendedor_alvo: boolean
         }[]
       }
       cpf_disponivel: { Args: { _cpf: string }; Returns: boolean }
@@ -4482,6 +4318,7 @@ export type Database = {
         | "entregador"
         | "cliente"
         | "admin"
+        | "revendedor"
       convite_loja_status: "pendente" | "aceito" | "expirado" | "cancelado"
       entregador_credito_tipo:
         | "recarga"
@@ -4689,6 +4526,7 @@ export const Constants = {
         "entregador",
         "cliente",
         "admin",
+        "revendedor",
       ],
       convite_loja_status: ["pendente", "aceito", "expirado", "cancelado"],
       entregador_credito_tipo: [
