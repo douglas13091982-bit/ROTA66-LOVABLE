@@ -33,6 +33,7 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
   { to: "/admin/sons-alerta", label: "Sons de alerta", icon: Bell, area: "notificacao_som", ownerOnly: true },
   { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
+  { to: "/admin/conectores", label: "Conectores Cloud", icon: Share2, area: null, ownerOnly: true },
   { to: "/admin/notificacoes", label: "Notificações push", icon: Bell, area: null, superOnly: true },
   { to: "/admin/clientes-push", label: "Clientes com push", icon: BellRing, area: null, superOnly: true },
 
