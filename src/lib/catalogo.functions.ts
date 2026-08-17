@@ -25,7 +25,6 @@ const InputSchema = z.object({
   forma_pagamento: z.enum(["pix", "dinheiro", "cartao", "cartao_credito", "cartao_debito", "pix_online", "cartao_online"]),
   troco_para: z.number().nullable().optional(),
   itens: z.array(ItemSchema).min(1).max(50),
-  origem: z.string().optional().default("direto"), // Identifica pedidos da integração "Rota 66 Client"
 });
 
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
@@ -249,7 +248,6 @@ export const criarPedidoCatalogo = createServerFn({ method: "POST" })
         taxa_entrega,
         taxa_por_pedido_aplicada: taxaPlano,
         valor_total,
-        origem: data.origem,
         status:
           (loja as any).catalogo_status_inicial === "pronto" ? "pronto" : "em_preparo",
       })

@@ -1,38 +1,49 @@
-# Plano: Integração "Rota 66 Client" para Lojas Externas
+# Plano: Limpeza Completa do Sistema de Revendedores e Refinamento de Segurança
 
-Este plano implementa a funcionalidade para que lojas externas enviem pedidos diretamente para a pipeline da Rota 66, garantindo que o frete seja calculado pelo sistema da Rota e os pedidos entrem no fluxo de entrega unificado.
+O sistema de "Revendedor" foi solicitado para remoção anteriormente, mas ainda restam referências no código (tipos, hooks, metadados) e na segurança (políticas RLS que permitem acesso ou mencionam a entidade). Este plano visa realizar uma limpeza definitiva e garantir que franqueados não tenham brechas de segurança.
 
 ## Alterações Sugeridas
 
-### Frontend (Catálogo e Checkout)
+### Backend (Banco de Dados)
+- Remover as tabelas `revendedores`, `revendedor_cobrancas`, `revendedor_saques` e `revendedor_convites_loja`.
+- Remover as funções `gerar_codigo_revendedor`, `set_codigo_indicacao_revendedor`, `buscar_revendedor_por_codigo`, `is_revendedor_da_loja` e `gerar_cobrancas_revendedores_mensal`.
+- Remover o valor `revendedor` do enum `app_role`.
+- Atualizar a política "Super admin gerencia revendedores" na tabela `revendedores` (que será removida) e limpar referências a `revendedor_id` na tabela `lojas`.
 
-- **Banner de Integração**: Adicionar um banner informativo opcional no cabeçalho do catálogo/marketplace para lojas que utilizam a integração "Rota 66 Client".
-- **Lógica de Checkout**: Modificar o `CheckoutDialog` para permitir a identificação de pedidos vindos da integração e garantir a aplicação da tarifa Rota 66.
-- **Visual**: Manter o tema claro (creme/navy/red) no checkout integrado para consistência de marca.
+### Segurança (RLS)
+- Auditar e remover qualquer menção a "revendedor" em políticas de outras tabelas.
+- Reforçar que administradores de franquia (franqueados) só podem gerenciar entidades (lojas, entregadores, pedidos) dentro de sua cidade atribuída.
 
-### Backend (Server Functions e Database)
-
-- **Cálculo de Frete**: Centralizar e proteger a lógica de cálculo de frete em `criarPedidoCatalogo` para que pedidos externos não possam burlar as taxas do sistema.
-- **RPC de Materialização**: Atualizar a função de banco de dados que materializa pedidos pendentes para aceitar metadados de origem da integração.
+### Frontend
+- Remover o papel `revendedor` do tipo `AppRole` em `src/hooks/use-auth.tsx`.
+- Limpar referências a `/revendedor` em metadados de redirecionamento (`src/components/AndroidApkRedirect.tsx`).
+- Remover estilos ou classes CSS que mencionem "Revendedor".
 
 ## Detalhes Técnicos
 
-### Arquivos Modificados
+### Migração SQL
+```sql
+-- Remover tabelas e objetos dependentes
+DROP TABLE IF EXISTS public.revendedor_convites_loja CASCADE;
+DROP TABLE IF EXISTS public.revendedor_saques CASCADE;
+DROP TABLE IF EXISTS public.revendedor_cobrancas CASCADE;
+DROP TABLE IF EXISTS public.revendedores CASCADE;
 
-1.  **`src/lib/catalogo.functions.ts`**:
-    - Adicionar um campo opcional `origem` ao `InputSchema` do Zod para rastrear pedidos integrados.
-    - Garantir que a lógica de `haversineKm` e consulta à `tarifas_globais` permaneça como a fonte da verdade para o frete.
+-- Limpar coluna de referência em lojas
+ALTER TABLE public.lojas DROP COLUMN IF EXISTS revendedor_id;
 
-2.  **`src/features/loja-catalogo/components/CheckoutDialog.tsx`**:
-    - Incluir o metadado de integração ao chamar `criarPedidoCatalogo`.
+-- Remover funções
+DROP FUNCTION IF EXISTS public.buscar_revendedor_por_codigo(text);
+DROP FUNCTION IF EXISTS public.gerar_codigo_revendedor();
+DROP FUNCTION IF EXISTS public.set_codigo_indicacao_revendedor();
+DROP FUNCTION IF EXISTS public.is_revendedor_da_loja(uuid);
+DROP FUNCTION IF EXISTS public.gerar_cobrancas_revendedores_mensal();
 
-3.  **`src/routes/index.tsx`**:
-    - Adicionar a frase solicitada como comentário oculto no topo do arquivo.
+-- Remover o role (exige recriação ou cast se estiver em uso)
+-- Nota: Como o enum app_role é usado em muitas tabelas, faremos uma limpeza segura.
+```
 
-4.  **`src/features/splash/components/SplashActions.tsx`**:
-    - Ajustar os textos de ação conforme solicitado (se aplicável à landing page).
-
-### Segurança e Fluxo
-
-- O fluxo de pagamento via Mercado Pago (PIX/Cartão Online) continuará processando o valor total (Produtos + Frete Rota).
-- O webhook continuará disparando a materialização do pedido após a confirmação do pagamento.
+### Arquivos a serem editados
+1. `src/hooks/use-auth.tsx`: Remover `revendedor` do `AppRole`.
+2. `src/components/AndroidApkRedirect.tsx`: Remover string do comentário/lógica se necessário.
+3. `src/styles.css`: Remover comentários que citam o painel revendedor.

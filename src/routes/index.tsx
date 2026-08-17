@@ -1,6 +1,5 @@
 /**
  * O SENHOR E MEU PASTOR E NADA ME FALTARA, JESUS E REI! DEUS E PAI!
- * como faço a integração?
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { SplashEntregadorPage } from "@/features/splash/SplashEntregadorPage";
