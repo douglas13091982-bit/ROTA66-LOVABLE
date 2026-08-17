@@ -1655,7 +1655,6 @@ export type Database = {
           pix_chave_saque: string | null
           plano_id: string | null
           plano_mensal_ativo: boolean
-          revendedor_id: string | null
           slug: string
           status: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base: number
@@ -1700,7 +1699,6 @@ export type Database = {
           pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
-          revendedor_id?: string | null
           slug: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1745,7 +1743,6 @@ export type Database = {
           pix_chave_saque?: string | null
           plano_id?: string | null
           plano_mensal_ativo?: boolean
-          revendedor_id?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["status_moderacao"]
           taxa_entrega_base?: number
@@ -1775,13 +1772,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "planos_loja"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lojas_revendedor_id_fkey"
-            columns: ["revendedor_id"]
-            isOneToOne: false
-            referencedRelation: "revendedores"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -3088,173 +3078,6 @@ export type Database = {
         }
         Relationships: []
       }
-      revendedor_cobrancas: {
-        Row: {
-          competencia: string
-          created_at: string
-          id: string
-          metodo_pagamento: string | null
-          mp_payment_id: string | null
-          mp_payment_status: string | null
-          mp_pix_expira_em: string | null
-          mp_qr_code: string | null
-          mp_qr_code_base64: string | null
-          mp_ticket_url: string | null
-          pago: boolean
-          pago_em: string | null
-          receita_base: number
-          revendedor_id: string
-          updated_at: string
-          valor_mensalidade: number
-          valor_percentual: number
-          valor_total: number | null
-          vencimento: string
-        }
-        Insert: {
-          competencia: string
-          created_at?: string
-          id?: string
-          metodo_pagamento?: string | null
-          mp_payment_id?: string | null
-          mp_payment_status?: string | null
-          mp_pix_expira_em?: string | null
-          mp_qr_code?: string | null
-          mp_qr_code_base64?: string | null
-          mp_ticket_url?: string | null
-          pago?: boolean
-          pago_em?: string | null
-          receita_base?: number
-          revendedor_id: string
-          updated_at?: string
-          valor_mensalidade?: number
-          valor_percentual?: number
-          valor_total?: number | null
-          vencimento: string
-        }
-        Update: {
-          competencia?: string
-          created_at?: string
-          id?: string
-          metodo_pagamento?: string | null
-          mp_payment_id?: string | null
-          mp_payment_status?: string | null
-          mp_pix_expira_em?: string | null
-          mp_qr_code?: string | null
-          mp_qr_code_base64?: string | null
-          mp_ticket_url?: string | null
-          pago?: boolean
-          pago_em?: string | null
-          receita_base?: number
-          revendedor_id?: string
-          updated_at?: string
-          valor_mensalidade?: number
-          valor_percentual?: number
-          valor_total?: number | null
-          vencimento?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "revendedor_cobrancas_revendedor_id_fkey"
-            columns: ["revendedor_id"]
-            isOneToOne: false
-            referencedRelation: "revendedores"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      revendedor_saques: {
-        Row: {
-          created_at: string
-          id: string
-          motivo_rejeicao: string | null
-          observacoes: string | null
-          observacoes_admin: string | null
-          pago_em: string | null
-          pix_chave: string
-          rejeitado_em: string | null
-          revendedor_user_id: string
-          status: string
-          updated_at: string
-          valor: number
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          motivo_rejeicao?: string | null
-          observacoes?: string | null
-          observacoes_admin?: string | null
-          pago_em?: string | null
-          pix_chave: string
-          rejeitado_em?: string | null
-          revendedor_user_id: string
-          status?: string
-          updated_at?: string
-          valor: number
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          motivo_rejeicao?: string | null
-          observacoes?: string | null
-          observacoes_admin?: string | null
-          pago_em?: string | null
-          pix_chave?: string
-          rejeitado_em?: string | null
-          revendedor_user_id?: string
-          status?: string
-          updated_at?: string
-          valor?: number
-        }
-        Relationships: []
-      }
-      revendedores: {
-        Row: {
-          ativo: boolean
-          codigo_indicacao: string | null
-          created_at: string
-          dia_vencimento: number
-          documento: string | null
-          email: string
-          mensalidade_valor: number
-          nome: string
-          observacoes: string | null
-          percentual_receita: number
-          telefone: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          ativo?: boolean
-          codigo_indicacao?: string | null
-          created_at?: string
-          dia_vencimento?: number
-          documento?: string | null
-          email: string
-          mensalidade_valor?: number
-          nome: string
-          observacoes?: string | null
-          percentual_receita?: number
-          telefone?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          ativo?: boolean
-          codigo_indicacao?: string | null
-          created_at?: string
-          dia_vencimento?: number
-          documento?: string | null
-          email?: string
-          mensalidade_valor?: number
-          nome?: string
-          observacoes?: string | null
-          percentual_receita?: number
-          telefone?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       suporte_mensagens: {
         Row: {
           autor_id: string
@@ -3830,13 +3653,6 @@ export type Database = {
           id: string
         }[]
       }
-      buscar_revendedor_por_codigo: {
-        Args: { _codigo: string }
-        Returns: {
-          nome: string
-          user_id: string
-        }[]
-      }
       calcular_prazo_coleta_min: { Args: { _dist_km: number }; Returns: number }
       calcular_tarifa_global: { Args: { _km: number }; Returns: number }
       calcular_taxa_publica: {
@@ -4003,10 +3819,8 @@ export type Database = {
         Returns: undefined
       }
       franqueado_do_colaborador: { Args: { _uid: string }; Returns: string }
-      gerar_cobrancas_revendedores_mensal: { Args: never; Returns: undefined }
       gerar_cobrancas_semanais_lojas: { Args: never; Returns: number }
       gerar_codigo_indicacao: { Args: never; Returns: string }
-      gerar_codigo_revendedor: { Args: never; Returns: string }
       gerar_faturas_franquia: { Args: never; Returns: number }
       gerar_mensalidades_do_dia: { Args: never; Returns: number }
       gerar_mensalidades_mes: { Args: never; Returns: number }
@@ -4127,7 +3941,6 @@ export type Database = {
         Args: { _loja_id: string; _user_id: string }
         Returns: boolean
       }
-      is_revendedor_da_loja: { Args: { _loja_id: string }; Returns: boolean }
       is_valid_cnpj: { Args: { _cnpj: string }; Returns: boolean }
       is_valid_cpf: { Args: { _cpf: string }; Returns: boolean }
       listar_admins: {
