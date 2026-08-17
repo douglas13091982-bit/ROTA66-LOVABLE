@@ -186,9 +186,10 @@ export function CheckoutDialog({
           itens: cartItems.map((i) => ({
             produto_id: i.produto.id,
             qtd: i.qtd,
-            adicionais: i.adicionais.map((a) => ({ opcao_id: a.opcao_id })),
-          })),
-        },
+              adicionais: i.adicionais.map((a) => ({ opcao_id: a.opcao_id })),
+            })),
+            origem: "rota66_client", // Identifica a integração
+          },
       });
       if (res.aguardando_pagamento && res.pendente_id) {
         setPendentePagar({ pendente_id: res.pendente_id });
