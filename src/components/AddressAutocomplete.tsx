@@ -138,7 +138,10 @@ export function AddressAutocomplete({
         }
       }}
       onFocus={() => {
-        if (suggestions.length > 0) setOpen(true);
+        if (value.trim()) {
+          setOpen(true);
+          fetchSuggestions(value);
+        }
       }}
       placeholder={placeholder}
       autoComplete="off"
