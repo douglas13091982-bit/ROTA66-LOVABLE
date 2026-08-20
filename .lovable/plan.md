@@ -1,41 +1,28 @@
----
-name: admin-config-frete
-description: Plano para criação da tela de configurações de frete no painel administrativo.
-type: feature
----
+# Corrigir endereço de entrega sem cálculo automático da taxa
 
-# Configurações de Frete - Painel Administrativo
+## O que está acontecendo na tela
 
-Implementação de uma interface centralizada para gerenciar Google Maps e regras de frete via banco de dados.
+Ao selecionar um cliente salvo (RAFAEL), o endereço aparece preenchido no campo "Endereço de entrega", mas o sistema mostra o aviso "Selecione o endereço no autocomplete para calcular a taxa automaticamente" e não calcula a taxa.
 
-## 1. Banco de Dados (Supabase)
-Criar a tabela `config_frete` para armazenar as configurações globais:
-- `id`: uuid (PK, sempre 1 para singleton)
-- `google_maps_key`: text (armazenado como secret se possível, ou em tabela protegida)
-- `origem_endereco`: text, `origem_bairro`: text, `origem_cidade`: text, `origem_uf`: text, `origem_cep`: text
-- `origem_lat`: double, `origem_lng`: double
-- `modo_calculo`: enum ('fixo_km', 'faixas')
-- `valor_base`: numeric
-- `valor_por_km`: numeric
-- `faixas_distancia`: jsonb (lista de {ate_km, valor})
-- `distancia_maxima`: numeric
-- `frete_gratis_ativo`: boolean
-- `frete_gratis_minimo`: numeric
-- `status_operacional`: boolean
+Motivo confirmado no código: quando o endereço vem de um cliente salvo, o formulário não tem as coordenadas. Ele tenta descobri-las reaproveitando o **autocomplete** (pega a 1ª sugestão do texto completo do endereço). Esse caminho falha com frequência porque:
 
-## 2. Backend (Server Functions)
-- `testarConexaoGoogleMaps`: Valida a chave enviada chamando a Geocoding API.
-- `salvarConfigFrete`: Recebe os dados, geocodifica o endereço de origem se alterado e salva no banco.
-- `getPublicConfigFrete`: Função segura que retorna apenas as regras de cálculo (sem a API Key) para o frontend de checkout.
+- o texto salvo é um endereço formatado completo ("R. Frederico Hubner, 37 - América, Joinville - SC, 89204-280"), e o autocomplete costuma não devolver sugestão para essa string inteira;
+- se a sugestão não vier, ou vier sem coordenada, cai direto no aviso e a taxa fica só na taxa base.
 
-## 3. Frontend (Admin)
-- Nova rota: `/admin/configuracoes-frete`.
-- Componente `ConfigFretePage`:
-    - **Status Card**: Indicador visual (Operacional / Incompleto).
-    - **Google Maps Section**: Input tipo password com botão de teste.
-    - **Origem Section**: Formulário com ViaCEP para preenchimento automático.
-    - **Regras Section**: Toggle entre "Fixo + KM" e "Faixas", com inputs dinâmicos.
-    - **Limites Section**: Distância máxima e Frete grátis.
+Ou seja: não é o autocomplete digitado que está quebrado — é a resolução automática do endereço já salvo.
 
-## 4. Integração no Checkout
-- Refatorar `src/lib/frete.functions.ts` para buscar as configurações da tabela `config_frete` em vez de usar valores fixos ou apenas variáveis de ambiente.
+## Correção proposta
+
+1. **Geocodificar o endereço salvo pelo servidor** em vez de depender da primeira sugestão do autocomplete: usar a Geocoding API pelo gateway (mesmo caminho já usado no cálculo de frete) para obter lat/lng do texto do endereço.
+2. **Fallback em cadeia**: geocoding do servidor → se falhar, tentativa via autocomplete (comportamento atual) → só então mostrar o aviso.
+3. **Salvar as coordenadas do cliente**: quando o endereço é resolvido, guardar lat/lng no cadastro do cliente para que nas próximas vezes o cálculo seja imediato, sem nova chamada ao Maps.
+4. **Aviso mais claro e acionável**: em vez do toast genérico, marcar o campo de entrega com um estado "endereço não localizado — reescreva e escolha na lista", para a loja saber exatamente o que fazer.
+5. **Não recalcular à toa**: cache/deduplicação por endereço para evitar chamadas repetidas ao Maps (controle de custo).
+
+## Detalhes técnicos
+
+- `src/lib/frete.functions.ts`: adicionar `geocodificarEndereco` (server fn, POST) chamando `maps/api/geocode/json` pelo gateway do conector Google Maps, com validação Zod do texto e tratamento dos 403 de chave (referrer/serviço bloqueado).
+- `src/hooks/use-pedido-form.ts` (`aplicarCliente`): trocar `resolveAddressToPlace` pela cadeia geocoding → autocomplete; setar `entregaCoords` e sinalizar erro de resolução em estado, não só toast.
+- `src/components/PedidoForm.tsx`: exibir o alerta inline no campo de entrega quando o endereço não tiver coordenadas.
+- Persistência de lat/lng do cliente: reutilizar as colunas de coordenadas do cadastro de clientes se já existirem; caso não existam, incluir migração adicionando `lat`/`lng` na tabela de clientes com os GRANTs e políticas já vigentes da tabela.
+- Sem mudança na regra de frete: `frete_global + taxa_por_pedido_loja` para o cliente, entregador recebe `frete_global`.
