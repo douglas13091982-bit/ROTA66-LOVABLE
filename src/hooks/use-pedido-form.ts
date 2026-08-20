@@ -160,7 +160,7 @@ export function usePedidoForm({
       setEntregaCoords({ lat: null, lng: null });
       try {
         // Tenta geocodificar via servidor (mais robusto para endereços completos)
-        const res = await geocodificarEndereco({ endereco: c.endereco });
+        const res = await geocodificarEndereco({ data: { endereco: c.endereco } });
         if (res.success && res.lat && res.lng) {
           setEndereco(res.address || c.endereco);
           setEntregaCoords({ lat: res.lat, lng: res.lng });
@@ -175,6 +175,7 @@ export function usePedidoForm({
         console.error("[aplicarCliente] Erro ao resolver endereço:", err);
         toast.warning("Não localizamos as coordenadas deste endereço. Selecione novamente na lista para calcular a taxa.");
       }
+
 
     }
     if (c.complemento) setComplemento(c.complemento);
