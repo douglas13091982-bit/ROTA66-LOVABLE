@@ -9,7 +9,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveAddressToPlace } from "@/lib/google-maps-places";
 import { useTarifaEntrega } from "./use-tarifa-entrega";
-import { convocarEntregadoresCidade, geocodificarEndereco } from "@/lib/frete.functions";
+import { convocarEntregadoresCidade } from "@/lib/convocacao.functions";
+import { geocodificarEndereco } from "@/lib/frete.functions";
+
 
 
 export type Item = { nome: string; qtd: number; preco: number };
