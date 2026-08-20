@@ -160,6 +160,16 @@ export function PedidoForm({
             required
             placeholder="Rua, número, bairro"
           />
+          {form.endereco && !form.entregaCoords.lat && (
+            <div className="flex items-start gap-2 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs mt-2 animate-in fade-in slide-in-from-top-1">
+              <Info className="h-4 w-4 shrink-0 mt-0.5 text-amber-600" />
+              <p>
+                <strong>Taxa indisponível:</strong> As coordenadas deste endereço não foram localizadas. 
+                Reescreva e selecione a sugestão correta na lista para calcular a taxa automaticamente.
+              </p>
+            </div>
+          )}
+
         </div>
       </div>
 

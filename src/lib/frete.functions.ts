@@ -121,3 +121,60 @@ export const reverseGeocode = createServerFn({ method: "POST" })
       return { address: null as string | null };
     }
   });
+
+/**
+ * Resolve um texto de endereço para coordenadas (lat, lng) e endereço formatado
+ * usando a Geocoding API (gateway).
+ */
+export const geocodificarEndereco = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ endereco: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
+    const apiKey = process.env.LOVABLE_API_KEY;
+    const connKey =
+      process.env.GOOGLE_MAPS_API_KEY ??
+      process.env.GOOGLE_MAPS_API_KEY_1 ??
+      process.env.GOOGLE_MAPS_API_KEY_2;
+
+    if (!apiKey || !connKey) {
+      throw new Error("Credenciais do Google Maps não configuradas");
+    }
+
+    const response = await fetch(
+      `${gatewayUrl}/maps/api/geocode/json?address=${encodeURIComponent(data.endereco)}&language=${i18nConfig.locale}&region=BR`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "X-Connection-Api-Key": connKey,
+        },
+      }
+    );
+
+    if (response.status === 403) {
+      const body = await response.json().catch(() => ({}));
+      const reason = body?.error?.details?.find((d: any) => d.reason)?.reason;
+      if (reason === "API_KEY_HTTP_REFERRER_BLOCKED") {
+        throw new Error("Chave do Google Maps bloqueada por referer no servidor.");
+      }
+      throw new Error("Acesso negado ao Google Maps (403)");
+    }
+
+    if (!response.ok) {
+      throw new Error(`Erro no Google Maps: ${response.status}`);
+    }
+
+    const body = await response.json();
+    const result = body.results?.[0];
+
+    if (!result) {
+      return { success: false, error: "Endereço não localizado" };
+    }
+
+    return {
+      success: true,
+      address: result.formatted_address,
+      lat: result.geometry.location.lat,
+      lng: result.geometry.location.lng,
+    };
+  });
+

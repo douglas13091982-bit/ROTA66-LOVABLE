@@ -10,6 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { resolveAddressToPlace } from "@/lib/google-maps-places";
 import { useTarifaEntrega } from "./use-tarifa-entrega";
 import { convocarEntregadoresCidade } from "@/lib/convocacao.functions";
+import { geocodificarEndereco } from "@/lib/frete.functions";
+
+
 
 export type Item = { nome: string; qtd: number; preco: number };
 
@@ -156,12 +159,24 @@ export function usePedidoForm({
       setEndereco(c.endereco);
       setEntregaCoords({ lat: null, lng: null });
       try {
+        // Tenta geocodificar via servidor (mais robusto para endereços completos)
+        const res = await geocodificarEndereco({ data: { endereco: c.endereco } });
+        if (res.success && res.lat && res.lng) {
+          setEndereco(res.address || c.endereco);
+          setEntregaCoords({ lat: res.lat, lng: res.lng });
+          return;
+        }
+
+        // Fallback: Autocomplete suggestion (comportamento antigo)
         const place = await resolveAddressToPlace(c.endereco);
         setEndereco(place.address);
         setEntregaCoords({ lat: place.lat, lng: place.lng });
-      } catch {
-        toast.warning("Selecione o endereço no autocomplete para calcular a taxa automaticamente.");
+      } catch (err) {
+        console.error("[aplicarCliente] Erro ao resolver endereço:", err);
+        toast.warning("Não localizamos as coordenadas deste endereço. Selecione novamente na lista para calcular a taxa.");
       }
+
+
     }
     if (c.complemento) setComplemento(c.complemento);
   }
