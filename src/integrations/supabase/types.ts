@@ -641,6 +641,72 @@ export type Database = {
         }
         Relationships: []
       }
+      config_frete: {
+        Row: {
+          distancia_maxima: number | null
+          faixas_distancia: Json | null
+          frete_gratis_ativo: boolean | null
+          frete_gratis_minimo: number | null
+          google_maps_key: string | null
+          id: number
+          modo_calculo: string | null
+          origem_bairro: string | null
+          origem_cep: string | null
+          origem_cidade: string | null
+          origem_endereco: string | null
+          origem_lat: number | null
+          origem_lng: number | null
+          origem_numero: string | null
+          origem_uf: string | null
+          status_operacional: boolean | null
+          updated_at: string | null
+          valor_base: number | null
+          valor_por_km: number | null
+        }
+        Insert: {
+          distancia_maxima?: number | null
+          faixas_distancia?: Json | null
+          frete_gratis_ativo?: boolean | null
+          frete_gratis_minimo?: number | null
+          google_maps_key?: string | null
+          id?: number
+          modo_calculo?: string | null
+          origem_bairro?: string | null
+          origem_cep?: string | null
+          origem_cidade?: string | null
+          origem_endereco?: string | null
+          origem_lat?: number | null
+          origem_lng?: number | null
+          origem_numero?: string | null
+          origem_uf?: string | null
+          status_operacional?: boolean | null
+          updated_at?: string | null
+          valor_base?: number | null
+          valor_por_km?: number | null
+        }
+        Update: {
+          distancia_maxima?: number | null
+          faixas_distancia?: Json | null
+          frete_gratis_ativo?: boolean | null
+          frete_gratis_minimo?: number | null
+          google_maps_key?: string | null
+          id?: number
+          modo_calculo?: string | null
+          origem_bairro?: string | null
+          origem_cep?: string | null
+          origem_cidade?: string | null
+          origem_endereco?: string | null
+          origem_lat?: number | null
+          origem_lng?: number | null
+          origem_numero?: string | null
+          origem_uf?: string | null
+          status_operacional?: boolean | null
+          updated_at?: string | null
+          valor_base?: number | null
+          valor_por_km?: number | null
+        }
+        Relationships: []
+      }
       config_notificacao_som: {
         Row: {
           ativo: boolean
