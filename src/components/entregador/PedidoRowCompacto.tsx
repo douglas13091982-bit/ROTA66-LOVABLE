@@ -1,5 +1,5 @@
 import { memo, useMemo } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Store } from "lucide-react";
 import { useSomStatus } from "@/hooks/use-som-status";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
@@ -70,9 +70,17 @@ function PedidoRowCompactoBase({
       />
 
       <div className="relative flex items-center gap-3 px-4 py-4">
-        {atrasado && (
-          <AlertTriangle className="h-6 w-6 !text-yellow-400 shrink-0" />
-        )}
+        <div
+          className="w-12 h-12 rounded-2xl grid place-items-center shrink-0"
+          style={{ background: "#0d2c54", border: "1px solid rgba(255,255,255,0.25)" }}
+        >
+
+          {atrasado ? (
+            <AlertTriangle className="h-6 w-6 !text-yellow-400" />
+          ) : (
+            <Store className="h-6 w-6 !text-white" strokeWidth={1.8} />
+          )}
+        </div>
 
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-black !text-white uppercase tracking-normal truncate leading-tight">
