@@ -129,7 +129,13 @@ export function AddressAutocomplete({
       onChange={(e) => {
         const v = e.target.value;
         onChange(v);
-        fetchSuggestions(v);
+        if (v.trim()) {
+          setOpen(true);
+          fetchSuggestions(v);
+        } else {
+          setOpen(false);
+          setSuggestions([]);
+        }
       }}
       onFocus={() => {
         if (suggestions.length > 0) setOpen(true);

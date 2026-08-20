@@ -76,6 +76,7 @@ export function loadGoogleMaps(): Promise<void> {
       callback: "__lovableInitMaps",
       language: i18nConfig.locale,
       region: "BR",
+      loading: "async",
     });
     if (TRACKING_ID) params.set("channel", TRACKING_ID);
     s.src = `https://maps.googleapis.com/maps/api/js?${params.toString()}`;
