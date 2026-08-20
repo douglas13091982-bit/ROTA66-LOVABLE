@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { manterSessaoViva } from "@/lib/auth-session";
 
 
-export type AppRole = "super_admin" | "admin" | "loja_admin" | "entregador" | "cliente";
+export type AppRole = "super_admin" | "admin" | "loja_admin" | "entregador" | "cliente" | "revendedor";
 
 interface AuthContextValue {
   user: User | null;

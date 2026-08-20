@@ -83,7 +83,6 @@ import { Route as AuthenticatedAdminDespesasRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin/dashboard'
 import { Route as AuthenticatedAdminCreditosEntregadorRouteImport } from './routes/_authenticated/admin/creditos-entregador'
 import { Route as AuthenticatedAdminContratosRouteImport } from './routes/_authenticated/admin/contratos'
-import { Route as AuthenticatedAdminConectoresRouteImport } from './routes/_authenticated/admin/conectores'
 import { Route as AuthenticatedAdminClientesPushRouteImport } from './routes/_authenticated/admin/clientes-push'
 import { Route as AuthenticatedAdminCidadesRouteImport } from './routes/_authenticated/admin/cidades'
 import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_authenticated/admin/categorias'
@@ -517,12 +516,6 @@ const AuthenticatedAdminContratosRoute =
     path: '/contratos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminConectoresRoute =
-  AuthenticatedAdminConectoresRouteImport.update({
-    id: '/conectores',
-    path: '/conectores',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminClientesPushRoute =
   AuthenticatedAdminClientesPushRouteImport.update({
     id: '/clientes-push',
@@ -626,7 +619,6 @@ export interface FileRoutesByFullPath {
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/cidades': typeof AuthenticatedAdminCidadesRoute
   '/admin/clientes-push': typeof AuthenticatedAdminClientesPushRoute
-  '/admin/conectores': typeof AuthenticatedAdminConectoresRoute
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -711,7 +703,6 @@ export interface FileRoutesByTo {
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/cidades': typeof AuthenticatedAdminCidadesRoute
   '/admin/clientes-push': typeof AuthenticatedAdminClientesPushRoute
-  '/admin/conectores': typeof AuthenticatedAdminConectoresRoute
   '/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -801,7 +792,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/_authenticated/admin/cidades': typeof AuthenticatedAdminCidadesRoute
   '/_authenticated/admin/clientes-push': typeof AuthenticatedAdminClientesPushRoute
-  '/_authenticated/admin/conectores': typeof AuthenticatedAdminConectoresRoute
   '/_authenticated/admin/contratos': typeof AuthenticatedAdminContratosRoute
   '/_authenticated/admin/creditos-entregador': typeof AuthenticatedAdminCreditosEntregadorRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -891,7 +881,6 @@ export interface FileRouteTypes {
     | '/admin/categorias'
     | '/admin/cidades'
     | '/admin/clientes-push'
-    | '/admin/conectores'
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
@@ -976,7 +965,6 @@ export interface FileRouteTypes {
     | '/admin/categorias'
     | '/admin/cidades'
     | '/admin/clientes-push'
-    | '/admin/conectores'
     | '/admin/contratos'
     | '/admin/creditos-entregador'
     | '/admin/dashboard'
@@ -1065,7 +1053,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categorias'
     | '/_authenticated/admin/cidades'
     | '/_authenticated/admin/clientes-push'
-    | '/_authenticated/admin/conectores'
     | '/_authenticated/admin/contratos'
     | '/_authenticated/admin/creditos-entregador'
     | '/_authenticated/admin/dashboard'
@@ -1672,13 +1659,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContratosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/conectores': {
-      id: '/_authenticated/admin/conectores'
-      path: '/conectores'
-      fullPath: '/admin/conectores'
-      preLoaderRoute: typeof AuthenticatedAdminConectoresRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/clientes-push': {
       id: '/_authenticated/admin/clientes-push'
       path: '/clientes-push'
@@ -1776,7 +1756,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminCategoriasRoute: typeof AuthenticatedAdminCategoriasRoute
   AuthenticatedAdminCidadesRoute: typeof AuthenticatedAdminCidadesRoute
   AuthenticatedAdminClientesPushRoute: typeof AuthenticatedAdminClientesPushRoute
-  AuthenticatedAdminConectoresRoute: typeof AuthenticatedAdminConectoresRoute
   AuthenticatedAdminContratosRoute: typeof AuthenticatedAdminContratosRoute
   AuthenticatedAdminCreditosEntregadorRoute: typeof AuthenticatedAdminCreditosEntregadorRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
@@ -1813,7 +1792,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminCategoriasRoute: AuthenticatedAdminCategoriasRoute,
     AuthenticatedAdminCidadesRoute: AuthenticatedAdminCidadesRoute,
     AuthenticatedAdminClientesPushRoute: AuthenticatedAdminClientesPushRoute,
-    AuthenticatedAdminConectoresRoute: AuthenticatedAdminConectoresRoute,
     AuthenticatedAdminContratosRoute: AuthenticatedAdminContratosRoute,
     AuthenticatedAdminCreditosEntregadorRoute:
       AuthenticatedAdminCreditosEntregadorRoute,

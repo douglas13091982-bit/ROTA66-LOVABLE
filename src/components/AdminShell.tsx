@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, BellRing, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown, GraduationCap, TrendingUp, Share2 } from "lucide-react";
+import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, BellRing, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown, GraduationCap, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
@@ -33,7 +33,6 @@ const NAV: { to: string; label: string; icon: any; area: AdminArea | null; super
   { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
   { to: "/admin/sons-alerta", label: "Sons de alerta", icon: Bell, area: "notificacao_som", ownerOnly: true },
   { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
-  { to: "/admin/conectores", label: "Conectores Cloud", icon: Share2, area: null, ownerOnly: true },
   { to: "/admin/notificacoes", label: "Notificações push", icon: Bell, area: null, superOnly: true },
   { to: "/admin/clientes-push", label: "Clientes com push", icon: BellRing, area: null, superOnly: true },
 
