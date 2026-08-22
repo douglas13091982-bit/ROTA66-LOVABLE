@@ -1,9 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/")({
-  component: () => (
-    <div className="p-8 max-w-4xl mx-auto whitespace-pre-wrap font-mono text-sm">
-      {`Analise todo o projeto de forma completa antes de realizar qualquer alteração e execute uma refatoração profunda e estruturada em toda a base de código.
+Analise todo o projeto de forma completa antes de realizar qualquer alteração e execute uma refatoração profunda e estruturada em toda a base de código.
 
 Seu objetivo é melhorar a qualidade interna do sistema sem alterar funcionalidades ou comportamento visível da aplicação.
 
@@ -173,17 +168,4 @@ Ao final da refatoração, o projeto deve estar:
 
 - Mais limpo e previsível
 
-- Sem alterar nenhuma funcionalidade existente`}
-      
-      <div className="mt-8 border-t pt-4 font-sans">
-        <Link to="/login" className="text-blue-600 hover:underline">Ir para o Sistema ROTA 66</Link>
-      </div>
-    </div>
-  ),
-  head: () => ({
-    meta: [
-      { title: "Solicitação de Auditoria — ROTA 66" },
-      { name: "description", content: "Documento de solicitação de auditoria e correção de erro." }
-    ]
-  })
-});
+- Sem alterar nenhuma funcionalidade existente
