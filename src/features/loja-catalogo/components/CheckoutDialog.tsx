@@ -13,7 +13,8 @@ import { CheckoutCarrinho } from "./CheckoutCarrinho";
 import { CheckoutDados, type CheckoutForm } from "./CheckoutDados";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { resolveAddressToPlace } from "@/lib/google-maps-places";
+import { resolveAddressToPlace } from "@/lib/address-resolution";
+
 
 type Props = {
   slug: string;

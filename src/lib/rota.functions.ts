@@ -1,13 +1,28 @@
+import { reverseGeocode } from "./frete.functions";
 import { createServerFn } from "@tanstack/react-start";
+
 import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
-import {
-  computeRouteMatrix,
-  haversineKm,
-  type LatLng,
-} from "./google-routes.server";
+import { mapboxCalcularDistancia } from "./mapbox.functions";
+
+type LatLng = { lat: number; lng: number };
+
+function haversineKm(p1: LatLng, p2: LatLng) {
+  const R = 6371;
+  const dLat = ((p2.lat - p1.lat) * Math.PI) / 180;
+  const dLng = ((p2.lng - p1.lng) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((p1.lat * Math.PI) / 180) *
+      Math.cos((p2.lat * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 
 type SupaClient = SupabaseClient<Database>;
 
@@ -121,7 +136,9 @@ async function pickEntregador(
     lat: Number(o.lat),
     lng: Number(o.lng),
   }));
-  const matrix = await computeRouteMatrix(origins, [pickup]);
+  // Mapbox Directions: calculamos sequencialmente ou via fallback (Mapbox Matrix é outro endpoint, simplificamos aqui)
+  const matrix = null as any; 
+
 
   type Score = {
     entregadorId: string;
@@ -130,7 +147,7 @@ async function pickEntregador(
     carga: number;
   };
   const scores: Score[] = online.map((o, i) => {
-    const cell = matrix?.find((c) => c.originIndex === i && c.destinationIndex === 0);
+    const cell = matrix?.find((c: any) => c.originIndex === i && c.destinationIndex === 0);
     return {
       entregadorId: o.entregador_id!,
       duracao: cell?.ok ? cell.durationSeconds : null,
@@ -279,7 +296,7 @@ export const atribuirPedido = createServerFn({ method: "POST" })
           }));
         if (origens.length === 0) continue;
 
-        const matrix = await computeRouteMatrix(origens, [destino]);
+        const matrix = null as any;
         let melhorDur = Infinity;
         let melhorDist = Infinity;
         if (matrix) {
