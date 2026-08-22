@@ -89,7 +89,7 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
       const { data, error } = await (supabase.from("entregadores" as any)
         .select("lat, lng")
         .eq("id", entregadorId)
-        .maybeSingle() as Promise<any>);
+        .maybeSingle() as any);
       
       if (!error && data?.lat && data?.lng) {
         updateEntregadorMarker(data.lat, data.lng);
