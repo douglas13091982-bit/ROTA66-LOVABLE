@@ -104,7 +104,7 @@ export function ConfiguracaoMapasAdmin() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, provedor_mapa: "google" })}
+                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "google" }))}
                 className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
                   atualProvedor === "google"
                     ? "bg-[#0d2c54] text-white border-[#0d2c54]"
@@ -115,7 +115,7 @@ export function ConfiguracaoMapasAdmin() {
               </button>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, provedor_mapa: "mapbox" })}
+                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "mapbox" }))}
                 className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
                   atualProvedor === "mapbox"
                     ? "bg-[#0d2c54] text-white border-[#0d2c54]"
@@ -140,7 +140,7 @@ export function ConfiguracaoMapasAdmin() {
               <input
                 type="password"
                 value={atualToken}
-                onChange={(e) => setFormData({ ...formData, mapbox_access_token: e.target.value })}
+                onChange={(e) => setFormData(prev => ({ ...prev, mapbox_access_token: e.target.value }))}
                 placeholder="pk.ey..."
                 className="flex-1 h-11 border border-[#e4e8ef] bg-white px-3 text-[#0d2c54] text-sm focus:outline-none focus:border-[#0d2c54] transition-colors"
               />
