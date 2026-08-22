@@ -61,6 +61,11 @@ export type RastreioData = {
   chegou_entrega_at: string | null;
   endereco_entrega: string;
   complemento: string | null;
+  entregador_id?: string | null;
   entregador_nome?: string | null;
   entregador_foto?: string | null;
+  loja_lat?: number | null;
+  loja_lng?: number | null;
+  entrega_lat?: number | null;
+  entrega_lng?: number | null;
 };
