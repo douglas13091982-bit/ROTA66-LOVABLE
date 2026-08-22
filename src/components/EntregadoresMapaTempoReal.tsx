@@ -6,7 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
-import { getConfigFrete } from "@/features/admin-config-frete/logic/config-frete.functions";
+
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
