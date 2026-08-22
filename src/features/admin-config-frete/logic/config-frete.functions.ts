@@ -46,16 +46,20 @@ export const salvarConfigProvedor = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
+    const updateData: any = {
+      provedor_mapa: data.provedor
+    };
+    
+    if (data.mapboxToken !== undefined) updateData.mapbox_access_token = data.mapboxToken;
+    if (data.googleKey !== undefined) updateData.google_maps_api_key = data.googleKey;
+
     const { error } = await supabaseAdmin
       .from("config_frete")
-      .update({
-        provedor_mapa: data.provedor,
-        mapbox_access_token: data.mapboxToken,
-        google_maps_api_key: data.googleKey,
-      })
-      .eq("id", "singleton"); // assumindo que existe um registro singleton
+      .update(updateData)
+      .eq("id", "singleton" as any); // Type cast to bypass strict string validation if needed
 
     if (error) throw error;
     return { success: true };
   });
+
 
