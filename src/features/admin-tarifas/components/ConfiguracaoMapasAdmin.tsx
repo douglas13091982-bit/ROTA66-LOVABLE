@@ -31,14 +31,14 @@ export function ConfiguracaoMapasAdmin() {
   });
 
   // Sincroniza estado local quando os dados carregam
-  useState(() => {
+  useEffect(() => {
     if (config) {
       setFormData({
         provedor_mapa: config.provedor_mapa || "google",
         mapbox_access_token: config.mapbox_access_token || "",
       });
     }
-  });
+  }, [config]);
 
   const atualProvedor = formData.provedor_mapa || config?.provedor_mapa || "google";
   const atualToken = formData.mapbox_access_token !== undefined ? formData.mapbox_access_token : config?.mapbox_access_token || "";
