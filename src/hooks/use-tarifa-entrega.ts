@@ -130,7 +130,7 @@ export function useTarifaEntrega(
     loading,
     // Legacy support
     taxa: tarifa,
-    info: infoText, // Changed to string to satisfy UI components
+    info: infoText || "---", // Changed to string to satisfy UI components
     setTaxa: () => {},
     adicionalRetorno
   };
