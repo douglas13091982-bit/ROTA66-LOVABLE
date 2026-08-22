@@ -36,3 +36,26 @@ export const testarConexaoGoogleMaps = createServerFn({ method: "POST" })
       return { success: false, error: err.message || "Network error" };
     }
   });
+
+export const salvarConfigProvedor = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({
+    provedor: z.enum(["google", "mapbox"]),
+    mapboxToken: z.string().optional(),
+    googleKey: z.string().optional(),
+  }).parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
+    const { error } = await supabaseAdmin
+      .from("config_frete")
+      .update({
+        provedor_mapa: data.provedor,
+        mapbox_access_token: data.mapboxToken,
+        google_maps_api_key: data.googleKey,
+      })
+      .eq("id", "singleton"); // assumindo que existe um registro singleton
+
+    if (error) throw error;
+    return { success: true };
+  });
+

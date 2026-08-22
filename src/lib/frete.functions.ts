@@ -1,6 +1,9 @@
 import { i18nConfig } from "./i18n-config";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { mapboxCalcularDistancia } from "./mapbox.functions";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
+
 
 const CoordSchema = z.object({
   lat: z.number(),
@@ -20,6 +23,23 @@ const InputSchema = z.object({
 export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
+    // 1. Verificar provedor configurado
+    const { data: config } = await supabaseAdmin
+      .from("config_frete")
+      .select("provedor_mapa, mapbox_access_token")
+      .single();
+
+    if (config?.provedor_mapa === "mapbox") {
+      const res = await mapboxCalcularDistancia({
+        data: {
+          waypoints: [data.origem, data.destino]
+        }
+      });
+      return { km: res.km };
+    }
+
+    // Fallback para Google (lógica atual)
+
     const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
     const apiKey = process.env.LOVABLE_API_KEY;
     const connKey =
