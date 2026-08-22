@@ -3,11 +3,20 @@ import { createPortal } from "react-dom";
 import { useServerFn } from "@tanstack/react-start";
 import { fetchAddressSuggestions, fetchAddressDetails, type MapboxSuggestion } from "@/lib/address-autocomplete.functions";
 
+export type AddressSelection = {
+  endereco: string;
+  cidade: string;
+  estado: string;
+  lat: number | null;
+  lng: number | null;
+};
+
 export type PlaceSelection = {
   address: string;
   lat: number | null;
   lng: number | null;
 };
+
 
 
 type Props = {
