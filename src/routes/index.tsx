@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
             </Button>
           </Link>
 
-          <Link to="/cadastro" search={{ tipo: 'loja' }}>
+          <Link to="/cadastro" search={{ role: 'loja_admin' }}>
             <Button 
               variant="outline"
               className="w-full h-14 bg-navy/40 hover:bg-navy/60 text-white border-white/20 hover:border-white/40 rounded-none uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2 group transition-all duration-300"
@@ -61,7 +61,7 @@ export const Route = createFileRoute("/")({
             </Button>
           </Link>
 
-          <Link to="/cadastro" search={{ tipo: 'entregador' }}>
+          <Link to="/cadastro" search={{ role: 'entregador' }}>
             <Button 
               variant="outline"
               className="w-full h-14 bg-navy/40 hover:bg-navy/60 text-white border-white/20 hover:border-white/40 rounded-none uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2 group transition-all duration-300"
