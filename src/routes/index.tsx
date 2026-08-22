@@ -2,62 +2,56 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: () => (
-    <div className="p-8 max-w-4xl mx-auto whitespace-pre-wrap font-sans">
-      <h2 className="text-2xl font-bold mb-4">Solicitação de Auditoria e Correção de Erro em Aplicação</h2>
+    <div className="p-8 max-w-4xl mx-auto whitespace-pre-wrap font-mono text-sm">
+      {`## Solicitação de Auditoria e Correção de Erro em Aplicação
 
-      <p className="mb-4">
-        <strong>Objetivo:</strong> Realizar uma auditoria completa de uma aplicação para identificar e corrigir um erro específico, utilizando múltiplos agentes especializados.
-      </p>
+**Objetivo:** Realizar uma auditoria completa de uma aplicação para identificar e corrigir um erro específico, utilizando múltiplos agentes especializados.
 
-      <p className="font-bold mb-2">Instruções:</p>
+**Instruções:**
 
-      <ol className="list-decimal pl-6 mb-4 space-y-4">
-        <li>
-          <strong>Coleta de Informações:</strong> Antes de criar quaisquer agentes, o agente principal deve interagir com o usuário para coletar informações detalhadas sobre:
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>A natureza exata do erro específico a ser corrigido.</li>
-            <li>Detalhes sobre a aplicação em questão (linguagem, framework, arquitetura, ambiente de execução, etc.).</li>
-            <li>Quaisquer sintomas ou comportamentos observados relacionados ao erro.</li>
-            <li>O impacto esperado da correção.</li>
-          </ul>
-        </li>
+1.  **Coleta de Informações:** Antes de criar quaisquer agentes, o agente principal deve interagir com o usuário para coletar informações detalhadas sobre:
 
-        <li>
-          <strong>Criação de Sub-Agentes:</strong> Com base nas informações coletadas, o agente principal deverá criar múltiplos sub-agentes, cada um com responsabilidades específicas para a auditoria e correção. Exemplos de sub-agentes podem incluir:
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li><strong>Agente de Análise de Código:</strong> Responsável por revisar o código-fonte em busca de padrões de erro, vulnerabilidades ou lógica incorreta.</li>
-            <li><strong>Agente de Testes de Unidade/Integração:</strong> Focado em criar e executar testes para reproduzir o erro e validar correções.</li>
-            <li><strong>Agente de Análise de Desempenho:</strong> Para investigar se o erro está relacionado a gargalos de desempenho ou uso ineficiente de recursos.</li>
-            <li><strong>Agente de Análise de Banco de Dados:</strong> Se aplicável, para verificar a integridade e o comportamento dos dados.</li>
-            <li><strong>Agente de Verificação de Configuração:</strong> Para garantir que as configurações da aplicação e do ambiente estejam corretas.</li>
-            <li><strong>Agente de Documentação e Relatórios:</strong> Para registrar o processo de auditoria, descobertas e a solução implementada.</li>
-          </ul>
-        </li>
+    *   A natureza exata do erro específico a ser corrigido.
 
-        <li>
-          <strong>Execução da Auditoria:</strong> Os sub-agentes deverão executar suas tarefas de forma coordenada, compartilhando informações relevantes entre si e com o agente principal.
-        </li>
+    *   Detalhes sobre a aplicação em questão (linguagem, framework, arquitetura, ambiente de execução, etc.).
 
-        <li>
-          <strong>Correção e Validação:</strong> Após a identificação da causa raiz do erro, o agente principal, em conjunto com os sub-agentes apropriados, deverá propor e implementar a correção. A validação da correção deve ser realizada através de testes rigorosos.
-        </li>
+    *   Quaisquer sintomas ou comportamentos observados relacionados ao erro.
 
-        <li>
-          <strong>Relatório Final:</strong> Ao final do processo, um relatório detalhado deve ser gerado, documentando o erro, a metodologia de auditoria, as descobertas, a solução implementada e os resultados da validação.
-        </li>
-      </ol>
+    *   O impacto esperado da correção.
 
-      <p className="font-bold mb-2">Requisitos Técnicos:</p>
+2.  **Criação de Sub-Agentes:** Com base nas informações coletadas, o agente principal deverá criar múltiplos sub-agentes, cada um com responsabilidades específicas para a auditoria e correção. Exemplos de sub-agentes podem incluir:
 
-      <ul className="list-disc pl-6 mb-8 space-y-1">
-        <li>Capacidade de gerenciar e orquestrar múltiplos agentes.</li>
-        <li>Habilidade de interpretar e processar informações técnicas sobre aplicações.</li>
-        <li>Mecanismos de comunicação e compartilhamento de dados entre agentes.</li>
-        <li>Capacidade de gerar e executar testes automatizados.</li>
-        <li>Geração de relatórios estruturados.</li>
-      </ul>
+    *   **Agente de Análise de Código:** Responsável por revisar o código-fonte em busca de padrões de erro, vulnerabilidades ou lógica incorreta.
+
+    *   **Agente de Testes de Unidade/Integração:** Focado em criar e executar testes para reproduzir o erro e validar correções.
+
+    *   **Agente de Análise de Desempenho:** Para investigar se o erro está relacionado a gargalos de desempenho ou uso ineficiente de recursos.
+
+    *   **Agente de Análise de Banco de Dados:** Se aplicável, para verificar a integridade e o comportamento dos dados.
+
+    *   **Agente de Verificação de Configuração:** Para garantir que as configurações da aplicação e do ambiente estejam corretas.
+
+    *   **Agente de Documentação e Relatórios:** Para registrar o processo de auditoria, descobertas e a solução implementada.
+
+3.  **Execução da Auditoria:** Os sub-agentes deverão executar suas tarefas de forma coordenada, compartilhando informações relevantes entre si e com o agente principal.
+
+4.  **Correção e Validação:** Após a identificação da causa raiz do erro, o agente principal, em conjunto com os sub-agentes apropriados, deverá propor e implementar a correção. A validação da correção deve ser realizada através de testes rigorosos.
+
+5.  **Relatório Final:** Ao final do processo, um relatório detalhado deve ser gerado, documentando o erro, a metodologia de auditoria, as descobertas, a solução implementada e os resultados da validação.
+
+**Requisitos Técnicos:**
+
+*   Capacidade de gerenciar e orquestrar múltiplos agentes.
+
+*   Habilidade de interpretar e processar informações técnicas sobre aplicações.
+
+*   Mecanismos de comunicação e compartilhamento de dados entre agentes.
+
+*   Capacidade de gerar e executar testes automatizados.
+
+*   Geração de relatórios estruturados.`}
       
-      <div className="border-t pt-4">
+      <div className="mt-8 border-t pt-4 font-sans">
         <Link to="/login" className="text-blue-600 hover:underline">Ir para o Sistema ROTA 66</Link>
       </div>
     </div>
