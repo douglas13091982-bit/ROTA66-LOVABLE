@@ -9,7 +9,8 @@ export function AdminTarifasPage() {
   const { data, isLoading, add, remove, toggle } = useAdminTarifas();
 
   return (
-    <AdminShell title="Tarifas Globais (lojas sem plano)">
+    <AdminShell title="Tarifas Globais e Mapas">
+      <ConfiguracaoMapasAdmin />
       <RetornoMaquinaConfig />
       <NovaTarifaForm onSubmit={add} />
 
