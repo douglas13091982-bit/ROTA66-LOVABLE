@@ -16,7 +16,7 @@ export const salvarConfigProvedor = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({
     provedor: z.enum(["mapbox"]),
     mapboxToken: z.string().optional(),
-    googleKey: z.string().optional(),
+
   }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -26,7 +26,7 @@ export const salvarConfigProvedor = createServerFn({ method: "POST" })
     };
     
     if (data.mapboxToken !== undefined) updateData.mapbox_access_token = data.mapboxToken;
-    if (data.googleKey !== undefined) updateData.google_maps_api_key = data.googleKey;
+
 
     const { error } = await supabaseAdmin
       .from("config_frete")

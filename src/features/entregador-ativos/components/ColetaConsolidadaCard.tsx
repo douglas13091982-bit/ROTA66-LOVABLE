@@ -29,6 +29,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
     .sort()[0];
   const mapsUrl = endereco
     ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(endereco)}`
+
     : null;
 
   const total = useMemo(() => {

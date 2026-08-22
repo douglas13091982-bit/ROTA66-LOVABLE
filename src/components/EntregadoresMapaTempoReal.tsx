@@ -134,38 +134,9 @@ export function EntregadoresMapaTempoReal({
   }, []);
 
   useEffect(() => {
-    if (provedor !== "google") return;
-    let cancel = false;
-    loadGoogleMaps()
-      .then(() => {
-        if (cancel || !mapDivRef.current) return;
-        const g = window.google;
-        mapRef.current = new g.maps.Map(mapDivRef.current, {
-          center: { lat: -15.78, lng: -47.93 },
-          zoom: 4,
-          disableDefaultUI: false,
-          streetViewControl: false,
-          mapTypeControl: false,
-          backgroundColor: "#0b1220",
-          styles: DARK_MAP_STYLE,
-        });
-        if (typeof navigator !== "undefined" && navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              if (cancel || !mapRef.current) return;
-              if (markersRef.current.size === 0) {
-                mapRef.current.setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-                mapRef.current.setZoom(13);
-              }
-            },
-            () => {},
-            { maximumAge: 300000, timeout: 5000 }
-          );
-        }
-      })
-      .catch((e) => !cancel && setErro(e.message));
-    return () => { cancel = true; };
+    // Google Maps logic removed. Mapbox is used via EntregadoresMapaMapbox component.
   }, [provedor]);
+
 
   useEffect(() => {
     if (source === "loja" && !lojaId) return;
@@ -204,67 +175,15 @@ export function EntregadoresMapaTempoReal({
   }, [source, lojaId]);
 
   useEffect(() => {
-    if (provedor !== "google" || !mapRef.current) return;
-    const g = window.google;
-    if (!g?.maps) return;
-    const seen = new Set<string>();
-    const bounds = new g.maps.LatLngBounds();
-    for (const e of entregadores) {
-      seen.add(e.entregador_id);
-      const pos = { lat: Number(e.lat), lng: Number(e.lng) };
-      bounds.extend(pos);
-      const stage: Stage = (e.stage as Stage) ?? "livre";
-      stageRef.current.set(e.entregador_id, stage);
-      const color = STAGE_COLORS[stage];
-      const existing = markersRef.current.get(e.entregador_id);
-      if (existing) {
-        existing.setPosition(pos);
-      } else {
-        const marker = new g.maps.Marker({
-          position: pos,
-          map: mapRef.current,
-          title: e.full_name ?? "Entregador",
-          icon: pulseIcon(g, 0, color),
-        });
-        marker.addListener("click", async () => {
-          if (infoRef.current) infoRef.current.close();
-          const info = new g.maps.InfoWindow();
-          infoRef.current = info;
-          const cached = addressCacheRef.current.get(e.entregador_id);
-          const build = (addr: string | null) => `<div>${e.full_name}<br/>${addr || "..."}</div>`;
-          info.setContent(build(cached ?? null));
-          info.open({ anchor: marker, map: mapRef.current });
-          if (!cached) {
-            const res = await runReverseGeocode({ data: { lat: Number(e.lat), lng: Number(e.lng) } });
-            if (res.address) {
-              addressCacheRef.current.set(e.entregador_id, res.address);
-              info.setContent(build(res.address));
-            }
-          }
-        });
-        markersRef.current.set(e.entregador_id, marker);
-      }
-    }
-    for (const [id, marker] of markersRef.current.entries()) {
-      if (!seen.has(id)) { marker.setMap(null); markersRef.current.delete(id); }
-    }
-    if (entregadores.length > 0) mapRef.current.fitBounds(bounds, 60);
+    // Real-time marker management for Google Maps removed. 
+    // Mapbox component handles its own markers.
   }, [entregadores, provedor]);
 
+
   useEffect(() => {
-    if (provedor !== "google") return;
-    const start = performance.now();
-    const id = setInterval(() => {
-      const g = window.google;
-      if (!g?.maps) return;
-      const phase = ((performance.now() - start) % 1600) / 1600;
-      for (const [id, marker] of markersRef.current.entries()) {
-        const stage = stageRef.current.get(id) ?? "livre";
-        marker.setIcon(pulseIcon(g, phase, STAGE_COLORS[stage]));
-      }
-    }, 80);
-    return () => clearInterval(id);
+    // Pulse animation logic for Google Maps removed.
   }, [provedor]);
+
 
   return (
     <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
