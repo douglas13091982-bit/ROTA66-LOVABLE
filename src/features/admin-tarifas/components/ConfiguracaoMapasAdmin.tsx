@@ -107,24 +107,12 @@ export function ConfiguracaoMapasAdmin() {
                 Mapbox (Ativo)
               </button>
             </div>
-
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "mapbox" }))}
-                className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
-                  formData.provedor_mapa === "mapbox"
-                    ? "bg-[#0d2c54] text-white border-[#0d2c54]"
-                    : "bg-white text-[#0d2c54] border-[#e4e8ef] hover:bg-gray-50"
-                }`}
-              >
-                Mapbox
-              </button>
-            </div>
             <p className="text-[10px] text-[#6b7688] mt-2 italic">
-              * O sistema utiliza o provedor selecionado para cálculo de frete, geocodificação e exibição dos mapas.
+              * O sistema utiliza o Mapbox para cálculo de frete, geocodificação e exibição dos mapas.
             </p>
           </div>
         </div>
+
 
         <div className="space-y-4">
           <div>
