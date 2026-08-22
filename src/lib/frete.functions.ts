@@ -25,6 +25,8 @@ const InputSchema = z.object({
 export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
     // 1. Verificar provedor configurado
     const { data: config } = await supabaseAdmin
       .from("config_frete")
@@ -41,9 +43,7 @@ export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
       return { km: res.km };
     }
 
-
     return { km: null };
-
   });
 
 const ReverseSchema = z.object({
@@ -70,6 +70,8 @@ export const reverseGeocode = createServerFn({ method: "POST" })
 export const geocodificarEndereco = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ endereco: z.string() }).parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    
     // 1. Verificar provedor configurado
     const { data: config } = await supabaseAdmin
       .from("config_frete")
@@ -97,11 +99,10 @@ export const geocodificarEndereco = createServerFn({ method: "POST" })
           };
         }
       } catch (err) {
-        console.error("[geocodificarEndereco] Mapbox failed, falling back to Google", err);
+        console.error("[geocodificarEndereco] Mapbox failed", err);
       }
     }
 
     return { success: false, error: "Mapbox não configurado" };
-
   });
 
