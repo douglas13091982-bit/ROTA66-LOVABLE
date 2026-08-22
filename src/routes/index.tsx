@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
             </Button>
           </Link>
 
-          <Link to="/cadastro/loja">
+          <Link to="/cadastro" search={{ tipo: 'loja' }}>
             <Button 
               variant="outline"
               className="w-full h-14 bg-navy/40 hover:bg-navy/60 text-white border-white/20 hover:border-white/40 rounded-none uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2 group transition-all duration-300"
@@ -61,7 +61,7 @@ export const Route = createFileRoute("/")({
             </Button>
           </Link>
 
-          <Link to="/cadastro/entregador">
+          <Link to="/cadastro" search={{ tipo: 'entregador' }}>
             <Button 
               variant="outline"
               className="w-full h-14 bg-navy/40 hover:bg-navy/60 text-white border-white/20 hover:border-white/40 rounded-none uppercase tracking-widest font-bold text-sm flex items-center justify-center gap-2 group transition-all duration-300"
@@ -75,7 +75,7 @@ export const Route = createFileRoute("/")({
         {/* Login Footer */}
         <div className="mt-8 flex items-center gap-2 text-white/70 text-sm tracking-wide">
           <span>Já tem conta?</span>
-          <Link to="/auth" className="text-white font-bold hover:text-red transition-colors flex items-center gap-1 border-b border-white/40 uppercase">
+          <Link to="/login" className="text-white font-bold hover:text-red transition-colors flex items-center gap-1 border-b border-white/40 uppercase">
             ENTRAR
           </Link>
         </div>
