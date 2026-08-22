@@ -23,20 +23,15 @@ export const Route = createFileRoute("/")({
           />
         </div>
 
-        {/* Title and subtitle */}
-        <div className="space-y-3">
-          <h1 className="text-4xl font-bold text-white tracking-[0.25em] uppercase font-bebas">
-            ACELERA
-          </h1>
+        {/* Subtitle - Replaced ACELERA with SEU NOVO DELIVERY per new mockup */}
+        <div className="space-y-4">
+          <p className="text-[12px] font-bold text-white/80 tracking-[0.4em] uppercase">
+            SEU NOVO DELIVERY
+          </p>
           <div className="flex items-center justify-center gap-3">
-            <div className="h-[1px] w-8 bg-white/20" />
-            <p className="text-[10px] font-bold text-white/60 tracking-[0.3em] uppercase">
-              SEU NOVO DELIVERY
-            </p>
-            <div className="h-[1px] w-8 bg-white/20" />
-          </div>
-          <div className="flex justify-center pt-1">
+            <div className="h-[1px] w-12 bg-white/20" />
             <div className="w-1.5 h-1.5 rounded-full bg-red rotate-45 shadow-[0_0_8px_rgba(227,0,15,0.8)]" />
+            <div className="h-[1px] w-12 bg-white/20" />
           </div>
         </div>
 
