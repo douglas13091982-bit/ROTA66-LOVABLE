@@ -3,177 +3,53 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   component: () => (
     <div className="p-8 max-w-4xl mx-auto whitespace-pre-wrap font-mono text-sm">
-      {`Analise todo o projeto de forma completa antes de realizar qualquer alteração e execute uma refatoração profunda e estruturada em toda a base de código.
+      {`## Solicitação de Auditoria e Correção de Erro em Aplicação
 
-Seu objetivo é melhorar a qualidade interna do sistema sem alterar funcionalidades ou comportamento visível da aplicação.
+**Objetivo:** Realizar uma auditoria completa de uma aplicação para identificar e corrigir um erro específico, utilizando múltiplos agentes especializados.
 
-A refatoração deve tornar o código mais limpo, organizado, escalável, padronizado e fácil de manter.
+**Instruções:**
 
-━━━━━━━━━━━━━━━━━━━
+1.  **Coleta de Informações:** Antes de criar quaisquer agentes, o agente principal deve interagir com o usuário para coletar informações detalhadas sobre:
 
-ESCOPO DA REFATORAÇÃO
+    *   A natureza exata do erro específico a ser corrigido.
 
-━━━━━━━━━━━━━━━━━━━
+    *   Detalhes sobre a aplicação em questão (linguagem, framework, arquitetura, ambiente de execução, etc.).
 
-Realize uma revisão completa de:
+    *   Quaisquer sintomas ou comportamentos observados relacionados ao erro.
 
-- Estrutura de pastas e organização do projeto
+    *   O impacto esperado da correção.
 
-- Componentes e sua reutilização
+2.  **Criação de Sub-Agentes:** Com base nas informações coletadas, o agente principal deverá criar múltiplos sub-agentes, cada um com responsabilidades específicas para a auditoria e correção. Exemplos de sub-agentes podem incluir:
 
-- Hooks customizados
+    *   **Agente de Análise de Código:** Responsável por revisar o código-fonte em busca de padrões de erro, vulnerabilidades ou lógica incorreta.
 
-- Lógica de estado (local e global)
+    *   **Agente de Testes de Unidade/Integração:** Focado em criar e executar testes para reproduzir o erro e validar correções.
 
-- Services e camadas de API
+    *   **Agente de Análise de Desempenho:** Para investigar se o erro está relacionado a gargalos de desempenho ou uso ineficiente de recursos.
 
-- Integração com Supabase
+    *   **Agente de Análise de Banco de Dados:** Se aplicável, para verificar a integridade e o comportamento dos dados.
 
-- Queries e manipulação de dados
+    *   **Agente de Verificação de Configuração:** Para garantir que as configurações da aplicação e do ambiente estejam corretas.
 
-- Fluxos de autenticação
+    *   **Agente de Documentação e Relatórios:** Para registrar o processo de auditoria, descobertas e a solução implementada.
 
-- Rotas e estrutura de navegação
+3.  **Execução da Auditoria:** Os sub-agentes deverão executar suas tarefas de forma coordenada, compartilhando informações relevantes entre si e com o agente principal.
 
-- Tipagem (TypeScript se aplicável)
+4.  **Correção e Validação:** Após a identificação da causa raiz do erro, o agente principal, em conjunto com os sub-agentes apropriados, deverá propor e implementar a correção. A validação da correção deve ser realizada através de testes rigorosos.
 
-- Lógica duplicada ou redundante
+5.  **Relatório Final:** Ao final do processo, um relatório detalhado deve ser gerado, documentando o erro, a metodologia de auditoria, as descobertas, a solução implementada e os resultados da validação.
 
-- Funções grandes ou mal divididas
+**Requisitos Técnicos:**
 
-- Acoplamento excessivo entre componentes
+*   Capacidade de gerenciar e orquestrar múltiplos agentes.
 
-- Código difícil de manter ou entender
+*   Habilidade de interpretar e processar informações técnicas sobre aplicações.
 
-- Imports desorganizados
+*   Mecanismos de comunicação e compartilhamento de dados entre agentes.
 
-- Regras de negócio misturadas com UI
+*   Capacidade de gerar e executar testes automatizados.
 
-- Manipulação de efeitos colaterais
-
-━━━━━━━━━━━━━━━━━━━
-
-OBJETIVOS PRINCIPAIS
-
-━━━━━━━━━━━━━━━━━━━
-
-- Reduzir duplicação de código
-
-- Melhorar legibilidade e clareza
-
-- Melhorar separação de responsabilidades
-
-- Melhorar reutilização de componentes
-
-- Melhorar organização da arquitetura
-
-- Criar padrões consistentes no projeto
-
-- Facilitar manutenção futura
-
-- Reduzir complexidade desnecessária
-
-- Melhorar escalabilidade do sistema
-
-- Tornar o código mais previsível e limpo
-
-━━━━━━━━━━━━━━━━━━━
-
-DIRETRIZES DE REFACTORING
-
-━━━━━━━━━━━━━━━━━━━
-
-- NÃO alterar funcionalidades existentes
-
-- NÃO mudar comportamento da interface
-
-- NÃO modificar design visual sem necessidade
-
-- NÃO quebrar fluxos já existentes
-
-Priorize sempre:
-
-- Separação de responsabilidades (UI / lógica / dados)
-
-- Componentização inteligente
-
-- Reutilização de código
-
-- Funções pequenas e bem definidas
-
-- Nomeação clara e consistente
-
-- Eliminação de código duplicado
-
-- Organização por domínio ou feature
-
-- Redução de complexidade por arquivo
-
-- Padronização de padrões de código
-
-━━━━━━━━━━━━━━━━━━━
-
-PADRÕES DE QUALIDADE
-
-━━━━━━━━━━━━━━━━━━━
-
-- Código limpo e legível
-
-- Arquitetura consistente em todo projeto
-
-- Componentes desacoplados
-
-- Hooks reutilizáveis e bem definidos
-
-- Serviços centralizados para API
-
-- Separação clara entre frontend e lógica de negócio
-
-- Estrutura previsível e escalável
-
-━━━━━━━━━━━━━━━━━━━
-
-PROCESSO OBRIGATÓRIO
-
-━━━━━━━━━━━━━━━━━━━
-
-1. Analise toda a base de código
-
-2. Identifique pontos de melhoria estrutural
-
-3. Liste problemas de organização e duplicação
-
-4. Priorize melhorias por impacto
-
-5. Execute refatorações de forma segura
-
-6. Garanta que nada do sistema quebre
-
-7. Valide consistência após mudanças
-
-━━━━━━━━━━━━━━━━━━━
-
-RESULTADO ESPERADO
-
-━━━━━━━━━━━━━━━━━━━
-
-Ao final da refatoração, o projeto deve estar:
-
-- Muito mais organizado
-
-- Fácil de entender e manter
-
-- Escalável para novas funcionalidades
-
-- Livre de duplicações desnecessárias
-
-- Com arquitetura mais profissional
-
-- Com padrões consistentes
-
-- Mais limpo e previsível
-
-- Sem alterar nenhuma funcionalidade existente`}
+*   Geração de relatórios estruturados.`}
       
       <div className="mt-8 border-t pt-4 font-sans">
         <Link to="/login" className="text-blue-600 hover:underline">Ir para o Sistema ROTA 66</Link>
