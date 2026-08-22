@@ -50,30 +50,38 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
 
     map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
 
+    const bounds = new mapboxgl.LngLatBounds();
+
     // Marcador da Loja
     if (lojaCoord) {
       const el = document.createElement("div");
       el.innerHTML = renderToStaticMarkup(
-        <div className="bg-white p-1 rounded-full shadow-lg border border-border">
+        <div className="bg-white p-1 rounded-full shadow-lg border border-[#0d2c54]">
           <Store className="w-5 h-5 text-[#0d2c54]" />
         </div>
       );
       new mapboxgl.Marker(el)
         .setLngLat([lojaCoord.lng, lojaCoord.lat])
         .addTo(map.current);
+      bounds.extend([lojaCoord.lng, lojaCoord.lat]);
     }
 
     // Marcador da Entrega
     if (entregaCoord) {
       const el = document.createElement("div");
       el.innerHTML = renderToStaticMarkup(
-        <div className="bg-white p-1 rounded-full shadow-lg border-2 border-red-600">
-          <MapPin className="w-5 h-5 text-red-600" fill="currentColor" fillOpacity={0.2} />
+        <div className="bg-white p-1 rounded-full shadow-lg border-2 border-[#e3000f]">
+          <MapPin className="w-5 h-5 text-[#e3000f]" fill="currentColor" fillOpacity={0.2} />
         </div>
       );
       new mapboxgl.Marker(el)
         .setLngLat([entregaCoord.lng, entregaCoord.lat])
         .addTo(map.current);
+      bounds.extend([entregaCoord.lng, entregaCoord.lat]);
+    }
+
+    if (!bounds.isEmpty()) {
+      map.current.fitBounds(bounds, { padding: 50, maxZoom: 15 });
     }
 
     return () => {
@@ -85,24 +93,13 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
   useEffect(() => {
     if (!map.current || !entregadorId) return;
 
-    async function fetchPosicao() {
-      const { data, error } = await (supabase.from("entregadores" as any)
-        .select("lat, lng")
-        .eq("id", entregadorId)
-        .maybeSingle() as any);
-      
-      if (!error && data?.lat && data?.lng) {
-        updateEntregadorMarker(data.lat, data.lng);
-      }
-    }
-
     function updateEntregadorMarker(lat: number, lng: number) {
       if (!map.current) return;
 
       if (!entregadorMarker.current) {
         const el = document.createElement("div");
         el.innerHTML = renderToStaticMarkup(
-          <div className="bg-[#0d2c54] p-1.5 rounded-full shadow-xl border-2 border-white animate-bounce">
+          <div className="bg-[#e3000f] p-1.5 rounded-full shadow-xl border-2 border-white animate-bounce">
             <Truck className="w-5 h-5 text-white" />
           </div>
         );
@@ -111,6 +108,17 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
           .addTo(map.current);
       } else {
         entregadorMarker.current.setLngLat([lng, lat]);
+      }
+    }
+
+    async function fetchPosicao() {
+      const { data, error } = await (supabase.from("entregadores" as any)
+        .select("lat, lng")
+        .eq("id", entregadorId)
+        .maybeSingle() as any);
+      
+      if (!error && data?.lat && data?.lng) {
+        updateEntregadorMarker(data.lat, data.lng);
       }
     }
 
@@ -147,7 +155,7 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
   if (!mapboxToken || (!lojaCoord && !entregaCoord)) return null;
 
   return (
-    <div className="w-full h-[300px] rounded-xl overflow-hidden shadow-inner border border-border relative mt-4">
+    <div className="w-full h-[320px] rounded-2xl overflow-hidden shadow-lg border border-slate-100 relative mt-2 bg-slate-50">
       <div ref={mapContainer} className="absolute inset-0" />
     </div>
   );
