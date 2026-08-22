@@ -649,6 +649,7 @@ export type Database = {
           frete_gratis_minimo: number | null
           google_maps_key: string | null
           id: number
+          mapbox_access_token: string | null
           modo_calculo: string | null
           origem_bairro: string | null
           origem_cep: string | null
@@ -658,6 +659,7 @@ export type Database = {
           origem_lng: number | null
           origem_numero: string | null
           origem_uf: string | null
+          provedor_mapa: string | null
           status_operacional: boolean | null
           updated_at: string | null
           valor_base: number | null
@@ -670,6 +672,7 @@ export type Database = {
           frete_gratis_minimo?: number | null
           google_maps_key?: string | null
           id?: number
+          mapbox_access_token?: string | null
           modo_calculo?: string | null
           origem_bairro?: string | null
           origem_cep?: string | null
@@ -679,6 +682,7 @@ export type Database = {
           origem_lng?: number | null
           origem_numero?: string | null
           origem_uf?: string | null
+          provedor_mapa?: string | null
           status_operacional?: boolean | null
           updated_at?: string | null
           valor_base?: number | null
@@ -691,6 +695,7 @@ export type Database = {
           frete_gratis_minimo?: number | null
           google_maps_key?: string | null
           id?: number
+          mapbox_access_token?: string | null
           modo_calculo?: string | null
           origem_bairro?: string | null
           origem_cep?: string | null
@@ -700,6 +705,7 @@ export type Database = {
           origem_lng?: number | null
           origem_numero?: string | null
           origem_uf?: string | null
+          provedor_mapa?: string | null
           status_operacional?: boolean | null
           updated_at?: string | null
           valor_base?: number | null

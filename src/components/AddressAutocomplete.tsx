@@ -1,25 +1,31 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  fetchAutocompleteAddressSuggestions,
-  fetchPlaceDetails,
-  loadGoogleMaps,
-  type AddressSelection,
-  type AddressSuggestion,
-  type PlaceSelection,
-} from "@/lib/google-maps-places";
+import { useServerFn } from "@tanstack/react-start";
+import { fetchAddressSuggestions, fetchAddressDetails, type MapboxSuggestion } from "@/lib/address-autocomplete.functions";
 
-export type { AddressSelection, PlaceSelection } from "@/lib/google-maps-places";
+export type AddressSelection = {
+  endereco: string;
+  cidade: string;
+  estado: string;
+  lat: number | null;
+  lng: number | null;
+};
+
+export type PlaceSelection = {
+  address: string;
+  lat: number | null;
+  lng: number | null;
+};
+
+
 
 type Props = {
   label?: string;
   required?: boolean;
   value: string;
   onChange: (v: string) => void;
-  /** Novo: retorna endereço + cidade + estado + coords */
   onSelect?: (s: AddressSelection) => void;
-  /** Legado: retorna { address, lat, lng } */
-  onSelectPlace?: (p: PlaceSelection) => void;
+  onSelectPlace?: (p: { address: string; lat: number | null; lng: number | null }) => void;
   placeholder?: string;
   className?: string;
 };
@@ -34,32 +40,28 @@ export function AddressAutocomplete({
   placeholder = "Comece a digitar o endereço…",
   className,
 }: Props) {
-  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [suggestions, setSuggestions] = useState<MapboxSuggestion[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const sessionTokenRef = useRef<any>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const fieldRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
 
-  useEffect(() => {
-    loadGoogleMaps().catch((e) => setError(e.message));
-  }, []);
+  const runFetchSuggestions = useServerFn(fetchAddressSuggestions);
+  const runFetchDetails = useServerFn(fetchAddressDetails);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const alvo = e.target as Node;
-      // A lista é renderizada via portal no body — precisa ser considerada "dentro".
       if (wrapRef.current?.contains(alvo) || listRef.current?.contains(alvo)) return;
       setOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
-
 
   const aberto = open && suggestions.length > 0;
 
@@ -89,31 +91,32 @@ export function AddressAutocomplete({
     debounceRef.current = setTimeout(async () => {
       try {
         setLoading(true);
-        const result = await fetchAutocompleteAddressSuggestions(input, sessionTokenRef.current);
-        sessionTokenRef.current = result.sessionToken;
-        setSuggestions(result.suggestions);
+        const { suggestions: result } = await runFetchSuggestions({ data: { input } });
+        setSuggestions(result);
         setOpen(true);
       } catch (e: any) {
         setError(e?.message ?? "Erro ao buscar endereço");
       } finally {
         setLoading(false);
       }
-    }, 250);
+    }, 400);
   };
 
-  const handleSelect = async (s: AddressSuggestion) => {
+  const handleSelect = async (s: MapboxSuggestion) => {
     setOpen(false);
     try {
-      sessionTokenRef.current = null;
-      const details = await fetchPlaceDetails(s);
+      setLoading(true);
+      const details = await runFetchDetails({ data: { placeId: s.placeId } });
       onChange(details.endereco);
       if (onSelect) {
-        onSelect(details);
+        onSelect(details as any);
       } else if (onSelectPlace) {
-        onSelectPlace(details);
+        onSelectPlace({ address: details.endereco, lat: details.lat, lng: details.lng });
       }
     } catch (e: any) {
       setError(e?.message ?? "Não foi possível obter detalhes do endereço");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,15 +157,15 @@ export function AddressAutocomplete({
     <div ref={wrapRef} className="relative mb-5">
       <div ref={fieldRef}>
         {label ? (
-        <label className="block">
-          <span className="block text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-2.5">
-            {label} {required && <span className="text-destructive">*</span>}
-          </span>
-          {inputEl}
-        </label>
-      ) : (
-        inputEl
-      )}
+          <label className="block">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-2.5">
+              {label} {required && <span className="text-destructive">*</span>}
+            </span>
+            {inputEl}
+          </label>
+        ) : (
+          inputEl
+        )}
       </div>
       {error && <div className="mt-1 text-[11px] text-destructive">{error}</div>}
       {loading && <div className="mt-1 text-[11px] text-muted-foreground">Buscando…</div>}
@@ -172,7 +175,6 @@ export function AddressAutocomplete({
         createPortal(
           <ul
             ref={listRef}
-
             style={{
               position: "fixed",
               top: rect.top,
