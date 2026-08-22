@@ -1,28 +1,33 @@
-# Corrigir endereço de entrega sem cálculo automático da taxa
+# Plano: Migração para Mapbox
 
-## O que está acontecendo na tela
+Este plano detalha a migração do sistema de mapas, geocodificação e rotas do Google Maps para o Mapbox, visando otimização de custos e performance.
 
-Ao selecionar um cliente salvo (RAFAEL), o endereço aparece preenchido no campo "Endereço de entrega", mas o sistema mostra o aviso "Selecione o endereço no autocomplete para calcular a taxa automaticamente" e não calcula a taxa.
+## Objetivos
+- Substituir a biblioteca Google Maps (JS SDK) pelo Mapbox GL JS no frontend.
+- Migrar as funções de geocodificação e cálculo de rotas no backend para as APIs do Mapbox.
+- Manter a compatibilidade com as funcionalidades atuais (autocomplete de endereços, cálculo de frete por distância, rastreio em tempo real).
 
-Motivo confirmado no código: quando o endereço vem de um cliente salvo, o formulário não tem as coordenadas. Ele tenta descobri-las reaproveitando o **autocomplete** (pega a 1ª sugestão do texto completo do endereço). Esse caminho falha com frequência porque:
+## Etapas de Implementação
 
-- o texto salvo é um endereço formatado completo ("R. Frederico Hubner, 37 - América, Joinville - SC, 89204-280"), e o autocomplete costuma não devolver sugestão para essa string inteira;
-- se a sugestão não vier, ou vier sem coordenada, cai direto no aviso e a taxa fica só na taxa base.
+1.  **Configuração de Infraestrutura**
+    - Criar tabela/campo para armazenar a `mapbox_access_token` nas configurações do sistema.
+    - Configurar o novo conector ou segredo para as chamadas de API do Mapbox no backend.
 
-Ou seja: não é o autocomplete digitado que está quebrado — é a resolução automática do endereço já salvo.
+2.  **Migração do Backend (Server Functions)**
+    - `src/lib/frete.functions.ts`: Substituir chamadas da Google Routes API pela Mapbox Directions API.
+    - `src/lib/geocoding.functions.ts`: Migrar a resolução de endereços para a Mapbox Geocoding API.
 
-## Correção proposta
+3.  **Migração do Frontend (Componentes de Mapa)**
+    - `src/components/MapaPedidos.tsx`: Substituir o componente de mapa e marcadores.
+    - `src/components/AddressAutocomplete.tsx`: Trocar o Google Places Autocomplete pelo Mapbox Search JS ou Geocoding direto.
+    - `src/routes/rastreio/$id.tsx`: Atualizar a visualização do entregador em rota.
 
-1. **Geocodificar o endereço salvo pelo servidor** em vez de depender da primeira sugestão do autocomplete: usar a Geocoding API pelo gateway (mesmo caminho já usado no cálculo de frete) para obter lat/lng do texto do endereço.
-2. **Fallback em cadeia**: geocoding do servidor → se falhar, tentativa via autocomplete (comportamento atual) → só então mostrar o aviso.
-3. **Salvar as coordenadas do cliente**: quando o endereço é resolvido, guardar lat/lng no cadastro do cliente para que nas próximas vezes o cálculo seja imediato, sem nova chamada ao Maps.
-4. **Aviso mais claro e acionável**: em vez do toast genérico, marcar o campo de entrega com um estado "endereço não localizado — reescreva e escolha na lista", para a loja saber exatamente o que fazer.
-5. **Não recalcular à toa**: cache/deduplicação por endereço para evitar chamadas repetidas ao Maps (controle de custo).
+4.  **Ajustes de UI e UX**
+    - Adaptar o estilo do mapa para o padrão "Premium Light" do sistema (Navy + Red).
+    - Garantir que a precisão das rotas e endereços no Brasil seja equivalente à do Google Maps.
 
-## Detalhes técnicos
-
-- `src/lib/frete.functions.ts`: adicionar `geocodificarEndereco` (server fn, POST) chamando `maps/api/geocode/json` pelo gateway do conector Google Maps, com validação Zod do texto e tratamento dos 403 de chave (referrer/serviço bloqueado).
-- `src/hooks/use-pedido-form.ts` (`aplicarCliente`): trocar `resolveAddressToPlace` pela cadeia geocoding → autocomplete; setar `entregaCoords` e sinalizar erro de resolução em estado, não só toast.
-- `src/components/PedidoForm.tsx`: exibir o alerta inline no campo de entrega quando o endereço não tiver coordenadas.
-- Persistência de lat/lng do cliente: reutilizar as colunas de coordenadas do cadastro de clientes se já existirem; caso não existam, incluir migração adicionando `lat`/`lng` na tabela de clientes com os GRANTs e políticas já vigentes da tabela.
-- Sem mudança na regra de frete: `frete_global + taxa_por_pedido_loja` para o cliente, entregador recebe `frete_global`.
+## Detalhes Técnicos
+- **Biblioteca Frontend:** `mapbox-gl` e `@types/mapbox-gl`.
+- **API de Rotas:** Utilizar o perfil `mapbox/driving` para cálculos de frete.
+- **Geocodificação:** Utilizar o tipo `address` com filtro de país (BR/MX) para maior precisão.
+- **Custos:** O Mapbox oferece um free tier generoso para carregamento de mapas, o que reduzirá os custos operacionais do ROTA 66.
