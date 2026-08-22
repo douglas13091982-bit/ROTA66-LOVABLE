@@ -33,10 +33,11 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
   useEffect(() => {
     if (!entregadorId) return;
 
-    // Busca posição inicial
+    // Busca posição inicial usando from("entregadores" as any) para evitar erros de tipagem
+    // caso o modelo gerado esteja dessincronizado ou com RLS restrito no build
     async function fetchPosicao() {
       const { data } = await supabase
-        .from("entregadores")
+        .from("entregadores" as any)
         .select("lat, lng")
         .eq("id", entregadorId)
         .maybeSingle();
@@ -51,14 +52,14 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
     const channel = supabase
       .channel(`entregador_posicao:${entregadorId}`)
       .on(
-        "postgres_changes",
+        "postgres_changes" as any,
         {
           event: "UPDATE",
           schema: "public",
           table: "entregadores",
           filter: `id=eq.${entregadorId}`,
         },
-        (payload) => {
+        (payload: any) => {
           const { lat, lng } = payload.new;
           if (lat && lng) {
             setEntregadorCoord({ lat, lng });
@@ -93,7 +94,7 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
         {lojaCoord && (
           <Marker longitude={lojaCoord.lng} latitude={lojaCoord.lat} anchor="bottom">
             <div className="bg-white p-1 rounded-full shadow-lg border border-border">
-              <Store className="w-5 h-5 text-navy-blue" />
+              <Store className="w-5 h-5 text-[#0d2c54]" />
             </div>
           </Marker>
         )}
@@ -108,7 +109,7 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
 
         {entregadorCoord && (
           <Marker longitude={entregadorCoord.lng} latitude={entregadorCoord.lat} anchor="center">
-            <div className="bg-navy-blue p-1.5 rounded-full shadow-xl border-2 border-white animate-bounce">
+            <div className="bg-[#0d2c54] p-1.5 rounded-full shadow-xl border-2 border-white animate-bounce">
               <Truck className="w-5 h-5 text-white" />
             </div>
           </Marker>
