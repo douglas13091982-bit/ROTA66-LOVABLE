@@ -1,86 +1,71 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import homeBgAsset from "@/assets/home-bg.png.asset.json";
-import { Button } from "@/components/ui/button";
-import { ShoppingBag, Store, Bike } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: () => (
-    <div 
-      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 relative overflow-hidden"
-      style={{ backgroundImage: `url(${homeBgAsset.url})` }}
-    >
-      {/* Overlay for depth */}
-      <div className="absolute inset-0 bg-navy/70 z-0" />
+    <div className="p-8 max-w-4xl mx-auto whitespace-pre-wrap font-sans">
+      <h2 className="text-2xl font-bold mb-4">Solicitação de Auditoria e Correção de Erro em Aplicação</h2>
 
-      {/* Content */}
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center gap-10 text-center">
-        {/* Logo with glow effect */}
-        <div className="w-48 h-48 flex items-center justify-center animate-in fade-in zoom-in duration-1000">
-          <img 
-            src="https://storage.googleapis.com/gpt-engineer-file-uploads/85H1Xj7XI9dnBTV14pAbFErSOmW2/social-images/social-1782498933692-ICONE_APK.webp" 
-            alt="ROTA 66" 
-            className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(227,0,15,0.6)]"
-          />
-        </div>
+      <p className="mb-4">
+        <strong>Objetivo:</strong> Realizar uma auditoria completa de uma aplicação para identificar e corrigir um erro específico, utilizando múltiplos agentes especializados.
+      </p>
 
-        {/* Subtitle - Replaced ACELERA with SEU NOVO DELIVERY per new mockup */}
-        <div className="space-y-4">
-          <p className="text-[12px] font-bold text-white/80 tracking-[0.4em] uppercase">
-            SEU NOVO DELIVERY
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-[1px] w-12 bg-white/20" />
-            <div className="w-1.5 h-1.5 rounded-full bg-red rotate-45 shadow-[0_0_8px_rgba(227,0,15,0.8)]" />
-            <div className="h-[1px] w-12 bg-white/20" />
-          </div>
-        </div>
+      <p className="font-bold mb-2">Instruções:</p>
 
-        {/* Action Buttons */}
-        <div className="w-full space-y-3 px-2">
-          <Link to="/clientes">
-            <Button 
-              className="w-full h-12 bg-red hover:bg-red/90 text-white rounded-none uppercase tracking-[0.2em] font-bold text-xs flex items-center justify-center gap-2 group transition-all duration-300 shadow-lg"
-            >
-              <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              PEÇA AGORA
-            </Button>
-          </Link>
+      <ol className="list-decimal pl-6 mb-4 space-y-4">
+        <li>
+          <strong>Coleta de Informações:</strong> Antes de criar quaisquer agentes, o agente principal deve interagir com o usuário para coletar informações detalhadas sobre:
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>A natureza exata do erro específico a ser corrigido.</li>
+            <li>Detalhes sobre a aplicação em questão (linguagem, framework, arquitetura, ambiente de execução, etc.).</li>
+            <li>Quaisquer sintomas ou comportamentos observados relacionados ao erro.</li>
+            <li>O impacto esperado da correção.</li>
+          </ul>
+        </li>
 
-          <Link to="/cadastro" search={{ role: 'loja_admin' }}>
-            <Button 
-              variant="outline"
-              className="w-full h-12 bg-navy/40 hover:bg-navy/60 text-white border-white/10 hover:border-white/20 rounded-none uppercase tracking-[0.2em] font-bold text-xs flex items-center justify-center gap-2 group transition-all duration-300"
-            >
-              <Store className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              CADASTRAR MINHA LOJA
-            </Button>
-          </Link>
+        <li>
+          <strong>Criação de Sub-Agentes:</strong> Com base nas informações coletadas, o agente principal deverá criar múltiplos sub-agentes, cada um com responsabilidades específicas para a auditoria e correção. Exemplos de sub-agentes podem incluir:
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>Agente de Análise de Código:</strong> Responsável por revisar o código-fonte em busca de padrões de erro, vulnerabilidades ou lógica incorreta.</li>
+            <li><strong>Agente de Testes de Unidade/Integração:</strong> Focado em criar e executar testes para reproduzir o erro e validar correções.</li>
+            <li><strong>Agente de Análise de Desempenho:</strong> Para investigar se o erro está relacionado a gargalos de desempenho ou uso ineficiente de recursos.</li>
+            <li><strong>Agente de Análise de Banco de Dados:</strong> Se aplicável, para verificar a integridade e o comportamento dos dados.</li>
+            <li><strong>Agente de Verificação de Configuração:</strong> Para garantir que as configurações da aplicação e do ambiente estejam corretas.</li>
+            <li><strong>Agente de Documentação e Relatórios:</strong> Para registrar o processo de auditoria, descobertas e a solução implementada.</li>
+          </ul>
+        </li>
 
-          <Link to="/cadastro" search={{ role: 'entregador' }}>
-            <Button 
-              variant="outline"
-              className="w-full h-12 bg-navy/40 hover:bg-navy/60 text-white border-white/10 hover:border-white/20 rounded-none uppercase tracking-[0.2em] font-bold text-xs flex items-center justify-center gap-2 group transition-all duration-300"
-            >
-              <Bike className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              SOU ENTREGADOR
-            </Button>
-          </Link>
-        </div>
+        <li>
+          <strong>Execução da Auditoria:</strong> Os sub-agentes deverão executar suas tarefas de forma coordenada, compartilhando informações relevantes entre si e com o agente principal.
+        </li>
 
-        {/* Login Footer */}
-        <div className="mt-4 flex items-center gap-2 text-white/50 text-[11px] tracking-wider font-medium">
-          <span>JÁ TEM CONTA?</span>
-          <Link to="/login" className="text-white font-bold hover:text-red transition-colors border-b border-white/30 hover:border-red/50 pb-0.5">
-            ENTRAR
-          </Link>
-        </div>
+        <li>
+          <strong>Correção e Validação:</strong> Após a identificação da causa raiz do erro, o agente principal, em conjunto com os sub-agentes apropriados, deverá propor e implementar a correção. A validação da correção deve ser realizada através de testes rigorosos.
+        </li>
+
+        <li>
+          <strong>Relatório Final:</strong> Ao final do processo, um relatório detalhado deve ser gerado, documentando o erro, a metodologia de auditoria, as descobertas, a solução implementada e os resultados da validação.
+        </li>
+      </ol>
+
+      <p className="font-bold mb-2">Requisitos Técnicos:</p>
+
+      <ul className="list-disc pl-6 mb-8 space-y-1">
+        <li>Capacidade de gerenciar e orquestrar múltiplos agentes.</li>
+        <li>Habilidade de interpretar e processar informações técnicas sobre aplicações.</li>
+        <li>Mecanismos de comunicação e compartilhamento de dados entre agentes.</li>
+        <li>Capacidade de gerar e executar testes automatizados.</li>
+        <li>Geração de relatórios estruturados.</li>
+      </ul>
+      
+      <div className="border-t pt-4">
+        <Link to="/login" className="text-blue-600 hover:underline">Ir para o Sistema ROTA 66</Link>
       </div>
     </div>
   ),
   head: () => ({
     meta: [
-      { title: "ROTA 66 - Seu Novo Delivery" },
-      { name: "description", content: "Peça agora, cadastre sua loja ou seja um entregador na ROTA 66." }
+      { title: "Solicitação de Auditoria — ROTA 66" },
+      { name: "description", content: "Documento de solicitação de auditoria e correção de erro." }
     ]
   })
 });
