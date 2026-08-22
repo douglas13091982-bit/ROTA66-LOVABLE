@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { Bike, Loader2, MapPin } from "lucide-react";
-import { useServerFn, useQuery } from "@tanstack/react-start";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
 import { getConfigFrete } from "@/features/admin-config-frete/logic/config-frete.functions";
 import mapboxgl from "mapbox-gl";
@@ -114,7 +116,43 @@ export function EntregadoresMapaTempoReal({
   lojaId?: string;
   title?: string;
 }) {
+  const { data: config } = useQuery({
+    queryKey: ["config_frete"],
+    queryFn: async () => {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data } = await supabase
+        .from("config_frete")
+        .select("*")
+        .eq("id", "singleton" as any)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  const provedor = (config as any)?.provedor_mapa ?? "google";
+  const mapboxToken = (config as any)?.mapbox_access_token;
+
+  if (provedor === "mapbox" && mapboxToken) {
+    const { EntregadoresMapaMapbox } = require("./EntregadoresMapaMapbox");
+    return (
+      <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <Bike className="h-4 w-4 text-emerald-400" />
+            <h3 className="font-display tracking-wide text-lg text-white">{title}</h3>
+          </div>
+        </div>
+        <EntregadoresMapaMapbox 
+          source={source} 
+          lojaId={lojaId} 
+          accessToken={mapboxToken} 
+        />
+      </div>
+    );
+  }
+
   const mapDivRef = useRef<HTMLDivElement | null>(null);
+
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
   const stageRef = useRef<Map<string, Stage>>(new Map());
