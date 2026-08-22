@@ -57,8 +57,9 @@ export const fetchAddressSuggestions = createServerFn({ method: "POST" })
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "X-Connection-Api-Key": connKey,
-        },
+        } as Record<string, string>,
       }
+
     );
     const json = await resp.json();
     const suggestions: MapboxSuggestion[] = (json.predictions ?? []).map((p: any) => ({
