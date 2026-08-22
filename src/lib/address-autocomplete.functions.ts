@@ -29,11 +29,11 @@ export const fetchAddressSuggestions = createServerFn({ method: "POST" })
       .eq("id", "singleton" as any)
       .maybeSingle();
 
-    if ((config as any)?.provedor_mapa === "mapbox" && (config as any)?.mapbox_access_token) {
-      const token = (config as any).mapbox_access_token;
+    const token = (config as any)?.mapbox_access_token;
+    if (token) {
       const lang = i18nConfig.locale.split('-')[0];
       const resp = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.input)}.json?access_token=${token}&language=${lang}&country=br&types=address,poi,place`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.input)}.json?access_token=${token}&language=${lang}&country=br,mx&types=address,poi,place`
       );
       const json = await resp.json();
       const suggestions: MapboxSuggestion[] = (json.features ?? []).map((f: any) => ({
@@ -44,34 +44,11 @@ export const fetchAddressSuggestions = createServerFn({ method: "POST" })
       return { suggestions, provider: "mapbox" };
     }
 
-    // Fallback/Default Google via Gateway
-    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
-    const apiKey = process.env.LOVABLE_API_KEY;
-    const connKey = process.env.GOOGLE_MAPS_API_KEY;
-
-    if (!apiKey || !connKey) return { suggestions: [], provider: "none" };
-
-    const resp = await fetch(
-      `${gatewayUrl}/maps/api/place/autocomplete/json?input=${encodeURIComponent(data.input)}&language=${i18nConfig.locale}&components=country:br`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "X-Connection-Api-Key": connKey,
-        } as Record<string, string>,
-      }
-
-    );
-    const json = await resp.json();
-    const suggestions: MapboxSuggestion[] = (json.predictions ?? []).map((p: any) => ({
-      placeId: p.place_id,
-      primary: p.structured_formatting?.main_text ?? p.description,
-      secondary: p.structured_formatting?.secondary_text ?? "",
-    }));
-    return { suggestions, provider: "google" };
+    return { suggestions: [], provider: "none" };
   });
 
 /**
- * Servidor: Busca detalhes de um local
+ * Servidor: Busca detalhes de um local (Mapbox Only)
  */
 export const fetchAddressDetails = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => DetailsSchema.parse(data))
@@ -83,8 +60,8 @@ export const fetchAddressDetails = createServerFn({ method: "POST" })
       .eq("id", "singleton" as any)
       .maybeSingle();
 
-    if ((config as any)?.provedor_mapa === "mapbox" && (config as any)?.mapbox_access_token) {
-      const token = (config as any).mapbox_access_token;
+    const token = (config as any)?.mapbox_access_token;
+    if (token) {
       const resp = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.placeId)}.json?access_token=${token}`
       );
@@ -106,34 +83,6 @@ export const fetchAddressDetails = createServerFn({ method: "POST" })
       };
     }
 
-    // Google details via Gateway
-    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
-    const apiKey = process.env.LOVABLE_API_KEY;
-    const connKey = process.env.GOOGLE_MAPS_API_KEY;
-
-    const resp = await fetch(
-      `${gatewayUrl}/maps/api/place/details/json?place_id=${data.placeId}&language=${i18nConfig.locale}&fields=formatted_address,address_components,geometry`,
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "X-Connection-Api-Key": connKey,
-        } as Record<string, string>,
-      }
-
-    );
-    const json = await resp.json();
-    const result = json.result;
-    if (!result) throw new Error("Local não encontrado no Google");
-
-    const comps = result.address_components ?? [];
-    const getComp = (t: string) => comps.find((c: any) => c.types.includes(t))?.long_name ?? "";
-    const getShort = (t: string) => comps.find((c: any) => c.types.includes(t))?.short_name ?? "";
-
-    return {
-      endereco: result.formatted_address,
-      cidade: getComp("administrative_area_level_2") || getComp("locality"),
-      estado: getShort("administrative_area_level_1"),
-      lat: result.geometry.location.lat,
-      lng: result.geometry.location.lng,
-    };
+    throw new Error("Mapbox não configurado");
   });
+
