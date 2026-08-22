@@ -33,22 +33,19 @@ export function RastreioMapa({ pedidoId, lojaCoord, entregaCoord, entregadorId }
   useEffect(() => {
     if (!entregadorId) return;
 
-    // Busca posição inicial usando from("entregadores" as any) para evitar erros de tipagem
-    // caso o modelo gerado esteja dessincronizado ou com RLS restrito no build
     async function fetchPosicao() {
-      const { data } = await supabase
-        .from("entregadores" as any)
+      // Usando uma abordagem mais robusta para bypassar o type inference do PostgREST no build
+      const { data, error } = await (supabase.from("entregadores" as any)
         .select("lat, lng")
         .eq("id", entregadorId)
-        .maybeSingle();
+        .maybeSingle() as Promise<any>);
       
-      if (data?.lat && data?.lng) {
+      if (!error && data?.lat && data?.lng) {
         setEntregadorCoord({ lat: data.lat, lng: data.lng });
       }
     }
     fetchPosicao();
 
-    // Subscreve em tempo real
     const channel = supabase
       .channel(`entregador_posicao:${entregadorId}`)
       .on(
