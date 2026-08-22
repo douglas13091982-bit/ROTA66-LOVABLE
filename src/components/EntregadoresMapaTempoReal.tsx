@@ -2,10 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { Bike, Loader2, MapPin } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
+import { useServerFn, useQuery } from "@tanstack/react-start";
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
+import { getConfigFrete } from "@/features/admin-config-frete/logic/config-frete.functions";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 type Stage = "livre" | "indo_coletar" | "chegou_coleta" | "em_rota_entrega";
+
 
 type Entregador = {
   entregador_id: string;
