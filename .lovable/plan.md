@@ -1,14 +1,21 @@
-# Plano: Atualização de Texto na Página Inicial
+---
+name: Atualizar Texto da Home
+description: Substitui o conteúdo da página inicial pelo texto literal da solicitação de auditoria.
+type: feature
+---
 
-O objetivo é substituir o conteúdo textual atual da rota `/` pelo novo texto solicitado, mantendo o formato literal conforme as instruções.
+# Plano de Atualização do Texto da Home
 
-## Alterações Propostas
+O usuário solicitou a substituição do texto na página inicial (`src/routes/index.tsx`) pelo conteúdo literal da "Solicitação de Auditoria e Correção de Erro em Aplicação".
 
-### Frontend
-*   **src/routes/index.tsx**: 
-    *   Substituir o bloco de texto atual dentro do componente da rota pelo novo texto solicitado.
-    *   Garantir que o texto seja exibido literalmente, mantendo a estrutura de `whitespace-pre-wrap` e `font-mono`.
+## Ações
+
+1. **Atualizar `src/routes/index.tsx`**:
+   - Substituir o texto atual no template pelo novo conteúdo fornecido.
+   - Manter a formatação `whitespace-pre-wrap` para preservar quebras de linha.
+   - Manter o link para o sistema.
 
 ## Detalhes Técnicos
-*   O texto será inserido como uma template string dentro do JSX.
-*   Nenhuma alteração lógica ou de funcionalidade será realizada, apenas a troca do conteúdo visual.
+
+- Arquivo: `src/routes/index.tsx`
+- Mudança: Atualização da string literal dentro do componente da rota.
