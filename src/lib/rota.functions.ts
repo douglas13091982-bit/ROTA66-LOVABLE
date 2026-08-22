@@ -147,7 +147,7 @@ async function pickEntregador(
     carga: number;
   };
   const scores: Score[] = online.map((o, i) => {
-    const cell = matrix?.find((c) => c.originIndex === i && c.destinationIndex === 0);
+    const cell = matrix?.find((c: any) => c.originIndex === i && c.destinationIndex === 0);
     return {
       entregadorId: o.entregador_id!,
       duracao: cell?.ok ? cell.durationSeconds : null,

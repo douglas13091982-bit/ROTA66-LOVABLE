@@ -1,4 +1,6 @@
+import { reverseGeocode as rg } from "./reverse-geocode.functions";
 import { i18nConfig } from "./i18n-config";
+
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { mapboxCalcularDistancia } from "./mapbox.functions";
@@ -55,9 +57,10 @@ const ReverseSchema = z.object({
 export const reverseGeocode = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => ReverseSchema.parse(data))
   .handler(async ({ data }) => {
-    const res = await reverseGeocode({ data });
+    const res = await rg({ data });
     return { address: res.address };
   });
+
 
 
 /**
