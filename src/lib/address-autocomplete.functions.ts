@@ -116,8 +116,9 @@ export const fetchAddressDetails = createServerFn({ method: "POST" })
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "X-Connection-Api-Key": connKey,
-        },
+        } as Record<string, string>,
       }
+
     );
     const json = await resp.json();
     const result = json.result;
