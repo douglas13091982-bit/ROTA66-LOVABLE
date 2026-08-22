@@ -21,11 +21,9 @@ function calcularTarifaPorFaixa(km: number, config: any, faixas: any[]) {
 
   if (km <= kmBase) return base;
 
-  // Busca a primeira faixa que cubra este KM
   const faixa = faixas.find((f) => km <= Number(f.km_ate));
   if (faixa) return Number(faixa.valor);
 
-  // Se exceder a última faixa, cobrar adicional por KM excedente da última faixa
   const ultima = faixas[faixas.length - 1];
   if (ultima) {
     const adicional = Number(config.adicional_km_excedente || 0);
@@ -33,16 +31,24 @@ function calcularTarifaPorFaixa(km: number, config: any, faixas: any[]) {
     return Number(ultima.valor) + excedente * adicional;
   }
 
-  // Fallback se não houver faixas: base + excedente do km_base
   const adicional = Number(config.adicional_km_excedente || 0);
   const excedente = km - kmBase;
   return base + excedente * adicional;
 }
 
 export function useTarifaEntrega(
-  origem: { lat: number; lng: number } | null,
-  destino: { lat: number; lng: number } | null,
+  lojaIdOrOrigem: string | { lat: number; lng: number } | null,
+  origemOrDestino: { lat: number | null; lng: number | null } | null,
+  destinoOrRetorno: { lat: number | null; lng: number | null } | null,
+  retornoMaquinaParam?: boolean
 ) {
+  // Overload detection
+  const isLegacy = typeof lojaIdOrOrigem === "string";
+  
+  const origem = (isLegacy ? origemOrDestino : lojaIdOrOrigem) as { lat: number; lng: number } | null;
+  const destino = (isLegacy ? destinoOrRetorno : origemOrDestino) as { lat: number; lng: number } | null;
+  const retornoMaquina = isLegacy ? retornoMaquinaParam : (destinoOrRetorno as unknown as boolean);
+
   const [distancia, setDistancia] = useState<number | null>(null);
   const [tarifa, setTarifa] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -54,14 +60,14 @@ export function useTarifaEntrega(
   useEffect(() => {
     async function load() {
       const { data: c } = await supabase
-        .from("config_frete")
+        .from("config_frete" as any)
         .select("*")
         .eq("id", "singleton" as any)
         .maybeSingle();
       setConfig(c);
 
       const { data: f } = await supabase
-        .from("config_frete_faixas")
+        .from("config_frete_faixas" as any)
         .select("*")
         .order("km_ate", { ascending: true });
       setFaixas(f || []);
@@ -69,9 +75,11 @@ export function useTarifaEntrega(
     load();
   }, []);
 
+  const adicionalRetorno = retornoMaquina ? Number(config?.taxa_retorno_maquina || 0) : 0;
+
   useEffect(() => {
     async function calculate() {
-      if (!origem || !destino) {
+      if (!origem?.lat || !origem?.lng || !destino?.lat || !destino?.lng) {
         setDistancia(null);
         setTarifa(0);
         return;
@@ -79,7 +87,13 @@ export function useTarifaEntrega(
 
       setLoading(true);
       try {
-        const res = await runCalcularDistancia({ data: { origem, destino } });
+        const res = await runCalcularDistancia({ 
+          data: { 
+            origem: { lat: origem.lat, lng: origem.lng }, 
+            destino: { lat: destino.lat, lng: destino.lng } 
+          } 
+        });
+        
         let km = res.km;
 
         if (km === null || km === undefined) {
@@ -94,19 +108,29 @@ export function useTarifaEntrega(
         }
 
         const t = calcularTarifaPorFaixa(km, config, faixas);
-        setTarifa(t);
+        setTarifa(t + adicionalRetorno);
       } catch (err) {
         console.error("[use-tarifa-entrega] Error:", err);
         const km = haversineKm(origem.lat, origem.lng, destino.lat, destino.lng);
         setDistancia(km);
-        setTarifa(calcularTarifaPorFaixa(km, config, faixas));
+        setTarifa(calcularTarifaPorFaixa(km, config, faixas) + adicionalRetorno);
       } finally {
         setLoading(false);
       }
     }
 
     calculate();
-  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, config, faixas, runCalcularDistancia]);
+  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, config, faixas, runCalcularDistancia, adicionalRetorno]);
 
-  return { distancia, tarifa, loading };
+  // Compatibility mapping
+  return { 
+    distancia, 
+    tarifa, 
+    loading,
+    // Legacy support
+    taxa: tarifa,
+    info: { km: distancia },
+    setTaxa: () => {},
+    adicionalRetorno
+  };
 }
