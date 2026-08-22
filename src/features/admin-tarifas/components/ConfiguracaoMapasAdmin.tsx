@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,17 +31,14 @@ export function ConfiguracaoMapasAdmin() {
   });
 
   // Sincroniza estado local quando os dados carregam
-  useState(() => {
+  useEffect(() => {
     if (config) {
       setFormData({
         provedor_mapa: config.provedor_mapa || "google",
         mapbox_access_token: config.mapbox_access_token || "",
       });
     }
-  });
-
-  const atualProvedor = formData.provedor_mapa || config?.provedor_mapa || "google";
-  const atualToken = formData.mapbox_access_token !== undefined ? formData.mapbox_access_token : config?.mapbox_access_token || "";
+  }, [config]);
 
   async function salvar() {
     setSalvando(true);
@@ -49,8 +46,8 @@ export function ConfiguracaoMapasAdmin() {
       const { error } = await supabase
         .from("config_frete")
         .update({
-          provedor_mapa: atualProvedor,
-          mapbox_access_token: atualToken,
+          provedor_mapa: formData.provedor_mapa,
+          mapbox_access_token: formData.mapbox_access_token,
         })
         .eq("id", "singleton");
       
@@ -65,13 +62,13 @@ export function ConfiguracaoMapasAdmin() {
   }
 
   async function testarMapbox() {
-    if (!atualToken) {
+    if (!formData.mapbox_access_token) {
       toast.error("Insira um token para testar");
       return;
     }
     setTestando(true);
     try {
-      const res = await runTestarConexao({ data: { accessToken: atualToken } });
+      const res = await runTestarConexao({ data: { accessToken: formData.mapbox_access_token } });
       if (res.success) {
         toast.success("Conexão com Mapbox validada com sucesso!");
       } else {
@@ -104,9 +101,9 @@ export function ConfiguracaoMapasAdmin() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, provedor_mapa: "google" })}
+                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "google" }))}
                 className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
-                  atualProvedor === "google"
+                  formData.provedor_mapa === "google"
                     ? "bg-[#0d2c54] text-white border-[#0d2c54]"
                     : "bg-white text-[#0d2c54] border-[#e4e8ef] hover:bg-gray-50"
                 }`}
@@ -115,9 +112,9 @@ export function ConfiguracaoMapasAdmin() {
               </button>
               <button
                 type="button"
-                onClick={() => setFormData({ ...formData, provedor_mapa: "mapbox" })}
+                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "mapbox" }))}
                 className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
-                  atualProvedor === "mapbox"
+                  formData.provedor_mapa === "mapbox"
                     ? "bg-[#0d2c54] text-white border-[#0d2c54]"
                     : "bg-white text-[#0d2c54] border-[#e4e8ef] hover:bg-gray-50"
                 }`}
@@ -139,15 +136,15 @@ export function ConfiguracaoMapasAdmin() {
             <div className="flex gap-2">
               <input
                 type="password"
-                value={atualToken}
-                onChange={(e) => setFormData({ ...formData, mapbox_access_token: e.target.value })}
+                value={formData.mapbox_access_token}
+                onChange={(e) => setFormData(prev => ({ ...prev, mapbox_access_token: e.target.value }))}
                 placeholder="pk.ey..."
                 className="flex-1 h-11 border border-[#e4e8ef] bg-white px-3 text-[#0d2c54] text-sm focus:outline-none focus:border-[#0d2c54] transition-colors"
               />
               <button
                 type="button"
                 onClick={testarMapbox}
-                disabled={testando || !atualToken}
+                disabled={testando || !formData.mapbox_access_token}
                 className="h-11 px-4 border border-[#0d2c54] text-[#0d2c54] font-bold text-[10px] uppercase tracking-widest hover:bg-[#0d2c54] hover:text-white transition-all disabled:opacity-30 flex items-center gap-2"
               >
                 <ShieldCheck className="h-3.5 w-3.5" />
