@@ -3,6 +3,7 @@ import { useAdminTarifas } from "./hooks/use-admin-tarifas";
 import { NovaTarifaForm } from "./components/NovaTarifaForm";
 import { TarifasTable } from "./components/TarifasTable";
 import { RetornoMaquinaConfig } from "./components/RetornoMaquinaConfig";
+import { ConfiguracaoMapasAdmin } from "./components/ConfiguracaoMapasAdmin";
 
 export function AdminTarifasPage() {
   const { data, isLoading, add, remove, toggle } = useAdminTarifas();
