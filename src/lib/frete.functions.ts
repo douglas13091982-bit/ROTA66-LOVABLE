@@ -26,10 +26,11 @@ export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
     // 1. Verificar provedor configurado
     const { data: config } = await supabaseAdmin
       .from("config_frete")
-      .select("provedor_mapa, mapbox_access_token")
-      .single();
+      .select("*")
+      .eq("id", "singleton" as any)
+      .maybeSingle();
 
-    if (config?.provedor_mapa === "mapbox") {
+    if ((config as any)?.provedor_mapa === "mapbox") {
       const res = await mapboxCalcularDistancia({
         data: {
           waypoints: [data.origem, data.destino]
@@ -37,6 +38,7 @@ export const calcularDistanciaDirigindo = createServerFn({ method: "POST" })
       });
       return { km: res.km };
     }
+
 
     // Fallback para Google (lógica atual)
 
