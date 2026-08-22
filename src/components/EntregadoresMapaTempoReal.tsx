@@ -75,28 +75,10 @@ function pulseIcon(g: any, phase: number, color: string = STAGE_COLORS.livre) {
   };
 }
 
-let mapsLoading: Promise<void> | null = null;
 function loadGoogleMaps(): Promise<void> {
-  if (typeof window === "undefined") return Promise.reject(new Error("no window"));
-  if (window.google?.maps?.Map) return Promise.resolve();
-  if (mapsLoading) return mapsLoading;
-  if (!MAPS_KEY) return Promise.reject(new Error("Google Maps key não configurada"));
-
-  mapsLoading = new Promise<void>((resolve, reject) => {
-    const cbName = `__initMap_${Math.random().toString(36).slice(2)}`;
-    (window as any)[cbName] = () => {
-      delete (window as any)[cbName];
-      resolve();
-    };
-    const s = document.createElement("script");
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&loading=async&callback=${cbName}${TRACKING_ID ? `&channel=${TRACKING_ID}` : ""}`;
-    s.async = true;
-    s.defer = true;
-    s.onerror = () => reject(new Error("Falha ao carregar Google Maps"));
-    document.head.appendChild(s);
-  });
-  return mapsLoading;
+  return Promise.reject(new Error("Google Maps desativado. Use Mapbox."));
 }
+
 
 export function EntregadoresMapaTempoReal({
   source,
@@ -119,7 +101,7 @@ export function EntregadoresMapaTempoReal({
     },
   });
 
-  const provedor = (config as any)?.provedor_mapa ?? "google";
+  const provedor = (config as any)?.provedor_mapa ?? "mapbox";
   const mapboxToken = (config as any)?.mapbox_access_token;
 
   const mapDivRef = useRef<HTMLDivElement | null>(null);

@@ -89,7 +89,7 @@ function CalcularFretePage() {
   const { data: resultado, isFetching: calculando } = useQuery({
     queryKey: [
       "calc-frete-publico",
-      "google-routes-v2",
+      "mapbox-v1",
       coletaCoords?.lat,
       coletaCoords?.lng,
       entregaCoords?.lat,

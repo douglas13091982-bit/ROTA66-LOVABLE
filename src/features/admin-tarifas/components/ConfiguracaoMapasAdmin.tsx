@@ -34,7 +34,7 @@ export function ConfiguracaoMapasAdmin() {
   useEffect(() => {
     if (config) {
       setFormData({
-        provedor_mapa: config.provedor_mapa || "google",
+        provedor_mapa: config.provedor_mapa || "mapbox",
         mapbox_access_token: config.mapbox_access_token || "",
       });
     }
@@ -98,18 +98,16 @@ export function ConfiguracaoMapasAdmin() {
             <label className="block text-[11px] font-bold uppercase tracking-wider text-[#6b7688] mb-1.5 flex items-center gap-1.5">
               <Globe className="h-3 w-3" /> Provedor de Mapas e Rotas
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <button
                 type="button"
-                onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "google" }))}
-                className={`flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all ${
-                  formData.provedor_mapa === "google"
-                    ? "bg-[#0d2c54] text-white border-[#0d2c54]"
-                    : "bg-white text-[#0d2c54] border-[#e4e8ef] hover:bg-gray-50"
-                }`}
+                disabled
+                className="flex items-center justify-center gap-2 px-4 py-3 border font-bold text-xs uppercase tracking-widest transition-all bg-[#0d2c54] text-white border-[#0d2c54]"
               >
-                Google Maps
+                Mapbox (Ativo)
               </button>
+            </div>
+
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, provedor_mapa: "mapbox" }))}
