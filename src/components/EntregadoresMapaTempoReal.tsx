@@ -4,14 +4,10 @@ import { subscribeLazy } from "@/lib/realtime-lazy";
 import { Bike, Loader2, MapPin } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-
 import { reverseGeocode } from "@/lib/reverse-geocode.functions";
-
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+import { EntregadoresMapaMapbox } from "./EntregadoresMapaMapbox";
 
 type Stage = "livre" | "indo_coletar" | "chegou_coleta" | "em_rota_entrega";
-
 
 type Entregador = {
   entregador_id: string;
@@ -23,12 +19,11 @@ type Entregador = {
   stage?: Stage | null;
 };
 
-// Cores por estágio do fluxo de entrega
 const STAGE_COLORS: Record<Stage, string> = {
-  livre: "#00D492",           // verde neon — sem pedido
-  indo_coletar: "#3B82F6",    // azul — aceitou, indo coletar
-  chegou_coleta: "#F59E0B",   // âmbar — chegou na coleta
-  em_rota_entrega: "#A855F7", // roxo — em rota de entrega
+  livre: "#00D492",
+  indo_coletar: "#3B82F6",
+  chegou_coleta: "#F59E0B",
+  em_rota_entrega: "#A855F7",
 };
 
 const STAGE_LABELS: Record<Stage, string> = {
@@ -38,9 +33,9 @@ const STAGE_LABELS: Record<Stage, string> = {
   em_rota_entrega: "Em entrega",
 };
 
-
 const MAPS_KEY = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string | undefined;
 const TRACKING_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string | undefined;
+
 const DARK_MAP_STYLE: any[] = [
   { elementType: "geometry", stylers: [{ color: "#0f172a" }] },
   { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
@@ -66,9 +61,8 @@ const DARK_MAP_STYLE: any[] = [
 ];
 
 function pulseIcon(g: any, phase: number, color: string = STAGE_COLORS.livre) {
-  // phase: 0..1
-  const haloR = 10 + phase * 18; // 10 -> 28
-  const haloOpacity = 0.75 * (1 - phase); // 0.75 -> 0
+  const haloR = 10 + phase * 18;
+  const haloOpacity = 0.75 * (1 - phase);
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
     <circle cx="30" cy="30" r="${haloR.toFixed(1)}" fill="${color}" fill-opacity="${haloOpacity.toFixed(2)}"/>
     <circle cx="30" cy="30" r="${(haloR - 3).toFixed(1)}" fill="none" stroke="${color}" stroke-opacity="${(haloOpacity * 0.6).toFixed(2)}" stroke-width="1"/>
@@ -81,12 +75,9 @@ function pulseIcon(g: any, phase: number, color: string = STAGE_COLORS.livre) {
   };
 }
 
-
-
 let mapsLoading: Promise<void> | null = null;
 function loadGoogleMaps(): Promise<void> {
   if (typeof window === "undefined") return Promise.reject(new Error("no window"));
-  
   if (window.google?.maps?.Map) return Promise.resolve();
   if (mapsLoading) return mapsLoading;
   if (!MAPS_KEY) return Promise.reject(new Error("Google Maps key não configurada"));
@@ -119,7 +110,6 @@ export function EntregadoresMapaTempoReal({
   const { data: config } = useQuery({
     queryKey: ["config_frete"],
     queryFn: async () => {
-      const { supabase } = await import("@/integrations/supabase/client");
       const { data } = await supabase
         .from("config_frete")
         .select("*")
@@ -132,27 +122,7 @@ export function EntregadoresMapaTempoReal({
   const provedor = (config as any)?.provedor_mapa ?? "google";
   const mapboxToken = (config as any)?.mapbox_access_token;
 
-  if (provedor === "mapbox" && mapboxToken) {
-    const { EntregadoresMapaMapbox } = require("./EntregadoresMapaMapbox");
-    return (
-      <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-          <div className="flex items-center gap-2">
-            <Bike className="h-4 w-4 text-emerald-400" />
-            <h3 className="font-display tracking-wide text-lg text-white">{title}</h3>
-          </div>
-        </div>
-        <EntregadoresMapaMapbox 
-          source={source} 
-          lojaId={lojaId} 
-          accessToken={mapboxToken} 
-        />
-      </div>
-    );
-  }
-
   const mapDivRef = useRef<HTMLDivElement | null>(null);
-
   const mapRef = useRef<any>(null);
   const markersRef = useRef<Map<string, any>>(new Map());
   const stageRef = useRef<Map<string, Stage>>(new Map());
@@ -164,8 +134,6 @@ export function EntregadoresMapaTempoReal({
   const [diag, setDiag] = useState<{ vinculados: number; onlineSemGps: number } | null>(null);
   const runReverseGeocode = useServerFn(reverseGeocode);
 
-
-  // Injeta estilo dark do InfoWindow (remove barras brancas)
   useEffect(() => {
     if (typeof document === "undefined") return;
     if (document.getElementById("gm-iw-dark-style")) return;
@@ -183,13 +151,12 @@ export function EntregadoresMapaTempoReal({
     document.head.appendChild(style);
   }, []);
 
-  // Carrega o Google Maps
   useEffect(() => {
+    if (provedor !== "google") return;
     let cancel = false;
     loadGoogleMaps()
       .then(() => {
         if (cancel || !mapDivRef.current) return;
-
         const g = window.google;
         mapRef.current = new g.maps.Map(mapDivRef.current, {
           center: { lat: -15.78, lng: -47.93 },
@@ -200,7 +167,6 @@ export function EntregadoresMapaTempoReal({
           backgroundColor: "#0b1220",
           styles: DARK_MAP_STYLE,
         });
-        // Centraliza na localização do navegador da loja/admin se houver permissão
         if (typeof navigator !== "undefined" && navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             (pos) => {
@@ -216,21 +182,16 @@ export function EntregadoresMapaTempoReal({
         }
       })
       .catch((e) => !cancel && setErro(e.message));
-    return () => {
-      cancel = true;
-    };
-  }, []);
+    return () => { cancel = true; };
+  }, [provedor]);
 
-  // Busca e atualiza
   useEffect(() => {
     if (source === "loja" && !lojaId) return;
     let cancel = false;
-
     const fetchData = async () => {
-      const { data, error } =
-        source === "loja"
-          ? await (supabase.rpc as any)("entregadores_online_loja", { _loja_id: lojaId })
-          : await (supabase.rpc as any)("entregadores_online_admin");
+      const { data, error } = source === "loja"
+        ? await (supabase.rpc as any)("entregadores_online_loja", { _loja_id: lojaId })
+        : await (supabase.rpc as any)("entregadores_online_admin");
       if (cancel) return;
       if (error) {
         setErro(error.message);
@@ -239,66 +200,33 @@ export function EntregadoresMapaTempoReal({
       }
       setEntregadores((data ?? []) as Entregador[]);
       setLoading(false);
-
-      // Diagnóstico (somente loja): mostra quantos vinculados ativos existem e
-      // quantos estão online mas sem coordenadas (não aparecem no mapa).
       if (source === "loja" && lojaId) {
-        const { data: vinc } = await supabase
-          .from("loja_entregadores")
-          .select("entregador_id, ativo")
-          .eq("loja_id", lojaId)
-          .eq("ativo", true);
+        const { data: vinc } = await supabase.from("loja_entregadores").select("entregador_id").eq("loja_id", lojaId).eq("ativo", true);
         const ids = (vinc ?? []).map((v: any) => v.entregador_id);
-        const vinculados = ids.length;
-        let onlineSemGps = 0;
         if (ids.length > 0) {
-          const { data: stat } = await supabase
-            .from("entregador_status")
-            .select("entregador_id, online, lat, lng")
-            .in("entregador_id", ids)
-            .eq("online", true);
-          onlineSemGps = (stat ?? []).filter((s: any) => s.lat == null || s.lng == null).length;
+          const { data: stat } = await supabase.from("entregador_status").select("entregador_id, online, lat, lng").in("entregador_id", ids).eq("online", true);
+          const onlineSemGps = (stat ?? []).filter((s: any) => s.lat == null || s.lng == null).length;
+          if (!cancel) setDiag({ vinculados: ids.length, onlineSemGps });
+        } else {
+          setDiag({ vinculados: 0, onlineSemGps: 0 });
         }
-        if (!cancel) setDiag({ vinculados, onlineSemGps });
       }
     };
-
     fetchData();
-    const id = setInterval(fetchData, 8_000);
-
-    // Realtime: qualquer mudança em entregador_status (ex.: entregador clica
-    // offline) dispara refetch imediato — sem esperar o próximo polling.
+    const id = setInterval(fetchData, 8000);
     const stopCh = subscribeLazy(
-      () =>
-        supabase
-          .channel(`mapa-entregadores-${source}-${lojaId ?? "admin"}`)
-          .on(
-            "postgres_changes",
-            { event: "*", schema: "public", table: "entregador_status" },
-            () => fetchData()
-          )
-          .subscribe(),
-      () => fetchData(),
+      () => supabase.channel(`mapa-ent-${source}-${lojaId ?? "admin"}`).on("postgres_changes", { event: "*", schema: "public", table: "entregador_status" }, fetchData).subscribe(),
+      fetchData,
     );
-
-
-    return () => {
-      cancel = true;
-      clearInterval(id);
-      stopCh();
-    };
+    return () => { cancel = true; clearInterval(id); stopCh(); };
   }, [source, lojaId]);
 
-  // Sincroniza marcadores
   useEffect(() => {
-    if (!mapRef.current) return;
-    
+    if (provedor !== "google" || !mapRef.current) return;
     const g = window.google;
     if (!g?.maps) return;
-
     const seen = new Set<string>();
     const bounds = new g.maps.LatLngBounds();
-
     for (const e of entregadores) {
       seen.add(e.entregador_id);
       const pos = { lat: Number(e.lat), lng: Number(e.lng) };
@@ -308,10 +236,6 @@ export function EntregadoresMapaTempoReal({
       const color = STAGE_COLORS[stage];
       const existing = markersRef.current.get(e.entregador_id);
       if (existing) {
-        const prev = existing.getPosition?.();
-        if (!prev || Math.abs(prev.lat() - pos.lat) > 0.0002 || Math.abs(prev.lng() - pos.lng) > 0.0002) {
-          addressCacheRef.current.delete(e.entregador_id);
-        }
         existing.setPosition(pos);
       } else {
         const marker = new g.maps.Marker({
@@ -320,82 +244,45 @@ export function EntregadoresMapaTempoReal({
           title: e.full_name ?? "Entregador",
           icon: pulseIcon(g, 0, color),
         });
-        const buildContent = (address: string | null, loadingAddr: boolean) => {
-          const curStage = stageRef.current.get(e.entregador_id) ?? "livre";
-          const curColor = STAGE_COLORS[curStage];
-          const curLabel = STAGE_LABELS[curStage];
-          const nome = (e.full_name ?? "Entregador").replace(/</g, "&lt;");
-          const fone = e.phone ? e.phone.replace(/</g, "&lt;") : "";
-          const enderecoHtml = loadingAddr
-            ? `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #cbd5e1;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;"></span>Buscando endereço...</div>`
-            : address
-              ? `<div style="font-size:12px;color:#f1f5f9;margin-top:6px;max-width:240px;line-height:1.4;"><span style="color:${curColor};font-weight:600;">📍</span> ${address.replace(/</g, "&lt;")}</div>`
-              : `<div style="font-size:12px;color:#cbd5e1;margin-top:6px;">Endereço indisponível</div>`;
-          return `<div style="font-family:sans-serif;padding:4px 6px;color:#f8fafc;">
-            <div style="font-weight:600;color:#ffffff;">${nome}</div>
-            <div style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:2px 8px;border-radius:999px;background:${curColor}22;border:1px solid ${curColor}66;font-size:11px;color:${curColor};font-weight:600;">
-              <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${curColor};"></span>${curLabel}
-            </div>
-            ${fone ? `<div style="font-size:12px;color:#cbd5e1;margin-top:4px;">${fone}</div>` : ""}
-            <div style="font-size:11px;color:#94a3b8;margin-top:2px;">Atualizado: ${new Date(e.updated_at).toLocaleTimeString()}</div>
-            ${enderecoHtml}
-          </div>`;
-        };
         marker.addListener("click", async () => {
           if (infoRef.current) infoRef.current.close();
           const info = new g.maps.InfoWindow();
           infoRef.current = info;
           const cached = addressCacheRef.current.get(e.entregador_id);
-          info.setContent(buildContent(cached ?? null, !cached));
+          const build = (addr: string | null) => `<div>${e.full_name}<br/>${addr || "..."}</div>`;
+          info.setContent(build(cached ?? null));
           info.open({ anchor: marker, map: mapRef.current });
           if (!cached) {
-            try {
-              const res: any = await runReverseGeocode({ data: { lat: Number(e.lat), lng: Number(e.lng) } });
-              const addr = res?.address ?? null;
-              if (addr) addressCacheRef.current.set(e.entregador_id, addr);
-              info.setContent(buildContent(addr, false));
-            } catch {
-              info.setContent(buildContent(null, false));
+            const res = await runReverseGeocode({ data: { lat: Number(e.lat), lng: Number(e.lng) } });
+            if (res.address) {
+              addressCacheRef.current.set(e.entregador_id, res.address);
+              info.setContent(build(res.address));
             }
           }
         });
         markersRef.current.set(e.entregador_id, marker);
       }
     }
-
-    // remove marcadores que não estão mais online
     for (const [id, marker] of markersRef.current.entries()) {
-      if (!seen.has(id)) {
-        marker.setMap(null);
-        markersRef.current.delete(id);
-        stageRef.current.delete(id);
-      }
+      if (!seen.has(id)) { marker.setMap(null); markersRef.current.delete(id); }
     }
+    if (entregadores.length > 0) mapRef.current.fitBounds(bounds, 60);
+  }, [entregadores, provedor]);
 
-    if (entregadores.length > 0) {
-      mapRef.current.fitBounds(bounds, 60);
-      if (entregadores.length === 1) {
-        mapRef.current.setZoom(15);
-      }
-    }
-  }, [entregadores]);
-
-  // Pulso neon animado nos marcadores (cor por estágio)
   useEffect(() => {
+    if (provedor !== "google") return;
     const start = performance.now();
     const id = setInterval(() => {
       const g = window.google;
       if (!g?.maps) return;
       const phase = ((performance.now() - start) % 1600) / 1600;
-      for (const [entregadorId, marker] of markersRef.current.entries()) {
-        const stage = stageRef.current.get(entregadorId) ?? "livre";
+      for (const [id, marker] of markersRef.current.entries()) {
+        const stage = stageRef.current.get(id) ?? "livre";
         marker.setIcon(pulseIcon(g, phase, STAGE_COLORS[stage]));
       }
-    }, 80); // ~12fps
+    }, 80);
     return () => clearInterval(id);
-  }, []);
-
-
+  }, [provedor]);
 
   return (
     <div className="bg-[#0f172a] border border-white/10 rounded-lg shadow-card overflow-hidden">
@@ -410,43 +297,13 @@ export function EntregadoresMapaTempoReal({
         </span>
       </div>
       <div className="relative">
-        <div ref={mapDivRef} className="w-full h-[420px] bg-[#0b1220]" />
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm">
-            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          </div>
+        {provedor === "mapbox" && mapboxToken ? (
+          <EntregadoresMapaMapbox source={source} lojaId={lojaId} accessToken={mapboxToken} />
+        ) : (
+          <div ref={mapDivRef} className="w-full h-[420px] bg-[#0b1220]" />
         )}
-        {erro && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-4">
-            <div className="text-center text-sm text-destructive flex flex-col items-center gap-2">
-              <MapPin className="h-6 w-6" />
-              {erro}
-            </div>
-          </div>
-        )}
-        {!loading && !erro && entregadores.length === 0 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-background/90 border border-border rounded-md px-3 py-1.5 text-xs text-muted-foreground shadow-card max-w-[90%] text-center">
-            {source === "loja" && diag
-              ? diag.vinculados === 0
-                ? "Você ainda não vinculou nenhum entregador a essa loja."
-                : diag.onlineSemGps > 0
-                  ? `${diag.onlineSemGps} entregador(es) online sem GPS — peça para liberar a localização no celular.`
-                  : `Nenhum entregador online agora (${diag.vinculados} vinculado(s)).`
-              : "Nenhum entregador online no momento"}
-          </div>
-        )}
-      </div>
-      {/* Legenda dos estágios */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2 border-t border-white/10 bg-[#0b1220]">
-        {(Object.keys(STAGE_COLORS) as Stage[]).map((s) => (
-          <div key={s} className="flex items-center gap-1.5 text-[11px] text-slate-300">
-            <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: STAGE_COLORS[s], boxShadow: `0 0 6px ${STAGE_COLORS[s]}` }}
-            />
-            {STAGE_LABELS[s]}
-          </div>
-        ))}
+        {loading && <div className="absolute inset-0 flex items-center justify-center bg-background/60"><Loader2 className="animate-spin" /></div>}
+        {erro && <div className="absolute inset-0 flex items-center justify-center bg-background/80 text-destructive">{erro}</div>}
       </div>
     </div>
   );
