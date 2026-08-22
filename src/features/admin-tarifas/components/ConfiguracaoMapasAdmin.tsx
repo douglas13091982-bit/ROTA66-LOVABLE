@@ -18,7 +18,7 @@ export function ConfiguracaoMapasAdmin() {
       const { data, error } = await supabase
         .from("config_frete")
         .select("*")
-        .eq("id", "singleton" as any)
+        .eq("id", "singleton")
         .maybeSingle();
       if (error) throw error;
       return data;
@@ -52,7 +52,7 @@ export function ConfiguracaoMapasAdmin() {
           provedor_mapa: atualProvedor,
           mapbox_access_token: atualToken,
         })
-        .eq("id", "singleton" as any);
+        .eq("id", "singleton");
       
       if (error) throw error;
       toast.success("Configurações de mapas atualizadas!");

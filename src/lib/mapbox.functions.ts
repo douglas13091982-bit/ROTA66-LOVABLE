@@ -15,7 +15,7 @@ async function getMapboxToken() {
   const { data } = await supabaseAdmin
     .from("config_frete")
     .select("mapbox_access_token")
-    .eq("id", "singleton" as any)
+    .eq("id", "singleton")
     .maybeSingle();
     
   return data?.mapbox_access_token;
