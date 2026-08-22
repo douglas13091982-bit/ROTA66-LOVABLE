@@ -1,27 +1,26 @@
--- The error "invalid input syntax for type integer: 'singleton'" indicates the ID column is integer but we're passing a string.
--- However, standard practice for singletons in this project is often a string ID.
--- Let's check the table structure and fix the data or the column.
-
--- If the table uses integer IDs, we should use ID 1 for the singleton.
--- But if the code expects 'singleton', we should change the column to TEXT or adjust the code.
--- Based on the project history, it's likely a TEXT column was expected.
+-- Primeiro, vamos garantir que a tabela existe com o esquema correto.
+-- Se o erro é "invalid input syntax for type integer: 'singleton'", a coluna 'id' é do tipo integer.
+-- Vamos converter para text para suportar o identificador 'singleton' usado no código.
 
 DO $$ 
 BEGIN
-    -- Check if 'id' is integer. If so, and we want to use 'singleton', we need to alter it or use a numeric ID.
-    -- However, changing ID type is risky if there are foreign keys (unlikely for a config table).
-    -- A safer approach for now is to check the current ID type and data.
+    -- Se a coluna for integer, vamos convertê-la.
+    IF EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_name = 'config_frete' 
+        AND column_name = 'id' 
+        AND data_type = 'integer'
+    ) THEN
+        ALTER TABLE public.config_frete ALTER COLUMN id TYPE text;
+    END IF;
 END $$;
 
--- Let's ensure the table exists and has the correct 'id' type to support 'singleton'.
--- If it's currently integer, we'll cast it to text.
-
-ALTER TABLE public.config_frete ALTER COLUMN id TYPE text;
-
--- Ensure the 'singleton' row exists
-INSERT INTO public.config_frete (id)
-VALUES ('singleton')
+-- Garantir que a linha 'singleton' exista
+INSERT INTO public.config_frete (id, provedor_mapa)
+VALUES ('singleton', 'google')
 ON CONFLICT (id) DO NOTHING;
 
+-- Garantir as permissões necessárias
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.config_frete TO authenticated;
 GRANT ALL ON public.config_frete TO service_role;
