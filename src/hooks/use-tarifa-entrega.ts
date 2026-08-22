@@ -122,14 +122,15 @@ export function useTarifaEntrega(
     calculate();
   }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, config, faixas, runCalcularDistancia, adicionalRetorno]);
 
-  // Compatibility mapping
+  const infoText = distancia != null ? `${distancia.toFixed(1)} km` : "";
+
   return { 
     distancia, 
     tarifa, 
     loading,
     // Legacy support
     taxa: tarifa,
-    info: { km: distancia },
+    info: infoText, // Changed to string to satisfy UI components
     setTaxa: () => {},
     adicionalRetorno
   };
