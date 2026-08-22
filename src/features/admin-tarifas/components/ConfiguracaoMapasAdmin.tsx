@@ -40,17 +40,14 @@ export function ConfiguracaoMapasAdmin() {
     }
   }, [config]);
 
-  const atualProvedor = formData.provedor_mapa || config?.provedor_mapa || "google";
-  const atualToken = formData.mapbox_access_token !== undefined ? formData.mapbox_access_token : config?.mapbox_access_token || "";
-
   async function salvar() {
     setSalvando(true);
     try {
       const { error } = await supabase
         .from("config_frete")
         .update({
-          provedor_mapa: atualProvedor,
-          mapbox_access_token: atualToken,
+          provedor_mapa: formData.provedor_mapa,
+          mapbox_access_token: formData.mapbox_access_token,
         })
         .eq("id", "singleton");
       
