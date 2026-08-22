@@ -53,40 +53,6 @@ export const reverseGeocode = createServerFn({ method: "POST" })
       }
     }
 
-    // Lógica legado Google
-    const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
-    const apiKey = process.env.LOVABLE_API_KEY;
-    const connKey = process.env.GOOGLE_MAPS_API_KEY;
-    
-    if (!apiKey || !connKey) return { address: null, cidade: null, uf: null };
+    return { address: null, cidade: null, uf: null };
 
-    try {
-      const resp = await fetch(
-        `${gatewayUrl}/maps/api/geocode/json?latlng=${data.lat},${data.lng}&language=${i18nConfig.locale}`,
-        {
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "X-Connection-Api-Key": connKey,
-          },
-        },
-      );
-      const json = await resp.json();
-      const result = json.results?.[0];
-      
-      let cidade = null;
-      let uf = null;
-
-      if (result?.address_components) {
-        cidade = result.address_components.find((c: any) => c.types.includes("administrative_area_level_2") || c.types.includes("locality"))?.long_name ?? null;
-        uf = result.address_components.find((c: any) => c.types.includes("administrative_area_level_1"))?.short_name ?? null;
-      }
-
-      return { 
-        address: result?.formatted_address ?? null,
-        cidade,
-        uf
-      };
-    } catch {
-      return { address: null, cidade: null, uf: null };
-    }
   });
