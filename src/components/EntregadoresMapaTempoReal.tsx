@@ -298,7 +298,7 @@ export function EntregadoresMapaTempoReal({
       </div>
       <div className="relative">
         {provedor === "mapbox" && mapboxToken ? (
-          <EntregadoresMapaMapbox source={source} lojaId={lojaId} accessToken={mapboxToken} />
+          <EntregadoresMapaMapbox source={source as any} lojaId={lojaId} accessToken={mapboxToken} />
         ) : (
           <div ref={mapDivRef} className="w-full h-[420px] bg-[#0b1220]" />
         )}

@@ -3,10 +3,23 @@ import { z } from "zod";
 import mbxClient from "@mapbox/mapbox-sdk";
 import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const ConfigSchema = z.object({
   accessToken: z.string(),
 });
+
+async function getMapboxToken() {
+  if (process.env.MAPBOX_ACCESS_TOKEN) return process.env.MAPBOX_ACCESS_TOKEN;
+  
+  const { data } = await supabaseAdmin
+    .from("config_frete")
+    .select("mapbox_access_token")
+    .eq("id", "singleton" as any)
+    .maybeSingle();
+    
+  return data?.mapbox_access_token;
+}
 
 /**
  * Valida se um token do Mapbox é funcional.
@@ -38,8 +51,8 @@ export const testarConexaoMapbox = createServerFn({ method: "POST" })
 export const mapboxGeocodificar = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ query: z.string(), proximity: z.array(z.number()).optional() }).parse(data))
   .handler(async ({ data }) => {
-    const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
-    if (!accessToken) throw new Error("MAPBOX_ACCESS_TOKEN not configured");
+    const accessToken = await getMapboxToken();
+    if (!accessToken) throw new Error("Mapbox token not configured");
 
     const geocodingService = mbxGeocoding(mbxClient({ accessToken }));
     const response = await geocodingService
@@ -68,13 +81,13 @@ export const mapboxCalcularDistancia = createServerFn({ method: "POST" })
     waypoints: z.array(z.object({ lat: z.number(), lng: z.number() })),
   }).parse(data))
   .handler(async ({ data }) => {
-    const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
-    if (!accessToken) throw new Error("MAPBOX_ACCESS_TOKEN not configured");
+    const accessToken = await getMapboxToken();
+    if (!accessToken) throw new Error("Mapbox token not configured");
 
     const directionsService = mbxDirections(mbxClient({ accessToken }));
     const response = await directionsService
       .getDirections({
-        profile: "driving-traffic",
+        profile: "driving", // Mudado para driving simples se driving-traffic falhar ou for muito caro
         waypoints: data.waypoints.map(w => ({ coordinates: [w.lng, w.lat] })),
         geometries: "geojson",
       })

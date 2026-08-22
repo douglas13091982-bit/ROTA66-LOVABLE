@@ -12,7 +12,9 @@ import {
   Route as RouteIcon,
   DollarSign,
   TrendingUp,
+  Map as MapIconLucide,
 } from "lucide-react";
+import { MapaRotaInterno } from "./MapaRotaInterno";
 import { toast } from "sonner";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
@@ -310,6 +312,13 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
 
 
         </div>
+        
+        {p.endereco_coleta_lat && p.endereco_coleta_lng && p.endereco_entrega_lat && p.endereco_entrega_lng && (
+          <MapaRotaInterno 
+            origem={{ lat: p.endereco_coleta_lat, lng: p.endereco_coleta_lng }}
+            destino={{ lat: p.endereco_entrega_lat, lng: p.endereco_entrega_lng }}
+          />
+        )}
       </div>
 
       {!agrupado && (

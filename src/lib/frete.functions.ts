@@ -146,11 +146,43 @@ export const reverseGeocode = createServerFn({ method: "POST" })
 
 /**
  * Resolve um texto de endereço para coordenadas (lat, lng) e endereço formatado
- * usando a Geocoding API (gateway).
+ * usando Mapbox ou Google (gateway).
  */
 export const geocodificarEndereco = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ endereco: z.string() }).parse(data))
   .handler(async ({ data }) => {
+    // 1. Verificar provedor configurado
+    const { data: config } = await supabaseAdmin
+      .from("config_frete")
+      .select("*")
+      .eq("id", "singleton" as any)
+      .maybeSingle();
+
+    if ((config as any)?.provedor_mapa === "mapbox" && (config as any)?.mapbox_access_token) {
+      try {
+        const token = (config as any).mapbox_access_token;
+        const lang = i18nConfig.locale.split("-")[0];
+        const resp = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.endereco)}.json?access_token=${token}&language=${lang}&country=br&limit=1`,
+        );
+        const json = await resp.json();
+        const feature = json.features?.[0];
+
+        if (feature) {
+          const [lng, lat] = feature.center;
+          return {
+            success: true,
+            address: feature.place_name,
+            lat,
+            lng,
+          };
+        }
+      } catch (err) {
+        console.error("[geocodificarEndereco] Mapbox failed, falling back to Google", err);
+      }
+    }
+
+    // Google fallback
     const gatewayUrl = "https://connector-gateway.lovable.dev/google_maps";
     const apiKey = process.env.LOVABLE_API_KEY;
     const connKey =
@@ -169,7 +201,7 @@ export const geocodificarEndereco = createServerFn({ method: "POST" })
           Authorization: `Bearer ${apiKey}`,
           "X-Connection-Api-Key": connKey,
         },
-      }
+      },
     );
 
     if (response.status === 403) {
