@@ -648,7 +648,7 @@ export type Database = {
           frete_gratis_ativo: boolean | null
           frete_gratis_minimo: number | null
           google_maps_key: string | null
-          id: number
+          id: string
           mapbox_access_token: string | null
           modo_calculo: string | null
           origem_bairro: string | null
@@ -671,7 +671,7 @@ export type Database = {
           frete_gratis_ativo?: boolean | null
           frete_gratis_minimo?: number | null
           google_maps_key?: string | null
-          id?: number
+          id: string
           mapbox_access_token?: string | null
           modo_calculo?: string | null
           origem_bairro?: string | null
@@ -694,7 +694,7 @@ export type Database = {
           frete_gratis_ativo?: boolean | null
           frete_gratis_minimo?: number | null
           google_maps_key?: string | null
-          id?: number
+          id?: string
           mapbox_access_token?: string | null
           modo_calculo?: string | null
           origem_bairro?: string | null
