@@ -12,7 +12,9 @@ import {
   Route as RouteIcon,
   DollarSign,
   TrendingUp,
+  Map as MapIconLucide,
 } from "lucide-react";
+import { MapaRotaInterno } from "./MapaRotaInterno";
 import { toast } from "sonner";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
