@@ -38,7 +38,7 @@ export const testarConexaoMapbox = createServerFn({ method: "POST" })
 export const mapboxGeocodificar = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ query: z.string(), proximity: z.array(z.number()).optional() }).parse(data))
   .handler(async ({ data }) => {
-    const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
+    const accessToken = process.env.MAPBOX_ACCESS_TOKEN || (await supabaseAdmin.from("config_frete").select("mapbox_access_token").eq("id", "singleton" as any).maybeSingle()).data?.mapbox_access_token;
     if (!accessToken) throw new Error("MAPBOX_ACCESS_TOKEN not configured");
 
     const geocodingService = mbxGeocoding(mbxClient({ accessToken }));
@@ -68,7 +68,7 @@ export const mapboxCalcularDistancia = createServerFn({ method: "POST" })
     waypoints: z.array(z.object({ lat: z.number(), lng: z.number() })),
   }).parse(data))
   .handler(async ({ data }) => {
-    const accessToken = process.env.MAPBOX_ACCESS_TOKEN;
+    const accessToken = process.env.MAPBOX_ACCESS_TOKEN || (await supabaseAdmin.from("config_frete").select("mapbox_access_token").eq("id", "singleton" as any).maybeSingle()).data?.mapbox_access_token;
     if (!accessToken) throw new Error("MAPBOX_ACCESS_TOKEN not configured");
 
     const directionsService = mbxDirections(mbxClient({ accessToken }));
