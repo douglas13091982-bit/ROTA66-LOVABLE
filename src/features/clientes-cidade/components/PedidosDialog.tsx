@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { ReceiptText, Loader2, Star } from "lucide-react";
 import { AvaliacaoDialog } from "./AvaliacaoDialog";
+import { formatDateTime } from "@/lib/format";
 
 interface PedidoRow {
   id: string;
@@ -28,13 +29,7 @@ const STATUS_LABEL: Record<string, string> = {
 function formatDate(iso: string) {
   try {
     const d = new Date(iso);
-    return d.toLocaleString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return formatDateTime(d);
   } catch {
     return iso;
   }

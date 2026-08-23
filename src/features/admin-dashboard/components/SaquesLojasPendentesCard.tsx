@@ -3,6 +3,7 @@ import { Store, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
+import { formatDayMonthTime } from "@/lib/format";
 
 type SaqueRecente = {
   id: string;
@@ -14,12 +15,7 @@ type SaqueRecente = {
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDayMonthTime(iso);
 }
 
 export function SaquesLojasPendentesCard() {

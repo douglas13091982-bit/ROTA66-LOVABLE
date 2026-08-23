@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useSaqueEntregador } from "../hooks/use-saque";
+import { formatCurrency } from "@/lib/format";
 
 function brl(v: number) {
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return formatCurrency(v);
 }
 
 type Props = {

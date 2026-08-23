@@ -1,4 +1,5 @@
 import { Clock, ShoppingBag, Star } from "lucide-react";
+import { formatNumber } from "@/lib/format";
 
 type Props = {
   entregas: number;
@@ -29,7 +30,7 @@ export function StatsRow({ entregas, tempo }: Props) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-2 py-4 flex items-stretch divide-x divide-white/10">
       <Cell icon={Star} value="5.0" label="Avaliação" />
-      <Cell icon={ShoppingBag} value={entregas.toLocaleString("pt-BR")} label="Pedidos" />
+      <Cell icon={ShoppingBag} value={formatNumber(entregas)} label="Pedidos" />
       <Cell icon={Clock} value={tempo} label="Tempo online" />
     </div>
   );

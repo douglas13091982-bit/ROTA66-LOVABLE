@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Copy, Check } from "lucide-react";
+import { formatDateTime } from "@/lib/format";
 
 type Saque = {
   id: string;
@@ -157,7 +158,7 @@ export function AdminSaquesLojasContent() {
                 <div className="min-w-0">
                   <div className="font-semibold text-foreground">{s.loja_nome ?? "Loja"}</div>
                   <div className="text-xs text-muted-foreground">
-                    Solicitado em {new Date(s.solicitado_em).toLocaleString("pt-BR")}
+                    Solicitado em {formatDateTime(s.solicitado_em)}
                   </div>
                   <div className="mt-2 flex items-center gap-2 flex-wrap text-sm">
                     <span className="text-muted-foreground">PIX:</span>

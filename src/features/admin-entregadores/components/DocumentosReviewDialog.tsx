@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getSignedDocUrl } from "@/features/entregador-documentos/use-entregador-documentos";
 import { convertImageToWebp } from "@/lib/image-to-webp";
+import { formatDateTime } from "@/lib/format";
 
 type Doc = {
   id: string;
@@ -154,7 +155,7 @@ export function DocumentosReviewDialog({
               {doc.submitted_at && (
                 <div>
                   <span className="text-muted-foreground">Enviado em:</span>{" "}
-                  <b>{new Date(doc.submitted_at).toLocaleString("pt-BR")}</b>
+                  <b>{formatDateTime(doc.submitted_at)}</b>
                 </div>
               )}
             </div>

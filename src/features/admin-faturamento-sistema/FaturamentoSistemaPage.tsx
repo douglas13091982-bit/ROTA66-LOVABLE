@@ -15,9 +15,9 @@ import {
   useFaturamentoSistema,
   type PeriodoFat,
 } from "./hooks/use-faturamento-sistema";
+import { formatCurrency } from "@/lib/format";
 
-const brl = (v: number) =>
-  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const brl = (v: number) => formatCurrency(v);
 
 const PERIODOS: { key: PeriodoFat; label: string }[] = [
   { key: "mes_atual", label: "Mês atual" },
