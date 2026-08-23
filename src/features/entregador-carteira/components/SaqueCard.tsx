@@ -26,9 +26,10 @@ import {
 } from "lucide-react";
 import { PixIcon } from "@/components/icons/PixIcon";
 import { DIAS_SEMANA, useSaqueEntregador, type SaqueRow } from "../hooks/use-saque";
+import { formatCurrency } from "@/lib/format";
 
 function brl(v: number) {
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return formatCurrency(v);
 }
 
 function StatusBadge({ status }: { status: SaqueRow["status"] }) {

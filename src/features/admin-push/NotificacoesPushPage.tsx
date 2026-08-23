@@ -16,6 +16,7 @@ import {
   enviarPushEntregadores,
   listarPushLogs,
 } from "@/lib/push-admin.functions";
+import { formatDateTime } from "@/lib/format";
 
 type Filtro = "todos" | "cidade" | "online" | "selecionados";
 
@@ -252,7 +253,7 @@ function Conteudo() {
             <div className="p-3 text-sm text-muted-foreground">Nenhum envio ainda.</div>
           )}
           {(logsData?.logs ?? []).map((l: any) => {
-            const dt = new Date(l.created_at).toLocaleString("pt-BR");
+            const dt = formatDateTime(l.created_at);
             const okIcon =
               l.status === "enviado" ? (
                 <CheckCircle2 className="w-4 h-4 text-green-500" />

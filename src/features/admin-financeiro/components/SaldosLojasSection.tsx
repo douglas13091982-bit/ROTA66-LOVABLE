@@ -17,14 +17,15 @@ import {
   useMovimentosLoja,
   type SaldoLojaRow,
 } from "../hooks/use-admin-saldos-lojas";
+import { formatCurrency, formatDateTime } from "@/lib/format";
 
 function brl(v: number) {
-  return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return formatCurrency(v);
 }
 
 function fmtDate(iso: string | null) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+  return formatDateTime(iso);
 }
 
 function StatusRecargaBadge({ status }: { status: string }) {

@@ -3,15 +3,10 @@ import { Phone, Check, Ban } from "lucide-react";
 import { toast } from "sonner";
 import { AvatarImg } from "@/components/AvatarImg";
 import { STATUS_LABEL, type SaqueRow } from "../logic/types";
+import { formatDateTime } from "@/lib/format";
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDateTime(iso);
 }
 
 export function SaquesTable({

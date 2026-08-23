@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { enviarPromocaoLoja } from "@/lib/promocoes.functions";
 import { useProdutosCatalogo } from "@/features/loja-catalogo/hooks/use-catalogo";
+import { formatCurrency, formatDateTime } from "@/lib/format";
 
 export function PromocoesLojaPage() {
   const { data: loja } = useMinhaLoja();
@@ -58,7 +59,7 @@ export function PromocoesLojaPage() {
     if (!produtoSelecionado) return "";
     const preco = Number(precoPromo);
     if (!preco || isNaN(preco)) return `🔥 ${produtoSelecionado.nome}`;
-    const fmt = preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    const fmt = formatCurrency(preco);
     return `🔥 ${produtoSelecionado.nome} por ${fmt}`.slice(0, 80);
   }, [produtoSelecionado, precoPromo]);
 
@@ -194,10 +195,7 @@ export function PromocoesLojaPage() {
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-sm truncate">{produtoSelecionado.nome}</div>
                     <div className="text-xs text-muted-foreground">
-                      {Number(produtoSelecionado.preco).toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}
+                      {formatCurrency(Number(produtoSelecionado.preco))}
                     </div>
                   </div>
                   <Button type="button" variant="ghost" size="icon" onClick={limparProduto}>
@@ -234,10 +232,7 @@ export function PromocoesLojaPage() {
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-medium truncate">{p.nome}</div>
                             <div className="text-xs text-muted-foreground">
-                              {Number(p.preco).toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })}
+                              {formatCurrency(Number(p.preco))}
                             </div>
                           </div>
                         </button>
@@ -269,10 +264,7 @@ export function PromocoesLojaPage() {
                     <span className="text-xs text-muted-foreground">
                       Preço normal:{" "}
                       <span className="line-through">
-                        {Number(produtoSelecionado.preco).toLocaleString("pt-BR", {
-                          style: "currency",
-                          currency: "BRL",
-                        })}
+                        {formatCurrency(Number(produtoSelecionado.preco))}
                       </span>
                     </span>
                   </div>
@@ -366,7 +358,7 @@ export function PromocoesLojaPage() {
               <div className="p-3 text-sm text-muted-foreground">Nenhuma promoção enviada ainda.</div>
             )}
             {historico.map((p: any) => {
-              const dt = new Date(p.created_at).toLocaleString("pt-BR");
+              const dt = formatDateTime(p.created_at);
               const icon =
                 p.status === "enviada" ? (
                   <CheckCircle2 className="w-4 h-4 text-green-500" />

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { X, RefreshCw, Link2, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminShell } from "@/components/AdminShell";
+import { formatDateTime } from "@/lib/format";
 
 type ResetRow = {
   id: string;
@@ -184,9 +185,9 @@ export function AdminPasswordResetPage() {
                     <div className="text-xs text-white/50 truncate">{r.email}</div>
                   )}
                   <div className="text-xs text-white/50 mt-0.5">
-                    Pediu em {new Date(r.created_at).toLocaleString("pt-BR")}
+                    Pediu em {formatDateTime(r.created_at)}
                     {r.resolved_at && (
-                      <> · resolvido em {new Date(r.resolved_at).toLocaleString("pt-BR")}</>
+                      <> · resolvido em {formatDateTime(r.resolved_at)}</>
                     )}
                     {r.observacao && <> · {r.observacao}</>}
                   </div>
@@ -206,7 +207,7 @@ export function AdminPasswordResetPage() {
                       <div className="text-[10px] text-white/40 mt-1">
                         Válido até{" "}
                         {r.token_expires_at
-                          ? new Date(r.token_expires_at).toLocaleString("pt-BR")
+                          ? formatDateTime(r.token_expires_at)
                           : "24h"}
                       </div>
                     </div>

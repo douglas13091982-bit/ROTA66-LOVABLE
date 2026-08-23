@@ -10,6 +10,7 @@ import {
   useMensagensRealtime,
 } from "../hooks/use-suporte";
 import { StatusBadge } from "./StatusBadge";
+import { formatDayMonthTime } from "@/lib/format";
 
 export function TicketChat({
   ticket,
@@ -108,7 +109,7 @@ export function TicketChat({
                 </div>
                 <div className="whitespace-pre-wrap break-words">{m.mensagem}</div>
                 <div className="text-[10px] opacity-60 mt-1 text-right">
-                  {new Date(m.created_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                  {formatDayMonthTime(m.created_at)}
                 </div>
               </div>
             </div>

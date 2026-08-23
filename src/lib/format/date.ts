@@ -7,6 +7,12 @@ const DATE_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
 
 const DATE_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { dateStyle: "short" });
 const TIME_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { timeStyle: "short" });
+const DAY_MONTH_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
+  day: "2-digit",
+  month: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
 
 type DateInput = Date | string | number | null | undefined;
 
@@ -29,6 +35,12 @@ export function formatDate(input: DateInput): string {
 export function formatTime(input: DateInput): string {
   const d = toDate(input);
   return d ? TIME_ONLY.format(d) : "";
+}
+
+/** "23/08, 13:50" — dia/mês + hora, sem o ano. Ideal para cards compactos. */
+export function formatDayMonthTime(input: DateInput): string {
+  const d = toDate(input);
+  return d ? DAY_MONTH_TIME.format(d) : "";
 }
 
 /** "há 5 min", "há 2 h", "há 3 d". Para valores futuros, retorna "agora". */

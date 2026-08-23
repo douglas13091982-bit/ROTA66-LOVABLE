@@ -6,6 +6,7 @@ import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 import { DocumentosReviewDialog } from "./DocumentosReviewDialog";
+import { formatCurrency } from "@/lib/format";
 
 export function EntregadorCard({
   p,
@@ -140,10 +141,7 @@ export function EntregadorCard({
           <div className="min-w-0">
             <div className="text-[11px] text-muted-foreground">Carteira</div>
             <div className="text-sm font-semibold tabular-nums">
-              {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
+              {formatCurrency(Number(p.saldo_carteira) || 0)}
             </div>
           </div>
         </div>

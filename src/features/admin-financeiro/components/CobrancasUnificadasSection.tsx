@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Store, Bike, ExternalLink, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { formatCurrency } from "@/lib/format";
 
 type MensRow = {
   id: string;
@@ -27,8 +28,7 @@ type RecargaRow = {
   entregador_nome?: string;
 };
 
-const moeda = (n: number) =>
-  Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const moeda = (n: number) => formatCurrency(Number(n || 0));
 
 const dataBR = (s: string | null | undefined) => {
   if (!s) return "—";

@@ -14,6 +14,7 @@ import {
   type SystemAlertsConfig,
 } from "./hooks/use-system-alerts";
 import { useBranding } from "@/hooks/use-branding";
+import { formatDateTime } from "@/lib/format";
 
 function severityBadge(sev: "warn" | "crit") {
   if (sev === "crit") return <Badge variant="destructive">Crítico</Badge>;
@@ -22,7 +23,7 @@ function severityBadge(sev: "warn" | "crit") {
 
 function formatDate(s: string) {
   try {
-    return new Date(s).toLocaleString("pt-BR");
+    return formatDateTime(s);
   } catch {
     return s;
   }

@@ -3,6 +3,7 @@ import { AvatarImg } from "@/components/AvatarImg";
 import { onlyDigits } from "../logic/filters";
 import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
+import { formatCurrency } from "@/lib/format";
 
 export function EntregadoresTabela({
   list,
@@ -90,7 +91,7 @@ export function EntregadoresTabela({
                     </span>
                   </td>
                   <td className={`px-3 py-2 text-right font-mono whitespace-nowrap tabular-nums ${Number(p.saldo_carteira) > 0 ? "text-green-500 font-bold" : "text-muted-foreground"}`}>
-                    {(Number(p.saldo_carteira) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                    {formatCurrency(Number(p.saldo_carteira) || 0)}
                   </td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap text-[11px]">
                     {p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—"}
