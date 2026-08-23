@@ -7,6 +7,12 @@ const DATE_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
 
 const DATE_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { dateStyle: "short" });
 const TIME_ONLY = new Intl.DateTimeFormat(i18nConfig.locale, { timeStyle: "short" });
+const DAY_MONTH_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
+  day: "2-digit",
+  month: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
 
 type DateInput = Date | string | number | null | undefined;
 
