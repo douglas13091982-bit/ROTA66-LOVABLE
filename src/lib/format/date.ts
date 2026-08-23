@@ -37,6 +37,12 @@ export function formatTime(input: DateInput): string {
   return d ? TIME_ONLY.format(d) : "";
 }
 
+/** "23/08, 13:50" — dia/mês + hora, sem o ano. Ideal para cards compactos. */
+export function formatDayMonthTime(input: DateInput): string {
+  const d = toDate(input);
+  return d ? DAY_MONTH_TIME.format(d) : "";
+}
+
 /** "há 5 min", "há 2 h", "há 3 d". Para valores futuros, retorna "agora". */
 export function formatRelative(input: DateInput, now: Date = new Date()): string {
   const d = toDate(input);
