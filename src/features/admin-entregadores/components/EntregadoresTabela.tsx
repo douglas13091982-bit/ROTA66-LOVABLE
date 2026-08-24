@@ -3,7 +3,7 @@ import { AvatarImg } from "@/components/AvatarImg";
 import { onlyDigits } from "../logic/filters";
 import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 export function EntregadoresTabela({
   list,
@@ -94,7 +94,7 @@ export function EntregadoresTabela({
                     {formatCurrency(Number(p.saldo_carteira) || 0)}
                   </td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap text-[11px]">
-                    {p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—"}
+                    {p.created_at ? formatDate(p.created_at) : "—"}
                   </td>
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">

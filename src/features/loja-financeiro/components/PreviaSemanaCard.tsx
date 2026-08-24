@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
+import { formatDayMonth } from "@/lib/format";
 
 type Props = {
   lojaId: string;
@@ -63,12 +64,9 @@ export function PreviaSemanaCard({ lojaId, taxaPorPedido, planoMensalAtivo }: Pr
 
   const total = (qtd ?? 0) * taxaPorPedido;
   const segunda = proximaSegunda();
-  const segundaFmt = segunda.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-  });
+  const segundaFmt = formatDayMonth(segunda);
   const ini = inicioSemana();
-  const periodo = `${ini.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })} – ${new Date(segunda.getTime() - 86400000).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}`;
+  const periodo = `${formatDayMonth(ini)} – ${formatDayMonth(segunda.getTime() - 86400000)}`;
 
   return (
     <div className="bg-gradient-to-br from-primary/10 to-card border border-primary/30 rounded-lg p-5">

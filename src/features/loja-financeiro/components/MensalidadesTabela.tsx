@@ -1,5 +1,6 @@
 import { Loader2, QrCode } from "lucide-react";
 import type { DialogState, Mensalidade } from "../logic/types";
+import { formatDate, formatMonthYearLong } from "@/lib/format";
 
 type Props = {
   loading: boolean;
@@ -66,10 +67,10 @@ export function MensalidadesTabela({
                 return (
                   <tr key={m.id} className="border-b border-border/50">
                     <td className="py-2">
-                      {comp.toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
+                      {formatMonthYearLong(comp)}
                     </td>
                     <td className="text-right">R$ {Number(m.valor).toFixed(2)}</td>
-                    <td className="pl-4">{venc.toLocaleDateString("pt-BR")}</td>
+                    <td className="pl-4">{formatDate(venc)}</td>
                     <td className="pl-4">
                       {m.pago ? (
                         <span className="text-green-500 text-xs font-bold uppercase">Paga</span>
@@ -93,11 +94,8 @@ export function MensalidadesTabela({
                               tipo: "mensalidade",
                               valor: Number(m.valor),
                               ids: [m.id],
-                              titulo: `Pagar mensalidade ${comp.toLocaleDateString("pt-BR", {
-                                month: "long",
-                                year: "numeric",
-                              })}`,
-                              descricao: `Vencimento ${venc.toLocaleDateString("pt-BR")}`,
+                              titulo: `Pagar mensalidade ${formatMonthYearLong(comp)}`,
+                              descricao: `Vencimento ${formatDate(venc)}`,
                             })
                           }
                           className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"

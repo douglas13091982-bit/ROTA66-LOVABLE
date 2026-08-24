@@ -1,5 +1,6 @@
 import { useCreditosEntregadores } from "../hooks/use-creditos-entregadores";
 import { brl } from "../logic/format";
+import { formatDate } from "@/lib/format";
 
 export function EntregadoresTab() {
   const { data, isLoading, ajustar } = useCreditosEntregadores(true);
@@ -18,7 +19,7 @@ export function EntregadoresTab() {
           <div className={`text-right font-mono ${Number(e.saldo) < 0 ? "text-red-400" : "text-white"}`}>
             <div className="font-bold">{brl(e.saldo)}</div>
             {e.ultima_competencia_cobrada && (
-              <div className="text-[10px] text-white/40">Últ. cob. {new Date(e.ultima_competencia_cobrada).toLocaleDateString("pt-BR")}</div>
+              <div className="text-[10px] text-white/40">Últ. cob. {formatDate(e.ultima_competencia_cobrada)}</div>
             )}
           </div>
           <button

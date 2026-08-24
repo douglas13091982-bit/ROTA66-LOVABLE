@@ -4,8 +4,8 @@ import { Circle, Clock, MapPin, WifiOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
 import { useAuth } from "@/hooks/use-auth";
-import { i18nConfig } from "@/lib/i18n-config";
 import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
+import { formatTimeWithSeconds } from "@/lib/format";
 
 function formatRelative(iso: string | null | undefined, now: number): string {
   if (!iso) return "—";
@@ -23,7 +23,7 @@ function formatHora(iso: string | null | undefined): string {
   if (!iso) return "—";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleTimeString(i18nConfig.locale, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  return formatTimeWithSeconds(d);
 }
 
 export function EntregadorStatusIndicator() {

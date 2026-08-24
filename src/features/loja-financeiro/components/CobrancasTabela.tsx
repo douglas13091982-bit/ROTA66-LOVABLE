@@ -1,5 +1,6 @@
 import { Check, Loader2, QrCode, CreditCard } from "lucide-react";
 import type { Cobranca, DialogState } from "../logic/types";
+import { formatDate } from "@/lib/format";
 
 type Props = {
   loading: boolean;
@@ -85,9 +86,9 @@ export function CobrancasTabela({
                 const solicitado = !c.pago && !!c.pago_solicitado_em;
                 return (
                   <tr key={c.id} className="border-b border-border/50">
-                    <td className="py-2">{new Date(c.created_at).toLocaleDateString("pt-BR")}</td>
+                    <td className="py-2">{formatDate(c.created_at)}</td>
                     <td className="text-right">R$ {Number(c.valor).toFixed(2)}</td>
-                    <td className="pl-4">{venc.toLocaleDateString("pt-BR")}</td>
+                    <td className="pl-4">{formatDate(venc)}</td>
                     <td className="pl-4">
                       {c.pago ? (
                         <span className="text-green-500 text-xs font-bold uppercase inline-flex items-center gap-1">
@@ -124,7 +125,7 @@ export function CobrancasTabela({
                                 valor: Number(c.valor),
                                 ids: [c.id],
                                 titulo: "Pagar taxa do pedido",
-                                descricao: `Vencimento ${venc.toLocaleDateString("pt-BR")}`,
+                                descricao: `Vencimento ${formatDate(venc)}`,
                               })
                             }
                             className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-primary hover:underline"

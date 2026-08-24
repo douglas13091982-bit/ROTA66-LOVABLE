@@ -35,6 +35,11 @@ const WEEKDAY_SHORT_DAY = new Intl.DateTimeFormat(i18nConfig.locale, {
   weekday: "short",
   day: "2-digit",
 });
+const WEEKDAY_SHORT_DAY_MONTH = new Intl.DateTimeFormat(i18nConfig.locale, {
+  weekday: "short",
+  day: "2-digit",
+  month: "2-digit",
+});
 const WEEKDAY_LONG_DAY_MONTH = new Intl.DateTimeFormat(i18nConfig.locale, {
   weekday: "long",
   day: "2-digit",
@@ -104,6 +109,12 @@ export function formatTimeWithSeconds(input: DateInput): string {
 export function formatWeekdayShortDay(input: DateInput): string {
   const d = toDate(input);
   return d ? WEEKDAY_SHORT_DAY.format(d) : "";
+}
+
+/** "sáb, 23/08" — dia da semana abreviado + dia/mês. */
+export function formatWeekdayShortDayMonth(input: DateInput): string {
+  const d = toDate(input);
+  return d ? WEEKDAY_SHORT_DAY_MONTH.format(d) : "";
 }
 
 /** "sábado, 23 de ago" — dia da semana por extenso + dia/mês abreviado. */

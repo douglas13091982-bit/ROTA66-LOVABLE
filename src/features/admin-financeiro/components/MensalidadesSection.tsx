@@ -1,5 +1,6 @@
 import { CheckCircle2, Loader2 } from "lucide-react";
 import type { Mensalidade } from "../logic/types";
+import { formatDate, formatMonthYear } from "@/lib/format";
 
 export function MensalidadesSection({
   mensalidades,
@@ -42,10 +43,10 @@ export function MensalidadesSection({
                   <tr key={m.id} className="border-b border-border/50">
                     <td className="py-2">{m.loja_nome || "—"}</td>
                     <td className="pl-4">
-                      {comp.toLocaleDateString("pt-BR", { month: "2-digit", year: "numeric" })}
+                      {formatMonthYear(comp)}
                     </td>
                     <td className="text-right">R$ {Number(m.valor).toFixed(2)}</td>
-                    <td className="pl-4">{venc.toLocaleDateString("pt-BR")}</td>
+                    <td className="pl-4">{formatDate(venc)}</td>
                     <td className="pl-4">
                       {m.pago ? (
                         <span className="text-green-500 text-xs font-bold uppercase">Pago</span>

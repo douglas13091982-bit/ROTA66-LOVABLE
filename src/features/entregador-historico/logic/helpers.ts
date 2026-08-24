@@ -1,5 +1,6 @@
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { Bucket, PedidoHistorico, Periodo } from "./types";
+import { formatWeekdayShortDay } from "@/lib/format";
 
 export function startOfDay(d: Date) {
   const x = new Date(d);
@@ -46,7 +47,7 @@ export function agregar(
       d.setDate(inicio.getDate() + i);
       buckets.push({
         key: d.toISOString().slice(0, 10),
-        label: d.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" }),
+        label: formatWeekdayShortDay(d),
         valor: 0,
         ts: d.getTime(),
       });
@@ -76,7 +77,7 @@ export function agregar(
     const d = new Date(inicioMes.getFullYear(), inicioMes.getMonth() + i, 1);
     buckets.push({
       key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
-      label: d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", ""),
+      label: formatMonthShort(d).replace(".", ""),
       valor: 0,
       ts: d.getTime(),
     });

@@ -1,5 +1,6 @@
 import { Trash2, Clock } from "lucide-react";
 import { anuncioExpirado, diasRestantes, type AnuncioRow } from "../logic/types";
+import { formatDate } from "@/lib/format";
 
 type Props = {
   anuncio: AnuncioRow;
@@ -43,7 +44,7 @@ export function AnuncioCard({ anuncio: a, onToggle, onPrazo, onDelete }: Props) 
           ) : (
             <span className="text-muted-foreground">
               Expira em {dias} dia{dias === 1 ? "" : "s"} (
-              {new Date(a.expira_em).toLocaleDateString("pt-BR")})
+              {formatDate(a.expira_em)})
             </span>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { CreditCard, Wallet, CheckCircle2, Calendar, LayoutGrid } from "lucide-react";
 import { formatCurrency } from "@/lib/format/currency";
+import { formatDate } from "@/lib/format";
 
 type Props = {
   totalAberto: number;
@@ -60,7 +61,7 @@ export function ResumoCards({ totalAberto, totalPago, mensalidadeValor, prox, on
             <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Próximo vencimento</div>
             <div className="text-xl font-bold text-navy mt-0.5">
               {prox
-                ? new Date(prox + (prox.length === 10 ? "T00:00:00" : "")).toLocaleDateString("pt-BR")
+                ? formatDate(prox + (prox.length === 10 ? "T00:00:00" : ""))
                 : "—"}
             </div>
           </div>

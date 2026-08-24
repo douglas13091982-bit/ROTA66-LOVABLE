@@ -3,6 +3,7 @@ import { CalendarDays, ArrowRight } from "lucide-react";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { useFinanceiroLoja } from "@/features/loja-financeiro/hooks/use-financeiro-loja";
 import { PreviaSemanaCard } from "@/features/loja-financeiro/components/PreviaSemanaCard";
+import { formatDate } from "@/lib/format";
 
 export function FinanceiroResumoDashboard() {
   const { data: loja } = useMinhaLoja();
@@ -15,11 +16,7 @@ export function FinanceiroResumoDashboard() {
     .sort((a, b) => a.vencimento.localeCompare(b.vencimento))[0];
 
   const vencFmt = proxMens
-    ? new Date(proxMens.vencimento).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
+    ? formatDate(proxMens.vencimento)
     : null;
 
   const valor = proxMens ? Number(proxMens.valor) : mensalidadeValor;

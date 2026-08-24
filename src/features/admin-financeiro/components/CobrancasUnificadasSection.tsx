@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Store, Bike, ExternalLink, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 type MensRow = {
   id: string;
@@ -33,7 +33,7 @@ const moeda = (n: number) => formatCurrency(Number(n || 0));
 const dataBR = (s: string | null | undefined) => {
   if (!s) return "—";
   const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
-  return d.toLocaleDateString("pt-BR");
+  return formatDate(d);
 };
 
 function StatusPill({ ok, label }: { ok: "ok" | "wait" | "fail"; label: string }) {
