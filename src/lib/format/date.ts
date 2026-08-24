@@ -70,6 +70,48 @@ export function formatDayMonthTime(input: DateInput): string {
   return d ? DAY_MONTH_TIME.format(d) : "";
 }
 
+/** "23/08" — apenas dia e mês. */
+export function formatDayMonth(input: DateInput): string {
+  const d = toDate(input);
+  return d ? DAY_MONTH.format(d) : "";
+}
+
+/** "08/2026" — competência numérica. */
+export function formatMonthYear(input: DateInput): string {
+  const d = toDate(input);
+  return d ? MONTH_YEAR.format(d) : "";
+}
+
+/** "agosto de 2026" — competência por extenso. */
+export function formatMonthYearLong(input: DateInput): string {
+  const d = toDate(input);
+  return d ? MONTH_YEAR_LONG.format(d) : "";
+}
+
+/** "ago" — mês abreviado. */
+export function formatMonthShort(input: DateInput): string {
+  const d = toDate(input);
+  return d ? MONTH_SHORT.format(d) : "";
+}
+
+/** "13:50:42" — hora com segundos. */
+export function formatTimeWithSeconds(input: DateInput): string {
+  const d = toDate(input);
+  return d ? TIME_WITH_SECONDS.format(d) : "";
+}
+
+/** "sáb, 23" — dia da semana abreviado + dia. */
+export function formatWeekdayShortDay(input: DateInput): string {
+  const d = toDate(input);
+  return d ? WEEKDAY_SHORT_DAY.format(d) : "";
+}
+
+/** "sábado, 23 de ago" — dia da semana por extenso + dia/mês abreviado. */
+export function formatWeekdayLongDayMonth(input: DateInput): string {
+  const d = toDate(input);
+  return d ? WEEKDAY_LONG_DAY_MONTH.format(d) : "";
+}
+
 /** "há 5 min", "há 2 h", "há 3 d". Para valores futuros, retorna "agora". */
 export function formatRelative(input: DateInput, now: Date = new Date()): string {
   const d = toDate(input);
