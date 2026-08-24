@@ -6,7 +6,7 @@ import { mensagemAprovacao, onlyDigits, waLink } from "../logic/filters";
 import { veiculoInfo } from "../logic/veiculo";
 import { STATUS_LABEL, type EntregadorRow, type StatusEntregador } from "../logic/types";
 import { DocumentosReviewDialog } from "./DocumentosReviewDialog";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 export function EntregadorCard({
   p,
@@ -149,7 +149,7 @@ export function EntregadorCard({
           <div className="text-right shrink-0">
             <div className="text-[11px] text-muted-foreground">Cadastro</div>
             <div className="text-sm font-semibold tabular-nums">
-              {new Date(p.created_at).toLocaleDateString("pt-BR")}
+              {formatDate(p.created_at)}
             </div>
           </div>
         )}

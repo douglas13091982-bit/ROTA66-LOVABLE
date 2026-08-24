@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { PixIcon } from "@/components/icons/PixIcon";
 import { DIAS_SEMANA, useSaqueEntregador, type SaqueRow } from "../hooks/use-saque";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 function brl(v: number) {
   return formatCurrency(v);
@@ -203,7 +203,7 @@ export function SaqueCard() {
                 <div className="flex-1 min-w-0">
                   <div className="text-base font-bold text-white truncate">{brl(Number(s.valor))}</div>
                   <div className="text-xs text-white/45 truncate">
-                    {new Date(s.solicitado_em).toLocaleDateString("pt-BR")} · {s.pix_chave}
+                    {formatDate(s.solicitado_em)} · {s.pix_chave}
                   </div>
                   {s.motivo_rejeicao && (
                     <div className="text-xs text-red-300 mt-1">Motivo: {s.motivo_rejeicao}</div>

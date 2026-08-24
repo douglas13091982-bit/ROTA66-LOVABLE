@@ -1,6 +1,7 @@
 import { ChevronRight, PackageCheck } from "lucide-react";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { PedidoHistorico } from "../logic/types";
+import { formatTime } from "@/lib/format";
 
 export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   const valor = ganhoPedidoEntregador({
@@ -11,10 +12,7 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
     agendamento_id: pedido.agendamento_id,
     taxa_turno_entregador: pedido.taxa_turno_entregador,
   });
-  const hora = new Date(pedido.updated_at).toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const hora = formatTime(pedido.updated_at);
   const lojaNome = pedido.lojas?.nome ?? pedido.cliente_nome ?? "Loja";
 
   return (

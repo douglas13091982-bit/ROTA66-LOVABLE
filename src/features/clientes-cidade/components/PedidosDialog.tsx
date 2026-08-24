@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { supabase } from "@/integrations/supabase/client";
 import { ReceiptText, Loader2, Star } from "lucide-react";
 import { AvaliacaoDialog } from "./AvaliacaoDialog";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrency, formatDateTime } from "@/lib/format";
 
 interface PedidoRow {
   id: string;
@@ -27,17 +27,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 function formatDate(iso: string) {
-  try {
-    const d = new Date(iso);
-    return formatDateTime(d);
-  } catch {
-    return iso;
-  }
-}
-
-function formatBRL(v: number | string | null) {
-  const n = Number(v) || 0;
-  return `R$ ${n.toFixed(2).replace(".", ",")}`;
+  return formatDateTime(iso) || iso;
 }
 
 export function PedidosDialog({
@@ -151,7 +141,7 @@ export function PedidosDialog({
                   <div className="flex items-center justify-between text-[12px] text-muted-foreground">
                     <span>#{p.numero} • {formatDate(p.created_at)}</span>
                     <span className="font-medium text-foreground">
-                      {formatBRL(p.valor_total)}
+                      {formatCurrency(Number(p.valor_total) || 0)}
                     </span>
                   </div>
                   {qtd > 0 && (

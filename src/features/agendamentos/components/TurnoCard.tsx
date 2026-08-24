@@ -1,9 +1,9 @@
 import { CalendarClock, Clock } from "lucide-react";
 import { STATUS_LABEL } from "../logic/constants";
 import type { TurnoRow } from "../logic/types";
-import { i18nConfig } from "@/lib/i18n-config";
 import { AceitesList } from "./AceitesList";
 import { TurnoActions } from "./TurnoActions";
+import { formatDate } from "@/lib/format";
 
 export function TurnoCard({ t, onChange }: { t: TurnoRow; onChange: () => void }) {
   const status = STATUS_LABEL[t.status];
@@ -18,11 +18,7 @@ export function TurnoCard({ t, onChange }: { t: TurnoRow; onChange: () => void }
           <CalendarClock className="h-5 w-5 text-primary" />
           <div>
             <div className="font-display text-lg leading-tight">
-              {data.toLocaleDateString(i18nConfig.locale, {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
+              {formatDate(data)}
               {" · "}
               {t.hora_inicio.slice(0, 5)}
             </div>

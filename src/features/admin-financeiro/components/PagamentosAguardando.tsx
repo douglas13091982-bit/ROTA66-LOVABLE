@@ -1,5 +1,5 @@
 import { BellRing, CheckCircle2 } from "lucide-react";
-import { formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTime, formatMonthYear } from "@/lib/format";
 import type { Cobranca, Mensalidade } from "../logic/types";
 
 export function PagamentosAguardando({
@@ -70,10 +70,7 @@ export function PagamentosAguardando({
                 </td>
                 <td className="pl-4">{m.loja_nome || "—"}</td>
                 <td className="pl-4">
-                  {new Date(m.competencia + "T00:00:00").toLocaleDateString("pt-BR", {
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
+                  {formatMonthYear(m.competencia + "T00:00:00")}
                 </td>
                 <td className="text-right pl-4">R$ {Number(m.valor).toFixed(2)}</td>
                 <td className="pl-4">
@@ -95,7 +92,7 @@ export function PagamentosAguardando({
                   <span className="text-xs font-bold uppercase text-primary">Taxa</span>
                 </td>
                 <td className="pl-4">{c.loja_nome || "—"}</td>
-                <td className="pl-4">{new Date(c.created_at).toLocaleDateString("pt-BR")}</td>
+                <td className="pl-4">{formatDate(c.created_at)}</td>
                 <td className="text-right pl-4">R$ {Number(c.valor).toFixed(2)}</td>
                 <td className="pl-4">
                   {c.pago_solicitado_em ? formatDateTime(c.pago_solicitado_em) : "—"}

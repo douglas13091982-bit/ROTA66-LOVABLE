@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, Clock, Loader2, Store } from "lucide-react";
 import type { TurnoDisponivel } from "../logic/types";
+import { formatWeekdayShortDayMonth } from "@/lib/format";
 
 export function TurnoDisponivelCard({
   t,
@@ -27,11 +28,7 @@ export function TurnoDisponivelCard({
             <Store className="h-3.5 w-3.5" /> {t.loja_nome ?? "Loja"}
           </div>
           <div className="font-display text-xl leading-tight">
-            {inicio.toLocaleDateString("pt-BR", {
-              weekday: "short",
-              day: "2-digit",
-              month: "2-digit",
-            })}{" "}
+            {formatWeekdayShortDayMonth(inicio)}{" "}
             · {t.hora_inicio.slice(0, 5)}
           </div>
           <div className="text-xs text-muted-foreground flex items-center gap-2 mt-1 flex-wrap">

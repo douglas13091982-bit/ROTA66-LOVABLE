@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useFranquia } from "@/hooks/use-franquia";
 import { Input } from "@/components/ui/input";
 import { listarClientesComPush } from "@/lib/push-admin.functions";
+import { formatDate } from "@/lib/format";
 
 export function ClientesPushPage() {
   const { roles } = useAuth();
@@ -106,7 +107,7 @@ function Conteudo() {
                 </div>
                 {c.ultima_inscricao && (
                   <div className="text-[10px] text-muted-foreground mt-0.5">
-                    {new Date(c.ultima_inscricao).toLocaleDateString("pt-BR")}
+                    {formatDate(c.ultima_inscricao)}
                   </div>
                 )}
               </div>

@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSaquesLoja, type SaqueLojaRow } from "../hooks/use-saques-loja";
 import { formatCurrency } from "@/lib/format/currency";
 import { i18nConfig } from "@/lib/i18n-config";
+import { formatDate } from "@/lib/format";
 
 const brl = (v: number) => formatCurrency(v);
 
@@ -169,7 +170,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
               : saldo < min
               ? `Saldo abaixo do mínimo necessário para saque (${brl(min)}).`
               : resumo?.ultimo_saque_em
-              ? `Limite de 1 saque por semana. Próximo saque disponível após ${new Date(new Date(resumo.ultimo_saque_em).getTime() + 7 * 24 * 3600 * 1000).toLocaleDateString("pt-BR")}.`
+              ? `Limite de 1 saque por semana. Próximo saque disponível após ${formatDate(new Date(resumo.ultimo_saque_em).getTime() + 7 * 24 * 3600 * 1000)}.`
               : "Saque indisponível no momento."}
           </p>
         </div>
@@ -197,7 +198,7 @@ export function SaquesLojaCard({ lojaId }: { lojaId: string }) {
                 <div className="min-w-0">
                   <div className="text-lg font-bold text-navy/80">{brl(Number(s.valor))}</div>
                   <div className="text-[10px] text-muted-foreground mt-0.5">
-                    {new Date(s.solicitado_em).toLocaleDateString(i18nConfig.locale)} · {s.pix_chave.slice(0, 4)}***
+                    {formatDate(s.solicitado_em)} · {s.pix_chave.slice(0, 4)}***
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-1">

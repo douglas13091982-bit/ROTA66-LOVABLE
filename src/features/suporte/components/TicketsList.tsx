@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 import type { Modo, Ticket, TicketStatus } from "../types";
 import { StatusBadge } from "./StatusBadge";
+import { formatDayMonth, formatTime } from "@/lib/format";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
   const hoje = new Date();
   const sameDay = d.toDateString() === hoje.toDateString();
   return sameDay
-    ? d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
-    : d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+    ? formatTime(d)
+    : formatDayMonth(d);
 }
 
 export function TicketsList({

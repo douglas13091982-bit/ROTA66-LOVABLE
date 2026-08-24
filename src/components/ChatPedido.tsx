@@ -8,7 +8,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Loader2, Send, MessageCircle, Store, Bike, X } from "lucide-react";
 import { toast } from "sonner";
-import { i18nConfig } from "@/lib/i18n-config";
+import { formatTime } from "@/lib/format";
 
 
 export type ChatSenderRole = "entregador" | "loja";
@@ -246,7 +246,7 @@ export function ChatPedido({ open, onOpenChange, pedidoId, pedidoNumero, senderR
                   >
                     <div className="whitespace-pre-wrap break-words">{m.mensagem}</div>
                     <div className={`text-[10px] mt-1 ${meu ? "text-white/70" : "text-[#5b6b82]"}`}>
-                      {new Date(m.created_at).toLocaleTimeString(i18nConfig.locale, { hour: "2-digit", minute: "2-digit" })}
+                      {formatTime(m.created_at)}
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import { Calendar, CheckCircle2, Clock, Loader2 } from "lucide-react";
 import { brl } from "../logic/helpers";
 import { PixRecargaPanel } from "./PixRecargaPanel";
 import type { ConfigCreditos, RecargaPixState, SaldoEntregador } from "../logic/types";
+import { formatDate } from "@/lib/format";
 
 type Props = {
   saldo: SaldoEntregador;
@@ -56,7 +57,7 @@ export function PasseMensalCard({
       <div className="text-xs text-white/40 mt-1">
         Vencimento{" "}
         {vencimentoDate
-          ? vencimentoDate.toLocaleDateString("pt-BR")
+          ? formatDate(vencimentoDate)
           : `dia ${saldo?.dia_vencimento ?? "—"}`}
         {mensalidadePaga
           ? " · mensalidade já quitada para este mês"
