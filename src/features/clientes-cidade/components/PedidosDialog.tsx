@@ -141,7 +141,7 @@ export function PedidosDialog({
                   <div className="flex items-center justify-between text-[12px] text-muted-foreground">
                     <span>#{p.numero} • {formatDate(p.created_at)}</span>
                     <span className="font-medium text-foreground">
-                      {formatCurrency(p.valor_total)}
+                      {formatCurrency(Number(p.valor_total) || 0)}
                     </span>
                   </div>
                   {qtd > 0 && (
