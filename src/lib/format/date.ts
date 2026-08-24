@@ -13,6 +13,33 @@ const DAY_MONTH_TIME = new Intl.DateTimeFormat(i18nConfig.locale, {
   hour: "2-digit",
   minute: "2-digit",
 });
+const DAY_MONTH = new Intl.DateTimeFormat(i18nConfig.locale, {
+  day: "2-digit",
+  month: "2-digit",
+});
+const MONTH_YEAR = new Intl.DateTimeFormat(i18nConfig.locale, {
+  month: "2-digit",
+  year: "numeric",
+});
+const MONTH_YEAR_LONG = new Intl.DateTimeFormat(i18nConfig.locale, {
+  month: "long",
+  year: "numeric",
+});
+const MONTH_SHORT = new Intl.DateTimeFormat(i18nConfig.locale, { month: "short" });
+const TIME_WITH_SECONDS = new Intl.DateTimeFormat(i18nConfig.locale, {
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+});
+const WEEKDAY_SHORT_DAY = new Intl.DateTimeFormat(i18nConfig.locale, {
+  weekday: "short",
+  day: "2-digit",
+});
+const WEEKDAY_LONG_DAY_MONTH = new Intl.DateTimeFormat(i18nConfig.locale, {
+  weekday: "long",
+  day: "2-digit",
+  month: "short",
+});
 
 type DateInput = Date | string | number | null | undefined;
 
