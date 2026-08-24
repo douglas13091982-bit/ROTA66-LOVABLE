@@ -1,6 +1,6 @@
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { Bucket, PedidoHistorico, Periodo } from "./types";
-import { formatWeekdayShortDay } from "@/lib/format";
+import { formatMonthShort, formatWeekdayLongDayMonth, formatWeekdayShortDay } from "@/lib/format";
 
 export function startOfDay(d: Date) {
   const x = new Date(d);
@@ -108,9 +108,7 @@ export function agruparPorDia(listagem: PedidoHistorico[]) {
     const dd = startOfDay(d).getTime();
     if (dd === hoje.getTime()) return "HOJE";
     if (dd === ontem.getTime()) return "ONTEM";
-    return d
-      .toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "short" })
-      .toUpperCase();
+    return formatWeekdayLongDayMonth(d).toUpperCase();
   };
   const groups: { label: string; items: PedidoHistorico[] }[] = [];
   for (const p of listagem) {
