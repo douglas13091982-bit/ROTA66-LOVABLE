@@ -3,7 +3,7 @@ import { CalendarDays, ArrowRight } from "lucide-react";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { useFinanceiroLoja } from "@/features/loja-financeiro/hooks/use-financeiro-loja";
 import { PreviaSemanaCard } from "@/features/loja-financeiro/components/PreviaSemanaCard";
-import { formatDate } from "@/lib/format";
+import { formatCurrencyValue, formatDate } from "@/lib/format";
 
 export function FinanceiroResumoDashboard() {
   const { data: loja } = useMinhaLoja();
@@ -54,7 +54,7 @@ export function FinanceiroResumoDashboard() {
                     Valor
                   </div>
                   <div className="text-2xl font-bold">
-                    R$ {Number(valor || 0).toFixed(2).replace(".", ",")}
+                    R$ {formatCurrencyValue(Number(valor || 0))}
                   </div>
                 </div>
                 <div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Wallet, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { formatCurrencyValue } from "@/lib/format";
 
 const STORAGE_KEY = "entregador:hide-ganho-dia";
 
@@ -26,7 +27,7 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
       <div className="flex flex-col -gap-1">
         <span className="text-[9px] font-bold uppercase tracking-widest leading-none" style={{ color: "#ffffff" }}>Saldo disponível</span>
         <div className="text-[17px] font-black tracking-tighter tabular-nums leading-none" style={{ color: "#ffffff" }}>
-          {hide ? "R$ ••••" : `R$ ${valor.toFixed(2).replace(".", ",")}`}
+          {hide ? "R$ ••••" : `R$ ${formatCurrencyValue(valor)}`}
         </div>
       </div>
       <ChevronRight className="h-4 w-4 ml-1" style={{ color: "#ffffff" }} />

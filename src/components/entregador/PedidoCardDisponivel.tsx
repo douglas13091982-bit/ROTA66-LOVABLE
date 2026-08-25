@@ -4,7 +4,7 @@ import { haversineKm, type LatLng } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { segundosRestantesPedido } from "@/lib/oferta-timer";
 import type { PedidoDisponivel } from "@/types/pedido";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrencyValue, formatDateTime } from "@/lib/format";
 
 type Props = {
   pedido: PedidoDisponivel;
@@ -129,7 +129,7 @@ function BadgeBonus({ valor }: { valor: number }) {
       }}
     >
       <TrendingUp className="h-6 w-6 stroke-[3]" />
-      <span>+ R$ {valor.toFixed(2).replace(".", ",")} BÔNUS</span>
+      <span>+ R$ {formatCurrencyValue(valor)} BÔNUS</span>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { AlertTriangle, CalendarClock, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useMinhaLoja, useIsLojaOwner } from "@/hooks/use-loja";
 import { supabase } from "@/integrations/supabase/client";
+import { formatCurrencyValue } from "@/lib/format";
 
 function calcularProxVencimento(diaVenc: number): string | undefined {
   if (!diaVenc || diaVenc < 1 || diaVenc > 31) return undefined;
@@ -97,7 +98,7 @@ export function MensalidadeVencimentoBanner() {
         <span className="font-semibold">{titulo}.</span>{" "}
         <span className="opacity-90">
           Vencimento {dataFmt}
-          {mensAberta?.valor ? ` — R$ ${Number(mensAberta.valor).toFixed(2).replace(".", ",")}` : ""}
+          {mensAberta?.valor ? ` — R$ ${formatCurrencyValue(Number(mensAberta.valor))}` : ""}
           . Evite bloqueio pagando antes do vencimento.
         </span>
       </div>

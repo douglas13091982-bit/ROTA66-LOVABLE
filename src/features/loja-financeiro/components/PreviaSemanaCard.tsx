@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
-import { formatDayMonth } from "@/lib/format";
+import { formatCurrencyValue, formatDayMonth } from "@/lib/format";
 
 type Props = {
   lojaId: string;
@@ -95,7 +95,7 @@ export function PreviaSemanaCard({ lojaId, taxaPorPedido, planoMensalAtivo }: Pr
                   Taxa por pedido
                 </div>
                 <div className="text-2xl font-bold">
-                  R$ {taxaPorPedido.toFixed(2).replace(".", ",")}
+                  R$ {formatCurrencyValue(taxaPorPedido)}
                 </div>
               </div>
               <div>
@@ -103,7 +103,7 @@ export function PreviaSemanaCard({ lojaId, taxaPorPedido, planoMensalAtivo }: Pr
                   Total previsto
                 </div>
                 <div className="text-2xl font-bold text-primary">
-                  R$ {total.toFixed(2).replace(".", ",")}
+                  R$ {formatCurrencyValue(total)}
                 </div>
               </div>
             </div>

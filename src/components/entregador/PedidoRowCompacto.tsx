@@ -4,6 +4,7 @@ import { useSomStatus } from "@/hooks/use-som-status";
 import { haversineKm, type LatLng } from "@/lib/geo";
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   grupo: GrupoPedido;
@@ -99,7 +100,7 @@ function PedidoRowCompactoBase({
             Ganhos
           </p>
           <p className="text-[24px] font-black !text-white tracking-normal tabular-nums leading-none mt-1">
-            R$ {total.toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(total)}
           </p>
         </div>
       </div>

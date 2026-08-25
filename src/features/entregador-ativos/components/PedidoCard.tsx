@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 import { ChatPedidoButton } from "@/components/ChatPedido";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrencyValue, formatDateTime } from "@/lib/format";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -337,7 +337,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               className="font-display text-4xl sm:text-5xl md:text-6xl leading-none mt-2 tabular-nums break-all"
               style={{ color: isLight ? "#10B981" : "#34D399" }}
             >
-              R$ {liquido.toFixed(2).replace(".", ",")}
+              R$ {formatCurrencyValue(liquido)}
             </div>
             {Number(p.bonus_entregador ?? 0) > 0 && (
               <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 text-xs font-bold uppercase tracking-normal rounded-full">
@@ -377,7 +377,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               label="Valor/km"
               value={
                 valorPorKm != null
-                  ? `R$ ${valorPorKm.toFixed(2).replace(".", ",")}`
+                  ? `R$ ${formatCurrencyValue(valorPorKm)}`
                   : "—"
               }
               withBorder

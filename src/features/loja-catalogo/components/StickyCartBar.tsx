@@ -1,4 +1,5 @@
 import { ShoppingBag } from "lucide-react";
+import { formatCurrencyValue } from "@/lib/format";
 
 export function StickyCartBar({
   totalItens,
@@ -30,7 +31,7 @@ export function StickyCartBar({
         </div>
         <div className="flex-1 min-w-0">
           <div className="cc-price text-[19px] leading-none cc-ink-text">
-            R$ {subtotal.toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(subtotal)}
           </div>
           <div className="text-[12px] text-muted-foreground mt-0.5">Ver sacola</div>
         </div>

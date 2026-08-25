@@ -1,5 +1,6 @@
 import { ExternalLink, Loader2, MapPin, Phone, Store, X } from "lucide-react";
 import type { MeuTurno } from "../logic/types";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   turno: MeuTurno;
@@ -27,7 +28,7 @@ export function TurnoInlineDetails({ turno, onDesmarcar, cancelando }: Props) {
         <div className="rounded-md border border-border/60 bg-background/40 p-2 text-center">
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Horas</div>
           <div className="text-sm font-bold text-emerald-400">
-            R$ {totalHoras.toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(totalHoras)}
           </div>
         </div>
         <div className="rounded-md border border-border/60 bg-background/40 p-2 text-center">
@@ -39,7 +40,7 @@ export function TurnoInlineDetails({ turno, onDesmarcar, cancelando }: Props) {
             Por entrega
           </div>
           <div className="text-sm font-bold text-emerald-400">
-            R$ {Number(turno.ganho_entregas || 0).toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(Number(turno.ganho_entregas || 0))}
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { resumirEnderecoEntrega } from "@/lib/endereco";
 
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   grupo: GrupoPedido;
@@ -144,7 +145,7 @@ function PedidoListItemBase({
         <div className="text-right shrink-0">
           <p className="text-[11px] font-black text-white uppercase tracking-wider mb-1.5">Ganhos</p>
           <p className="text-4xl font-black text-white tracking-normal tabular-nums leading-none">
-            R$ {total.toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(total)}
           </p>
         </div>
       </div>
@@ -250,7 +251,7 @@ function PedidoListItemBase({
                 style={{ background: "#0d2c54", color: "#fff" }}
               >
                 <TrendingUp className="h-4 w-4" />
-                + R$ {totalBonus.toFixed(2).replace(".", ",")} bônus
+                + R$ {formatCurrencyValue(totalBonus)} bônus
               </span>
             )}
             {ehCartao && (

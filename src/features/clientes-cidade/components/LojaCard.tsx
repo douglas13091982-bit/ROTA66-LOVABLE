@@ -5,6 +5,7 @@ import { useLojaCategorias, labelCategoriaDinamico } from "@/hooks/use-loja-cate
 import type { LojaPublica } from "../logic/types";
 import type { FreteInfo } from "../hooks/use-fretes-lojas";
 import type { AvaliacaoResumo } from "../hooks/use-avaliacoes-lojas";
+import { formatCurrencyValue } from "@/lib/format";
 
 interface Props {
   loja: LojaPublica;
@@ -20,17 +21,17 @@ export function LojaCard({ loja, frete, freteCarregando, semEndereco, avaliacao 
 
   let freteLabel: string;
   if (frete) {
-    freteLabel = `Frete R$ ${frete.valor.toFixed(2).replace(".", ",")} · ${frete.km.toFixed(1)} km`;
+    freteLabel = `Frete R$ ${formatCurrencyValue(frete.valor)} · ${frete.km.toFixed(1)} km`;
   } else if (freteCarregando) {
     freteLabel = "Calculando frete…";
   } else if (semEndereco) {
     freteLabel =
       taxaBase > 0
-        ? `Entrega a partir de R$ ${taxaBase.toFixed(2).replace(".", ",")}`
+        ? `Entrega a partir de R$ ${formatCurrencyValue(taxaBase)}`
         : "Entrega disponível";
   } else {
     freteLabel =
-      taxaBase > 0 ? `Frete R$ ${taxaBase.toFixed(2).replace(".", ",")}` : "Entrega disponível";
+      taxaBase > 0 ? `Frete R$ ${formatCurrencyValue(taxaBase)}` : "Entrega disponível";
   }
 
   const categoriaLabel = loja.categoria
