@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import homeBgAsset from "@/assets/home-bg.png.asset.json";
+import roadBg from "@/assets/splash-road.webp";
+import rota66Logo from "@/assets/rota66-logo.webp";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Store, Bike } from "lucide-react";
 
@@ -7,7 +8,7 @@ export const Route = createFileRoute("/")({
   component: () => (
     <div 
       className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat p-4 relative overflow-hidden"
-      style={{ backgroundImage: `url(${homeBgAsset.url})` }}
+      style={{ backgroundImage: `url(${roadBg})` }}
     >
       {/* Overlay for depth */}
       <div className="absolute inset-0 bg-navy/70 z-0" />
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/")({
         {/* Logo with glow effect */}
         <div className="w-48 h-48 flex items-center justify-center animate-in fade-in zoom-in duration-1000">
           <img 
-            src="https://storage.googleapis.com/gpt-engineer-file-uploads/85H1Xj7XI9dnBTV14pAbFErSOmW2/social-images/social-1782498933692-ICONE_APK.webp" 
+            src={rota66Logo} 
             alt="ROTA 66" 
             className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(227,0,15,0.6)]"
           />
