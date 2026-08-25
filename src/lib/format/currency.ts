@@ -1,4 +1,5 @@
 import { i18nConfig } from "../i18n-config";
+import { formatCurrencyValue } from "@/lib/format";
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat(i18nConfig.locale, {
   style: "currency",

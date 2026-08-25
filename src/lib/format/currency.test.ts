@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { formatCurrency, formatCurrencyValue, parseCurrency } from "./currency";
+import { formatCurrencyValue } from "@/lib/format";
 
 describe("formatCurrency", () => {
   it('retorna "R$ 0,00" para null/undefined/NaN', () => {
