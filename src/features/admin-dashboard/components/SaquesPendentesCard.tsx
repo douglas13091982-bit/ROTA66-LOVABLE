@@ -20,7 +20,7 @@ export function SaquesPendentesCard() {
   const { data: recentes = [] } = useQuery({
     queryKey: ["admin-saques-entregadores-recentes"],
     queryFn: async (): Promise<SaqueRecente[]> => {
-      const { data: saques, error } = await (supabase as any)
+      const { data: saques, error } = await supabase
         .from("entregador_saques")
         .select("id, entregador_id, valor, pix_chave, solicitado_em")
         .in("status", ["solicitado", "pendente"])
@@ -30,16 +30,16 @@ export function SaquesPendentesCard() {
         console.warn("[SaquesPendentesCard]", error.message ?? error);
         return [];
       }
-      const ids = (saques ?? []).map((s: any) => s.entregador_id);
+      const ids = (saques ?? []).map((s) => s.entregador_id);
       let names: Record<string, string | null> = {};
       if (ids.length) {
         const { data: profs } = await supabase
           .from("profiles")
           .select("id, full_name")
           .in("id", ids);
-        names = Object.fromEntries((profs ?? []).map((p: any) => [p.id, p.full_name ?? null]));
+        names = Object.fromEntries((profs ?? []).map((p) => [p.id, p.full_name ?? null]));
       }
-      return (saques ?? []).map((s: any) => ({
+      return (saques ?? []).map((s) => ({
         id: s.id,
         entregador_id: s.entregador_id,
         valor: Number(s.valor ?? 0),
