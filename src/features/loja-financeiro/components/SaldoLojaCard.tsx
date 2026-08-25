@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSaldoLoja } from "../hooks/use-saldo-loja";
 import { formatCurrency } from "@/lib/format/currency";
 import { i18nConfig } from "@/lib/i18n-config";
+import { formatDayMonthTime } from "@/lib/format";
 
 const brl = (v: number) =>
   formatCurrency(v);
@@ -181,7 +182,7 @@ export function SaldoLojaCard({ lojaId }: { lojaId: string }) {
                   <div className="min-w-0 pr-3">
                     <div className="text-[13px] font-bold text-navy/80 truncate group-hover:text-navy transition-colors">{m.descricao ?? m.tipo}</div>
                     <div className="text-[10px] text-muted-foreground mt-0.5">
-                      {new Date(m.created_at).toLocaleString(i18nConfig.locale, { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                      {formatDayMonthTime(m.created_at)}
                     </div>
                   </div>
                   <div className="text-right">
