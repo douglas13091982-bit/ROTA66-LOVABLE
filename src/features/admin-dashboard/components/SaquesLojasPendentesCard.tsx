@@ -14,17 +14,13 @@ type SaqueRecente = {
   nome: string | null;
 };
 
-function formatDate(iso: string) {
-  return formatDayMonthTime(iso);
-}
-
 export function SaquesLojasPendentesCard() {
   const { data: total = 0 } = useSaquesLojasPendentesCount();
 
   const { data: recentes = [] } = useQuery({
     queryKey: ["admin-saques-lojas-recentes"],
     queryFn: async (): Promise<SaqueRecente[]> => {
-      const { data: saques, error } = await (supabase as any)
+      const { data: saques, error } = await supabase
         .from("lojas_saques")
         .select("id, loja_id, valor, pix_chave, solicitado_em")
         .in("status", ["solicitado", "pendente"])
@@ -34,16 +30,13 @@ export function SaquesLojasPendentesCard() {
         console.warn("[SaquesLojasPendentesCard]", error.message ?? error);
         return [];
       }
-      const ids = (saques ?? []).map((s: any) => s.loja_id);
+      const ids = (saques ?? []).map((s) => s.loja_id);
       let names: Record<string, string | null> = {};
       if (ids.length) {
-        const { data: lojas } = await (supabase as any)
-          .from("lojas")
-          .select("id, nome")
-          .in("id", ids);
-        names = Object.fromEntries((lojas ?? []).map((l: any) => [l.id, l.nome ?? null]));
+        const { data: lojas } = await supabase.from("lojas").select("id, nome").in("id", ids);
+        names = Object.fromEntries((lojas ?? []).map((l) => [l.id, l.nome ?? null]));
       }
-      return (saques ?? []).map((s: any) => ({
+      return (saques ?? []).map((s) => ({
         id: s.id,
         loja_id: s.loja_id,
         valor: Number(s.valor ?? 0),
@@ -85,12 +78,10 @@ export function SaquesLojasPendentesCard() {
             <div className="min-w-0">
               <div className="font-bold truncate">{r.nome ?? "Loja"}</div>
               <div className="text-[11px] text-muted-foreground truncate">
-                PIX: {r.pix_chave} · {formatDate(r.solicitado_em)}
+                PIX: {r.pix_chave} · {formatDayMonthTime(r.solicitado_em)}
               </div>
             </div>
-            <div className="font-bold text-sky-300 whitespace-nowrap">
-              R$ {r.valor.toFixed(2)}
-            </div>
+            <div className="font-bold text-sky-300 whitespace-nowrap">R$ {r.valor.toFixed(2)}</div>
           </div>
         ))}
       </div>

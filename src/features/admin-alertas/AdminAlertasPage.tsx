@@ -21,14 +21,6 @@ function severityBadge(sev: "warn" | "crit") {
   return <Badge className="bg-amber-500 hover:bg-amber-600">Atenção</Badge>;
 }
 
-function formatDate(s: string) {
-  try {
-    return formatDateTime(s);
-  } catch {
-    return s;
-  }
-}
-
 export function AdminAlertasPage() {
   const [includeResolved, setIncludeResolved] = useState(false);
   const { data: alerts = [], isLoading, refetch } = useSystemAlerts(includeResolved);
@@ -45,7 +37,7 @@ export function AdminAlertasPage() {
 
   const waLink = suporteWhatsapp
     ? `https://wa.me/${suporteWhatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
-        `Alertas críticos no sistema: ${criticos}`
+        `Alertas críticos no sistema: ${criticos}`,
       )}`
     : null;
 
@@ -58,7 +50,8 @@ export function AdminAlertasPage() {
               Monitoramento automático do banco. Atualiza a cada 5 min.
             </p>
             <p className="text-sm mt-1">
-              <strong>{ativos.length}</strong> alerta(s) ativo(s) — <strong>{criticos}</strong> crítico(s).
+              <strong>{ativos.length}</strong> alerta(s) ativo(s) — <strong>{criticos}</strong>{" "}
+              crítico(s).
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -95,9 +88,7 @@ export function AdminAlertasPage() {
                   <Input
                     type="number"
                     value={cfg.query_max_ms_crit}
-                    onChange={(e) =>
-                      setForm({ ...cfg, query_max_ms_crit: Number(e.target.value) })
-                    }
+                    onChange={(e) => setForm({ ...cfg, query_max_ms_crit: Number(e.target.value) })}
                   />
                 </div>
                 <div>
@@ -105,9 +96,7 @@ export function AdminAlertasPage() {
                   <Input
                     type="number"
                     value={cfg.connections_warn}
-                    onChange={(e) =>
-                      setForm({ ...cfg, connections_warn: Number(e.target.value) })
-                    }
+                    onChange={(e) => setForm({ ...cfg, connections_warn: Number(e.target.value) })}
                   />
                 </div>
                 <div>
@@ -115,9 +104,7 @@ export function AdminAlertasPage() {
                   <Input
                     type="number"
                     value={cfg.connections_crit}
-                    onChange={(e) =>
-                      setForm({ ...cfg, connections_crit: Number(e.target.value) })
-                    }
+                    onChange={(e) => setForm({ ...cfg, connections_crit: Number(e.target.value) })}
                   />
                 </div>
                 <div>
@@ -189,10 +176,10 @@ export function AdminAlertasPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       {severityBadge(a.severidade)}
-                      <span className="text-xs text-muted-foreground">{formatDate(a.created_at)}</span>
-                      {a.resolvido && (
-                        <Badge variant="secondary">Resolvido</Badge>
-                      )}
+                      <span className="text-xs text-muted-foreground">
+                        {formatDateTime(a.created_at)}
+                      </span>
+                      {a.resolvido && <Badge variant="secondary">Resolvido</Badge>}
                     </div>
                     <p className="text-sm mt-1 break-words">{a.mensagem}</p>
                     {a.metadata?.query && (

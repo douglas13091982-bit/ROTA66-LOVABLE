@@ -5,10 +5,6 @@ import { AvatarImg } from "@/components/AvatarImg";
 import { STATUS_LABEL, type SaqueRow } from "../logic/types";
 import { formatDateTime } from "@/lib/format";
 
-function formatDate(iso: string) {
-  return formatDateTime(iso);
-}
-
 export function SaquesTable({
   list,
   isLoading,
@@ -49,14 +45,21 @@ export function SaquesTable({
                           src={null}
                           alt={s.entregador_nome ?? "Entregador"}
                           className="h-full w-full object-cover"
-                          fallback={<span className="text-xs font-bold text-white/70">{(s.entregador_nome ?? "?").slice(0, 1).toUpperCase()}</span>}
+                          fallback={
+                            <span className="text-xs font-bold text-white/70">
+                              {(s.entregador_nome ?? "?").slice(0, 1).toUpperCase()}
+                            </span>
+                          }
                         />
                       </div>
                       <div className="min-w-0">
                         <div className="font-bold truncate">{s.entregador_nome ?? "Sem nome"}</div>
                         <div className="text-[11px] text-muted-foreground truncate">
                           {s.entregador_phone ? (
-                            <a href={`tel:${s.entregador_phone.replace(/\D/g, "")}`} className="hover:text-foreground inline-flex items-center gap-1">
+                            <a
+                              href={`tel:${s.entregador_phone.replace(/\D/g, "")}`}
+                              className="hover:text-foreground inline-flex items-center gap-1"
+                            >
                               <Phone className="h-3 w-3" /> {s.entregador_phone}
                             </a>
                           ) : (
@@ -67,16 +70,16 @@ export function SaquesTable({
                     </div>
                   </td>
                   <td className="px-3 py-2 font-medium whitespace-nowrap">{s.pix_chave}</td>
-                  <td className="px-3 py-2 font-bold whitespace-nowrap">
-                    R$ {s.valor.toFixed(2)}
-                  </td>
+                  <td className="px-3 py-2 font-bold whitespace-nowrap">R$ {s.valor.toFixed(2)}</td>
                   <td className="px-3 py-2">
-                    <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${st.cls}`}>
+                    <span
+                      className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${st.cls}`}
+                    >
                       {st.label}
                     </span>
                   </td>
                   <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">
-                    {formatDate(s.solicitado_em)}
+                    {formatDateTime(s.solicitado_em)}
                   </td>
                   <td className="px-3 py-2">
                     {(s.status === "pendente" || s.status === "solicitado") && (
@@ -98,10 +101,15 @@ export function SaquesTable({
                       </div>
                     )}
                     {s.status === "pago" && (
-                      <span className="text-[10px] text-muted-foreground">Pago em {formatDate(s.pago_em!)}</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        Pago em {formatDateTime(s.pago_em!)}
+                      </span>
                     )}
                     {s.status === "rejeitado" && (
-                      <span className="text-[10px] text-muted-foreground" title={s.motivo_rejeicao ?? undefined}>
+                      <span
+                        className="text-[10px] text-muted-foreground"
+                        title={s.motivo_rejeicao ?? undefined}
+                      >
                         Rejeitado
                       </span>
                     )}
