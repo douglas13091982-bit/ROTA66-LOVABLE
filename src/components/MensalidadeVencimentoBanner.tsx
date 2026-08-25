@@ -97,7 +97,7 @@ export function MensalidadeVencimentoBanner() {
         <span className="font-semibold">{titulo}.</span>{" "}
         <span className="opacity-90">
           Vencimento {dataFmt}
-          {mensAberta?.valor ? ` — R$ ${Number(mensAberta.valor).toFixed(2).replace(".", ",")}` : ""}
+          {mensAberta?.valor ? ` — R$ ${formatCurrencyValue(Number(mensAberta.valor))}` : ""}
           . Evite bloqueio pagando antes do vencimento.
         </span>
       </div>

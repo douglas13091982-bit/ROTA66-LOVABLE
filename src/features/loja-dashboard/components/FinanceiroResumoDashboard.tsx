@@ -54,7 +54,7 @@ export function FinanceiroResumoDashboard() {
                     Valor
                   </div>
                   <div className="text-2xl font-bold">
-                    R$ {Number(valor || 0).toFixed(2).replace(".", ",")}
+                    R$ {formatCurrencyValue(Number(valor || 0))}
                   </div>
                 </div>
                 <div>

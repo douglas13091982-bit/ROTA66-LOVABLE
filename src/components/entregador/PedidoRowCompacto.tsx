@@ -99,7 +99,7 @@ function PedidoRowCompactoBase({
             Ganhos
           </p>
           <p className="text-[24px] font-black !text-white tracking-normal tabular-nums leading-none mt-1">
-            R$ {total.toFixed(2).replace(".", ",")}
+            R$ {formatCurrencyValue(total)}
           </p>
         </div>
       </div>

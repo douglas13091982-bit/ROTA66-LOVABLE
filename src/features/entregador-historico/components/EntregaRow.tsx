@@ -41,7 +41,7 @@ export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
 
       <div className="text-right shrink-0">
         <div className="font-bold text-[17px] text-white whitespace-nowrap">
-          R$ {valor.toFixed(2).replace(".", ",")}
+          R$ {formatCurrencyValue(valor)}
         </div>
         <div className="text-[11px] text-white/50 mt-0.5">Taxa de entrega</div>
       </div>

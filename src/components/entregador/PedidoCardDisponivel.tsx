@@ -129,7 +129,7 @@ function BadgeBonus({ valor }: { valor: number }) {
       }}
     >
       <TrendingUp className="h-6 w-6 stroke-[3]" />
-      <span>+ R$ {valor.toFixed(2).replace(".", ",")} BÔNUS</span>
+      <span>+ R$ {formatCurrencyValue(valor)} BÔNUS</span>
     </div>
   );
 }

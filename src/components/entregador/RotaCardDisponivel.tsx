@@ -129,7 +129,7 @@ export function RotaCardDisponivel({
               }}
             >
               <TrendingUp className="h-6 w-6 stroke-[3]" />
-              <span>+ R$ {totalBonus.toFixed(2).replace(".", ",")} BÔNUS</span>
+              <span>+ R$ {formatCurrencyValue(totalBonus)} BÔNUS</span>
             </div>
           )}
           <div className="flex items-center justify-center gap-2 mt-3 text-base font-semibold text-white/85">

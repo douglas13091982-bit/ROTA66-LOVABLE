@@ -35,15 +35,15 @@ export function ProdutoGrid({ items, qtdByProduto, onAdd, onDec, layout }: Props
     promoAtiva(p) ? (
       <span className="inline-flex items-baseline gap-2">
         <span className="cc-price text-[19px] text-primary leading-none">
-          R$ {precoEfetivo(p).toFixed(2).replace(".", ",")}
+          R$ {formatCurrencyValue(precoEfetivo(p))}
         </span>
         <span className="text-[12px] text-muted-foreground line-through">
-          R$ {Number(p.preco).toFixed(2).replace(".", ",")}
+          R$ {formatCurrencyValue(Number(p.preco))}
         </span>
       </span>
     ) : (
       <span className="cc-price text-[19px] text-primary leading-none">
-        R$ {Number(p.preco).toFixed(2).replace(".", ",")}
+        R$ {formatCurrencyValue(Number(p.preco))}
       </span>
     );
 

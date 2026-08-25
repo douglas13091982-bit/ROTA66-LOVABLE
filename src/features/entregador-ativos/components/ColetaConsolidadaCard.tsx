@@ -62,11 +62,11 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                 Você recebe
               </span>
               <span className="font-display text-4xl text-navy leading-none mt-1 font-black">
-                R$ {total.total.toFixed(2).replace(".", ",")}
+                R$ {formatCurrencyValue(total.total)}
               </span>
               {total.bonus > 0 && (
                 <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-amber-300 mt-1">
-                  + R$ {total.bonus.toFixed(2).replace(".", ",")} bônus
+                  + R$ {formatCurrencyValue(total.bonus)} bônus
                 </span>
               )}
             </span>
