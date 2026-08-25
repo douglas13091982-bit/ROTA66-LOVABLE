@@ -14,10 +14,6 @@ type SaqueRecente = {
   nome: string | null;
 };
 
-function formatDate(iso: string) {
-  return formatDayMonthTime(iso);
-}
-
 export function SaquesPendentesCard() {
   const { data: total = 0 } = useSaquesPendentesCount();
 
@@ -85,7 +81,7 @@ export function SaquesPendentesCard() {
             <div className="min-w-0">
               <div className="font-bold truncate">{r.nome ?? "Entregador"}</div>
               <div className="text-[11px] text-muted-foreground truncate">
-                PIX: {r.pix_chave} · {formatDate(r.solicitado_em)}
+                PIX: {r.pix_chave} · {formatDayMonthTime(r.solicitado_em)}
               </div>
             </div>
             <div className="font-bold text-amber-300 whitespace-nowrap">
