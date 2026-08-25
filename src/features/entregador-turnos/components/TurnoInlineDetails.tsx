@@ -1,5 +1,6 @@
 import { ExternalLink, Loader2, MapPin, Phone, Store, X } from "lucide-react";
 import type { MeuTurno } from "../logic/types";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   turno: MeuTurno;

@@ -1,7 +1,7 @@
 import { ChevronRight, PackageCheck } from "lucide-react";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import type { PedidoHistorico } from "../logic/types";
-import { formatTime } from "@/lib/format";
+import { formatCurrencyValue, formatTime } from "@/lib/format";
 
 export function EntregaRow({ pedido }: { pedido: PedidoHistorico }) {
   const valor = ganhoPedidoEntregador({

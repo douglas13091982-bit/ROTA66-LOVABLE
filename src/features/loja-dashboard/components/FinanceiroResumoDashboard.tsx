@@ -3,7 +3,7 @@ import { CalendarDays, ArrowRight } from "lucide-react";
 import { useMinhaLoja } from "@/hooks/use-loja";
 import { useFinanceiroLoja } from "@/features/loja-financeiro/hooks/use-financeiro-loja";
 import { PreviaSemanaCard } from "@/features/loja-financeiro/components/PreviaSemanaCard";
-import { formatDate } from "@/lib/format";
+import { formatCurrencyValue, formatDate } from "@/lib/format";
 
 export function FinanceiroResumoDashboard() {
   const { data: loja } = useMinhaLoja();

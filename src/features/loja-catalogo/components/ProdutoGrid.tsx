@@ -1,5 +1,6 @@
 import { precoEfetivo, promoAtiva, type Produto } from "@/routes/-catalogo-types";
 import { AddButton, QtyStepper } from "./QtyStepper";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   items: Produto[];

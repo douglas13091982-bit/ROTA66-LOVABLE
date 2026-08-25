@@ -1,4 +1,5 @@
 import { ShoppingBag } from "lucide-react";
+import { formatCurrencyValue } from "@/lib/format";
 
 export function StickyCartBar({
   totalItens,

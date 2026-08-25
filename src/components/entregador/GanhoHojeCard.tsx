@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Wallet, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { formatCurrencyValue } from "@/lib/format";
 
 const STORAGE_KEY = "entregador:hide-ganho-dia";
 

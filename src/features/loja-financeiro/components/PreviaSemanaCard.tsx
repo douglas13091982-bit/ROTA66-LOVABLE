@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscribeLazy } from "@/lib/realtime-lazy";
-import { formatDayMonth } from "@/lib/format";
+import { formatCurrencyValue, formatDayMonth } from "@/lib/format";
 
 type Props = {
   lojaId: string;

@@ -4,7 +4,7 @@ import { haversineKm, type LatLng } from "@/lib/geo";
 import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { segundosRestantesPedido } from "@/lib/oferta-timer";
 import type { PedidoDisponivel } from "@/types/pedido";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrencyValue, formatDateTime } from "@/lib/format";
 
 type Props = {
   pedido: PedidoDisponivel;

@@ -5,7 +5,7 @@ import { liquidoEntregador } from "@/hooks/use-taxa-sistema";
 import { segundosRestantesGrupo } from "@/lib/oferta-timer";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
 import { BotaoAceitar, BotaoRecusar } from "./PedidoCardDisponivel";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrencyValue, formatDateTime } from "@/lib/format";
 
 type Props = {
   grupo: GrupoPedido;

@@ -19,7 +19,7 @@ import { toast } from "sonner";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 import { ChatPedidoButton } from "@/components/ChatPedido";
-import { formatDateTime } from "@/lib/format";
+import { formatCurrencyValue, formatDateTime } from "@/lib/format";
 import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 
 import { supabase } from "@/integrations/supabase/client";

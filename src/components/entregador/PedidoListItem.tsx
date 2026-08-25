@@ -5,6 +5,7 @@ import { resumirEnderecoEntrega } from "@/lib/endereco";
 
 import { ATRASO_POOL_MINUTOS } from "@/lib/pedido-atraso";
 import type { GrupoPedido, PedidoDisponivel } from "@/types/pedido";
+import { formatCurrencyValue } from "@/lib/format";
 
 type Props = {
   grupo: GrupoPedido;

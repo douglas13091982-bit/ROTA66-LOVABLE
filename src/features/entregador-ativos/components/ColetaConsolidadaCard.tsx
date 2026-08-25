@@ -6,6 +6,7 @@ import { ganhoPedidoEntregador } from "@/lib/ganho-pedido";
 import { supabase } from "@/integrations/supabase/client";
 import { ColetaDeadlineBadge } from "./ColetaDeadlineBadge";
 import type { PedidoAtivo } from "../logic/types";
+import { formatCurrencyValue } from "@/lib/format";
 
 
 type Props = {

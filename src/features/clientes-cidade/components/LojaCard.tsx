@@ -5,6 +5,7 @@ import { useLojaCategorias, labelCategoriaDinamico } from "@/hooks/use-loja-cate
 import type { LojaPublica } from "../logic/types";
 import type { FreteInfo } from "../hooks/use-fretes-lojas";
 import type { AvaliacaoResumo } from "../hooks/use-avaliacoes-lojas";
+import { formatCurrencyValue } from "@/lib/format";
 
 interface Props {
   loja: LojaPublica;
