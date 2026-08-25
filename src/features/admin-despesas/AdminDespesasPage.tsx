@@ -1,49 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AdminShell } from "@/components/AdminShell";
-import { supabase } from "@/integrations/supabase/client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useFranquia } from "@/hooks/use-franquia";
 import { formatCurrency } from "@/lib/format";
-import { toast } from "sonner";
 import { Plus, Trash2, Users, Wallet, TrendingDown, TrendingUp, Save } from "lucide-react";
-
-type Socio = {
-  id: string;
-  franqueado_user_id: string;
-  nome: string;
-  percentual: number;
-  ordem: number;
-};
-
-type Despesa = {
-  id: string;
-  franqueado_user_id: string;
-  descricao: string;
-  categoria: string | null;
-  tipo: "despesa" | "investimento";
-  valor: number;
-  competencia: string; // YYYY-MM
-  pago: boolean;
-  observacao: string | null;
-  created_at: string;
-  recorrente: boolean;
-  recorrencia_id: string | null;
-};
-
-function competenciaAtual(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
-function fmtCompetencia(c: string) {
-  const [y, m] = c.split("-");
-  const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-  return `${meses[Number(m) - 1] ?? m}/${y}`;
-}
+import { useAdminDespesas } from "./hooks/use-admin-despesas";
+import { competenciaAtual, fmtCompetencia, ultimasCompetencias } from "./logic/competencia";
+import { calcTotais } from "./logic/resumo";
+import { FORM_INICIAL, type DespesaForm } from "./logic/types";
 
 export function AdminDespesasPage() {
-  const qc = useQueryClient();
   const { user } = useAuth();
   const { loading: loadingFranq, isColaborador, config } = useFranquia();
 
@@ -51,197 +17,28 @@ export function AdminDespesasPage() {
   const franqueadoUserId = isColaborador ? config?.user_id ?? null : user?.id ?? null;
 
   const [competencia, setCompetencia] = useState<string>(competenciaAtual());
-  const [form, setForm] = useState({
-    descricao: "",
-    categoria: "",
-    tipo: "despesa" as "despesa" | "investimento",
-    valor: "",
-    observacao: "",
-    recorrente: false,
-    meses: "12",
+  const [form, setForm] = useState<DespesaForm>(FORM_INICIAL);
+
+  const {
+    socios,
+    loadingSocios,
+    despesas,
+    loadingDespesas,
+    addMut,
+    delMut,
+    delSerieMut,
+    togglePagoMut,
+    updateSocioMut,
+    addSocioMut,
+    delSocioMut,
+  } = useAdminDespesas({
+    franqueadoUserId,
+    competencia,
+    userId: user?.id,
+    isColaborador,
   });
 
-  const { data: socios, isLoading: loadingSocios } = useQuery({
-    queryKey: ["franqueado-socios", franqueadoUserId],
-    enabled: !!franqueadoUserId,
-    queryFn: async (): Promise<Socio[]> => {
-      const { data, error } = await (supabase as any)
-        .from("franqueado_socios")
-        .select("*")
-        .eq("franqueado_user_id", franqueadoUserId)
-        .order("ordem");
-      if (error) throw error;
-      return (data ?? []) as Socio[];
-    },
-  });
-
-  // Auto-seed de sócios padrão na primeira carga (apenas o próprio franqueado, não colaborador)
-  useEffect(() => {
-    if (!franqueadoUserId || isColaborador || !socios || socios.length > 0) return;
-    (async () => {
-      const defaults = [
-        { nome: "Douglas", percentual: 50, ordem: 0 },
-        { nome: "Sócio 2", percentual: 25, ordem: 1 },
-        { nome: "Sócio 3", percentual: 25, ordem: 2 },
-      ].map((s) => ({ ...s, franqueado_user_id: franqueadoUserId }));
-      const { error } = await (supabase as any).from("franqueado_socios").insert(defaults);
-      if (!error) qc.invalidateQueries({ queryKey: ["franqueado-socios", franqueadoUserId] });
-    })();
-  }, [franqueadoUserId, isColaborador, socios, qc]);
-
-  const { data: despesas, isLoading: loadingDespesas } = useQuery({
-    queryKey: ["franqueado-despesas", franqueadoUserId, competencia],
-    enabled: !!franqueadoUserId,
-    queryFn: async (): Promise<Despesa[]> => {
-      const { data, error } = await (supabase as any)
-        .from("franqueado_despesas")
-        .select("*")
-        .eq("franqueado_user_id", franqueadoUserId)
-        .eq("competencia", competencia)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as Despesa[];
-    },
-  });
-
-  const addMut = useMutation({
-    mutationFn: async () => {
-      const valor = Number(form.valor.replace(",", "."));
-      if (!form.descricao.trim() || !valor || valor <= 0) throw new Error("Preencha descrição e valor");
-
-      // Monta as competências (recorrente = N meses a partir da competência atual)
-      const meses = form.recorrente ? Math.min(Math.max(Number(form.meses) || 12, 1), 60) : 1;
-      const recorrencia_id = form.recorrente
-        ? (globalThis.crypto?.randomUUID?.() ??
-            `${Date.now()}-${Math.random().toString(36).slice(2)}`)
-        : null;
-
-      const [yStr, mStr] = competencia.split("-");
-      const baseYear = Number(yStr);
-      const baseMonth = Number(mStr); // 1-12
-      const rows = Array.from({ length: meses }).map((_, i) => {
-        const total = baseMonth - 1 + i;
-        const y = baseYear + Math.floor(total / 12);
-        const m = (total % 12) + 1;
-        const comp = `${y}-${String(m).padStart(2, "0")}`;
-        return {
-          franqueado_user_id: franqueadoUserId,
-          descricao: form.descricao.trim(),
-          categoria: form.categoria.trim() || null,
-          tipo: form.tipo,
-          valor,
-          competencia: comp,
-          observacao: form.observacao.trim() || null,
-          created_by: user?.id,
-          recorrente: form.recorrente,
-          recorrencia_id,
-        };
-      });
-
-      const { error } = await (supabase as any).from("franqueado_despesas").insert(rows);
-      if (error) throw error;
-      return { meses };
-    },
-    onSuccess: (r) => {
-      toast.success(
-        r.meses > 1
-          ? `Programado em ${r.meses} meses`
-          : "Lançamento adicionado",
-      );
-      setForm({ descricao: "", categoria: "", tipo: "despesa", valor: "", observacao: "", recorrente: false, meses: "12" });
-      qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
-    },
-    onError: (e: any) => toast.error(e?.message ?? "Erro ao adicionar"),
-  });
-
-  const delMut = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await (supabase as any).from("franqueado_despesas").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Excluído");
-      qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
-    },
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const delSerieMut = useMutation({
-    mutationFn: async (d: Despesa) => {
-      if (!d.recorrencia_id) throw new Error("Não é uma série recorrente");
-      // Remove apenas a competência atual e futuras (mantém histórico já pago)
-      const { error } = await (supabase as any)
-        .from("franqueado_despesas")
-        .delete()
-        .eq("recorrencia_id", d.recorrencia_id)
-        .gte("competencia", d.competencia);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Série encerrada a partir deste mês");
-      qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] });
-    },
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const togglePagoMut = useMutation({
-    mutationFn: async (d: Despesa) => {
-      const { error } = await (supabase as any)
-        .from("franqueado_despesas")
-        .update({ pago: !d.pago })
-        .eq("id", d.id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["franqueado-despesas", franqueadoUserId, competencia] }),
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const updateSocioMut = useMutation({
-    mutationFn: async (s: Partial<Socio> & { id: string }) => {
-      const { id, ...patch } = s;
-      const { error } = await (supabase as any).from("franqueado_socios").update(patch).eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Sócio atualizado");
-      qc.invalidateQueries({ queryKey: ["franqueado-socios", franqueadoUserId] });
-    },
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const addSocioMut = useMutation({
-    mutationFn: async () => {
-      const ordem = (socios?.length ?? 0);
-      const { error } = await (supabase as any).from("franqueado_socios").insert({
-        franqueado_user_id: franqueadoUserId,
-        nome: `Sócio ${ordem + 1}`,
-        percentual: 0,
-        ordem,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["franqueado-socios", franqueadoUserId] }),
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const delSocioMut = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await (supabase as any).from("franqueado_socios").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["franqueado-socios", franqueadoUserId] }),
-    onError: (e: any) => toast.error(e?.message ?? "Erro"),
-  });
-
-  const totais = useMemo(() => {
-    const lista = despesas ?? [];
-    const despesa = lista.filter((d) => d.tipo === "despesa").reduce((s, d) => s + Number(d.valor), 0);
-    const investimento = lista.filter((d) => d.tipo === "investimento").reduce((s, d) => s + Number(d.valor), 0);
-    const total = despesa + investimento;
-    const pago = lista.filter((d) => d.pago).reduce((s, d) => s + Number(d.valor), 0);
-    const aberto = total - pago;
-    return { despesa, investimento, total, pago, aberto };
-  }, [despesas]);
+  const totais = useMemo(() => calcTotais(despesas), [despesas]);
 
   const somaPct = (socios ?? []).reduce((s, x) => s + Number(x.percentual), 0);
   const pctOk = Math.abs(somaPct - 100) < 0.01;
@@ -265,13 +62,7 @@ export function AdminDespesasPage() {
     );
   }
 
-  // Últimos 12 meses para o seletor
-  const opcoesCompetencia = Array.from({ length: 12 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(1);
-    d.setMonth(d.getMonth() - i);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-  });
+  const opcoesCompetencia = ultimasCompetencias(12);
 
   return (
     <AdminShell title="Despesas do negócio">
@@ -430,7 +221,9 @@ export function AdminDespesasPage() {
             className="mt-4 px-4 py-2 rounded-lg font-semibold text-black flex items-center gap-2"
             style={{ background: "var(--rota-gold)" }}
             disabled={addMut.isPending}
-            onClick={() => addMut.mutate()}
+            onClick={() =>
+              addMut.mutate(form, { onSuccess: () => setForm(FORM_INICIAL) })
+            }
           >
             <Save className="h-4 w-4" />
             {addMut.isPending ? "Salvando..." : "Adicionar"}
