@@ -1,7 +1,9 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import type { TarifaFaixa } from "@/types/pedido";
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   const toRad = (x: number) => (x * Math.PI) / 180;
@@ -15,27 +17,6 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   return R * c;
 }
 
-function calcularTarifaPorFaixa(km: number, config: any, faixas: any[]) {
-  const base = Number(config.taxa_entrega_base || 0);
-  const kmBase = Number(config.km_base || 0);
-
-  if (km <= kmBase) return base;
-
-  const faixa = faixas.find((f) => km <= Number(f.km_ate));
-  if (faixa) return Number(faixa.valor);
-
-  const ultima = faixas[faixas.length - 1];
-  if (ultima) {
-    const adicional = Number(config.adicional_km_excedente || 0);
-    const excedente = km - Number(ultima.km_ate);
-    return Number(ultima.valor) + excedente * adicional;
-  }
-
-  const adicional = Number(config.adicional_km_excedente || 0);
-  const excedente = km - kmBase;
-  return base + excedente * adicional;
-}
-
 export function useTarifaEntrega(
   lojaIdOrOrigem: string | { lat: number; lng: number } | null,
   origemOrDestino: { lat: number | null; lng: number | null } | null,
@@ -44,7 +25,7 @@ export function useTarifaEntrega(
 ) {
   // Overload detection
   const isLegacy = typeof lojaIdOrOrigem === "string";
-  
+
   const origem = (isLegacy ? origemOrDestino : lojaIdOrOrigem) as { lat: number; lng: number } | null;
   const destino = (isLegacy ? destinoOrRetorno : origemOrDestino) as { lat: number; lng: number } | null;
   const retornoMaquina = isLegacy ? retornoMaquinaParam : (destinoOrRetorno as unknown as boolean);
@@ -54,28 +35,35 @@ export function useTarifaEntrega(
   const [loading, setLoading] = useState(false);
   const runCalcularDistancia = useServerFn(calcularDistanciaDirigindo);
 
-  const [config, setConfig] = useState<any>(null);
-  const [faixas, setFaixas] = useState<any[]>([]);
+  const [faixas, setFaixas] = useState<TarifaFaixa[]>([]);
+  const [retornoPorKm, setRetornoPorKm] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     async function load() {
-      const { data: c } = await supabase
-        .from("config_frete" as any)
-        .select("*")
-        .eq("id", "singleton" as any)
-        .maybeSingle();
-      setConfig(c);
-
-      const { data: f } = await supabase
-        .from("config_frete_faixas" as any)
-        .select("*")
-        .order("km_ate", { ascending: true });
-      setFaixas(f || []);
+      const [tarifasRes, retornoRes] = await Promise.all([
+        supabase
+          .from("tarifas_globais")
+          .select("faixa_km_min, faixa_km_max, valor, valor_minimo, valor_por_km")
+          .eq("ativa", true)
+          .eq("tipo_veiculo", "moto")
+          .order("faixa_km_min", { ascending: true }),
+        supabase.rpc("get_retorno_cartao_por_km" as any),
+      ]);
+      if (cancelled) return;
+      setFaixas((tarifasRes.data ?? []) as unknown as TarifaFaixa[]);
+      setRetornoPorKm(Number(retornoRes.data ?? 0) || 0);
     }
     load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const adicionalRetorno = retornoMaquina ? Number(config?.taxa_retorno_maquina || 0) : 0;
+  const adicionalRetorno =
+    retornoMaquina && distancia != null
+      ? Number((retornoPorKm * distancia).toFixed(2))
+      : 0;
 
   useEffect(() => {
     async function calculate() {
@@ -102,25 +90,20 @@ export function useTarifaEntrega(
 
         setDistancia(km);
 
-        if (!config?.taxa_entrega_base) {
-          setTarifa(0);
-          return;
-        }
-
-        const t = calcularTarifaPorFaixa(km, config, faixas);
-        setTarifa(t + adicionalRetorno);
+        const t = calcularTarifaPorFaixa(km, faixas);
+        setTarifa((t ?? 0) + adicionalRetorno);
       } catch (err) {
         console.error("[use-tarifa-entrega] Error:", err);
         const km = haversineKm(origem.lat, origem.lng, destino.lat, destino.lng);
         setDistancia(km);
-        setTarifa(calcularTarifaPorFaixa(km, config, faixas) + adicionalRetorno);
+        setTarifa((calcularTarifaPorFaixa(km, faixas) ?? 0) + adicionalRetorno);
       } finally {
         setLoading(false);
       }
     }
 
     calculate();
-  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, config, faixas, runCalcularDistancia, adicionalRetorno]);
+  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, faixas, runCalcularDistancia, adicionalRetorno]);
 
   const infoText = distancia != null ? `${distancia.toFixed(1)} km` : "";
 
