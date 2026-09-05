@@ -90,25 +90,20 @@ export function useTarifaEntrega(
 
         setDistancia(km);
 
-        if (!config?.taxa_entrega_base) {
-          setTarifa(0);
-          return;
-        }
-
-        const t = calcularTarifaPorFaixa(km, config, faixas);
-        setTarifa(t + adicionalRetorno);
+        const t = calcularTarifaPorFaixa(km, faixas);
+        setTarifa((t ?? 0) + adicionalRetorno);
       } catch (err) {
         console.error("[use-tarifa-entrega] Error:", err);
         const km = haversineKm(origem.lat, origem.lng, destino.lat, destino.lng);
         setDistancia(km);
-        setTarifa(calcularTarifaPorFaixa(km, config, faixas) + adicionalRetorno);
+        setTarifa((calcularTarifaPorFaixa(km, faixas) ?? 0) + adicionalRetorno);
       } finally {
         setLoading(false);
       }
     }
 
     calculate();
-  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, config, faixas, runCalcularDistancia, adicionalRetorno]);
+  }, [origem?.lat, origem?.lng, destino?.lat, destino?.lng, faixas, runCalcularDistancia, adicionalRetorno]);
 
   const infoText = distancia != null ? `${distancia.toFixed(1)} km` : "";
 
