@@ -104,6 +104,16 @@ export function AddressAutocomplete({
 
   const handleSelect = async (s: MapboxSuggestion) => {
     setOpen(false);
+    // A sugestao ja traz o endereco completo (com numero) e as coordenadas.
+    if (s.endereco && s.lat != null && s.lng != null) {
+      onChange(s.endereco);
+      if (onSelect) {
+        onSelect({ endereco: s.endereco, cidade: s.cidade, estado: s.estado, lat: s.lat, lng: s.lng });
+      } else if (onSelectPlace) {
+        onSelectPlace({ address: s.endereco, lat: s.lat, lng: s.lng });
+      }
+      return;
+    }
     try {
       setLoading(true);
       const details = await runFetchDetails({ data: { placeId: s.placeId } });

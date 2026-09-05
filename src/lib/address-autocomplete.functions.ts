@@ -14,6 +14,11 @@ export type MapboxSuggestion = {
   placeId: string;
   primary: string;
   secondary: string;
+  endereco: string;
+  cidade: string;
+  estado: string;
+  lat: number | null;
+  lng: number | null;
 };
 
 /**
@@ -36,11 +41,27 @@ export const fetchAddressSuggestions = createServerFn({ method: "POST" })
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(data.input)}.json?access_token=${token}&language=${lang}&country=br,mx&types=address,poi,place`
       );
       const json = await resp.json();
-      const suggestions: MapboxSuggestion[] = (json.features ?? []).map((f: any) => ({
-        placeId: f.id,
-        primary: f.text,
-        secondary: f.place_name.replace(f.text, "").replace(/^, /, ""),
-      }));
+      const suggestions: MapboxSuggestion[] = (json.features ?? []).map((f: any) => {
+        // Mapbox devolve o numero em `address` (separado do nome da rua em `text`)
+        const numero = f.address ? String(f.address) : "";
+        const primary = numero ? `${f.text}, ${numero}` : f.text;
+        const secondary = String(f.place_name ?? "")
+          .replace(primary, "")
+          .replace(f.text, "")
+          .replace(/^,\s*/, "");
+        const ctx = f.context ?? [];
+        return {
+          cidade: ctx.find((c: any) => String(c.id).startsWith("place"))?.text ?? "",
+          estado:
+            ctx.find((c: any) => String(c.id).startsWith("region"))?.short_code?.split("-")[1] ?? "",
+          placeId: f.id,
+          primary,
+          secondary,
+          endereco: f.place_name ?? primary,
+          lat: Array.isArray(f.center) ? f.center[1] : null,
+          lng: Array.isArray(f.center) ? f.center[0] : null,
+        };
+      });
       return { suggestions, provider: "mapbox" };
     }
 
