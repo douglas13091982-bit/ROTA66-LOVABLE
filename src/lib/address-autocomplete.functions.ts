@@ -15,6 +15,8 @@ export type MapboxSuggestion = {
   primary: string;
   secondary: string;
   endereco: string;
+  cidade: string;
+  estado: string;
   lat: number | null;
   lng: number | null;
 };
@@ -47,7 +49,11 @@ export const fetchAddressSuggestions = createServerFn({ method: "POST" })
           .replace(primary, "")
           .replace(f.text, "")
           .replace(/^,\s*/, "");
+        const ctx = f.context ?? [];
         return {
+          cidade: ctx.find((c: any) => String(c.id).startsWith("place"))?.text ?? "",
+          estado:
+            ctx.find((c: any) => String(c.id).startsWith("region"))?.short_code?.split("-")[1] ?? "",
           placeId: f.id,
           primary,
           secondary,

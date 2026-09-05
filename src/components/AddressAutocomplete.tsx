@@ -108,7 +108,7 @@ export function AddressAutocomplete({
     if (s.endereco && s.lat != null && s.lng != null) {
       onChange(s.endereco);
       if (onSelect) {
-        onSelect({ endereco: s.endereco, cidade: "", estado: "", lat: s.lat, lng: s.lng });
+        onSelect({ endereco: s.endereco, cidade: s.cidade, estado: s.estado, lat: s.lat, lng: s.lng });
       } else if (onSelectPlace) {
         onSelectPlace({ address: s.endereco, lat: s.lat, lng: s.lng });
       }
