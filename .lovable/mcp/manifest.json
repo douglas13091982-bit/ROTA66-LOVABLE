@@ -3,7 +3,13 @@
   "sdk_version": "0.20.0",
   "path": "/mcp",
   "auth": {
-    "type": "none"
+    "type": "oauth",
+    "issuer": "https://ybbxuynwznlhgnmflsky.supabase.co/auth/v1",
+    "resource_name": "ROTA 66 MCP",
+    "accepted_audiences": [
+      "authenticated"
+    ],
+    "jwks_uri": "https://ybbxuynwznlhgnmflsky.supabase.co/auth/v1/.well-known/jwks.json"
   },
   "mcp": {
     "server": {
