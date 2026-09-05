@@ -1,7 +1,9 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { calcularDistanciaDirigindo } from "@/lib/frete.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import type { TarifaFaixa } from "@/types/pedido";
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   const toRad = (x: number) => (x * Math.PI) / 180;
