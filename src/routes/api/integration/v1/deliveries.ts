@@ -37,6 +37,25 @@ function authorized(request: Request) {
   return bearer === configured || header === configured;
 }
 
+function normalizeLogisticsStatus(status: string) {
+  switch (status) {
+    case "pronto":
+      return "waiting_courier";
+    case "aceito":
+      return "accepted";
+    case "em_rota":
+      return "on_route_to_pickup";
+    case "coletado":
+      return "picked_up";
+    case "entregue":
+      return "delivered";
+    case "cancelado":
+      return "cancelled";
+    default:
+      return "pending";
+  }
+}
+
 function validUuid(value: unknown) {
   return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
@@ -104,6 +123,7 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
             idempotent: true,
             delivery_id: existing.pedido_id,
             status: pedido?.status ?? null,
+            logistics_status: pedido?.status ? normalizeLogisticsStatus(pedido.status) : null,
             entregador_id: pedido?.entregador_id ?? null,
             codigo_entrega: pedido?.codigo_entrega ?? null,
           });
@@ -190,6 +210,7 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
           idempotent: false,
           delivery_id: pedido.id,
           status: pedido.status,
+          logistics_status: normalizeLogisticsStatus(pedido.status),
           entregador_id: pedido.entregador_id,
           codigo_entrega: pedido.codigo_entrega,
         }, 201);
