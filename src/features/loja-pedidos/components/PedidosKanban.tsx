@@ -225,7 +225,7 @@ function ColumnBody(props: ColumnBodyProps) {
 }
 
 function VirtualizedColumn(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, usaEntregadores, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const parentRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -324,6 +324,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                   setDragOver(null);
                 }}
                 onOpenDetalhe={onOpenDetalhe}
+                usaEntregadores={usaEntregadores}
                 onConfirmarColeta={onConfirmarColeta}
                 onToggleArquivado={actions.toggleArquivado}
                 onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
