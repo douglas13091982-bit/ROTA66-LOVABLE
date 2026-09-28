@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AdminFranqueadosPage } from "@/features/admin-franqueados/AdminFranqueadosPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/franqueados")({
-  component: AdminFranqueadosPage,
+  beforeLoad: () => { throw redirect({ to: "/admin/dashboard" }); },
 });
