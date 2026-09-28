@@ -1,9 +1,7 @@
-// Server-only: dispatcher único para webhooks do Mercado Pago da plataforma.
-// A MESMA conta MP recebe:
-//   - mensalidades das lojas        (external_reference = "mensalidade:<id>")
-//   - recargas/mensalidades dos entregadores (external_reference = "recarga:<id>")
-// Validamos a assinatura HMAC com o webhook_secret guardado em private_config
-// e então despachamos pelo prefixo do external_reference.
+// Server-only: dispatcher do Mercado Pago para a operação financeira logística.
+// O ROTA 66 processa somente referências ligadas a entregadores.
+// Pagamentos de lojas, catálogo, pedidos e cobranças comerciais pertencem
+// ao Pixel Palace e são deliberadamente ignorados aqui.
 
 import { createHmac, timingSafeEqual } from "crypto";
 
@@ -343,26 +341,13 @@ export async function handleMpPlataformaWebhook(
     });
     if (!first) return new Response("duplicate", { status: 200 });
 
-    if (ref.startsWith("mensalidade:")) {
-      return await processMensalidadeLoja(paymentId, payment);
-    }
-    if (ref.startsWith("fatura:")) {
-      return await processFaturaCobrancas(paymentId, payment);
-    }
-    if (ref.startsWith("cobranca:")) {
-      return await processCobrancaLoja(paymentId, payment);
-    }
-    if (ref.startsWith("loja_recarga:")) {
-      return await processRecargaLoja(paymentId, payment);
-    }
+    // Somente financeiro logístico do entregador permanece ativo.
     if (ref.startsWith("recarga:")) {
       return await processRecargaEntregador(paymentId, payment);
     }
-    if (ref.startsWith("cat_pendente:")) {
-      return await processCatalogoPedidoPendente(paymentId, payment);
-    }
 
-    return new Response("unknown reference", { status: 200 });
+    // Referências comerciais são explicitamente ignoradas no ROTA 66.
+    return new Response("reference_not_supported_by_rota66", { status: 200 });
 
   } catch (e: any) {
     console.error("[mp-webhook-dispatcher]", e?.message ?? e);
