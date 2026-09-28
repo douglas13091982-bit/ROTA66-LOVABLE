@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BrandingPage } from "@/features/admin-branding/BrandingPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/branding")({
-  component: BrandingPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/admin/dashboard" });
+  },
 });
