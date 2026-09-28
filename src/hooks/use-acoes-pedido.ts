@@ -98,7 +98,7 @@ async function aceitarPedidosExternos(items: PedidoDisponivel[]): Promise<string
         fn: string,
         args: { _pedido_id: string },
       ) => Promise<{ error: Error | null }>
-    )("aceitar_pedido_externo", { _pedido_id: p.id });
+    )("rota66_aceitar_entrega", { _pedido_id: p.id });
     if (error) return error.message;
   }
 
@@ -143,7 +143,7 @@ export function useAcoesPedido() {
 
   const invalidarQueries = useCallback(() => {
     qc.invalidateQueries({ queryKey: ["pedidos-disponiveis"] });
-    qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", user?.id] });
+    qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", user?.id] });
     qc.invalidateQueries({ queryKey: ["pedidos-ativos", user?.id] });
   }, [qc, user?.id]);
 
@@ -155,8 +155,7 @@ export function useAcoesPedido() {
         return;
       }
 
-      // Pool aberto: tudo passa pelo RPC aceitar_pedido_externo, que faz a
-      // trava atômica (UPDATE ... WHERE entregador_id IS NULL).
+      // Pool logístico: o aceite passa pela RPC SECURITY DEFINER com trava atômica.
       const erro = await aceitarPedidosExternos(items);
 
       if (erro) {
@@ -165,7 +164,7 @@ export function useAcoesPedido() {
         toast.error(ehRace ? "Pedido já foi aceito por outro entregador" : erro);
         // Some imediatamente da lista local e refaz a busca
         for (const p of items) dismiss(p.id);
-        qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", user.id] });
+        qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", user.id] });
         return;
       }
 
