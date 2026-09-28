@@ -44,6 +44,7 @@ export function PedidosPage() {
   });
   useAutoArquivar(loja?.id, pedidos, pedidosRef);
 
+  const usaEntregadores = (loja as any)?.usa_entregadores !== false;
   const actions = usePedidoActions(loja?.id);
   const raioAgrupamentoKm = useRaioAgrupamentoKm();
 
@@ -113,6 +114,7 @@ export function PedidosPage() {
           grouped={grouped}
           lotesEmPreparo={lotesEmPreparo}
           actions={actions}
+          usaEntregadores={usaEntregadores}
           onOpenDetalhe={setDetalhe}
           onConfirmarColeta={handleConfirmarColeta}
         />
@@ -122,6 +124,7 @@ export function PedidosPage() {
         detalhe={detalhe}
         lojaNome={loja.nome}
         actions={actions}
+        usaEntregadores={usaEntregadores}
         onClose={() => setDetalhe(null)}
         onConfirmarColeta={handleConfirmarColeta}
         onUpdateDetalhe={setDetalhe}
