@@ -5,38 +5,21 @@ import { useLoginSubmit } from "./logic/use-login-submit";
 
 export function LoginPage() {
   const { redirect } = useSearch({ from: "/login" }) as { redirect?: string };
-  const {
-    email,
-    setEmail,
-    password,
-    setPassword,
-    loading,
-    handleEmailLogin,
-  } = useLoginSubmit(redirect);
-
+  const { email, setEmail, password, setPassword, loading, handleEmailLogin } = useLoginSubmit(redirect);
   const cadastroSearch = redirect ? { redirect } : {};
 
   return (
     <AuthCard
-      title="ACELERA"
-      subtitle="Entre na sua conta para continuar"
+      title="ACESSAR ROTA 66"
+      subtitle="Entre no painel de logística"
       footer={
         <>
-          Ainda não tem conta?{" "}
-          <Link to="/cadastro" search={cadastroSearch} className="text-primary font-bold hover:underline">
-            Cadastre-se
-          </Link>
+          Ainda não é entregador?{" "}
+          <Link to="/cadastro" search={cadastroSearch} className="text-primary font-bold hover:underline">Cadastre-se como entregador</Link>
         </>
       }
     >
-      <LoginForm
-        email={email}
-        password={password}
-        loading={loading}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onSubmit={handleEmailLogin}
-      />
+      <LoginForm email={email} password={password} loading={loading} onEmailChange={setEmail} onPasswordChange={setPassword} onSubmit={handleEmailLogin} />
     </AuthCard>
   );
 }
