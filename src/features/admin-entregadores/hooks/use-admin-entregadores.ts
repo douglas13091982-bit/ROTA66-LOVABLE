@@ -106,11 +106,10 @@ export function useAdminEntregadores() {
   const remove = async (entregador_id: string, nome: string) => {
     if (
       !confirm(
-        `Remover acesso do entregador "${nome}"? Vínculos com lojas também serão removidos.`
+        `Remover o acesso do entregador "${nome}" da central logística?`
       )
     )
       return;
-    await supabase.from("loja_entregadores").delete().eq("entregador_id", entregador_id);
     const { error } = await supabase
       .from("user_roles")
       .delete()
