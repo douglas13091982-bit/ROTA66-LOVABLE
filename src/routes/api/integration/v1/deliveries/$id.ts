@@ -4,6 +4,25 @@ function json(data: unknown, status = 200) {
   return Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 }
 
+function normalizeLogisticsStatus(status: string) {
+  switch (status) {
+    case "pronto":
+      return "waiting_courier";
+    case "aceito":
+      return "accepted";
+    case "em_rota":
+      return "on_route_to_pickup";
+    case "coletado":
+      return "picked_up";
+    case "entregue":
+      return "delivered";
+    case "cancelado":
+      return "cancelled";
+    default:
+      return "pending";
+  }
+}
+
 function authorized(request: Request) {
   const configured = process.env.ROTA66_INTEGRATION_API_KEY;
   if (!configured) return false;
@@ -53,7 +72,10 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
 
         return json({
           ok: true,
-          delivery: pedido,
+          delivery: {
+            ...pedido,
+            logistics_status: normalizeLogisticsStatus(pedido.status),
+          },
           integration: integration ? {
             source: integration.source,
             external_order_id: integration.external_order_id,
