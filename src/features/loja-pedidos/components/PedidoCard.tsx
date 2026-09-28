@@ -13,6 +13,7 @@ interface Props {
   dragId: string | null;
   onDragStart: (id: string) => void;
   onDragEnd: () => void;
+  usaEntregadores: boolean;
   onOpenDetalhe: (p: Pedido) => void;
   onConfirmarColeta: (p: Pedido) => void;
   onToggleArquivado: (id: string, arquivado: boolean) => void;
@@ -25,13 +26,14 @@ export function PedidoCard({
   dragId,
   onDragStart,
   onDragEnd,
+  usaEntregadores,
   onOpenDetalhe,
   onConfirmarColeta,
   onToggleArquivado,
   onAbrirWhatsApp,
   onCancelar,
 }: Props) {
-  const lojaControla = lojaControlaStatus(p.status);
+  const lojaControla = lojaControlaStatus(p.status, usaEntregadores);
   const podeCancelar = CANCELAVEL.has(p.status) && !p.entregador_id;
 
   return (
