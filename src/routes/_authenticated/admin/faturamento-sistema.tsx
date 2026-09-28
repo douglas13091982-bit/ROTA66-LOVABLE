@@ -1,8 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { FaturamentoSistemaPage } from "@/features/admin-faturamento-sistema/FaturamentoSistemaPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute(
-  "/_authenticated/admin/faturamento-sistema",
-)({
-  component: FaturamentoSistemaPage,
+export const Route = createFileRoute("/_authenticated/admin/faturamento-sistema")({
+  beforeLoad: () => { throw redirect({ to: "/admin/dashboard" }); },
 });
