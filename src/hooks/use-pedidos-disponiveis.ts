@@ -49,11 +49,23 @@ export function usePedidosDisponiveis(
   const userId = user?.id;
 
   // O ROTA 66 recebe ofertas exclusivamente pelo pool logístico integrado.
-  // Não depende mais de vínculo direto com lojas nem da flag comercial
-  // "aceita_pedidos_externos" do perfil. O pedido comercial permanece no
-  // Pixel Palace; aqui existe apenas a operação de entrega.
+  // A preferência de veículo continua vindo do perfil, mas a operação não
+  // depende mais de vínculo comercial com uma loja.
+  const { data: perfilEntregador } = useQuery({
+    queryKey: ["meu-perfil-logistica", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("tipo_veiculo")
+        .eq("id", userId!)
+        .maybeSingle();
+      return data;
+    },
+  });
   const aceitaPedidosExternos = true;
-  const tipoVeiculo: TipoVeiculo = "moto";
+  const tipoVeiculo: TipoVeiculo =
+    ((perfilEntregador as { tipo_veiculo?: string | null } | null)?.tipo_veiculo || "moto") as TipoVeiculo;
 
   // Status online do próprio entregador. Quando offline, nenhum pedido deve
   // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
