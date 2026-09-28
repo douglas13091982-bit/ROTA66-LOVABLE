@@ -105,6 +105,31 @@ export function ConfigPage() {
           onChange={(v) => setForm({ ...form, catalogo_retirada_ativa: v })}
         />
 
+        <div className="rounded-lg border border-border bg-muted/20 p-5 space-y-3">
+          <div>
+            <p className="font-bold">Entregadores Rota 66</p>
+            <p className="text-sm text-muted-foreground">
+              Escolha se esta loja utilizará os entregadores da Rota 66 para realizar as entregas.
+            </p>
+          </div>
+          <label className="flex items-center justify-between gap-4 cursor-pointer">
+            <span className="text-sm font-medium">
+              {form.usa_entregadores ? "Usar entregadores Rota 66" : "A loja fará as entregas manualmente"}
+            </span>
+            <input
+              type="checkbox"
+              checked={form.usa_entregadores}
+              onChange={(e) => setForm({ ...form, usa_entregadores: e.target.checked })}
+              className="h-5 w-5 accent-primary"
+            />
+          </label>
+          {!form.usa_entregadores && (
+            <p className="text-xs text-muted-foreground">
+              Os pedidos poderão ser movidos manualmente no painel, de "Pronto" até "Entregue", sem depender do aplicativo do entregador.
+            </p>
+          )}
+        </div>
+
         <UrlPublica slug={slug} />
 
         <button
