@@ -25,10 +25,7 @@ export const STATUS_COLOR: Record<string, string> = {
   cancelado: "bg-zinc-600 !text-white",
 };
 
-/**
- * Próximo status no fluxo controlado pela loja.
- * Após "pronto", o entregador assume e a loja não avança mais.
- */
+/** Fluxo atual quando a entrega é integrada aos entregadores Rota 66. */
 export const NEXT: Record<string, string | null> = {
   novo: "pronto",
   aceito: "pronto",
@@ -36,6 +33,18 @@ export const NEXT: Record<string, string | null> = {
   pronto: null,
   em_rota: null,
   coletado: null,
+  entregue: null,
+  cancelado: null,
+};
+
+/** Fluxo completo quando a própria loja realiza a entrega. */
+export const NEXT_MANUAL: Record<string, string | null> = {
+  novo: "aceito",
+  aceito: "em_preparo",
+  em_preparo: "pronto",
+  pronto: "em_rota",
+  em_rota: "coletado",
+  coletado: "entregue",
   entregue: null,
   cancelado: null,
 };
@@ -104,5 +113,8 @@ export const COLUMNS: ColumnDef[] = [
 
 export const LOJA_CONTROLA_STATUSES = new Set(["novo", "aceito", "em_preparo"]);
 
-export const lojaControlaStatus = (status: string): boolean =>
-  LOJA_CONTROLA_STATUSES.has(status);
+export const lojaControlaStatus = (status: string, usaEntregadores = true): boolean =>
+  !usaEntregadores || LOJA_CONTROLA_STATUSES.has(status);
+
+export const proximoStatus = (status: string, usaEntregadores = true): string | null =>
+  (usaEntregadores ? NEXT : NEXT_MANUAL)[status] ?? null;
