@@ -1,9 +1,8 @@
 /**
  * Hook com as ações de aceitar/recusar um grupo de pedidos.
  * Encapsula a complexidade dos 3 caminhos:
- *   1. Pedidos externos → RPC `aceitar_pedido_externo`
- *   2. Rota agrupada vinculada → UPDATE em lote com rota_id e codigo_coleta
- *   3. Pedido único vinculado → UPDATE direto
+ *   1. Entrega logística → RPC `rota66_aceitar_entrega`
+ *   2. Agrupamento de rota → RPC `unificar_lote_coleta`
  */
 
 import { useCallback, useState } from "react";
@@ -121,7 +120,7 @@ async function aceitarPedidosExternos(items: PedidoDisponivel[]): Promise<string
 }
 
 // Nota: `aceitarRotaVinculada` e `aceitarPedidoUnico` foram removidos —
-// todo aceite passa pela RPC `aceitar_pedido_externo` (trava atômica no
+// todo aceite passa pela RPC `rota66_aceitar_entrega` (trava atômica no
 // banco). Se um dia voltarmos a aceitar via UPDATE direto, o guard do
 // codigo_coleta obriga a usar `unificar_lote_coleta` também.
 
