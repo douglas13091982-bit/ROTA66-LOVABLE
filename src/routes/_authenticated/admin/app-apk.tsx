@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AppApkPage } from "@/features/admin-app-apk/AppApkPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/app-apk")({
-  head: () => ({ meta: [{ title: "App APK — Admin" }] }),
-  component: AppApkPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/admin/dashboard" });
+  },
 });
