@@ -1,4 +1,4 @@
-import { COLUMNS, NEXT, lojaControlaStatus } from "../logic/constants";
+import { COLUMNS, NEXT, NEXT_MANUAL, lojaControlaStatus } from "../logic/constants";
 import type { LoteEmPreparo } from "../logic/agrupador";
 import type { Pedido } from "../hooks/use-pedidos-loja";
 import type { PedidoActions } from "../hooks/use-pedido-actions";
@@ -18,12 +18,13 @@ interface Props {
   grouped: Record<string, Pedido[]>;
   lotesEmPreparo: LoteEmPreparo[];
   actions: PedidoActions;
+  usaEntregadores: boolean;
   onOpenDetalhe: (p: Pedido) => void;
   onConfirmarColeta: (p: Pedido) => void;
 }
 
-function resolveTargetStatus(currentStatus: string, targetStatuses: string[]): string | null {
-  let next: string | null = NEXT[currentStatus];
+function resolveTargetStatus(currentStatus: string, targetStatuses: string[], usaEntregadores: boolean): string | null {
+  let next: string | null = (usaEntregadores ? NEXT : NEXT_MANUAL)[currentStatus];
   const visited = new Set<string>();
   while (next && !visited.has(next)) {
     visited.add(next);
@@ -38,6 +39,7 @@ export function PedidosKanban({
   grouped,
   lotesEmPreparo,
   actions,
+  usaEntregadores,
   onOpenDetalhe,
   onConfirmarColeta,
 }: Props) {
@@ -59,7 +61,7 @@ export function PedidosKanban({
     if (!id) return;
     const pedido = pedidos.find((p) => p.id === id);
     if (!pedido) return;
-    if (!lojaControlaStatus(pedido.status)) {
+    if (!lojaControlaStatus(pedido.status, usaEntregadores)) {
       toast.error("Esse pedido é atualizado pelo app do entregador.");
       return;
     }
@@ -68,7 +70,7 @@ export function PedidosKanban({
     const currentCol = COLUMNS.find((c) => c.statuses.includes(pedido.status));
     if (!currentCol || currentCol.key === targetCol.key) return;
 
-    const finalStatus = resolveTargetStatus(pedido.status, targetCol.statuses);
+    const finalStatus = resolveTargetStatus(pedido.status, targetCol.statuses, usaEntregadores);
     if (!finalStatus) {
       toast.error("Mova para a próxima coluna do fluxo.");
       return;
@@ -122,6 +124,7 @@ export function PedidosKanban({
               setDragOver={setDragOver}
               actions={actions}
               onOpenDetalhe={onOpenDetalhe}
+              usaEntregadores={usaEntregadores}
               onConfirmarColeta={onConfirmarColeta}
               onCancelar={handleCancelar}
             />
@@ -160,13 +163,14 @@ interface ColumnBodyProps {
   setDragId: (id: string | null) => void;
   setDragOver: (k: string | null) => void;
   actions: PedidoActions;
+  usaEntregadores: boolean;
   onOpenDetalhe: (p: Pedido) => void;
   onConfirmarColeta: (p: Pedido) => void;
   onCancelar: (p: Pedido) => void;
 }
 
 function ColumnBody(props: ColumnBodyProps) {
-  const { items, lotes, emptyText, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
+  const { items, lotes, emptyText, dragId, setDragId, setDragOver, actions, usaEntregadores, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const virtualize = items.length > COLUMN_VIRTUALIZE_THRESHOLD;
 
   // Render padrão: comportamento idêntico ao original.
@@ -193,6 +197,7 @@ function ColumnBody(props: ColumnBodyProps) {
               setDragOver(null);
             }}
             onOpenDetalhe={onOpenDetalhe}
+            usaEntregadores={usaEntregadores}
             onConfirmarColeta={onConfirmarColeta}
             onToggleArquivado={actions.toggleArquivado}
             onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
@@ -211,6 +216,7 @@ function ColumnBody(props: ColumnBodyProps) {
       setDragId={setDragId}
       setDragOver={setDragOver}
       actions={actions}
+      usaEntregadores={usaEntregadores}
       onOpenDetalhe={onOpenDetalhe}
       onConfirmarColeta={onConfirmarColeta}
       onCancelar={onCancelar}
@@ -219,7 +225,7 @@ function ColumnBody(props: ColumnBodyProps) {
 }
 
 function VirtualizedColumn(props: ColumnBodyProps) {
-  const { items, lotes, dragId, setDragId, setDragOver, actions, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
+  const { items, lotes, dragId, setDragId, setDragOver, actions, usaEntregadores, onOpenDetalhe, onConfirmarColeta, onCancelar } = props;
   const parentRef = useRef<HTMLDivElement>(null);
 
   const virtualizer = useVirtualizer({
@@ -318,6 +324,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                   setDragOver(null);
                 }}
                 onOpenDetalhe={onOpenDetalhe}
+                usaEntregadores={usaEntregadores}
                 onConfirmarColeta={onConfirmarColeta}
                 onToggleArquivado={actions.toggleArquivado}
                 onAbrirWhatsApp={actions.abrirWhatsAppRastreio}
