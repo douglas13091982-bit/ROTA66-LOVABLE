@@ -48,27 +48,12 @@ export function usePedidosDisponiveis(
   const qc = useQueryClient();
   const userId = user?.id;
 
-  const { data: perfilEntregador } = useQuery({
-    queryKey: ["meu-perfil-externo", userId],
-    enabled: !!userId,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("aceita_pedidos_externos, tipo_veiculo")
-        .eq("id", userId!)
-        .maybeSingle();
-      const perfil = data as {
-        aceita_pedidos_externos?: boolean | null;
-        tipo_veiculo?: string | null;
-      } | null;
-      return {
-        aceitaPedidosExternos: !!perfil?.aceita_pedidos_externos,
-        tipoVeiculo: (perfil?.tipo_veiculo || "moto") as TipoVeiculo,
-      };
-    },
-  });
-  const aceitaPedidosExternos = !!perfilEntregador?.aceitaPedidosExternos;
-  const tipoVeiculo: TipoVeiculo = perfilEntregador?.tipoVeiculo || "moto";
+  // O ROTA 66 recebe ofertas exclusivamente pelo pool logístico integrado.
+  // Não depende mais de vínculo direto com lojas nem da flag comercial
+  // "aceita_pedidos_externos" do perfil. O pedido comercial permanece no
+  // Pixel Palace; aqui existe apenas a operação de entrega.
+  const aceitaPedidosExternos = true;
+  const tipoVeiculo: TipoVeiculo = "moto";
 
   // Status online do próprio entregador. Quando offline, nenhum pedido deve
   // ser oferecido — nem na lista, nem via popup/realtime. A query é leve e
@@ -166,20 +151,6 @@ export function usePedidosDisponiveis(
     );
   }, [userId, qc]);
 
-
-  const { data: lojaIds } = useQuery({
-    queryKey: ["minhas-lojas-vinculadas", userId],
-    enabled: !!userId,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("loja_entregadores")
-        .select("loja_id")
-        .eq("entregador_id", userId!)
-        .eq("ativo", true);
-      if (error) throw error;
-      return (data ?? []).map((r) => r.loja_id);
-    },
-  });
 
   // Pool unificado: a RPC `pedidos_pool_externo` aplica o escopo configurado
   // no admin (somente_vinculados / somente_externos / vinculados_e_externos).
@@ -392,7 +363,7 @@ export function usePedidosDisponiveis(
     isLoading: loadingExt,
     temRotaAtiva,
     rotaAtivaResolvida,
-    semVinculoNemExterno: (!lojaIds || lojaIds.length === 0) && !aceitaPedidosExternos,
+    semVinculoNemExterno: false,
     ganhoHoje: ganhoHoje ?? 0,
     taxaParaExibir,
     estouOnline,
