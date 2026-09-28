@@ -11,6 +11,7 @@ export type ConfigForm = {
   catalogo_layout: "cards" | "lista";
   catalogo_status_inicial: "em_preparo" | "pronto";
   catalogo_retirada_ativa: boolean;
+  usa_entregadores: boolean;
   categoria: LojaCategoria | "";
   usar_horario_automatico: boolean;
   city_id: string;
@@ -25,6 +26,7 @@ export const DEFAULT_FORM: ConfigForm = {
   catalogo_layout: "cards",
   catalogo_status_inicial: "em_preparo",
   catalogo_retirada_ativa: false,
+  usa_entregadores: true,
   categoria: "",
   usar_horario_automatico: false,
   city_id: "",
