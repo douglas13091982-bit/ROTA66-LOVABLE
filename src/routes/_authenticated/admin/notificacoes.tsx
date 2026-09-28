@@ -1,6 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { NotificacoesPushPage } from "@/features/admin-push/NotificacoesPushPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/notificacoes")({
-  component: NotificacoesPushPage,
+  beforeLoad: () => { throw redirect({ to: "/admin/dashboard" }); },
 });
