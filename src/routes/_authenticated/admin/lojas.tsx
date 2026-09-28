@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { LojasPage } from "@/features/admin-lojas/LojasPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/lojas")({
-  component: LojasPage,
+  beforeLoad: () => {
+    throw redirect({ to: "/admin/entregadores" });
+  },
 });

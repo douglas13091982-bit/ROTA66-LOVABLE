@@ -1,11 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { LojaPublicaPage } from "@/features/loja-publica/LojaPublicaPage";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/loja/$slug")({
-  component: LojaPublicaRoute,
+  beforeLoad: () => {
+    throw redirect({ to: "/" });
+  },
 });
-
-function LojaPublicaRoute() {
-  const { slug } = Route.useParams();
-  return <LojaPublicaPage slug={slug} />;
-}
