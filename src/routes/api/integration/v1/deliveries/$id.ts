@@ -18,14 +18,47 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
       GET: async ({ request, params }) => {
         if (!authorized(request)) return json({ error: "unauthorized" }, 401);
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const externalOrderId = new URL(request.url).searchParams.get("external_order_id")?.trim();
+
+        let pedidoId = params.id;
+        let integration: any = null;
+
+        if (externalOrderId) {
+          const { data: mapping, error: mappingError } = await supabaseAdmin
+            .from("integracao_entregas" as any)
+            .select("pedido_id,source,external_order_id")
+            .eq("source", "pixel-palace")
+            .eq("external_order_id", externalOrderId)
+            .maybeSingle();
+          if (mappingError) return json({ error: "integration_lookup_failed" }, 500);
+          if (!mapping) return json({ error: "delivery_not_found" }, 404);
+          pedidoId = mapping.pedido_id;
+          integration = mapping;
+        } else {
+          const { data: mapping } = await supabaseAdmin
+            .from("integracao_entregas" as any)
+            .select("pedido_id,source,external_order_id")
+            .eq("pedido_id", params.id)
+            .maybeSingle();
+          integration = mapping ?? null;
+        }
+
         const { data: pedido, error } = await supabaseAdmin
           .from("pedidos")
           .select("id,status,entregador_id,taxa_entrega,codigo_coleta,codigo_entrega,endereco_coleta,endereco_entrega,created_at,updated_at")
-          .eq("id", params.id)
+          .eq("id", pedidoId)
           .maybeSingle();
         if (error) return json({ error: "delivery_lookup_failed" }, 500);
         if (!pedido) return json({ error: "delivery_not_found" }, 404);
-        return json({ ok: true, delivery: pedido });
+
+        return json({
+          ok: true,
+          delivery: pedido,
+          integration: integration ? {
+            source: integration.source,
+            external_order_id: integration.external_order_id,
+          } : null,
+        });
       },
 
       POST: async ({ request, params }) => {
@@ -35,10 +68,20 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
         if (body.action !== "cancel") return json({ error: "unsupported_action" }, 400);
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+        const { data: mapping } = await supabaseAdmin
+          .from("integracao_entregas" as any)
+          .select("pedido_id")
+          .eq("source", "pixel-palace")
+          .eq("external_order_id", params.id)
+          .maybeSingle();
+
+        const pedidoId = mapping?.pedido_id ?? params.id;
+
         const { data, error } = await supabaseAdmin
           .from("pedidos")
           .update({ status: "cancelado" })
-          .eq("id", params.id)
+          .eq("id", pedidoId)
           .in("status", ["pronto", "aceito"])
           .select("id,status")
           .maybeSingle();
