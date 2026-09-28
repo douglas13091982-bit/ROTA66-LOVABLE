@@ -1,83 +1,27 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Shield, Store, Bike, DollarSign, ClipboardList, LogOut, Menu, Route as RouteIcon, Image as ImageIcon, Wallet, Megaphone, Bell, BellRing, Smartphone, X, ChevronRight, Users, ScrollText, Sparkles, LifeBuoy, Tag, AlertTriangle, KeyRound, Calculator, Handshake, MapPin, Crown, GraduationCap, TrendingUp } from "lucide-react";
+import { Shield, Bike, MapPin, DollarSign, LifeBuoy, LogOut, Menu, X, ChevronRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/logout/logic/use-logout";
 import { useBranding } from "@/hooks/use-branding";
-import { useAdminPermissoes, type AdminArea } from "@/hooks/use-admin-permissoes";
-import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
-import { useSystemAlertsCount } from "@/features/admin-alertas/hooks/use-system-alerts";
-import { useSaquesPendentesCount } from "@/features/admin-saques-entregadores/hooks/use-saques-pendentes-count";
-import { useSaquesLojasPendentesCount } from "@/features/admin-saques-lojas/hooks/use-saques-lojas-pendentes-count";
-import { usePasswordResetPendentesCount } from "@/features/admin-password-reset/hooks/use-password-reset-pendentes-count";
 import { useDocsEntregadorPendentesCount } from "@/features/admin-entregadores/hooks/use-docs-pendentes-count";
-import { useFranquia } from "@/hooks/use-franquia";
+import { useSuporteBadge } from "@/features/suporte/hooks/use-suporte";
 
-
-// ownerOnly = só o dono da franquia (você). superOnly = qualquer super_admin (owner + franqueados de cidade).
-const NAV: { to: string; label: string; icon: any; area: AdminArea | null; superOnly?: boolean; ownerOnly?: boolean; franqueadoOnly?: boolean; donoFranquiaOnly?: boolean }[] = [
-  { to: "/admin/dashboard", label: "Dashboard", icon: Shield, area: null },
-
-  { to: "/admin/lojas", label: "Lojas", icon: Store, area: "lojas" },
-  { to: "/admin/categorias", label: "Categorias", icon: Tag, area: null, ownerOnly: true },
-  { to: "/admin/cidades", label: "Cidades", icon: MapPin, area: null, ownerOnly: true },
-  { to: "/admin/planos", label: "Planos", icon: Sparkles, area: "lojas", ownerOnly: true },
-  { to: "/admin/entregadores", label: "Entregadores", icon: Bike, area: "entregadores" },
-  
-  { to: "/admin/tarifas", label: "Tarifas", icon: DollarSign, area: "tarifas", ownerOnly: true },
-  { to: "/admin/financeiro", label: "Financeiro", icon: Wallet, area: "financeiro" },
-  { to: "/admin/faturamento-sistema", label: "Faturamento do sistema", icon: TrendingUp, area: null },
-  { to: "/admin/carteiras", label: "Carteiras & Saques", icon: Wallet, area: null, ownerOnly: true },
-
-
-  { to: "/admin/roteirizacao", label: "Roteirização", icon: RouteIcon, area: "roteirizacao", ownerOnly: true },
-  { to: "/admin/sons-alerta", label: "Sons de alerta", icon: Bell, area: "notificacao_som", ownerOnly: true },
-  { to: "/admin/branding", label: "Identidade", icon: ImageIcon, area: "branding", ownerOnly: true },
-  { to: "/admin/notificacoes", label: "Notificações push", icon: Bell, area: null, superOnly: true },
-  { to: "/admin/clientes-push", label: "Clientes com push", icon: BellRing, area: null, superOnly: true },
-
-  { to: "/admin/anuncios", label: "Anúncios", icon: Megaphone, area: "anuncios", ownerOnly: true },
-  { to: "/admin/app-apk", label: "App APK", icon: Smartphone, area: "app_apk", ownerOnly: true },
-  { to: "/admin/pedidos", label: "Pedidos", icon: ClipboardList, area: "pedidos" },
-  { to: "/admin/mapa", label: "Mapa", icon: MapPin, area: "entregadores" },
-  { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy, area: null },
-  { to: "/admin/treinamento", label: "Treinamento", icon: GraduationCap, area: null, ownerOnly: true },
-  { to: "/admin/contratos", label: "Contratos", icon: ScrollText, area: null, ownerOnly: true },
-  { to: "/admin/admins", label: "Administradores", icon: Users, area: null, ownerOnly: true },
-  
-  { to: "/admin/franqueados", label: "Franqueados", icon: Crown, area: null, ownerOnly: true },
-  { to: "/admin/minha-franquia", label: "Minha franquia", icon: MapPin, area: null, franqueadoOnly: true, donoFranquiaOnly: true },
-  { to: "/admin/despesas", label: "Despesas do negócio", icon: Calculator, area: null, franqueadoOnly: true },
-  { to: "/admin/alertas", label: "Alertas do sistema", icon: AlertTriangle, area: null, ownerOnly: true },
-  { to: "/admin/password-reset", label: "Redefinir senha", icon: KeyRound, area: null, donoFranquiaOnly: true },
-  { to: "/calcular-frete", label: "Calcular frete (público)", icon: Calculator, area: null, ownerOnly: true },
-];
-
+const NAV = [
+  { to: "/admin/dashboard", label: "Visão geral", icon: Shield },
+  { to: "/admin/entregadores", label: "Entregadores", icon: Bike },
+  { to: "/admin/mapa", label: "Mapa de entregadores", icon: MapPin },
+  { to: "/admin/tarifas", label: "Tarifas de entrega", icon: DollarSign },
+  { to: "/admin/suporte", label: "Suporte", icon: LifeBuoy },
+] as const;
 
 export function AdminShell({ children, title }: { children: ReactNode; title: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
-  const { signOut: handleSignOut, loading: signingOut } = useLogout();
-  const { isSuper, can } = useAdminPermissoes();
-  const { isOwner, isFranqueado, isColaborador, cidade, bloqueado } = useFranquia();
-  const visibleNav = NAV.filter((n) => {
-    if (n.donoFranquiaOnly && isColaborador) return false;
-    if (n.ownerOnly) return isOwner;
-    if (n.franqueadoOnly) return isFranqueado;
-    if (n.superOnly) return isSuper;
-    if (n.area === null) return true;
-    return can(n.area);
-  });
+  const { signOut, loading: signingOut } = useLogout();
   const { logoUrl, nomeSistema } = useBranding();
-  const suporteBadge = useSuporteBadge("admin");
-  const { data: alertasCount = 0 } = useSystemAlertsCount();
-  const { data: saquesPendentes = 0 } = useSaquesPendentesCount();
-  const { data: saquesLojasPendentes = 0 } = useSaquesLojasPendentesCount();
-  const { data: resetPendentes = 0 } = usePasswordResetPendentesCount();
   const { data: docsPendentes = 0 } = useDocsEntregadorPendentesCount();
-
-
-  
+  const suporteBadge = useSuporteBadge("admin");
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -87,48 +31,35 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-
-  const activeItem = visibleNav.find((n) => path.startsWith(n.to));
+  const activeItem = NAV.find((item) => path.startsWith(item.to));
   const initials = (user?.email ?? "A").slice(0, 1).toUpperCase();
 
   return (
-    <div className="panel-premium panel-light flex">
+    <div className="panel-premium panel-light flex min-h-screen">
       <aside
-        className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 w-[260px] h-screen pp-glass-strong border-r flex flex-col transition-transform duration-500`}
-        style={{ transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)" }}
+        className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:sticky top-0 z-40 w-[260px] h-screen pp-glass-strong border-r flex flex-col transition-transform duration-300`}
       >
         <div className="px-5 pt-5 pb-4">
           <div className="flex items-center justify-between gap-2">
-            <Link to="/" className="flex items-center gap-3 group min-w-0">
-              <div className="relative shrink-0">
-                <img src={logoUrl} alt={nomeSistema} className="h-14 w-14 object-contain transition-transform duration-500 group-hover:scale-105" />
-              </div>
+            <Link to="/" className="flex items-center gap-3 min-w-0">
+              <img src={logoUrl} alt={nomeSistema} className="h-14 w-14 object-contain" />
               <div className="min-w-0">
-                <div className="text-[15px] font-semibold tracking-tight truncate text-white">{nomeSistema}</div>
-                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>{isOwner ? "Owner" : isColaborador ? `CCO · ${(cidade ?? "").toUpperCase()}` : isFranqueado ? `${(cidade ?? "").toUpperCase()} - SC` : isSuper ? "Super admin" : "Admin"}</div>
+                <div className="text-[15px] font-semibold tracking-tight truncate text-white">ROTA 66</div>
+                <div className="pp-eyebrow text-[9px] mt-0.5" style={{ color: "var(--rota-gold)" }}>CENTRAL LOGÍSTICA</div>
               </div>
             </Link>
-            <button onClick={() => setOpen(false)} className="md:hidden text-white/60 hover:text-white" aria-label="Fechar menu">
-              <X className="h-5 w-5" />
-            </button>
+            <button onClick={() => setOpen(false)} className="md:hidden text-white/60" aria-label="Fechar menu"><X className="h-5 w-5" /></button>
           </div>
         </div>
 
         <div className="h-px mx-5 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <div className="pp-eyebrow px-3 pb-2">Plataforma</div>
-          {visibleNav.map((item) => {
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <div className="pp-eyebrow px-3 pb-2">Operação</div>
+          {NAV.map((item) => {
             const active = path.startsWith(item.to);
             const Icon = item.icon;
-            const badge =
-              item.to === "/admin/suporte" ? suporteBadge :
-              item.to === "/admin/alertas" ? alertasCount :
-              item.to === "/admin/carteiras" ? saquesPendentes + saquesLojasPendentes :
-              item.to === "/admin/entregadores" ? docsPendentes :
-              item.to === "/admin/password-reset" ? resetPendentes : 0;
-
-
+            const badge = item.to === "/admin/entregadores" ? docsPendentes : item.to === "/admin/suporte" ? suporteBadge : 0;
             return (
               <Link
                 key={item.to}
@@ -138,11 +69,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
               >
                 <Icon />
                 <span className="flex-1 truncate">{item.label}</span>
-                {badge > 0 && (
-                  <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-red text-white text-[10px] font-bold flex items-center justify-center">
-                    {badge > 9 ? "9+" : badge}
-                  </span>
-                )}
+                {badge > 0 && <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-gradient-red text-white text-[10px] font-bold flex items-center justify-center">{badge > 9 ? "9+" : badge}</span>}
                 {active && badge === 0 && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
               </Link>
             );
@@ -151,111 +78,28 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
 
         <div className="px-3 py-3 border-t border-white/5">
           <div className="flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/[0.02] border border-white/5">
-            <div className="h-9 w-9 rounded-full grid place-items-center text-sm font-semibold text-white shrink-0" style={{ background: "linear-gradient(135deg, oklch(0.78 0.16 75), oklch(0.58 0.18 60))", color: "#1a1305" }}>
-              {initials}
-            </div>
+            <div className="h-9 w-9 rounded-full grid place-items-center text-sm font-semibold text-white shrink-0" style={{ background: "var(--rota-gold)", color: "#1a1305" }}>{initials}</div>
             <div className="min-w-0 flex-1">
               <div className="text-[12px] font-semibold text-white truncate">Administrador</div>
               <div className="text-[10.5px] text-white/50 truncate">{user?.email}</div>
             </div>
-            <button
-              onClick={handleSignOut}
-              disabled={signingOut}
-              className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition disabled:opacity-50"
-              aria-label="Sair"
-              title="Sair"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
+            <button onClick={signOut} disabled={signingOut} className="h-8 w-8 grid place-items-center rounded-lg text-white/60 hover:text-white hover:bg-white/5" aria-label="Sair"><LogOut className="h-4 w-4" /></button>
           </div>
         </div>
       </aside>
 
-      {open && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-30 animate-in fade-in duration-300"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {open && <div className="md:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-30" onClick={() => setOpen(false)} />}
 
       <div className="flex-1 flex flex-col min-w-0 relative">
-        <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-60" />
-
-        <header
-          className={`h-16 sticky top-0 z-20 flex items-center px-5 md:px-8 gap-3 transition-all duration-300 border-b ${
-            scrolled
-              ? "pp-glass-strong border-white/8 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.7)]"
-              : "border-transparent bg-transparent"
-          }`}
-        >
-          <button
-            className="md:hidden h-9 w-9 grid place-items-center rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition"
-            onClick={() => setOpen(true)}
-            aria-label="Abrir menu"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-
+        <header className={`h-16 sticky top-0 z-20 flex items-center px-5 md:px-8 gap-3 border-b ${scrolled ? "pp-glass-strong border-white/8" : "border-transparent bg-transparent"}`}>
+          <button className="md:hidden h-9 w-9 grid place-items-center rounded-lg text-white/70" onClick={() => setOpen(true)} aria-label="Abrir menu"><Menu className="h-5 w-5" /></button>
           <div className="flex items-center gap-2 text-white/40 text-[12px]">
-            <span>Admin</span>
-            <ChevronRight className="h-3.5 w-3.5 opacity-50" />
+            <span>Logística</span><ChevronRight className="h-3.5 w-3.5 opacity-50" />
             <span className="text-white/80 font-medium">{activeItem?.label ?? title}</span>
           </div>
-
-          <div className="ml-auto flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-white/60 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/5">
-              <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rota-gold)", boxShadow: "0 0 0 3px oklch(0.78 0.16 75 / 0.18), 0 0 12px oklch(0.78 0.16 75 / 0.55)" }} />
-              Plataforma
-            </span>
-          </div>
         </header>
-
         <main className="flex-1 px-5 md:px-8 py-6 md:py-8 relative">
-          {isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && (
-            <div className="mb-4 rounded-xl border border-red-500/40 bg-red-500/10 p-4 flex items-center justify-between">
-              <div className="text-sm text-red-200">
-                <span className="font-semibold text-red-300">Acesso bloqueado por inadimplência.</span> Regularize sua mensalidade de franquia.
-              </div>
-              <Link to="/admin/minha-franquia" className="text-xs px-3 py-1.5 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
-            </div>
-          )}
-          <div className="pp-reveal">
-            {(() => {
-              const currentNav = NAV.find((n) => path.startsWith(n.to));
-              const blockedByRole = currentNav?.ownerOnly
-                ? !isOwner
-                : currentNav?.franqueadoOnly
-                ? !isFranqueado
-                : currentNav?.superOnly
-                ? !isSuper
-                : currentNav?.area
-                ? !can(currentNav.area)
-                : false;
-              const blockedByInadimplencia = isFranqueado && bloqueado && !path.startsWith("/admin/minha-franquia") && !path.startsWith("/admin/dashboard");
-              if (blockedByRole) {
-                return (
-                  <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
-                    <div className="text-lg font-semibold text-white mb-1">Acesso restrito</div>
-                    <div className="text-sm text-white/60">
-                      Você não tem permissão para acessar esta área.
-                    </div>
-                  </div>
-                );
-              }
-              if (blockedByInadimplencia) {
-                return (
-                  <div className="max-w-md mx-auto mt-12 text-center pp-card rounded-2xl p-8">
-                    <div className="text-lg font-semibold text-white mb-1">Acesso bloqueado</div>
-                    <div className="text-sm text-white/60 mb-4">
-                      Regularize a mensalidade de franquia para continuar operando.
-                    </div>
-                    <Link to="/admin/minha-franquia" className="inline-block px-4 py-2 rounded-lg font-semibold text-black" style={{ background: "var(--rota-gold)" }}>Ver faturas</Link>
-                  </div>
-                );
-              }
-              return children;
-            })()}
-          </div>
+          <div className="pp-reveal">{children}</div>
         </main>
       </div>
     </div>
