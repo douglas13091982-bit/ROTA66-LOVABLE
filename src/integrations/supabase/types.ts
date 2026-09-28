@@ -1732,7 +1732,6 @@ export type Database = {
           taxa_entrega_base: number
           taxa_por_pedido: number
           telefone: string | null
-          usa_entregadores: boolean
           updated_at: string
           usar_horario_automatico: boolean
         }
@@ -1777,7 +1776,6 @@ export type Database = {
           taxa_entrega_base?: number
           taxa_por_pedido?: number
           telefone?: string | null
-          usa_entregadores?: boolean
           updated_at?: string
           usar_horario_automatico?: boolean
         }
@@ -1822,7 +1820,6 @@ export type Database = {
           taxa_entrega_base?: number
           taxa_por_pedido?: number
           telefone?: string | null
-          usa_entregadores?: boolean
           updated_at?: string
           usar_horario_automatico?: boolean
         }
