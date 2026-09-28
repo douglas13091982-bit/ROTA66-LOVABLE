@@ -64,7 +64,7 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
 
         const { data: pedido, error } = await supabaseAdmin
           .from("pedidos")
-          .select("id,status,entregador_id,taxa_entrega,codigo_coleta,codigo_entrega,endereco_coleta,endereco_entrega,created_at,updated_at")
+          .select("id,status,entregador_id,taxa_entrega,endereco_coleta,endereco_entrega,created_at,updated_at,coleta_confirmada_em,entrega_confirmada_em")
           .eq("id", pedidoId)
           .maybeSingle();
         if (error) return json({ error: "delivery_lookup_failed" }, 500);
