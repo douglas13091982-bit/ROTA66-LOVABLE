@@ -89,3 +89,35 @@ O cancelamento só é aceito enquanto a entrega estiver em `pronto` ou `aceito`.
 - status da entrega
 
 A tabela `integracao_entregas` funciona somente como vínculo técnico entre o ID do pedido externo e a entrega operacional do ROTA 66.
+
+
+## Status logístico
+
+O ROTA 66 normaliza os estados internos para a integração:
+
+| ROTA 66 | API |
+|---|---|
+| `pronto` | `waiting_courier` |
+| `aceito` | `accepted` |
+| `em_rota` | `on_route_to_pickup` |
+| `coletado` | `picked_up` |
+| `entregue` | `delivered` |
+| `cancelado` | `cancelled` |
+
+Também é possível consultar diretamente pelo pedido externo:
+
+`GET /api/integration/v1/deliveries/external/{external_order_id}`
+
+Esse endpoint retorna somente dados logísticos e não expõe os códigos de coleta/entrega.
+
+## Limites da integração
+
+`loja_id` permanece no endpoint de criação apenas como compatibilidade com o modelo legado do banco do ROTA 66. O ROTA 66 não usa esse vínculo para decidir quais entregas são oferecidas aos entregadores.
+
+O fluxo operacional do entregador usa o pool logístico `rota66_pool_entregas` e o aceite atômico `rota66_aceitar_entrega`.
+
+## Mercado Pago
+
+O ROTA 66 não processa pagamentos comerciais de lojas, catálogo, checkout ou pedidos do Pixel Palace. O webhook específico de loja foi desativado.
+
+O webhook principal do ROTA 66 fica restrito ao financeiro operacional de entregadores, como recargas/créditos, quando esse recurso estiver habilitado.
