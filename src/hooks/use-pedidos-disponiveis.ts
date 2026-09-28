@@ -164,10 +164,9 @@ export function usePedidosDisponiveis(
   }, [userId, qc]);
 
 
-  // Pool unificado: a RPC `pedidos_pool_externo` aplica o escopo configurado
-  // no admin (somente_vinculados / somente_externos / vinculados_e_externos).
+  // Pool logístico independente: não depende de vínculo com loja nem de configuração comercial.
   const { data: pedidosExternos, isLoading: loadingExt } = useQuery({
-    queryKey: ["pedidos-pool-externo", userId],
+    queryKey: ["rota66-pool-entregas", userId],
     enabled: !!userId && !temRotaAtiva && estouOnline,
     refetchInterval: POOL_REFETCH_MS,
     queryFn: async () => {
@@ -175,7 +174,7 @@ export function usePedidosDisponiveis(
         supabase.rpc as unknown as (
           fn: string,
         ) => Promise<{ data: PedidoDisponivel[] | null; error: Error | null }>
-      )("pedidos_pool_externo");
+      )("rota66_pool_entregas");
       if (error) throw error;
       // Marca todos como "externos" — o aceite agora é único (RPC).
       return (data ?? []).map((p) => ({ ...p, _externo: true }));
