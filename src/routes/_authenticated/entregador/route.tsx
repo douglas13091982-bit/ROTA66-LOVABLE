@@ -23,8 +23,7 @@ export const Route = createFileRoute("/_authenticated/entregador")({
 
     // Não é entregador: manda para a área compatível com o papel real.
     if (list.includes("super_admin") || list.includes("admin")) throw redirect({ to: "/admin" });
-    if (list.includes("loja_admin")) throw redirect({ to: "/loja" });
-    if (list.includes("cliente")) throw redirect({ to: "/clientes" });
+
     throw redirect({ to: "/" });
   },
   errorComponent: ({ error, reset }) => <GlobalErrorBoundary error={error} reset={reset} />,
