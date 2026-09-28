@@ -22,7 +22,7 @@ import {
 import { EntregadorPixCard } from "@/components/EntregadorPixCard";
 
 import { formatDateTime } from "@/lib/format";
-import { STATUS_LABEL, STATUS_COLOR, NEXT } from "../logic/constants";
+import { STATUS_LABEL, STATUS_COLOR, NEXT, NEXT_MANUAL } from "../logic/constants";
 import { imprimirPedido } from "../logic/print-pedido";
 import type { Pedido } from "../hooks/use-pedidos-loja";
 import type { PedidoActions } from "../hooks/use-pedido-actions";
@@ -31,6 +31,7 @@ interface Props {
   detalhe: Pedido | null;
   lojaNome?: string | null;
   actions: PedidoActions;
+  usaEntregadores: boolean;
   onClose: () => void;
   onConfirmarColeta: (p: Pedido) => void;
   onUpdateDetalhe: (next: Pedido | null) => void;
@@ -40,6 +41,7 @@ export function PedidoDrawer({
   detalhe,
   lojaNome,
   actions,
+  usaEntregadores,
   onClose,
   onConfirmarColeta,
   onUpdateDetalhe,
@@ -72,9 +74,8 @@ export function PedidoDrawer({
 
 
 
-  const podeAvancar =
-    (detalhe.status === "novo" || detalhe.status === "aceito" || detalhe.status === "em_preparo") &&
-    NEXT[detalhe.status];
+  const fluxo = usaEntregadores ? NEXT : NEXT_MANUAL;
+  const podeAvancar = fluxo[detalhe.status];
 
   return (
     <Sheet open onOpenChange={(o: boolean) => { if (!o) onClose(); }}>
@@ -251,13 +252,13 @@ export function PedidoDrawer({
             {podeAvancar && (
               <button
                 onClick={() => {
-                  const next = NEXT[detalhe.status]!;
+                  const next = fluxo[detalhe.status]!;
                   actions.updateStatus(detalhe.id, next);
                   onUpdateDetalhe({ ...detalhe, status: next });
                 }}
                 className="pp-cta uppercase tracking-[0.15em]"
               >
-                Avançar para {STATUS_LABEL[NEXT[detalhe.status]!]}
+                Avançar para {STATUS_LABEL[fluxo[detalhe.status]!]}
               </button>
             )}
             {detalhe.status !== "entregue" && detalhe.status !== "cancelado" && (
