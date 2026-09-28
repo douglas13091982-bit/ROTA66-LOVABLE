@@ -227,7 +227,7 @@ export function usePedidosDisponiveis(
           },
           (payload) => {
             if (!estouOnlineRef.current) return;
-            qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+            qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", userId] });
             if (payload.eventType === "INSERT") {
               toast.success("🚨 Nova oferta de pedido disponível!");
             }
@@ -253,7 +253,7 @@ export function usePedidosDisponiveis(
             { event: "*", schema: "public", table: "pedidos", filter: "status=eq.pronto" },
             (payload) => {
               if (!estouOnlineRef.current) return;
-              qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+              qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", userId] });
 
               const novo = payload.new as {
                 id?: string;
@@ -275,7 +275,7 @@ export function usePedidosDisponiveis(
           )
           .subscribe() as never,
       () => {
-        qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+        qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", userId] });
       },
     );
 
@@ -288,11 +288,11 @@ export function usePedidosDisponiveis(
     const removerDoPool = (id?: string | null) => {
       if (!id) return;
       qc.setQueryData(
-        ["pedidos-pool-externo", userId],
+        ["rota66-pool-entregas", userId],
         (prev: PedidoDisponivel[] | undefined) =>
           prev ? prev.filter((p) => p.id !== id) : prev,
       );
-      qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+      qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", userId] });
     };
 
     const stopSaidas = subscribeLazy(
@@ -311,7 +311,7 @@ export function usePedidosDisponiveis(
         return ch.subscribe() as never;
       },
       () => {
-        qc.invalidateQueries({ queryKey: ["pedidos-pool-externo", userId] });
+        qc.invalidateQueries({ queryKey: ["rota66-pool-entregas", userId] });
       },
     );
 
