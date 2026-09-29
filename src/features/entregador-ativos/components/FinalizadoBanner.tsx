@@ -1,4 +1,4 @@
-import { PartyPopper, X, Store, Navigation, MapPin } from "lucide-react";
+import { CheckCircle2, Store, Navigation, MapPin, ArrowRight } from "lucide-react";
 
 type Props = {
   count: number;
@@ -27,14 +27,14 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
           <PartyPopper className="h-8 w-8 text-emerald-400" />
         </div>
         <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-400 font-bold">
-          {retornoPendente ? "Entrega Pendente de Retorno" : "Entregas Finalizadas"}
+          {retornoPendente ? "ENTREGA FINALIZADA · RETORNO PENDENTE" : "ENTREGA FINALIZADA"}
         </div>
         <div className="text-sm text-muted-foreground">
-          {retornoPendente ? "Devolva a maquininha para concluir" : `${count} ${count === 1 ? "entrega concluída" : "entregas concluídas"}`}
+          {retornoPendente ? "A entrega foi concluída. Falta devolver a maquininha." : `${count} ${count === 1 ? "entrega concluída" : "entregas concluídas"}`}
         </div>
         <div className="mt-3">
           <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-1">
-            Você ganhou
+            GANHO DESTA ROTA
           </div>
           <div className="font-display text-6xl md:text-7xl text-emerald-400 leading-none drop-shadow-[0_4px_24px_oklch(0.7_0.18_155_/_0.45)]">
             R$ {totalGanho.toFixed(2)}
@@ -52,7 +52,7 @@ export function FinalizadoBanner({ count, totalGanho, onDismiss, retornoPendente
                 Devolução da Maquininha
               </h3>
               <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest">
-                Retorno Obrigatório à Loja
+                RETORNO OBRIGATÓRIO À LOJA
               </p>
             </div>
           </div>
