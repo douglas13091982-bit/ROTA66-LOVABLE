@@ -161,17 +161,29 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
       <div className="flex-1 flex flex-col min-w-0 relative">
         <div className="pointer-events-none absolute inset-0 pp-grid-overlay opacity-0" />
 
-        <main className="flex-1 px-6 pb-32 relative pt-20 bg-white isolation-auto">
-          <div className="fixed top-0 left-0 right-0 h-20 z-[60] flex items-center justify-between px-6 pointer-events-none bg-white">
-            <button 
+        <main className="flex-1 px-6 pb-32 relative pt-[72px] bg-white isolation-auto">
+          <div className="fixed top-0 left-0 right-0 h-[72px] z-[60] flex items-center gap-3 px-4 pointer-events-none bg-white border-b border-[#edf0f4] shadow-[0_4px_18px_-16px_rgba(15,27,45,0.35)]">
+            <button
               onClick={() => setOpen(true)}
-              className="flex items-center justify-center h-12 w-12 text-[#e3000f] active:scale-95 transition-transform pointer-events-auto"
+              aria-label="Abrir menu"
+              className="flex h-11 w-11 shrink-0 items-center justify-center text-[#0d2c54] active:scale-95 transition-transform pointer-events-auto"
             >
-              <Menu className="h-8 w-8" />
+              <Menu className="h-7 w-7" strokeWidth={2.5} />
             </button>
-            
 
-            <div className="flex items-center gap-2 pointer-events-auto">
+            <div className="min-w-0 flex-1 pointer-events-none">
+              <div className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 shrink-0 bg-[#e3000f]" />
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#8b95a5]">
+                  ROTA 66 • ENTREGADOR
+                </span>
+              </div>
+              <h1 className="mt-0.5 truncate text-[17px] font-black tracking-tight text-[#0f1b2d]">
+                {title}
+              </h1>
+            </div>
+
+            <div className="flex items-center gap-1 pointer-events-auto">
               
               {topFixed && (
                 <div className="pointer-events-auto">
@@ -179,7 +191,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                 </div>
               )}
 
-              <button className="flex items-center justify-center h-12 w-12 text-[#e3000f] relative active:scale-95 transition-transform pointer-events-auto">
+              <button aria-label="Notificações" className="flex items-center justify-center h-11 w-11 text-[#e3000f] relative active:scale-95 transition-transform pointer-events-auto">
                 <div className="relative">
                   <Bell className="h-7 w-7" />
                   <div className="absolute top-0 right-0 h-2.5 w-2.5 bg-[#e3000f] rounded-full border-2 border-white" />
