@@ -1733,6 +1733,7 @@ export type Database = {
           taxa_por_pedido: number
           telefone: string | null
           updated_at: string
+          usa_entregadores: boolean
           usar_horario_automatico: boolean
         }
         Insert: {
@@ -1777,6 +1778,7 @@ export type Database = {
           taxa_por_pedido?: number
           telefone?: string | null
           updated_at?: string
+          usa_entregadores?: boolean
           usar_horario_automatico?: boolean
         }
         Update: {
@@ -1821,6 +1823,7 @@ export type Database = {
           taxa_por_pedido?: number
           telefone?: string | null
           updated_at?: string
+          usa_entregadores?: boolean
           usar_horario_automatico?: boolean
         }
         Relationships: [
