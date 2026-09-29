@@ -21,11 +21,11 @@ export function GanhoHojeCard({ valor }: { valor: number }) {
     <Link 
       to="/entregador/carteira"
       data-ganho-hoje 
-      className="inline-flex items-center gap-3 bg-[#e3000f] rounded-full pl-4 pr-5 py-2.5 shadow-xl shadow-[#e3000f]/20 active:scale-95 transition-transform"
+      className="inline-flex items-center gap-3 bg-[#0d2c54] rounded-2xl pl-3 pr-4 py-2.5 shadow-lg shadow-[#0d2c54]/15 border border-white/10 active:scale-95 transition-transform"
     >
-      <Wallet className="h-5 w-5 text-white" strokeWidth={2.5} />
+      <div className="h-9 w-9 rounded-xl bg-white/10 grid place-items-center"><Wallet className="h-4 w-4 text-white" strokeWidth={2.5} /></div>
       <div className="flex flex-col -gap-1">
-        <span className="text-[9px] font-bold uppercase tracking-widest leading-none" style={{ color: "#ffffff" }}>Saldo disponível</span>
+        <span className="text-[8px] font-bold uppercase tracking-[0.12em] leading-none text-white/60" style={{ color: "#ffffff" }}>Saldo disponível</span>
         <div className="text-[17px] font-black tracking-tighter tabular-nums leading-none" style={{ color: "#ffffff" }}>
           {hide ? "R$ ••••" : `R$ ${formatCurrencyValue(valor)}`}
         </div>
