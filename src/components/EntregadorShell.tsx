@@ -188,7 +188,7 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
             </div>
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
-            <SheetContent side="left" className="w-[280px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100]">
+            <SheetContent side="left" className="w-[300px] p-0 border-none bg-[#0d2c54] text-white flex flex-col overflow-y-auto overflow-x-hidden z-[100] shadow-2xl">
                 <div className="p-8 pt-12 flex flex-col items-center text-center border-b border-white/5 bg-black/10 shrink-0">
                   <div className="relative mb-4">
                     <div className="h-20 w-20 rounded-full border-2 border-white/20 overflow-hidden bg-white/5 flex items-center justify-center">
@@ -220,7 +220,23 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col flex-1 py-4">
+                <div className="mx-5 mb-2 border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 bg-[#e3000f]" />
+                      <span className="text-[9px] font-black uppercase tracking-[0.18em] text-white/50">Operação</span>
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.12em] text-[#ff5660]">
+                      {online ? "ONLINE" : "OFFLINE"}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-px bg-white/10" />
+                  <p className="mt-2 text-[10px] leading-relaxed text-white/45">
+                    {online ? "Pronto para receber novos pedidos." : "Ative seu status para ficar disponível."}
+                  </p>
+                </div>
+
+                <div className="flex flex-col flex-1 py-2">
                   {NAV.map((item) => {
                     const active = path.startsWith(item.to);
                     const Icon = item.icon;
@@ -230,8 +246,8 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
                         key={item.to}
                         to={item.to}
                         onClick={() => setOpen(false)}
-                        className={`flex items-center gap-4 px-6 py-4 text-[13px] font-medium uppercase tracking-[0.25em] transition-all ${
-                          active ? "bg-[#e3000f] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
+                        className={`relative flex items-center gap-4 px-6 py-3.5 mx-3 text-[12px] font-bold uppercase tracking-[0.18em] transition-all ${
+                          active ? "bg-[#e3000f] text-white shadow-lg shadow-black/10" : "text-white/65 hover:bg-white/5 hover:text-white"
                         }`}
                       >
                         <div className="relative">
