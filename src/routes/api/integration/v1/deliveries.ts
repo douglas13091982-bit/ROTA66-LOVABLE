@@ -22,6 +22,8 @@ type DeliveryPayload = {
   valor_total?: number;
 };
 
+type IntegrationMapping = { pedido_id: string; source: string; external_order_id: string };
+
 function json(data: unknown, status = 200) {
   return Response.json(data, {
     status,
@@ -112,16 +114,17 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
           .eq("external_order_id", externalOrderId)
           .maybeSingle();
 
-        if (existing?.pedido_id) {
+        const existingMapping = existing as IntegrationMapping | null;
+        if (existingMapping?.pedido_id) {
           const { data: pedido } = await supabaseAdmin
             .from("pedidos")
             .select("id,status,entregador_id,taxa_entrega,codigo_entrega")
-            .eq("id", existing.pedido_id)
+            .eq("id", existingMapping.pedido_id)
             .maybeSingle();
           return json({
             ok: true,
             idempotent: true,
-            delivery_id: existing.pedido_id,
+            delivery_id: existingMapping.pedido_id,
             status: pedido?.status ?? null,
             logistics_status: pedido?.status ? normalizeLogisticsStatus(pedido.status) : null,
             entregador_id: pedido?.entregador_id ?? null,
@@ -191,12 +194,13 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
             .eq("external_order_id", externalOrderId)
             .maybeSingle();
 
-          if (winner?.pedido_id) {
+          const winningMapping = winner as Pick<IntegrationMapping, "pedido_id"> | null;
+          if (winningMapping?.pedido_id) {
             await supabaseAdmin.from("pedidos").delete().eq("id", pedido.id);
             return json({
               ok: true,
               idempotent: true,
-              delivery_id: winner.pedido_id,
+              delivery_id: winningMapping.pedido_id,
             });
           }
 

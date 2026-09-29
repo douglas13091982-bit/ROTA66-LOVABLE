@@ -3,7 +3,7 @@ import { CadastroPage } from "@/features/cadastro/CadastroPage";
 
 export { passwordMeetsRequirements } from "@/features/cadastro/logic/password-rules";
 
-type CadastroSearch = { role?: "entregador"; ref?: string; redirect?: string };
+type CadastroSearch = { role?: "entregador" | "cliente"; ref?: string; redirect?: string };
 
 function safeRedirect(v: unknown): string | undefined {
   if (typeof v !== "string") return undefined;

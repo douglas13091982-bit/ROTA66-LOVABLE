@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+type IntegrationMapping = { pedido_id: string; source: string; external_order_id: string };
+
 function json(data: unknown, status = 200) {
   return Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 }
@@ -51,8 +53,9 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
             .maybeSingle();
           if (mappingError) return json({ error: "integration_lookup_failed" }, 500);
           if (!mapping) return json({ error: "delivery_not_found" }, 404);
-          pedidoId = mapping.pedido_id;
-          integration = mapping;
+          const foundMapping = mapping as IntegrationMapping;
+          pedidoId = foundMapping.pedido_id;
+          integration = foundMapping;
         } else {
           const { data: mapping } = await supabaseAdmin
             .from("integracao_entregas" as any)
@@ -98,7 +101,7 @@ export const Route = createFileRoute("/api/integration/v1/deliveries/$id")({
           .eq("external_order_id", params.id)
           .maybeSingle();
 
-        const pedidoId = mapping?.pedido_id ?? params.id;
+        const pedidoId = (mapping as Pick<IntegrationMapping, "pedido_id"> | null)?.pedido_id ?? params.id;
 
         const { data, error } = await supabaseAdmin
           .from("pedidos")
