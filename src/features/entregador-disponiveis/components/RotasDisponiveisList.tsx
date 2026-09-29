@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Package, Radio } from "lucide-react";
+import { Package, Radio, Sparkles } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -107,9 +107,9 @@ export function RotasDisponiveisList({
   }, [grupos, ordenacao, taxaParaExibir, minhaPos, agora]);
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto">\n      {grupos.length > 0 && (\n        <div className="mb-4 rounded-2xl border border-[#e6eaf0] bg-[#f8fafc] px-4 py-3 flex items-center justify-between gap-3">\n          <div className="flex items-center gap-3 min-w-0">\n            <div className="h-9 w-9 rounded-xl bg-[#e3000f]/10 grid place-items-center shrink-0">\n              <Sparkles className="h-4 w-4 text-[#e3000f]" />\n            </div>\n            <div className="min-w-0">\n              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#0d2c54]">Entregas disponíveis</div>\n              <div className="text-[11px] font-medium text-[#718096] truncate">Escolha uma rota e veja os detalhes antes de aceitar</div>\n            </div>\n          </div>\n          <span className="shrink-0 rounded-full bg-[#0d2c54] px-2.5 py-1 text-[10px] font-black text-white">{grupos.length}</span>\n        </div>\n      )}
       {isLoading && grupos.length === 0 && (
-        <p className="text-sm px-1" style={{ color: "#374151" }}>Carregando pedidos...</p>
+        <div className="rounded-2xl border border-[#e6eaf0] bg-[#f8fafc] px-4 py-4 flex items-center gap-3">\n          <div className="h-8 w-8 rounded-xl bg-[#e3000f]/10 grid place-items-center animate-pulse"><Package className="h-4 w-4 text-[#e3000f]" /></div>\n          <span className="text-xs font-bold uppercase tracking-wider text-[#0d2c54]">Procurando novas entregas...</span>\n        </div>
       )}
 
       {!isLoading && grupos.length === 0 && (
