@@ -277,13 +277,63 @@ export function EntregadorShell({ children, title, topFixed }: { children: React
 
       {/* Bottom tab bar - mobile only */}
       <RetornoLojaDialog />
+      {/* Barra inferior de operação: sempre visível e focada no status do entregador */}
       <nav
         data-entregador-nav
-        className="fixed bottom-0 inset-x-0 z-40 border-t border-black/[0.03] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)]"
+        aria-label="Status operacional"
+        className="fixed bottom-0 inset-x-0 z-40 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+10px)]"
         style={{ background: "#ffffff" }}
       >
-        <div className="flex flex-col gap-3">
-          {path.startsWith("/entregador/disponiveis") && StatusToggleLarge}
+        <div className="mx-auto w-full max-w-md">
+          <div
+            data-status-bar
+            className="flex items-center gap-3 border border-[#e4e8ef] bg-white px-3 py-2.5 shadow-[0_-8px_28px_-18px_rgba(15,27,45,0.35)]"
+          >
+            <div
+              className="grid h-10 w-10 shrink-0 place-items-center"
+              style={{
+                background: online ? "rgba(227,0,15,0.10)" : "rgba(13,44,84,0.08)",
+              }}
+            >
+              <span className="relative flex h-3.5 w-3.5">
+                {online && (
+                  <span className="absolute inline-flex h-full w-full animate-ping bg-[#e3000f] opacity-40" />
+                )}
+                <span
+                  className="relative h-3.5 w-3.5"
+                  style={{ background: online ? "#e3000f" : "#64748b" }}
+                />
+              </span>
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6b7688]">
+                  Status
+                </span>
+                <span
+                  className="text-[13px] font-black uppercase tracking-[0.08em]"
+                  style={{ color: online ? "#e3000f" : "#0d2c54" }}
+                >
+                  {online ? "ONLINE" : "OFFLINE"}
+                </span>
+              </div>
+              <p className="mt-0.5 truncate text-[10px] font-medium text-[#8b95a5]">
+                {online ? "Você está recebendo novas oportunidades" : "Ative para começar a receber pedidos"}
+              </p>
+            </div>
+
+            <button
+              onClick={toggle}
+              data-status-toggle
+              aria-label={online ? "Ficar offline" : "Ficar online"}
+              className="flex h-10 shrink-0 items-center gap-2 px-4 text-[10px] font-black uppercase tracking-[0.08em] text-white transition-all active:scale-[0.98]"
+              style={{ background: online ? "#e3000f" : "#0d2c54" }}
+            >
+              <Power className="h-4 w-4" strokeWidth={3} />
+              {online ? "Offline" : "Ficar online"}
+            </button>
+          </div>
         </div>
       </nav>
 
