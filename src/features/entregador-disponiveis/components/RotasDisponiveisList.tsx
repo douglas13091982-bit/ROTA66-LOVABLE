@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Package } from "lucide-react";
+import { Package, Radio, WifiOff } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Dialog, DialogOverlay, DialogPortal, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -113,16 +113,21 @@ export function RotasDisponiveisList({
       )}
 
       {!isLoading && grupos.length === 0 && (
-        <div className="text-center py-20 px-4 flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="mb-8 w-44 h-44 grid place-items-center bg-[#f8f9fb] rounded-[48px]">
-            <Package className="h-24 w-24 text-[#0d2c54]/20" strokeWidth={1} />
+        <div className="text-center py-16 px-4 flex flex-col items-center justify-center min-h-[55vh]">
+          <div className="relative mb-7 w-28 h-28 grid place-items-center bg-[#f8f9fb] rounded-[36px]">
+            <div className="absolute inset-0 rounded-[36px] animate-pulse bg-[#e3000f]/[0.04]" />
+            <Radio className="relative h-14 w-14 text-[#e3000f]/60" strokeWidth={1.5} />
           </div>
-          <h2 className="text-[22px] font-black text-[#0d2c54] tracking-tight mb-2 uppercase tracking-wider">
-            Nenhuma entrega disponível
+          <h2 className="text-[22px] font-black text-[#0d2c54] tracking-tight mb-2 uppercase">
+            Procurando entregas
           </h2>
-          <p className="text-[15px] font-medium text-[#6b7688]">
-            Fique online para receber novos pedidos.
+          <p className="text-[15px] font-medium text-[#6b7688] max-w-[290px] leading-relaxed">
+            Você está online. Assim que surgir uma nova entrega, ela aparecerá aqui.
           </p>
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-emerald-700">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            Online e aguardando
+          </div>
         </div>
       )}
 
