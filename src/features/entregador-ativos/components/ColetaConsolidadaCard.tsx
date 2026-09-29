@@ -49,7 +49,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
       <div className="relative">
         <div className="flex flex-col items-center text-center mb-4 gap-2">
           <div>
-            <div className="text-base uppercase tracking-wider text-muted-foreground font-black">Coleta agrupada</div>
+            <div className="text-base uppercase tracking-wider text-muted-foreground font-black">COLETA AGRUPADA</div>
             <div className="font-display text-4xl md:text-5xl tracking-[0.06em] mt-1 text-navy font-black">
               {pedidos.length} pedidos
             </div>
@@ -168,7 +168,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                 </div>
               ))}
             <p className="text-[11px] text-white/50 text-center pt-1">
-              Mostre estes códigos para a loja confirmar os {pedidos.length} pedidos.
+              Mostre os códigos para a loja confirmar os {pedidos.length} pedidos. Depois, toque em <b className="text-navy">IR PARA A ENTREGA</b>.
             </p>
             {onSairDoLocal && (
               <button
@@ -178,7 +178,7 @@ export function ColetaConsolidadaCard({ pedidos, totalRota, onSairDoLocal, onCol
                   background: "#e3000f",
                 }}
               >
-                <span>Sair do local</span>
+                <span>IR PARA A ENTREGA</span>
                 <Navigation className="h-5 w-5 rotate-90" />
               </button>
             )}
