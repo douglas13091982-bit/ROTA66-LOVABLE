@@ -95,6 +95,9 @@ import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenti
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as ApiPublicMpWebhookLojaIdRouteImport } from './routes/api/public/mp-webhook.$lojaId'
 import { Route as ApiPublicHooksMpPollPendentesRouteImport } from './routes/api/public/hooks/mp-poll-pendentes'
+import { Route as ApiIntegrationV1DeliveriesRouteImport } from './routes/api/integration/v1/deliveries'
+import { Route as ApiIntegrationV1DeliveriesIdRouteImport } from './routes/api/integration/v1/deliveries/$id'
+import { Route as ApiIntegrationV1DeliveriesExternalExternalOrderIdRouteImport } from './routes/api/integration/v1/deliveries/external/$externalOrderId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -588,6 +591,24 @@ const ApiPublicHooksMpPollPendentesRoute =
     path: '/api/public/hooks/mp-poll-pendentes',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiIntegrationV1DeliveriesRoute =
+  ApiIntegrationV1DeliveriesRouteImport.update({
+    id: '/api/integration/v1/deliveries',
+    path: '/api/integration/v1/deliveries',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiIntegrationV1DeliveriesIdRoute =
+  ApiIntegrationV1DeliveriesIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => ApiIntegrationV1DeliveriesRoute,
+  } as any)
+const ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute =
+  ApiIntegrationV1DeliveriesExternalExternalOrderIdRouteImport.update({
+    id: '/external/$externalOrderId',
+    path: '/external/$externalOrderId',
+    getParentRoute: () => ApiIntegrationV1DeliveriesRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -673,8 +694,11 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/loja/': typeof AuthenticatedLojaIndexRoute
+  '/api/integration/v1/deliveries': typeof ApiIntegrationV1DeliveriesRouteWithChildren
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
+  '/api/integration/v1/deliveries/$id': typeof ApiIntegrationV1DeliveriesIdRoute
+  '/api/integration/v1/deliveries/external/$externalOrderId': typeof ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -757,8 +781,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/entregador': typeof AuthenticatedEntregadorIndexRoute
   '/loja': typeof AuthenticatedLojaIndexRoute
+  '/api/integration/v1/deliveries': typeof ApiIntegrationV1DeliveriesRouteWithChildren
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
+  '/api/integration/v1/deliveries/$id': typeof ApiIntegrationV1DeliveriesIdRoute
+  '/api/integration/v1/deliveries/external/$externalOrderId': typeof ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -846,8 +873,11 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/entregador/': typeof AuthenticatedEntregadorIndexRoute
   '/_authenticated/loja/': typeof AuthenticatedLojaIndexRoute
+  '/api/integration/v1/deliveries': typeof ApiIntegrationV1DeliveriesRouteWithChildren
   '/api/public/hooks/mp-poll-pendentes': typeof ApiPublicHooksMpPollPendentesRoute
   '/api/public/mp-webhook/$lojaId': typeof ApiPublicMpWebhookLojaIdRoute
+  '/api/integration/v1/deliveries/$id': typeof ApiIntegrationV1DeliveriesIdRoute
+  '/api/integration/v1/deliveries/external/$externalOrderId': typeof ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -935,8 +965,11 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/entregador/'
     | '/loja/'
+    | '/api/integration/v1/deliveries'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
+    | '/api/integration/v1/deliveries/$id'
+    | '/api/integration/v1/deliveries/external/$externalOrderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1019,8 +1052,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/entregador'
     | '/loja'
+    | '/api/integration/v1/deliveries'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
+    | '/api/integration/v1/deliveries/$id'
+    | '/api/integration/v1/deliveries/external/$externalOrderId'
   id:
     | '__root__'
     | '/'
@@ -1107,8 +1143,11 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/entregador/'
     | '/_authenticated/loja/'
+    | '/api/integration/v1/deliveries'
     | '/api/public/hooks/mp-poll-pendentes'
     | '/api/public/mp-webhook/$lojaId'
+    | '/api/integration/v1/deliveries/$id'
+    | '/api/integration/v1/deliveries/external/$externalOrderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1136,6 +1175,7 @@ export interface RootRouteChildren {
   ApiPublicMpWebhookPlataformaRoute: typeof ApiPublicMpWebhookPlataformaRoute
   ApiPublicPwaIconDotpngRoute: typeof ApiPublicPwaIconDotpngRoute
   ApiPublicSendPushRoute: typeof ApiPublicSendPushRoute
+  ApiIntegrationV1DeliveriesRoute: typeof ApiIntegrationV1DeliveriesRouteWithChildren
   ApiPublicHooksMpPollPendentesRoute: typeof ApiPublicHooksMpPollPendentesRoute
 }
 
@@ -1743,6 +1783,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksMpPollPendentesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/integration/v1/deliveries': {
+      id: '/api/integration/v1/deliveries'
+      path: '/api/integration/v1/deliveries'
+      fullPath: '/api/integration/v1/deliveries'
+      preLoaderRoute: typeof ApiIntegrationV1DeliveriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/integration/v1/deliveries/$id': {
+      id: '/api/integration/v1/deliveries/$id'
+      path: '/$id'
+      fullPath: '/api/integration/v1/deliveries/$id'
+      preLoaderRoute: typeof ApiIntegrationV1DeliveriesIdRouteImport
+      parentRoute: typeof ApiIntegrationV1DeliveriesRoute
+    }
+    '/api/integration/v1/deliveries/external/$externalOrderId': {
+      id: '/api/integration/v1/deliveries/external/$externalOrderId'
+      path: '/external/$externalOrderId'
+      fullPath: '/api/integration/v1/deliveries/external/$externalOrderId'
+      preLoaderRoute: typeof ApiIntegrationV1DeliveriesExternalExternalOrderIdRouteImport
+      parentRoute: typeof ApiIntegrationV1DeliveriesRoute
+    }
   }
 }
 
@@ -1931,6 +1992,23 @@ const ApiPublicMpWebhookRouteChildren: ApiPublicMpWebhookRouteChildren = {
 const ApiPublicMpWebhookRouteWithChildren =
   ApiPublicMpWebhookRoute._addFileChildren(ApiPublicMpWebhookRouteChildren)
 
+interface ApiIntegrationV1DeliveriesRouteChildren {
+  ApiIntegrationV1DeliveriesIdRoute: typeof ApiIntegrationV1DeliveriesIdRoute
+  ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute: typeof ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute
+}
+
+const ApiIntegrationV1DeliveriesRouteChildren: ApiIntegrationV1DeliveriesRouteChildren =
+  {
+    ApiIntegrationV1DeliveriesIdRoute: ApiIntegrationV1DeliveriesIdRoute,
+    ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute:
+      ApiIntegrationV1DeliveriesExternalExternalOrderIdRoute,
+  }
+
+const ApiIntegrationV1DeliveriesRouteWithChildren =
+  ApiIntegrationV1DeliveriesRoute._addFileChildren(
+    ApiIntegrationV1DeliveriesRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -1959,6 +2037,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicMpWebhookPlataformaRoute: ApiPublicMpWebhookPlataformaRoute,
   ApiPublicPwaIconDotpngRoute: ApiPublicPwaIconDotpngRoute,
   ApiPublicSendPushRoute: ApiPublicSendPushRoute,
+  ApiIntegrationV1DeliveriesRoute: ApiIntegrationV1DeliveriesRouteWithChildren,
   ApiPublicHooksMpPollPendentesRoute: ApiPublicHooksMpPollPendentesRoute,
 }
 export const routeTree = rootRouteImport
