@@ -173,7 +173,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
       : "ring-4 ring-white/20"
     : "";
 
-  const stagePillLabel = isColeta ? "INDO BUSCAR" : "EM ENTREGA";
+  const stagePillLabel = isColeta ? "A CAMINHO DA COLETA" : "A CAMINHO DA ENTREGA";
   const stagePillColor = isColeta ? (isLight ? RED : "#F5B301") : (isLight ? "#0EA5E9" : "#7DD3FC");
 
 
@@ -481,7 +481,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                   boxShadow: "0 14px 32px -10px rgba(227,0,15,0.55)",
                 }}
               >
-                <span>Sair do local</span>
+                <span>Ir para a entrega</span>
                 <ArrowRight className="h-5 w-5" />
               </button>
             </div>
