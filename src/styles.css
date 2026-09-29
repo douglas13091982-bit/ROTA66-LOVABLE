@@ -2184,19 +2184,32 @@ button[class*="bg-\[\#e3000f\]"] * {
 .entregador-theme.panel-light [role="tab"][data-surface="navy"] { background: #0d2c54 !important; }
 .entregador-theme.panel-light [role="tab"][data-surface="red"] { background: #e3000f !important; }
 
-/* Restaura texto branco sobre superfícies escuras do app do entregador
-   (nav inferior e pílulas navy/vermelhas), acima de qualquer override claro. */
+/* Superfícies escuras: vermelho/navy mantêm texto branco. */
 .panel-premium.panel-light [data-surface="red"],
 .panel-premium.panel-light [data-surface="red"] *,
 .panel-premium.panel-light [data-surface="navy"],
-.panel-premium.panel-light [data-surface="navy"] *,
-.panel-premium.panel-light [data-entregador-nav],
-.panel-premium.panel-light [data-entregador-nav] * {
+.panel-premium.panel-light [data-surface="navy"] * {
   color: #ffffff !important;
   text-shadow: none !important;
 }
 .panel-premium.panel-light [data-surface="red"] [class*="text-white\/"],
-.panel-premium.panel-light [data-surface="navy"] [class*="text-white\/"],
-.panel-premium.panel-light [data-entregador-nav] [class*="text-white\/"] {
+.panel-premium.panel-light [data-surface="navy"] [class*="text-white\/"] {
   color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* Barra operacional inferior: superfície clara independente dos estilos legados da navegação. */
+.entregador-theme.panel-light [data-status-bar] {
+  background: #ffffff !important;
+  color: #0f1b2d !important;
+  border-color: #e4e8ef !important;
+  text-shadow: none !important;
+}
+.entregador-theme.panel-light [data-status-bar] .text-\[\#6b7688\] {
+  color: #6b7688 !important;
+}
+.entregador-theme.panel-light [data-status-bar] .text-\[\#8b95a5\] {
+  color: #8b95a5 !important;
+}
+.entregador-theme.panel-light [data-status-bar] button {
+  color: #ffffff !important;
 }
