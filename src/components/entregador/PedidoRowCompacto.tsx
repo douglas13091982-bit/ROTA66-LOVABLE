@@ -14,7 +14,7 @@ type Props = {
   minutosAtraso?: number;
 };
 
-const BRAND = { red: "#e3000f", redDeep: "#8F0000" } as const;
+const BRAND = { red: "#e3000f" } as const;
 
 function kmAteLoja(p: PedidoDisponivel, minhaPos: LatLng | null): string | null {
   if (!minhaPos || p.endereco_coleta_lat == null || p.endereco_coleta_lng == null) return null;
@@ -54,19 +54,21 @@ function PedidoRowCompactoBase({
         pararSom();
         onAbrir(grupo);
       }}
-      data-surface="red"
-      className="relative w-full mb-3 overflow-hidden text-left active:scale-[0.99] transition-transform duration-150 border border-[#e5e9ef]"
+      className="relative w-full mb-3 overflow-hidden text-left active:scale-[0.99] transition-transform duration-150"
       style={{
-        background: BRAND.red,
+        background: "#ffffff",
         borderRadius: 18,
-        boxShadow: "0 10px 24px -14px rgba(227,0,15,0.55)",
+        border: "1px solid #e5e9ef",
+        boxShadow: "0 8px 24px -16px rgba(15,27,45,0.28)",
       }}
     >
       {/* onda decorativa à direita */}
       <div
         className="pointer-events-none absolute inset-y-0 right-0 w-1/2"
         style={{
-          background: `linear-gradient(180deg, ${BRAND.red} 0%, ${BRAND.red} 100%)`,\n          width: "5px",\n          opacity: 1,
+          background: BRAND.red,
+          width: "5px",
+          opacity: 1,
         }}
       />
 
