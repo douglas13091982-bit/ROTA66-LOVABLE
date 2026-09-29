@@ -20,6 +20,7 @@ import { criarCalculadorTaxaExibida } from "@/lib/taxa-exibida";
 import { agruparPedidosPorRota } from "@/lib/pedido-agrupador";
 import { fetchConfigSom, tocarNotificacao } from "@/lib/notificacao-som";
 import { calcularTarifaPorFaixa } from "@/lib/tarifa-calculator";
+import { isEffectivelyOnline, useOnlineTtlTicker } from "@/lib/entregador-online";
 import type { PedidoDisponivel, TarifaFaixa } from "@/types/pedido";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -83,8 +84,10 @@ export function usePedidosDisponiveis(
       return data;
     },
   });
-  const estouOnline = !!meuStatus?.online;
+  const { ttlMin, tick: onlineTick } = useOnlineTtlTicker(20_000);
+  const estouOnline = isEffectivelyOnline(meuStatus?.online, meuStatus?.updated_at, ttlMin);
   const estouOnlineRef = useRef(estouOnline);
+  void onlineTick;
   estouOnlineRef.current = estouOnline;
 
   // Realtime no próprio status: assim que o toggle grava online=false,
