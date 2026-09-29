@@ -61,10 +61,10 @@ export function RotaBlock({ items, destaque }: Props) {
       <div className="space-y-3">
         <div className="flex items-center justify-between bg-white border border-border/40 rounded-xl px-4 py-2.5 text-[10px] uppercase tracking-wider shadow-sm">
           <span className="text-muted-foreground font-bold">
-            Rota agrupada · {items.length} paradas
+            ROTA ATIVA · {items.length} PARADAS
           </span>
           <span className="font-bold text-[#e3000f] drop-shadow-sm">
-            Entrega {idxAtual + 1}/{items.length} · faltam {restantes}
+            PRÓXIMA ENTREGA · {idxAtual + 1}/{items.length}
           </span>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
