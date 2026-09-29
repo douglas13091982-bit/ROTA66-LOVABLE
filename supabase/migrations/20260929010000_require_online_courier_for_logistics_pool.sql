@@ -22,6 +22,12 @@ as $$
       from public.entregador_status es
       where es.entregador_id = auth.uid()
         and es.online = true
+        and es.updated_at >= now() - (
+          coalesce(
+            (select c.entregador_online_ttl_min from public.config_roteirizacao c where c.singleton = true limit 1),
+            10
+          ) * interval '1 minute'
+        )
     )
     and p.status = 'pronto'::public.pedido_status
     and p.entregador_id is null
@@ -56,9 +62,15 @@ begin
 
   if not exists (
     select 1
-    from public.entregador_status
-    where entregador_id = v_user
-      and online = true
+    from public.entregador_status es
+    where es.entregador_id = v_user
+      and es.online = true
+      and es.updated_at >= now() - (
+        coalesce(
+          (select c.entregador_online_ttl_min from public.config_roteirizacao c where c.singleton = true limit 1),
+          10
+        ) * interval '1 minute'
+      )
   ) then
     raise exception 'Entregador precisa estar online para aceitar entregas';
   end if;
