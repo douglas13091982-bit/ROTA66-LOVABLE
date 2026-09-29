@@ -2443,7 +2443,7 @@ export type Database = {
           forma_pagamento: Database["public"]["Enums"]["forma_pagamento"]
           id: string
           itens: Json
-          loja_id: string
+          loja_id: string | null
           mp_metodo: string | null
           mp_payment_id: string | null
           mp_payment_status: string | null
@@ -2501,7 +2501,7 @@ export type Database = {
           forma_pagamento?: Database["public"]["Enums"]["forma_pagamento"]
           id?: string
           itens?: Json
-          loja_id: string
+          loja_id?: string | null
           mp_metodo?: string | null
           mp_payment_id?: string | null
           mp_payment_status?: string | null
@@ -2559,7 +2559,7 @@ export type Database = {
           forma_pagamento?: Database["public"]["Enums"]["forma_pagamento"]
           id?: string
           itens?: Json
-          loja_id?: string
+          loja_id?: string | null
           mp_metodo?: string | null
           mp_payment_id?: string | null
           mp_payment_status?: string | null
