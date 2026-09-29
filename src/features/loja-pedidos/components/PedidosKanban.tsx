@@ -286,6 +286,7 @@ function VirtualizedColumn(props: ColumnBodyProps) {
                 <PedidoCard
                   pedido={p}
                   dragId={dragId}
+                  usaEntregadores={usaEntregadores}
                   onDragStart={setDragId}
                   onDragEnd={() => {
                     setDragId(null);

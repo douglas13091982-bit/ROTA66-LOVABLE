@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+type IntegrationMapping = { pedido_id: string; source: string; external_order_id: string };
+
 function json(data: unknown, status = 200) {
   return Response.json(data, {
     status,
@@ -63,7 +65,8 @@ export const Route = createFileRoute(
           return json({ error: "integration_lookup_failed" }, 500);
         }
 
-        if (!integration?.pedido_id) {
+        const foundIntegration = integration as IntegrationMapping | null;
+        if (!foundIntegration?.pedido_id) {
           return json({ error: "delivery_not_found" }, 404);
         }
 
@@ -72,7 +75,7 @@ export const Route = createFileRoute(
           .select(
             "id,status,entregador_id,taxa_entrega,bonus_entregador,endereco_coleta,endereco_entrega,endereco_coleta_lat,endereco_coleta_lng,endereco_entrega_lat,endereco_entrega_lng,created_at,updated_at,coleta_confirmada_em,entrega_confirmada_em",
           )
-          .eq("id", integration.pedido_id)
+          .eq("id", foundIntegration.pedido_id)
           .maybeSingle();
 
         if (pedidoError) {
@@ -86,8 +89,8 @@ export const Route = createFileRoute(
           ok: true,
           delivery: {
             id: pedido.id,
-            external_order_id: integration.external_order_id,
-            source: integration.source,
+            external_order_id: foundIntegration.external_order_id,
+            source: foundIntegration.source,
             status: pedido.status,
             logistics_status: normalizeLogisticsStatus(pedido.status),
             entregador_id: pedido.entregador_id,

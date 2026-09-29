@@ -291,6 +291,7 @@ export function HistoricoPage() {
         detalhe={detalhe}
         lojaNome={loja.nome}
         actions={actions}
+        usaEntregadores={loja.usa_entregadores !== false}
         onClose={() => setDetalhe(null)}
         onConfirmarColeta={() => {}}
         onUpdateDetalhe={setDetalhe}
