@@ -6,13 +6,11 @@ import {
   Loader2,
   Map as MapIcon,
   MapPin,
-  Phone,
   User,
   Wallet,
   Route as RouteIcon,
   DollarSign,
   TrendingUp,
-  Map as MapIconLucide,
 } from "lucide-react";
 import { MapaRotaInterno } from "./MapaRotaInterno";
 import { toast } from "sonner";
@@ -445,7 +443,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
                 void coletarPedido();
               }}
             >
-              Coletar pedido
+              Cheguei na loja
             </CtaButton>
           ) : (
             <div
