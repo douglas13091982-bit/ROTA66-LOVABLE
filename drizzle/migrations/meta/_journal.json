@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790652521871,
+      "tag": "0000_add_lojas_usa_entregadores",
+      "breakpoints": true
+    }
+  ]
+}
