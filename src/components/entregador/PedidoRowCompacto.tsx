@@ -55,7 +55,7 @@ function PedidoRowCompactoBase({
         onAbrir(grupo);
       }}
       data-surface="red"
-      className="relative w-full mb-3 overflow-hidden text-left active:scale-[0.99] transition-transform duration-150"
+      className="relative w-full mb-3 overflow-hidden text-left active:scale-[0.99] transition-transform duration-150 border border-[#e5e9ef]"
       style={{
         background: BRAND.red,
         borderRadius: 18,
@@ -66,28 +66,28 @@ function PedidoRowCompactoBase({
       <div
         className="pointer-events-none absolute inset-y-0 right-0 w-1/2"
         style={{
-          background: `radial-gradient(120% 140% at 100% 50%, ${BRAND.redDeep} 0%, rgba(143,0,0,0.55) 45%, rgba(143,0,0,0) 70%)`,
+          background: `linear-gradient(180deg, ${BRAND.red} 0%, ${BRAND.red} 100%)`,\n          width: "5px",\n          opacity: 1,
         }}
       />
 
-      <div className="relative flex items-center gap-3 px-4 py-4">
+      <div className="relative flex items-center gap-3 px-4 py-4 pl-5">
         <div
           className="w-12 h-12 rounded-2xl grid place-items-center shrink-0"
-          style={{ background: "#0d2c54", border: "1px solid rgba(255,255,255,0.25)" }}
+          style={{ background: "#f0f4f8", border: "1px solid #e1e7ee" }}
         >
 
           {atrasado ? (
-            <AlertTriangle className="h-6 w-6 !text-yellow-400" />
+            <AlertTriangle className="h-6 w-6 text-[#e3000f]" />
           ) : (
-            <Store className="h-6 w-6 !text-white" strokeWidth={1.8} />
+            <Store className="h-6 w-6 text-[#0d2c54]" strokeWidth={1.8} />
           )}
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-black !text-white uppercase tracking-normal truncate leading-tight">
+          <h3 className="text-base font-black text-[#0d2c54] uppercase tracking-normal truncate leading-tight">
             {principal.loja_nome || "Loja"}
           </h3>
-          <p className="text-sm font-semibold uppercase tracking-wider mt-1 truncate !text-white/75">
+          <p className="text-[11px] font-bold uppercase tracking-wider mt-1 truncate text-[#718096]">
             {principal.loja_bairro || `#${principal.numero}`}
             {kmLoja && <span className="mx-1.5">·</span>}
             {kmLoja && <span>{kmLoja} KM</span>}
@@ -96,10 +96,10 @@ function PedidoRowCompactoBase({
         </div>
 
         <div className="text-right shrink-0">
-          <p className="text-[11px] font-bold uppercase tracking-normal !text-white/75">
+          <p className="text-[9px] font-black uppercase tracking-[0.14em] text-[#8a96a6]">
             Ganhos
           </p>
-          <p className="text-[24px] font-black !text-white tracking-normal tabular-nums leading-none mt-1">
+          <p className="text-[23px] font-black text-[#e3000f] tracking-normal tabular-nums leading-none mt-1">
             R$ {formatCurrencyValue(total)}
           </p>
         </div>
