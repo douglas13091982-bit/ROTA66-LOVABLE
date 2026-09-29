@@ -4,7 +4,6 @@ import { randomInt } from "node:crypto";
 type DeliveryPayload = {
   external_order_id?: string;
   source?: string;
-  loja_id?: string;
   cliente_nome?: string;
   cliente_telefone?: string;
   endereco_coleta?: string;
@@ -90,8 +89,8 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
         if (!externalOrderId || externalOrderId.length > 120) {
           return json({ error: "external_order_id_required" }, 400);
         }
-        if (!validUuid(body.loja_id)) {
-          return json({ error: "loja_id_invalid" }, 400);
+        if (source !== "pixel-palace") {
+          return json({ error: "unsupported_source" }, 400);
         }
         if (!body.cliente_nome?.trim() || !body.cliente_telefone?.trim()) {
           return json({ error: "cliente_required" }, 400);
@@ -132,21 +131,12 @@ export const Route = createFileRoute("/api/integration/v1/deliveries")({
           });
         }
 
-        const { data: loja, error: lojaError } = await supabaseAdmin
-          .from("lojas")
-          .select("id")
-          .eq("id", body.loja_id!)
-          .maybeSingle();
-
-        if (lojaError) return json({ error: "store_lookup_failed" }, 500);
-        if (!loja) return json({ error: "loja_not_found" }, 404);
-
         const codigoEntrega = body.codigo_entrega?.trim() || code();
 
         const { data: pedido, error: pedidoError } = await supabaseAdmin
           .from("pedidos")
           .insert({
-            loja_id: body.loja_id!,
+            loja_id: null,
             cliente_nome: body.cliente_nome.trim(),
             cliente_telefone: body.cliente_telefone.trim(),
             endereco_coleta: body.endereco_coleta.trim(),
