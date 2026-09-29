@@ -596,7 +596,7 @@ export function PedidoCard({ pedido: p, destaque, agrupado }: Props) {
               className="text-[12px] text-center"
               style={{ color: MUTED }}
             >
-              Peça ao cliente o código de 4 dígitos da página de rastreio.
+              Peça ao cliente o código de 4 dígitos e digite acima. A entrega será finalizada automaticamente.
             </p>
           </div>
         )}
