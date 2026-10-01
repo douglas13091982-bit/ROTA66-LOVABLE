@@ -121,3 +121,38 @@ O fluxo operacional do entregador usa o pool logístico `rota66_pool_entregas` e
 O ROTA 66 não processa pagamentos comerciais de lojas, catálogo, checkout ou pedidos do Pixel Palace. O webhook específico de loja foi desativado.
 
 O webhook principal do ROTA 66 fica restrito ao financeiro operacional de entregadores, como recargas/créditos, quando esse recurso estiver habilitado.
+
+
+## Configuração obrigatória
+
+No ambiente do servidor ROTA 66:
+
+```
+ROTA66_INTEGRATION_API_KEY=<chave-secreta-compartilhada>
+```
+
+Essa variável não deve ser colocada no código-fonte, no `.env` versionado ou no navegador.
+
+O Pixel Palace deve usar exatamente a mesma chave no servidor como `ROTA66_INTEGRATION_API_KEY`.
+
+A integração não utiliza `LOVABLE_API_KEY`.
+
+## Idempotência
+
+O ROTA 66 usa `source + external_order_id` como chave idempotente. Assim, se o Pixel Palace reenviar o mesmo pedido por timeout, retry ou execução concorrente, a API devolve a entrega já criada em vez de criar outra.
+
+## Teste
+
+Depois de configurar a variável de ambiente, o Pixel Palace pode testar:
+
+`GET /api/integration/v1/deliveries`
+
+com:
+
+`Authorization: Bearer <ROTA66_INTEGRATION_API_KEY>`
+
+Resposta esperada:
+
+```json
+{ "ok": true, "service": "rota66-logistica", "version": "v1" }
+```
